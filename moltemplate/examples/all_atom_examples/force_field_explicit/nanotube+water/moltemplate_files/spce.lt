@@ -1,0 +1,56 @@
+# file "beta-cristobalite.lt"
+#
+#
+#    Make a figure of the molecule here. If you can...
+#
+#
+
+beta-cristobalite {
+
+  write_once("In Init") {
+    units        real
+    atom_style   atomic
+    pair_style 	 vashishta
+    #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+  }
+
+  write_once("In Settings") {
+    pair_coeff  * *  SiO.1990.vashishta Si O
+  }
+
+  #Unit cell of beta-cristobalite
+  write("Data Atoms") {
+    $atom:Si1    $mol:.    @atom:Si    0.0000000    0.0000000    0.0000000
+    $atom:Si2    $mol:.    @atom:Si    0.0000000    0.5000000    0.5000000
+    $atom:Si3    $mol:.    @atom:Si    0.2500000    0.2500000    0.2500000
+    $atom:Si4    $mol:.    @atom:Si    0.5000000    0.0000000    0.5000000
+    $atom:Si5    $mol:.    @atom:Si    0.2500000    0.7500000    0.7500000
+    $atom:Si6    $mol:.    @atom:Si    0.7500000    0.7500000    0.2500000
+    $atom:Si7    $mol:.    @atom:Si    0.5000000    0.5000000    0.0000000
+    $atom:Si8    $mol:.    @atom:Si    0.7500000    0.2500000    0.7500000
+    $atom:O1     $mol:.    @atom:O     0.1250000    0.1250000    0.1250000
+    $atom:O2     $mol:.    @atom:O     0.8750000    0.6250000    0.3750000
+    $atom:O3     $mol:.    @atom:O     0.3750000    0.3750000    0.1250000
+    $atom:O4     $mol:.    @atom:O     0.6250000    0.1250000    0.6250000
+    $atom:O5     $mol:.    @atom:O     0.1250000    0.6250000    0.6250000
+    $atom:O6     $mol:.    @atom:O     0.6250000    0.6250000    0.1250000
+    $atom:O7     $mol:.    @atom:O     0.3750000    0.8750000    0.6250000
+    $atom:O8     $mol:.    @atom:O     0.3750000    0.1250000    0.3750000
+    $atom:O9     $mol:.    @atom:O     0.6250000    0.3750000    0.8750000
+    $atom:O10    $mol:.    @atom:O     0.8750000    0.3750000    0.6250000
+    $atom:O11    $mol:.    @atom:O     0.3750000    0.6250000    0.8750000
+    $atom:O12    $mol:.    @atom:O     0.1250000    0.8750000    0.8750000
+    $atom:O13    $mol:.    @atom:O     0.1250000    0.3750000    0.3750000
+    $atom:O14    $mol:.    @atom:O     0.6250000    0.8750000    0.3750000
+    $atom:O15    $mol:.    @atom:O     0.8750000    0.8750000    0.1250000
+    $atom:O16    $mol:.    @atom:O     0.8750000    0.1250000    0.8750000
+  }
+
+  write_once("Data Masses") {
+    @atom:Si 28.0855
+    @atom:O  15.9994
+  }
+
+
+
+} # end of definition of beta-cristobalite molecule type

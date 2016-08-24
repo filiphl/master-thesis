@@ -1,0 +1,10 @@
+# file "system.lt"
+
+import "beta-cristobalite.lt"
+import "slab.lt"
+
+write_once("Data Boundary") {
+  0.0  21.36  xlo  xhi
+  0.0  21.36  ylo  yhi
+  0.0  21.36  zlo  zhi
+}
