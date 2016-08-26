@@ -16,8 +16,10 @@ include "system.in.settings"
 
 # ----------------- Run Section -----------------
 
+variable N equal 2000
 
-velocity	all create 1000.0 277387 mom yes
+
+velocity	all create 500.0 277387 mom yes
 
 neighbor	0.3 bin
 neigh_modify	delay 10
@@ -27,21 +29,21 @@ fix nvt all nvt temp 500 500 1.0
 thermo		100
 timestep	0.1
 
-dump myDump all atom 10 SiO2.dump
-run 500
+#dump myDump all atom 500 SiO2.dump
+run 1000
 
 
 variable T equal 500
 label meltingLoop
 variable i loop 15
     fix nvt all nvt temp ${T} ${T} 1.0
-    run 500
+    run ${N}
     compute msdID all msd
-    fix msdDump all ave/time 1 1 1 c_msdID[4] file msd_${T}.txt
-    run 500
+    fix msdDump all ave/time 1 1 2000 c_msdID[4] file msd_${T}.txt
+    run ${N}
     uncompute msdID
     unfix nvt
     unfix msdDump
-    variable T equal ${T}+200
+    variable T equal ${T}+100
 next i
 jump SELF meltingLoop
