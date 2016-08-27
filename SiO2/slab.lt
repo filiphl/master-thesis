@@ -1,7 +1,0 @@
-# file "slab.lt"
-
-import "beta-cristobalite.lt"
-
-slab = new beta-cristobalite [8].move(7.12, 0.00, 0.00)
-                             [3].move(0.00, 7.12, 0.00)
-                             [3].move(0.00, 0.00, 7.12)

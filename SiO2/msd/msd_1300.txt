@@ -1,3 +1,0 @@
-# Time-averaged data for fix msdDump
-# TimeStep c_msdID[4]
-36000 0.268101

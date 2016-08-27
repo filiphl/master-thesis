@@ -16,7 +16,7 @@ include "system.in.settings"
 
 # ----------------- Run Section -----------------
 
-variable N equal 2000
+variable N equal 3000
 
 
 velocity	all create 500.0 277387 mom yes
@@ -30,20 +30,18 @@ thermo		100
 timestep	0.1
 
 #dump myDump all atom 500 SiO2.dump
-run 1000
-
 
 variable T equal 500
 label meltingLoop
-variable i loop 15
+variable i loop 30
     fix nvt all nvt temp ${T} ${T} 1.0
     run ${N}
     compute msdID all msd
-    fix msdDump all ave/time 1 1 2000 c_msdID[4] file msd_${T}.txt
+    fix msdDump all ave/time 1 1 1 c_msdID[4] file msd_${T}.txt
     run ${N}
     uncompute msdID
     unfix nvt
     unfix msdDump
-    variable T equal ${T}+100
+    variable T equal ${T}+50
 next i
 jump SELF meltingLoop
