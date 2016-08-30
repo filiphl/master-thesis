@@ -2,6 +2,7 @@ from matplotlib import pyplot as plt
 import argparse
 import numpy as np
 import sys
+import re
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-filename", type=str,
@@ -16,7 +17,7 @@ parser.add_argument("-stop", type=float, default=1,
                     help="Last x-value of the linear approximation is taken")
 args = parser.parse_args()
 
-
+temp = re.findall('_(\d*)\.',args.filename)[0]
 
 infile = open(args.filename,"r")
 infile.readline()
@@ -52,7 +53,7 @@ if (parser.parse_args().save or not parser.parse_args().noPlot):
     plt.plot(time[b:e], np.polyval(linearApproximation, time[b:e]), color="red", linewidth=3, linestyle="--", label=figureLabel)
     plt.legend(loc=4)
     #plt.axis([dt, (timeSteps+1)*dt, 0, 1.1*max(msd)])
-    plt.title("Diffusion constant: %.2g"%diffusionConstant)
+    plt.title("Temperature: %s\nDiffusion constant: %.2g"%(temp,diffusionConstant))
     if parser.parse_args().save:
         filepath = "msdplotTEST"
         print "Figure saved as %s" %filepath
