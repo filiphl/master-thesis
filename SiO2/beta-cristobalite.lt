@@ -16,7 +16,9 @@ beta-cristobalite {
   }
 
   write_once("In Settings") {
-    pair_coeff  * *  SiO.1990.vashishta Si O
+    pair_coeff  * *  SiO2.vashishta Si O
+    pair_modify table 16
+    pair_modify tabinner 0.1
   }
 
   #Unit cell of beta-cristobalite

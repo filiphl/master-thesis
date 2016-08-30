@@ -28,7 +28,7 @@ msd       = np.asarray([float(i) for i in content[1::2]])
 
 timesteps = timesteps-timesteps[0]
 
-dt   = 0.1    # Units though...
+dt   = 0.002    # ps
 time = timesteps*dt
 N    = len(time)
 b    = int(np.floor(args.start * N))
@@ -45,7 +45,7 @@ diffusionConstant = linearApproximation[1]/6.0
 if (parser.parse_args().save or not parser.parse_args().noPlot):
     figureLabel = "Linear approximation\n%s"%str(linearApproximation)
     plt.plot(time, msd, color="#36308A", linewidth=4)
-    plt.xlabel('Time [fs]')
+    plt.xlabel('Time [ps]')
     plt.ylabel('Mean square displacement [AA]')
     plt.grid('on')
     plt.hold('on')
