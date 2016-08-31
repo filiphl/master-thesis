@@ -13,9 +13,9 @@ read_data "system.data"
 
 include "system.in.settings"
 
-
 # ----------------- Run Section -----------------
 include "system.run"
+
 # The lines above define the system you want to simulate.
 # What you do next is up to you.
 # Typically a user would minimize and equilibrate
