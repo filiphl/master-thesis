@@ -1,0 +1,122 @@
+LAMMPS (27 Aug 2016-ICMS)
+
+
+# ----------------- Init Section -----------------
+
+include "system.in.init"
+    units		metal
+    boundary	p p p
+    atom_style   atomic
+    pair_style 	 vashishta
+    #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+
+
+# ----------------- Atom Definition Section -----------------
+
+read_data "system.data"
+  orthogonal box = (0 0 0) to (106.8 106.8 180)
+  2 by 2 by 2 MPI processor grid
+  reading atoms ...
+  81000 atoms
+
+# ----------------- Settings Section -----------------
+
+include "system.in.settings"
+    pair_coeff  * *  SiO2.vashishta Si O
+Reading potential file SiO2.vashishta with DATE: 2015-10-14
+    pair_modify table 16
+    pair_modify tabinner 0.1
+
+# ----------------- Run Section -----------------
+include "system.run"
+
+
+variable N equal 4000
+variable T equal 500
+
+velocity	all create ${T} 277387 mom yes
+velocity	all create 500 277387 mom yes
+include "system.prepare"
+#region ID style args keyword arg ...
+
+
+
+#Define the region of the sphere
+#sphere args = x y z radius
+region RsphereID sphere 53.4 53.4 221.8 150     #region RsphereID1 sphere 53.4 53.4 216 150
+#region RsphereID2 block 0.0 INF 0.0 INF 80.0 INF
+#region RsphereID intersect 2 RsphereID1 RsphereID2
+group  sphereID region RsphereID
+21356 atoms in group sphereID
+
+#Define the region of the slab
+#Group the atoms in the slab
+#block args = xlo xhi ylo yhi zlo zhi
+region RslabID block 0 INF 0 INF 0 35.6
+group  slabID region RslabID
+27450 atoms in group slabID
+
+#Define the region that is outside the sphere and slab
+#union args = N reg-ID1 reg-ID2 ...
+region RbothID union 2 RsphereID RslabID side out
+
+#Delete all atoms exterior to the sphere and slab
+#delete_atoms style args keyword value ...
+delete_atoms region RbothID
+Deleted 32194 atoms, new total = 48806
+
+#Set up reflecting walls at top and bottom face in z-direction
+#fix ID group-ID wall/reflect face arg ... keyword value ...
+#fix zWallsID all wall/reflect zlo EDGE zhi EDGE
+
+
+#Freeze the "bottom" of the slab
+region RbottomAtomsID block 0.0 INF 0.0 INF 0.0 3.0
+group bottomAtomsID region RbottomAtomsID
+2700 atoms in group bottomAtomsID
+fix freezeID bottomAtomsID setforce 0 0 0
+velocity bottomAtomsID set 0 0 0
+
+#read_restart squeeze.1000.restart
+#include "system.in.settings"
+restart 1000 squeeze*.restart
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+dump myDump all atom 10 SiO2.dump
+
+#Move the top z-boundary downwards
+variable compressionLength equal 200
+fix deform all deform 1 z delta 0 -${compressionLength} remap x
+fix deform all deform 1 z delta 0 -200 remap x
+
+fix nvt all nvt temp ${T} ${T} 1.0
+fix nvt all nvt temp 500 ${T} 1.0
+fix nvt all nvt temp 500 500 1.0
+run ${N}
+run 4000
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.8
+  ghost atom cutoff = 5.8
+  binsize = 2.9 -> bins = 37 37 63
+Memory usage per processor = 10.5389 Mbytes
+Step Temp E_pair E_mol TotEng Press Volume 
+       0    472.12742    -154322.7            0   -151344.27    77530.964    2053123.2 
+     100    1067.8211   -157622.23            0   -150885.84    7891.9915      1996092 
+     200    1040.5966   -157649.73            0   -151085.09     8514.801    1939060.8 
+     300    1038.0569   -157838.16            0   -151289.54    10525.672    1882029.6 
+     400    1041.0797   -157978.38            0   -151410.69    12243.936    1824998.4 
+     500    1014.9149   -157902.43            0    -151499.8    13101.343    1767967.2 
+     600    979.75381   -157821.54            0   -151640.72    12770.269      1710936 
+     700     926.1851   -157669.61            0   -151826.74    13857.547    1653904.8 
+     800    882.99918    -157547.3            0   -151976.87    15349.702    1596873.6 
+     900    852.94626   -157410.79            0   -152029.95    18550.294    1539842.4 
+    1000    827.40771    -157186.2            0   -151966.46     22835.22    1482811.2 
+    1100    820.51854   -156951.87            0   -151775.59    26661.789      1425780 
+    1200    808.4

@@ -4,9 +4,9 @@
 
 #Define the region of the sphere
 #sphere args = x y z radius
-region RsphereID1 sphere 53.4 53.4 216 150
-region RsphereID2 block 0.0 INF 0.0 INF 80.0 INF
-region RsphereID intersect 2 RsphereID1 RsphereID2
+region RsphereID sphere 53.4 53.4 221.8 150     #region RsphereID1 sphere 53.4 53.4 216 150
+#region RsphereID2 block 0.0 INF 0.0 INF 80.0 INF
+#region RsphereID intersect 2 RsphereID1 RsphereID2
 group  sphereID region RsphereID
 
 #Define the region of the slab
