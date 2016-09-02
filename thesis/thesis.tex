@@ -65,35 +65,24 @@ The main idea is to manually enter the coordinates of only the atoms in a unit c
 
 \section{Silica}
 Silica is a chemical compound also known as Silicon dioxide, having the chemical formula SiO$_2$. It has several polymorph structures, the most common being quartz, which is one of the most abundant minerals in the Earth's crust. Other polymorphs include cristobalite, tridymite, coesite and more.    
-In this project we will build the constituents of the system from a variety named $\beta$-cristobailte. This is mainly because it has a simple structure and a cubical unit cell. The length of each edge is 7.12Å.
+
+For our purpose it is insignificant which one we choose. Once the material is melted, it is indifferent which configuration we started from, as long as the density is correct.
+In this project we will build the constituents of the system from a type of cristobalite named $\beta$-cristobalite. This is mainly because it has a simple structure and a cubical unit cell.
 
 \subsection{Unit cell of $\beta$-cristobalite}
-In order to construct the unit cell of a material, one should look up the coordinates of the atoms in a crystallography database. We have used the unit cell of $\beta$-cristobalite found at \textit{Crystallography Open Database}\footnote{\href{http://www.crystallography.net/cod/1010944.html}{http://www.crystallography.net/cod/1010944.html}}. At this site one can download a \texttt{.cif}-file consisting of the spatial positions of each atom, the length of the unit cell edges, and the angles between the faces of the cell. In the case of $\beta$-cristobalite the unit cell is cubical with sides of length 7.12Å. It contain 8 silicon atoms and 16 oxygen atoms. The density of the unit cell can easily be computed and is 2.2114 g/cm$^3$.
+In order to construct the unit cell of a material, one should look up the coordinates of the atoms in a crystallography database. We have used the unit cell of $\beta$-cristobalite found at \textit{Crystallography Open Database}\footnote{\href{http://www.crystallography.net/cod/1010944.html}{http://www.crystallography.net/cod/1010944.html}}. At this site one can download a \texttt{.cif}-file consisting of the spatial positions of each atom, the length of the unit cell edges, and the angles between the faces of the cell. In the case of $\beta$-cristobalite the unit cell is cubical with edges of length 7.12Å. It contain 8 silicon atoms and 16 oxygen atoms. The density of the unit cell can easily be computed and is 2.2114 g/cm$^3$.
 
-\begin{figure}[H]
+\begin{figure}
 \centering
-\includegraphics[width=0.7\linewidth]{figures/unitcell/unitcell2.png}
-\caption{Unit cell of b-cristobalite. One of the easiest unit cells of the silica variations, due to the cubical structure and few atoms.}
+\includegraphics[width=0.7\linewidth]{figures/unitcell/unitcell.png}
+\caption{Unit cell of b-cristobalite. Tan and blue spheres represent silicon and oxygen atoms respectively.}
 \label{fig:unitcellbcristobalite}
 \end{figure}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{figures/unitcell/combiningCells.png}
-	\caption{Unit cell of b-cristobalite. One of the easiest unit cells of the silica variations, due to the cubical structure and few atoms.}
-	\label{fig:unitcellbcristobalite}
-\end{figure}
-
-
-
-
-
-
-
 
 
 
 \subsection{Shaping the system}
-The coordinates gotten from the \texttt{.cif}-file can now be implemented into \textit{moltemplate} together with data of whatever bond and angle data required. In this case, we will use the Vashishta potential, which does not require these. We use the unit cell as building blocks, placing them concurrently until we have a crystal of the desired size. For our purpose, we generate a large cube of $15\times15\times15$ unit cells, as shown in \autoref{fig:hugeCube}. This system contain 81000 atoms.
+The coordinates gotten from the \texttt{.cif}-file can now be implemented into \textit{moltemplate} together with data of whatever bond and angle data required. In this case, we will use the Vashishta potential, which does not require these. We use the unit cell as building blocks, placing them concurrently until we have a crystal of the desired size. For our purpose, we generate a large cube of $15\times15\times15$ unit cells, as shown in \autoref{fig:hugeCube}. This system contain 81000 atoms. We can now mold the system however we like by deleting atoms. This is done in LAMMPS by using the \texttt{region}, \texttt{union}, \texttt{intersect} and \texttt{delete atoms} commands.
 
 \begin{figure}
 	\centering
