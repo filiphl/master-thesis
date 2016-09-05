@@ -1,6 +1,5 @@
 \documentclass[twoside,english]{uiofysmaster}
 
-
 \usepackage[utf8]{inputenc} % Riktig tegnsett
 \usepackage{babel} 
 \usepackage{url}
@@ -21,7 +20,7 @@
 % Custom commands
 \newcommand\lr[1]{\left(#1\right)} 
 
-\definecolor{LightBlue}{rgb}{0.9, 0.9, 1.0}
+\definecolor{LightBlue}{rgb}{0.8, 0.8, 0.95}
 
 \definecolor{editColor}{rgb}{0.5, 0.0, 0.0}
 
@@ -92,13 +91,9 @@ Moltemplate has its own structure and syntax. The first step to build up a large
 
 For a more profound understanding of the structure and syntax of these files, the reader is advised to read the moltemplate manual  
 
-\begin{listing}[H]
-	\inputminted[linenos, xleftmargin=6mm, bgcolor=LightBlue, fontsize=\footnotesize]{text}{../SiO2/beta-cristobalite.lt}
-	\caption{Typical moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units. }
-	\label{lst:beta-cristobalite.lt}
-\end{listing}
 
 
+\lstinputlisting[language=LammpsData]{../SiO2/beta-cristobalite.lt}
 
 We use the unit cell as building blocks, placing them concurrently until we have a crystal of the desired size. For our purpose, we generate a large cube of $15\times15\times15$ unit cells. This is done as follows.
 

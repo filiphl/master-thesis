@@ -15,6 +15,8 @@ include "system.in.settings"
 
 
 # ----------------- Run Section -----------------
+include "system.run"
+#include "continue.in"
 
 # The lines above define the system you want to simulate.
 # What you do next is up to you.
@@ -38,4 +40,3 @@ include "system.in.settings"
 #  -- Now, finally run the simulation --
 # run   50000
 #  ---- (end of examples) ----
-

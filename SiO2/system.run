@@ -1,8 +1,8 @@
 
 
-variable N equal 3000
+variable N equal 30000
 variable T equal 500
-variable compressionLength equal 50
+variable compressionLength equal 10
 
 velocity	all create ${T} 277387 mom yes
 include "system.prepare"
@@ -17,7 +17,7 @@ neigh_modify	delay 10
 thermo		100
 timestep	0.002
 
-dump myDump all atom 20 SiO2.dump
+dump myDump all atom 20 dumps/SiO2_*.dump
 
 #Move the top z-boundary downwards
 fix deform all deform 1 z delta 0 -${compressionLength} remap x
