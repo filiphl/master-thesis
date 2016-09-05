@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefaultZsh{} file \PYGdefaultZdq{}setup.lt\PYGdefaultZdq{}
+
+import \PYGdefaultZdq{}beta\PYGdefaultZhy{}cristobalite.lt\PYGdefaultZdq{}
+
+SiO2 = new beta\PYGdefaultZhy{}cristobalite [15].move(7.12, 0.00, 0.00)
+                             [15].move(0.00, 7.12, 0.00)
+                             [15].move(0.00, 0.00, 7.12)
+\end{Verbatim}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  2 SEP 2016 16:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  4 SEP 2016 21:17
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1010,56 +1010,140 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \float@box=\box78
 \@float@everytoks=\toks32
 \@floatcapt=\box79
-) (./thesis.aux)
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/minted/minted.sty
+Package: minted 2015/01/31 v2.0 Yet another Pygments shim for LaTeX
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2008/02/07
+
+Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
+<2008/02/07> (tvz)
+\FV@CodeLineNo=\count187
+\FV@InFile=\read2
+\FV@TabBox=\box80
+\c@FancyVerbLine=\count188
+\FV@StepNumber=\count189
+\FV@OutFile=\write3
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/ifplatform/ifplatform.sty
+Package: ifplatform 2010/10/22 v0.4 Testing for the operating system
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/catchfile.sty
+Package: catchfile 2011/03/01 v1.6 Catch the contents of a file (HO)
+)
+runsystem(uname -s > "thesis.w18")...executed.
+
+
+(./thesis.w18)
+runsystem(rm -- "thesis.w18")...executed.
+
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2015/05/04 v2.2 e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count190
+)
+(/usr/local/texlive/2015/texmf-dist/tex/generic/xstring/xstring.sty
+(/usr/local/texlive/2015/texmf-dist/tex/generic/xstring/xstring.tex
+\@xs@message=\write4
+\integerpart=\count191
+\decimalpart=\count192
+)
+Package: xstring 2013/10/13  v1.7c  String manipulations (C Tellechea)
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/lineno/lineno.sty
+Package: lineno 2005/11/02 line numbers on paragraphs v4.41
+\linenopenalty=\count193
+\output=\toks33
+\linenoprevgraf=\count194
+\linenumbersep=\dimen194
+\linenumberwidth=\dimen195
+\c@linenumber=\count195
+\c@pagewiselinenumber=\count196
+\c@LN@truepage=\count197
+\c@internallinenumber=\count198
+\c@internallinenumbers=\count199
+\quotelinenumbersep=\dimen196
+\bframerule=\dimen197
+\bframesep=\dimen198
+\bframebox=\box81
+LaTeX Info: Redefining \\ on input line 3056.
+)
+\minted@appexistsfile=\read3
+\FV@BreakIndent=\dimen199
+\FV@BreakSymbolSepLeft=\dimen200
+\FV@BreakSymbolSepRight=\dimen201
+\FV@BreakSymbolIndentLeft=\dimen202
+\FV@BreakSymbolIndentRight=\dimen203
+\c@FancyVerbLineBreakLast=\count200
+\FV@LineBox=\box82
+\FV@LineIndentBox=\box83
+\minted@bgbox=\box84
+\minted@code=\write5
+\c@minted@FancyVerbLineTemp=\count201
+\@float@every@listing=\toks34
+\c@listing=\count202
+)
+runsystem(mkdir -p "_minted-thesis")...executed.
+
+runsystem(which "pygmentize" && touch "thesis.aex")...executed.
+
+runsystem(rm "thesis.aex")...executed.
+
+
+(./_minted-thesis/default.pygstyle) (./thesis.aux
+
+LaTeX Warning: Label `lst:beta-cristobalite.lt' multiply defined.
+
+)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-\c@lstlisting=\count187
-
-(/usr/local/texlive/2015/texmf-dist/tex/context/base/supp-pdf.mkii
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+\c@lstlisting=\count203
+ (/usr/local/texlive/2015/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count188
-\scratchdimen=\dimen194
-\scratchbox=\box80
-\nofMPsegments=\count189
-\nofMParguments=\count190
-\everyMPshowfont=\toks33
-\MPscratchCnt=\count191
-\MPscratchDim=\dimen195
-\MPnumerator=\count192
-\makeMPintoPDFobject=\count193
-\everyMPtoPDFconversion=\toks34
+\scratchcounter=\count204
+\scratchdimen=\dimen204
+\scratchbox=\box85
+\nofMPsegments=\count205
+\nofMParguments=\count206
+\everyMPshowfont=\toks35
+\MPscratchCnt=\count207
+\MPscratchDim=\dimen205
+\MPnumerator=\count208
+\makeMPintoPDFobject=\count209
+\everyMPtoPDFconversion=\toks36
 )
-\AtBeginShipoutBox=\box81
-Package hyperref Info: Link coloring ON on input line 31.
+\AtBeginShipoutBox=\box86
+Package hyperref Info: Link coloring ON on input line 33.
  (/usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
 (/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count194
+\c@section@level=\count210
 )
-LaTeX Info: Redefining \ref on input line 31.
-LaTeX Info: Redefining \pageref on input line 31.
-LaTeX Info: Redefining \nameref on input line 31.
+LaTeX Info: Redefining \ref on input line 33.
+LaTeX Info: Redefining \pageref on input line 33.
+LaTeX Info: Redefining \nameref on input line 33.
 
 (./thesis.out) (./thesis.out)
-\@outlinefile=\write3
-\openout3 = `thesis.out'.
+\@outlinefile=\write6
+\openout6 = `thesis.out'.
 
 
 *geometry* driver: auto-detecting
@@ -1196,17 +1280,17 @@ Dictionary: translator-basic-dictionary, Language: English
 (/usr/local/texlive/2015/texmf-dist/tex/latex/siunitx/siunitx-abbreviations.cfg
 File: siunitx-abbreviations.cfg 2015/01/21 v2.6e siunitx: Abbreviated units
 )
-\c__siunitx_mathsf_int=\count195
-LaTeX Font Info:    Try loading font information for U+msa on input line 31.
+\c__siunitx_mathsf_int=\count211
+LaTeX Font Info:    Try loading font information for U+msa on input line 33.
  (/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 31.
+LaTeX Font Info:    Try loading font information for U+msb on input line 33.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-\c__siunitx_mathtt_int=\count196
+\c__siunitx_mathtt_int=\count212
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: pdftex
 * paper: <default>
@@ -1240,13 +1324,13 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 
-<figures/apollonseglet/Apollonseglet/UiO_Segl_cmyk.pdf, id=24, 140.94772pt x 14
+<figures/apollonseglet/Apollonseglet/UiO_Segl_cmyk.pdf, id=28, 140.94772pt x 14
 0.95068pt>
 File: figures/apollonseglet/Apollonseglet/UiO_Segl_cmyk.pdf Graphic file (type 
 pdf)
  <use figures/apollonseglet/Apollonseglet/UiO_Segl_cmyk.pdf>
 Package pdftex.def Info: figures/apollonseglet/Apollonseglet/UiO_Segl_cmyk.pdf 
-used on input line 33.
+used on input line 35.
 (pdftex.def)             Requested size: 142.27217pt x 142.27518pt.
  [1
 
@@ -1268,8 +1352,8 @@ t/UiO_Segl_cmyk.pdf>] [2
 
 
 ] (./thesis.toc)
-\tf@toc=\write4
-\openout4 = `thesis.toc'.
+\tf@toc=\write7
+\openout7 = `thesis.toc'.
 
  [1
 
@@ -1277,7 +1361,7 @@ t/UiO_Segl_cmyk.pdf>] [2
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.50 \tableofcontents
+l.52 \tableofcontents
                       [2
 
 ]
@@ -1290,70 +1374,103 @@ Chapter 1.
 Chapter 2.
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 72.
+(hyperref)                removing `math shift' on input line 76.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\beta' on input line 72.
+(hyperref)                removing `\beta' on input line 76.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 72.
+(hyperref)                removing `math shift' on input line 76.
 
 
 Underfull \vbox (badness 3713) has occurred while \output is active []
 
  [3]
-<figures/unitcell/unitcell.png, id=100, 1003.75pt x 1003.75pt>
+<figures/unitcell/unitcell.png, id=105, 1003.75pt x 1003.75pt>
 File: figures/unitcell/unitcell.png Graphic file (type png)
 
 <use figures/unitcell/unitcell.png>
-Package pdftex.def Info: figures/unitcell/unitcell.png used on input line 77.
+Package pdftex.def Info: figures/unitcell/unitcell.png used on input line 81.
 (pdftex.def)             Requested size: 287.79831pt x 287.80243pt.
  [4 <./figures/unitcell/unitcell.png>]
-<figures/CreatingSystem/hugeCube.png, id=113, 1003.75pt x 1003.75pt>
+(./_minted-thesis/C5C38351E4CA3CFD7C95907511CAAD30D3192C6E61FD04891FB9B4347C8D0
+F2C.pygtex)
+Package hyperref Info: bookmark level for unknown listing defaults to 0 on inpu
+t line 97.
+ [5]
+runsystem(pygmentize -l text -f latex -F tokenmerge -P style=default -P command
+prefix=PYGdefault -o "_minted-thesis/F145A5386C63E954A9509071A6634252A1080C55E1
+9FAF30C88CFB7D4FAEF4D3.pygtex" "../SiO2/setup.lt" )...executed.
+
+
+(./_minted-thesis/F145A5386C63E954A9509071A6634252A1080C55E19FAF30C88CFB7D4FAEF
+4D3.pygtex)
+<figures/CreatingSystem/hugeCube.png, id=125, 1003.75pt x 1003.75pt>
 File: figures/CreatingSystem/hugeCube.png Graphic file (type png)
 
 <use figures/CreatingSystem/hugeCube.png>
 Package pdftex.def Info: figures/CreatingSystem/hugeCube.png used on input line
- 89.
+ 114.
 (pdftex.def)             Requested size: 287.79831pt x 287.80243pt.
- (./thesis.bbl [5 <./figures/CreatingSystem/hugeCube.png>] [6
 
-])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 105.
- [7]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 105.
+<figures/CreatingSystem/drawing.pdf, id=126, 1610.12393pt x 1610.12381pt>
+File: figures/CreatingSystem/drawing.pdf Graphic file (type pdf)
+
+<use figures/CreatingSystem/drawing.pdf>
+Package pdftex.def Info: figures/CreatingSystem/drawing.pdf used on input line 
+123.
+(pdftex.def)             Requested size: 287.79831pt x 287.79517pt.
+
+(./_minted-thesis/044A27F3BE5AC001312AC10931B248E896D988FFF27A641381424A18A43DC
+032.pygtex) [6 <./figures/CreatingSystem/hugeCube.png>] [7 <./figures/CreatingS
+ystem/drawing.pdf>] (./thesis.bbl [8])
+runsystem(rm "_minted-thesis/F812C0E9537A64D30E41F21E996D200A0722DDBC744933A30B
+53E658D8C3B544.pygtex")...executed.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 152.
+ [9
+
+]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 152.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 105.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 105.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 152.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 152.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 49DA1967537A6365477B6248C478C7A2;305.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 105.
+(rerunfilecheck)             Checksum: 66BFF9E3EFA255C05D47629B097A51C8;362.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 152.
  ) 
 Here is how much of TeX's memory you used:
- 19198 strings out of 493089
- 356807 string characters out of 6134842
- 533264 words of memory out of 5000000
- 22398 multiletter control sequences out of 15000+600000
+ 21263 strings out of 493089
+ 397049 string characters out of 6134842
+ 610743 words of memory out of 5000000
+ 24404 multiletter control sequences out of 15000+600000
  20229 words of font info for 79 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 44i,11n,60p,10391b,816s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,11n,60p,10391b,820s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb>
-</usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><
-/usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
-sr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr
-/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/lo
-cal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local
-/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/
-texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/t
-exlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on thesis.pdf (17 pages, 1739573 bytes).
+</usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
+/usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></
+usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></us
+r/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/
+local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/loc
+al/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/
+texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/tex
+live/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
+ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texli
+ve/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texliv
+e/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on thesis.pdf (19 pages, 1784333 bytes).
 PDF statistics:
- 175 PDF objects out of 1000 (max. 8388607)
- 138 compressed objects within 2 object streams
- 29 named destinations out of 1000 (max. 500000)
- 56 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 230 PDF objects out of 1000 (max. 8388607)
+ 179 compressed objects within 2 object streams
+ 36 named destinations out of 1000 (max. 500000)
+ 69 words of extra memory for PDF output out of 10000 (max. 10000000)
 

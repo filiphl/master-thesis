@@ -1,27 +1,6 @@
 # file "beta-cristobalite.lt"
-#
-#
-#    Make a figure of the molecule here. If you can...
-#
-#
 
 beta-cristobalite {
-
-  write_once("In Init") {
-    units		metal
-    boundary	p p p
-    atom_style   atomic
-    pair_style 	 vashishta
-    #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
-  }
-
-  write_once("In Settings") {
-    pair_coeff  * *  SiO2.vashishta Si O
-    pair_modify table 16
-    pair_modify tabinner 0.1
-  }
-
-  #Unit cell of beta-cristobalite
   write("Data Atoms") {
     $atom:Si1    @atom:Si    0.00    0.00    0.00
     $atom:Si2    @atom:Si    0.00    3.56    3.56
@@ -54,6 +33,4 @@ beta-cristobalite {
     @atom:O  15.9994
   }
 
-
-
-} # end of definition of beta-cristobalite molecule type
+} # end definition of beta-cristobalite molecule type

@@ -1,0 +1,37 @@
+# file "spce.lt"
+#
+#    H1     H2
+#      \   /
+#        O
+
+SPCE {
+
+  write_once("In Init") {
+    # -- Default styles (for solo "SPCE" water) --
+    units        real
+    atom_style   atomic
+    # (Hybrid force fields were not necessary but are used for portability.)
+    pair_style   hybrid lj/charmm/coul/long 9.0 10.0 10.0
+    kspace_style pppm 0.0001
+    pair_modify  mix arithmetic
+  }
+
+  write("Data Atoms") {
+    $atom:O  @atom:O -0.8476  0.0000000 0.00000 0.000000
+    $atom:H1 @atom:H  0.4238  0.8164904 0.00000  0.5773590
+    $atom:H2 @atom:H  0.4238  -0.8164904 0.00000 0.5773590
+  }
+
+  write_once("Data Masses") {
+    @atom:O 15.9994
+    @atom:H 1.008
+  }
+
+
+  write_once("In Settings") {
+    pair_coeff   @atom:O @atom:O  lj/charmm/coul/long  0.1553  3.166
+    pair_coeff   @atom:H @atom:H  lj/charmm/coul/long  0.0     2.058
+    group spce type  @atom:O  @atom:H
+  }
+
+} # end of definition of "SPCE" water molecule type

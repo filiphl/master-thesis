@@ -1,0 +1,38 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefaultZsh{} file \PYGdefaultZdq{}beta\PYGdefaultZhy{}cristobalite.lt\PYGdefaultZdq{}
+
+beta\PYGdefaultZhy{}cristobalite \PYGdefaultZob{}
+  write(\PYGdefaultZdq{}Data Atoms\PYGdefaultZdq{}) \PYGdefaultZob{}
+    \PYGdefaultZdl{}atom:Si1    @atom:Si    0.00    0.00    0.00
+    \PYGdefaultZdl{}atom:Si2    @atom:Si    0.00    3.56    3.56
+    \PYGdefaultZdl{}atom:Si3    @atom:Si    1.78    1.78    1.78
+    \PYGdefaultZdl{}atom:Si4    @atom:Si    3.56    0.00    3.56
+    \PYGdefaultZdl{}atom:Si5    @atom:Si    1.78    5.34    5.34
+    \PYGdefaultZdl{}atom:Si6    @atom:Si    5.34    5.34    1.78
+    \PYGdefaultZdl{}atom:Si7    @atom:Si    3.56    3.56    0.00
+    \PYGdefaultZdl{}atom:Si8    @atom:Si    5.34    1.78    5.34
+    \PYGdefaultZdl{}atom:O1     @atom:O     0.89    0.89    0.89
+    \PYGdefaultZdl{}atom:O2     @atom:O     6.23    4.45    2.67
+    \PYGdefaultZdl{}atom:O3     @atom:O     2.67    2.67    0.89
+    \PYGdefaultZdl{}atom:O4     @atom:O     4.45    0.89    4.45
+    \PYGdefaultZdl{}atom:O5     @atom:O     0.89    4.45    4.45
+    \PYGdefaultZdl{}atom:O6     @atom:O     4.45    4.45    0.89
+    \PYGdefaultZdl{}atom:O7     @atom:O     2.67    6.23    4.45
+    \PYGdefaultZdl{}atom:O8     @atom:O     2.67    0.89    2.67
+    \PYGdefaultZdl{}atom:O9     @atom:O     4.45    2.67    6.23
+    \PYGdefaultZdl{}atom:O10    @atom:O     6.23    2.67    4.45
+    \PYGdefaultZdl{}atom:O11    @atom:O     2.67    4.45    6.23
+    \PYGdefaultZdl{}atom:O12    @atom:O     0.89    6.23    6.23
+    \PYGdefaultZdl{}atom:O13    @atom:O     0.89    2.67    2.67
+    \PYGdefaultZdl{}atom:O14    @atom:O     4.45    6.23    2.67
+    \PYGdefaultZdl{}atom:O15    @atom:O     6.23    6.23    0.89
+    \PYGdefaultZdl{}atom:O16    @atom:O     6.23    0.89    6.23
+  \PYGdefaultZcb{}
+
+  write\PYGdefaultZus{}once(\PYGdefaultZdq{}Data Masses\PYGdefaultZdq{}) \PYGdefaultZob{}
+    @atom:Si 28.0855
+    @atom:O  15.9994
+  \PYGdefaultZcb{}
+
+\PYGdefaultZcb{} \PYGdefaultZsh{} end definition of beta\PYGdefaultZhy{}cristobalite molecule type
+\end{Verbatim}
