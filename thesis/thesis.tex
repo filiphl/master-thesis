@@ -67,7 +67,60 @@ LAMMPS stands for \textit{Large-scale Atomic/Molecular Massively Parallel Simula
 Today LAMMPS is an open-source code with extensive and user friendly documentation. This is one of the main reasons that we have chosen to use LAMMPS as opposed to other molecular dynamics software. 
 
 \section{Installation}
+Installing LAMMPS is a fairly simple procedure if only the basic settings are needed.
 
+\subsection{Linux}
+Users with a Unix based OS may download the lammps distribution as a tarball from LAMMPS' download page\footnote{\href{http://lammps.sandia.gov/download.html}{http://lammps.sandia.gov/download.html}} and then unpack it from the command line.
+\begin{lstlisting}
+gunzip filename.tar.gz
+tar xvf filename.tar
+\end{lstlisting}
+The user may then change directory into \texttt{/path/to/lammps/src/}, and execute the following commands in order to list available packages. 
+\begin{lstlisting}
+make package-status
+\end{lstlisting}
+Installing specific packages is accomplished as shown below.
+\begin{lstlisting}
+make yes-molecule yes-manybody yes-python yes-rigid 
+\end{lstlisting}
+The above example installs the packages \textit{molecule, manybody, python and rigid}.
+Next, the user can build LAMMPS using either of the lines below. Assuming the user has MPI installed line 2 makes the resulting executable compatible with parallelization in MPI.
+\begin{lstlisting}
+make serial
+make mpi
+\end{lstlisting}
+At this point there should be an executable in the \texttt{/path/to/lammps/src/} directory named \texttt{lmp\_serial} or \texttt{lmp\_mpi}, depending on the previous choice. These are now ready to run.
+To use it one has to point to this file from the command line at every run. It may be practical to set up a symlink as follows shown below.
+
+\begin{lstlisting}
+sudo ln -s /path/to/lammps/src/lmp_mpi /usr/local/bin/lmp_mpi
+\end{lstlisting}
+The executable is now available as \texttt{lmp\_serial} or \texttt{lmp\_mpi} from anywhere.
+
+\subsection{Mac OS X with Homebrew}
+Mac users can follow the procedure described above, however they may also install even easier using \textit{Homebrew}\footnote{\href{http://brew.sh/}{http://brew.sh/}}. 
+\begin{lstlisting}
+brew tap homebrew/science
+brew install lammps              # serial version
+brew install lammps --with-mpi   # mpi support 
+\end{lstlisting}
+Where the user obviously should choose either line 2 or line 3, depending on if the user wants MPI comparability.
+This will install an executable named "lammps", a python module named "lammps", and resources with standard packages. 
+This is basically it. Lammps is now ready to run, however, not all packages are installed.
+
+The location of the resources and available packages can be found using the following command.
+\begin{lstlisting}
+brew info lammps 
+\end{lstlisting}
+Specific packages are available as options, and may be installed with the following command.
+
+\begin{lstlisting}
+brew install lammps --enable-manybody 
+\end{lstlisting}
+In the example shown we installed the package manybody.
+
+
+\subsection{Windows}
 
 
 
