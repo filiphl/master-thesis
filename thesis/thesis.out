@@ -1,6 +1,8 @@
 \BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
-\BOOKMARK [0][-]{chapter.2}{Setting up the system}{}% 2
-\BOOKMARK [1][-]{section.2.1}{Silica}{chapter.2}% 3
-\BOOKMARK [2][-]{subsection.2.1.1}{Unit cell of -cristobalite}{section.2.1}% 4
-\BOOKMARK [1][-]{section.2.2}{Building a crystal}{chapter.2}% 5
-\BOOKMARK [1][-]{section.2.3}{Shaping the silica}{chapter.2}% 6
+\BOOKMARK [0][-]{chapter.2}{LAMMPS}{}% 2
+\BOOKMARK [1][-]{section.2.1}{Installation}{chapter.2}% 3
+\BOOKMARK [0][-]{chapter.3}{Setting up the system}{}% 4
+\BOOKMARK [1][-]{section.3.1}{Silica}{chapter.3}% 5
+\BOOKMARK [2][-]{subsection.3.1.1}{Unit cell of -cristobalite}{section.3.1}% 6
+\BOOKMARK [1][-]{section.3.2}{Building a crystal}{chapter.3}% 7
+\BOOKMARK [1][-]{section.3.3}{Shaping the silica}{chapter.3}% 8

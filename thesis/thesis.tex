@@ -1,6 +1,6 @@
 \documentclass[twoside,english]{uiofysmaster}
 
-\usepackage[utf8]{inputenc} % Riktig tegnsett
+%\usepackage[utf8]{inputenc} % Riktig tegnsett
 \usepackage{babel} 
 \usepackage{url}
 \usepackage{units}
@@ -12,11 +12,11 @@
 \usepackage{hyperref}
 \usepackage{braket} 
 \usepackage{multicol}
-\usepackage{listings}  
+%\usepackage{listings}  
 \usepackage{amsfonts}
-\usepackage{siunitx}
+%\usepackage{siunitx}
 \usepackage{float}
-\usepackage{minted}
+\usepackage{HASstyle}
 % Custom commands
 \newcommand\lr[1]{\left(#1\right)} 
 
@@ -58,6 +58,22 @@ What do we hope to accomplish?\\
 How will this be of any contribution to anything?\\
 How is the thesis laid out?
 
+
+
+\chapter{LAMMPS}
+
+LAMMPS stands for \textit{Large-scale Atomic/Molecular Massively Parallel Simulator}. It is a classical molecular dynamics simulation code designed to run efficiently on parallel computers. It's development began in the mid 1990s at Sandia National Laboratories, with funding from the U.S. Department of Energy. It was a cooperative project between two DOE labs and three private companies. The development is still ongoing and contributions are revised thoroughly. 
+
+Today LAMMPS is an open-source code with extensive and user friendly documentation. This is one of the main reasons that we have chosen to use LAMMPS as opposed to other molecular dynamics software. 
+
+\section{Installation}
+
+
+
+
+ 
+
+
 \chapter{Setting up the system}
 
 We wish to construct a system consisting of {\color{red} two} elements made out of silica: a slab and a sphere cap. In order to do this we need to generate the spacial position coordinates (x,y,z) of every single atom. Considering that we are making a system consisting of about $10^5$ atoms, this is obviously not done manually. We have chosen to use a tool named \textit{Moltemplate}\footnote{\href{http://www.moltemplate.org/index.html}{http://www.moltemplate.org/index.html}}, which is included in the LAMMPS distribution.
@@ -91,17 +107,15 @@ Moltemplate has its own structure and syntax. The first step to build up a large
 
 For a more profound understanding of the structure and syntax of these files, the reader is advised to read the moltemplate manual  
 
-
-
-\lstinputlisting[language=LammpsData]{../SiO2/beta-cristobalite.lt}
+\begin{center}
+\begin{minipage}{\linewidth}
+	\lstinputlisting[caption={Typical moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units.}, label=lst:beta-cristobalite.lt,
+	language=LammpsData]{../SiO2/beta-cristobalite.lt}
+\end{minipage}
+\end{center}
 
 We use the unit cell as building blocks, placing them concurrently until we have a crystal of the desired size. For our purpose, we generate a large cube of $15\times15\times15$ unit cells. This is done as follows.
 
-\begin{listing}[H]
-	\inputminted[linenos, xleftmargin=6mm, bgcolor=LightBlue, fontsize=\footnotesize]{text}{../SiO2/setup.lt}
-	\caption{Typical moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units. }
-	\label{lst:beta-cristobalite.lt}
-\end{listing}
 
 
 \begin{figure}
@@ -121,11 +135,8 @@ We use the unit cell as building blocks, placing them concurrently until we have
 \end{figure}
 
 The huge cube of silica can be carved however we like by defining regions from which we delete the containing atoms. In LAMMPS this is done by using the \texttt{region}, \texttt{union}, \texttt{intersect} and \texttt{delete atoms} commands. Our implementation is stated in Listing \ref{lst:sculpting}, which is very simple due to the way we are going to treat the boundary conditions. 
-\begin{listing}
-	\inputminted[linenos, xleftmargin=6mm, bgcolor=LightBlue, fontsize=\footnotesize]{bash}{../SiO2/system.prepare.latex}
-	\caption{Defining regions to keep or delete from a system of dimensions $106.8\times106.8\times106.8$ Å.}
-	\label{lst:sculpting}
-\end{listing}
+
+\lstinputlisting[caption={Defining regions to keep or delete from a system of dimensions $106.8\times106.8\times106.8$ Å.}, label={lst:sculpting}]{../SiO2/system.prepare.latex}
 
 
 
