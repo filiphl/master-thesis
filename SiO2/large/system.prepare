@@ -1,0 +1,33 @@
+#region ID style args keyword arg ...
+
+
+
+#Define the region of the sphere
+#sphere args = x y z radius
+region sphereRegion sphere 160.2 160.2 178.0 106.8
+group  sphereGroup region sphereRegion
+
+#Define the region of the slab
+#Group the atoms in the slab
+#block args = xlo xhi ylo yhi zlo zhi
+region slabRegion block 0 INF 0 INF 0 53.4
+group  slabGroup region slabRegion
+
+#Define the region that is outside the sphere and slab
+#union args = N reg-ID1 reg-ID2 ...
+region bothRegion union 2 sphereRegion slabRegion side out
+
+#Delete all atoms exterior to the sphere and slab
+#delete_atoms style args keyword value ...
+delete_atoms region bothRegion
+
+#Set up reflecting walls at top and bottom face in z-direction
+#fix ID group-ID wall/reflect face arg ... keyword value ...
+#fix zWallsID all wall/reflect zlo EDGE zhi EDGE
+
+
+#Freeze the "bottom" of the slab
+region RbottomAtomsID block 0.0 INF 0.0 INF 0.0 3.0
+group bottomAtomsID region RbottomAtomsID
+fix freezeID bottomAtomsID setforce 0 0 0
+velocity bottomAtomsID set 0 0 0

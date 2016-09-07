@@ -1,0 +1,35 @@
+# Script to measure normal forces on the surface of the slab?
+include "system.in.init"
+read_restart ${filename}
+include "system.in.settings"
+
+variable N equal 20000
+variable T equal 500
+variable compressionLength equal 0
+
+
+# -----------Freeze the "bottom" of the slab ----------------
+fix freezeID bottomAtomsID setforce 0 0 0
+velocity bottomAtomsID set 0 0 0
+
+
+#restart 1000 hold*.restart
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+#dump myDump all atom 50 dumps/holding_half_*.dump
+
+#Move the top z-boundary downwards
+#fix deform all deform 1 z delta 0 -${compressionLength} remap x
+
+
+fix nvt all nvt temp ${T} ${T} 1.0
+
+compute chunkID all chunk/atom bin/2d x 0 1.78 y 0 1.78
+compute stressID all stress/atom NULL
+fix fixChunkID all ave/chunk 1 1 10 chunkID c_stressID[3] file positionsInChunk.xyz
+
+run ${N}
