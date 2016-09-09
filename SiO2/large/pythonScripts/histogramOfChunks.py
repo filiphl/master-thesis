@@ -1,22 +1,46 @@
 # plot a histogram of number of particles
 
+from matplotlib import rc
 from matplotlib import pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
-from sys import argv
+import time
+import sys
+import re
 
-group = 1
-if len(argv) > 1:
-    group = float(argv[1])
 
-infile = open("positionsInChunk.xyz", "r")
+
+if len(sys.argv) > 1:
+    filepath = str(sys.argv[1])
+
+infile   = open( filepath, "r")
+content  = infile.read()
+print "Measuring file size...\n"
+nSamples = len(re.findall("\s1\s", content))
+infile.close()
+infile   = open( filepath, "r")
+
 for i in xrange(3):
-    print infile.readline()
+    infile.readline()
+
 timestep, nChunks, nParticles = infile.readline().split()
-
-snChunks = int(np.sqrt(float(nChunks)))/group
-
+snChunks = int(np.sqrt(float(nChunks)))
 matrix = np.zeros([snChunks, snChunks])
+
+
+
+toolbar_width = 100
+ts = nSamples/100
+
+sys.stdout.write("Reading data...")
+
+
+# setup toolbar
+sys.stdout.write("|%s|" % (" " * toolbar_width))
+sys.stdout.flush()
+sys.stdout.write("\b" * (toolbar_width+1)) # return to start of line, after '['
+
+
 
 
 
@@ -29,25 +53,37 @@ for line in infile:
             col = line.split()
             if binWidth == 0:
                 binWidth = float(col[1])*2
-            x = int(float(col[1])/(binWidth*group))
-            y = int(float(col[2])/(binWidth*group))
+            x = int(float(col[1])/binWidth)
+            y = int(float(col[2])/binWidth)
             matrix[x,y] = float(col[4])
         except:
             first = False
             c+=1
+            if not c%ts:
+                sys.stdout.write(u"\u25A1")
+                sys.stdout.flush()
             continue
     else:
         try:
             col = line.split()
-            x = int(float(col[1])/(binWidth*group))
-            y = int(float(col[2])/(binWidth*group))
+            x = int(float(col[1])/binWidth)
+            y = int(float(col[2])/binWidth)
             matrix[x,y] += float(col[4])
         except:
             c+=1
+            if not c%ts:
+                sys.stdout.write(u"\u2588")
+                sys.stdout.flush()
             continue
+
+sys.stdout.write("\n")
 
 print "Number of samples: ", c
 print "Bin width: ", binWidth
+print "Size of matrix: %dx%d"%(snChunks, snChunks)
+
+
+
 infile.close()
 matrix/=c
 #matrix /= sum(sum(matrix))
@@ -61,4 +97,42 @@ def fmt(x, pos):
 plt.imshow(matrix, interpolation='none', cmap="hot_r", )
 cb = plt.colorbar(format=ticker.FuncFormatter(fmt))
 cb.ax.invert_yaxis()
+plt.show()
+
+
+
+#---------------------------- radial distribution of forces ------------------
+N = 31
+bins   = np.linspace(1,N, N)
+values = np.zeros(N)
+counts = np.zeros(N)
+xc = 22.5
+yc = 22.5
+
+for i in xrange(np.shape(matrix)[0]):
+    for j in xrange(np.shape(matrix)[1]):
+        r = np.sqrt((i-xc)**2+(j-yc)**2)
+        for k in xrange(len(bins)):
+            if r <= bins[k]:
+                values[k] += matrix[i,j]
+                counts[k] += 1
+                break
+
+
+for i in xrange(len(counts)):
+    if counts[i] != 0:
+        values[i]/=counts[i]
+
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+## for Palatino and other serif fonts use:
+#rc('font',**{'family':'serif','serif':['Palatino']})
+rc('text', usetex=True)
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
+
+plt.plot(bins,values, "-*", color="#8080ff", linewidth=2)
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+plt.grid("on")
+plt.xlabel(r"Radial distance [\AA]")
+plt.ylabel(r"Stress in z-direction [eV/\AA]")
 plt.show()

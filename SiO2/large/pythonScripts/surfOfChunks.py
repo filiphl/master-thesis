@@ -20,7 +20,7 @@ group = 1
 if len(argv) > 1:
     group = float(argv[1])
 
-infile = open("positionsInChunk.xyz", "r")
+infile = open("forcesInChunk.txt", "r")
 for i in xrange(3):
     print infile.readline()
 timestep, nChunks, nParticles = infile.readline().split()
@@ -85,7 +85,10 @@ fig = plt.figure()
 ax = fig.gca(projection='3d')
 surf = ax.plot_surface(X, Y, matrix, rstride=1, cstride=1, cmap="hot_r",
                        linewidth=0, antialiased=False)
-
+#ax.set_axis_bgcolor('#cccccc')
+ax.w_xaxis.set_pane_color((0.8, 0.8, 0.8, 1.0))
+ax.w_yaxis.set_pane_color((0.8, 0.8, 0.8, 1.0))
+ax.w_zaxis.set_pane_color((0.8, 0.8, 0.8, 1.0))
 #ax.set_zlim(-1.01, 1.01)
 
 #ax.zaxis.set_major_locator(LinearLocator(10))
