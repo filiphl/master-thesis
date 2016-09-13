@@ -2,7 +2,7 @@ include "system.in.init"
 
 read_restart ${filename}
 
-variable N equal 3000
+variable N equal 1
 variable T equal 293
 variable compressionLength equal 10
 
@@ -12,14 +12,14 @@ include "system.in.settings"
 fix freezeID bottomAtomsID setforce 0 0 0
 velocity bottomAtomsID set 0 0 0
 
-restart 1000 restartFiles/lowering*.restart
+restart 1000 restartFiles/initial*.restart
 neighbor	0.3 bin
 neigh_modify	delay 10
 
 thermo		100
 timestep	0.002
 
-dump myDump all atom 500 dumpFiles/lowering*.dump
+dump myDump all atom 500 dumpFiles/initial*.dump
 dump surfaseDump surfaceGroup atom 500 dumpFiles/surface*.dump
 fix deform all deform 1 z delta 0 -${compressionLength} remap x
 

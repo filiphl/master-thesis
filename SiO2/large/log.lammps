@@ -8,11 +8,12 @@ include "system.in.init"
 
 read_restart ${filename}
 read_restart restartFiles/initial20000.restart
+WARNING: Restart file used different # of processors (../read_restart.cpp:717)
   orthogonal box = (0 0 0) to (322.47 322.47 139.15)
-  2 by 4 by 1 MPI processor grid
+  1 by 1 by 1 MPI processor grid
   537410 atoms
 
-variable N equal 3000
+variable N equal 1
 variable T equal 293
 variable compressionLength equal 10
 
@@ -26,14 +27,14 @@ Reading potential file SiO2.vashishta with DATE: 2015-10-14
 fix freezeID bottomAtomsID setforce 0 0 0
 velocity bottomAtomsID set 0 0 0
 
-restart 1000 restartFiles/lowering*.restart
+restart 1000 restartFiles/initial*.restart
 neighbor	0.3 bin
 neigh_modify	delay 10
 
 thermo		100
 timestep	0.002
 
-dump myDump all atom 500 dumpFiles/lowering*.dump
+dump myDump all atom 500 dumpFiles/initial*.dump
 dump surfaseDump surfaceGroup atom 500 dumpFiles/surface*.dump
 fix deform all deform 1 z delta 0 -${compressionLength} remap x
 fix deform all deform 1 z delta 0 -10 remap x
@@ -43,7 +44,7 @@ fix nvt all nvt temp 293 ${T} 1.0
 fix nvt all nvt temp 293 293 1.0
 Resetting global state of Fix nvt Style nvt from restart file info
 run ${N}
-run 3000
+run 1
 Neighbor list info ...
   1 neighbor list requests
   update every 1 steps, delay 10 steps, check yes
@@ -51,65 +52,36 @@ Neighbor list info ...
   master list distance cutoff = 5.8
   ghost atom cutoff = 5.8
   binsize = 2.9 -> bins = 112 112 48
-Memory usage per processor = 23.5693 Mbytes
+Memory usage per processor = 148.707 Mbytes
 Step Temp E_pair E_mol TotEng Press Volume 
    20000    300.34221   -1804070.7            0   -1783207.2    16824.365     14469777 
-   20100    299.71386   -1803746.6            0   -1782926.8    16956.977     14435115 
-   20200    298.72685     -1803432            0   -1782680.8    16991.598     14400453 
-   20300    298.20503   -1803185.3            0   -1782470.3    16964.463     14365790 
-   20400    296.64895   -1802892.9            0     -1782286    17004.093     14331128 
-   20500    295.73675   -1802661.5            0     -1782118    17006.904     14296466 
-   20600    293.98306   -1802376.3            0   -1781954.6    17131.261     14261803 
-   20700    292.00118   -1802068.7            0   -1781784.7    17190.568     14227141 
-   20800    291.21566   -1801829.6            0   -1781600.2    17466.297     14192479 
-   20900    290.21897   -1801553.1            0   -1781392.9    17733.971     14157817 
-   21000    289.21826   -1801248.1            0   -1781157.4    18093.312     14123154 
-   21100    289.02253   -1800966.7            0   -1780889.6    18433.842     14088492 
-   21200    288.87984   -1800655.1            0   -1780587.9    18857.338     14053830 
-   21300    289.03744   -1800329.4            0   -1780251.2     19314.77     14019167 
-   21400     288.9484   -1799951.6            0   -1779879.6    19806.282     13984505 
-   21500    289.24073   -1799567.3            0     -1779475    20148.984     13949843 
-   21600    289.92365   -1799178.9            0   -1779039.2    20580.641     13915180 
-   21700    291.01521   -1798791.6            0     -1778576    20934.701     13880518 
-   21800    291.61603   -1798350.2            0   -1778092.9    21278.403     13845856 
-   21900     292.7817     -1797935            0   -1777596.8    21526.533     13811194 
-   22000    293.68175   -1797495.5            0   -1777094.8    21790.719     13776531 
-   22100     294.1058   -1797022.6            0   -1776592.4     21941.64     13741869 
-   22200    295.18699   -1796601.7            0   -1776096.4    22020.706     13707207 
-   22300    295.12275   -1796111.7            0   -1775610.9    22123.965     13672544 
-   22400    295.13536   -1795638.9            0   -1775137.1     22259.56     13637882 
-   22500    295.06643   -1795172.5            0   -1774675.6    22390.968     13603220 
-   22600    294.53523   -1794682.5            0   -1774222.4     22556.77     13568557 
-   22700    294.40007   -1794226.4            0   -1773775.7     22824.05     13533895 
-   22800    293.81026     -1793740            0   -1773330.3    23168.695     13499233 
-   22900    293.45881   -1793268.7            0   -1772883.5    23446.015     13464571 
-   23000    293.69012   -1792833.5            0   -1772432.2    23872.616     13429908 
-Loop time of 929.652 on 8 procs for 3000 steps with 537410 atoms
+   20001     300.3531   -1804071.7            0   -1783207.5    18113.677     13429908 
+Loop time of 2.96538 on 1 procs for 1 steps with 537410 atoms
 
-Performance: 0.558 ns/day, 43.039 hours/ns, 3.227 timesteps/s
-83.4% CPU use with 8 MPI tasks x no OpenMP threads
+Performance: 0.058 ns/day, 411.859 hours/ns, 0.337 timesteps/s
+71.5% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 450.27     | 605.72     | 762.78     | 605.8 | 65.16
-Neigh   | 48.462     | 68.199     | 87.871     | 231.3 |  7.34
-Comm    | 21.79      | 203.99     | 384.49     |1214.9 | 21.94
-Output  | 1.0206     | 1.0459     | 1.0711     |   2.0 |  0.11
-Modify  | 40.21      | 45.578     | 51.608     |  78.1 |  4.90
-Other   |            | 5.109      |            |       |  0.55
+Pair    | 2.8824     | 2.8824     | 2.8824     |   0.0 | 97.20
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.004838   | 0.004838   | 0.004838   |   0.0 |  0.16
+Output  | 0.0038109  | 0.0038109  | 0.0038109  |   0.0 |  0.13
+Modify  | 0.072458   | 0.072458   | 0.072458   |   0.0 |  2.44
+Other   |            | 0.001866   |            |       |  0.06
 
-Nlocal:    67176.2 ave 85563 max 49010 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Nghost:    24734.2 ave 29523 max 20263 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
+Nlocal:    537410 ave 537410 max 537410 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    88183 ave 88183 max 88183 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
 Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  3.82932e+06 ave 5.06196e+06 max 2.62994e+06 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:  3.00692e+07 ave 3.00692e+07 max 3.00692e+07 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 30634584
-Ave neighs/atom = 57.0041
-Neighbor list builds = 300
-Dangerous builds = 297
-Total wall time: 0:15:30
+Total # of neighbors = 30069160
+Ave neighs/atom = 55.952
+Neighbor list builds = 0
+Dangerous builds = 0
+Total wall time: 0:00:09

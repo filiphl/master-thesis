@@ -1,0 +1,15 @@
+# file "beta-cristobalite.lt"
+
+beta-cristobalite {
+  write("Data Atoms") {
+    $atom:Si1    @atom:Si    -1.00    0.00    0.00
+    $atom:O1     @atom:O     1.00    0.00    0.00
+
+  }
+
+  write_once("Data Masses") {
+    @atom:Si 28.0855
+    @atom:O  15.9994
+  }
+
+} # end definition of beta-cristobalite molecule type
