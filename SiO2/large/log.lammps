@@ -1,87 +1,105 @@
 LAMMPS (27 Aug 2016-ICMS)
+# Script to measure normal forces on the surface of the slab?
 include "system.in.init"
   units         metal
   boundary      p p p
   atom_style    atomic
   pair_style    vashishta
   #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
-
 read_restart ${filename}
-read_restart restartFiles/initial20000.restart
-WARNING: Restart file used different # of processors (../read_restart.cpp:717)
-  orthogonal box = (0 0 0) to (322.47 322.47 139.15)
-  1 by 1 by 1 MPI processor grid
+read_restart restartFiles/hold26000.restart
+  orthogonal box = (0 0 0) to (322.47 322.47 129.15)
+  2 by 4 by 1 MPI processor grid
   537410 atoms
-
-variable N equal 1
-variable T equal 293
-variable compressionLength equal 10
-
 include "system.in.settings"
   pair_coeff  * *  SiO2.vashishta Si O
 Reading potential file SiO2.vashishta with DATE: 2015-10-14
   pair_modify table 16
   pair_modify tabinner 0.1
 
-#Freeze the "bottom" of the slab
+# -----------Freeze the "bottom" of the slab ----------------
 fix freezeID bottomAtomsID setforce 0 0 0
 velocity bottomAtomsID set 0 0 0
 
-restart 1000 restartFiles/initial*.restart
+
+variable N equal 2000
+variable T equal 293
+
 neighbor	0.3 bin
 neigh_modify	delay 10
 
 thermo		100
 timestep	0.002
 
-dump myDump all atom 500 dumpFiles/initial*.dump
-dump surfaseDump surfaceGroup atom 500 dumpFiles/surface*.dump
-fix deform all deform 1 z delta 0 -${compressionLength} remap x
-fix deform all deform 1 z delta 0 -10 remap x
-
 fix nvt all nvt temp ${T} ${T} 1.0
 fix nvt all nvt temp 293 ${T} 1.0
 fix nvt all nvt temp 293 293 1.0
 Resetting global state of Fix nvt Style nvt from restart file info
+
+compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+compute stressID all stress/atom NULL
+fix fixChunkID all ave/chunk 100 20 2000 chunkID c_stressID[3] file stress.txt
+#compute computeID slabGroup group/group/atom sphereGroup pair yes
+#fix fixComputeID slabGroup ave/chunk 100 20 2000 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt ave running
+
 run ${N}
-run 1
+run 2000
 Neighbor list info ...
   1 neighbor list requests
   update every 1 steps, delay 10 steps, check yes
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 5.8
   ghost atom cutoff = 5.8
-  binsize = 2.9 -> bins = 112 112 48
-Memory usage per processor = 148.707 Mbytes
-Step Temp E_pair E_mol TotEng Press Volume 
-   20000    300.34221   -1804070.7            0   -1783207.2    16824.365     14469777 
-   20001     300.3531   -1804071.7            0   -1783207.5    18113.677     13429908 
-Loop time of 2.96538 on 1 procs for 1 steps with 537410 atoms
+  binsize = 2.9 -> bins = 112 112 45
+Memory usage per processor = 20.8952 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+   26000    294.33448     -1793260            0   -1772813.9    24471.142 
+   26100    295.36286   -1793296.2            0   -1772778.7    24582.553 
+   26200    295.09147   -1793254.9            0   -1772756.2    24639.052 
+   26300    295.80338   -1793297.4            0   -1772749.3    24664.255 
+   26400    295.65594   -1793294.8            0   -1772756.9      24681.3 
+   26500    295.37097   -1793297.6            0   -1772779.4    24533.403 
+   26600     295.1355   -1793317.6            0   -1772815.9    24303.262 
+   26700    294.82166   -1793343.6            0   -1772863.7    24257.233 
+   26800    293.69468   -1793321.2            0   -1772919.5    24157.498 
+   26900    293.03962   -1793337.1            0   -1772980.9    23979.545 
+   27000    293.12315   -1793406.8            0   -1773044.8    23777.337 
+   27100    292.17328   -1793402.7            0   -1773106.7    23725.338 
+   27200    291.91531   -1793442.7            0   -1773164.6    23722.729 
+   27300    292.08487   -1793507.6            0   -1773217.8    23826.289 
+   27400    291.74309   -1793529.2            0   -1773263.1    23868.955 
+   27500    291.66715     -1793562            0   -1773301.2    23959.752 
+   27600    291.84533   -1793604.8            0   -1773331.6    24055.004 
+   27700    292.43544   -1793668.9            0   -1773354.7    24140.253 
+   27800    292.10364   -1793661.4            0   -1773370.3    24201.785 
+   27900    291.68764   -1793641.8            0   -1773379.6    24313.552 
+   28000    291.93891   -1793661.8            0   -1773382.1    24393.355 
+Loop time of 821.305 on 8 procs for 2000 steps with 537410 atoms
 
-Performance: 0.058 ns/day, 411.859 hours/ns, 0.337 timesteps/s
-71.5% CPU use with 1 MPI tasks x no OpenMP threads
+Performance: 0.421 ns/day, 57.035 hours/ns, 2.435 timesteps/s
+74.2% CPU use with 8 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 2.8824     | 2.8824     | 2.8824     |   0.0 | 97.20
-Neigh   | 0          | 0          | 0          |   0.0 |  0.00
-Comm    | 0.004838   | 0.004838   | 0.004838   |   0.0 |  0.16
-Output  | 0.0038109  | 0.0038109  | 0.0038109  |   0.0 |  0.13
-Modify  | 0.072458   | 0.072458   | 0.072458   |   0.0 |  2.44
-Other   |            | 0.001866   |            |       |  0.06
+Pair    | 377.9      | 521.51     | 666.65     | 608.8 | 63.50
+Neigh   | 47.024     | 66.004     | 85.407     | 227.4 |  8.04
+Comm    | 27.883     | 196.77     | 362.7      |1145.1 | 23.96
+Output  | 0.085989   | 0.13694    | 0.19715    |  12.6 |  0.02
+Modify  | 30.138     | 33.591     | 37.675     |  53.6 |  4.09
+Other   |            | 3.296      |            |       |  0.40
 
-Nlocal:    537410 ave 537410 max 537410 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:    88183 ave 88183 max 88183 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
+Nlocal:    67176.2 ave 85641 max 48976 min
+Histogram: 4 0 0 0 0 0 0 0 0 4
+Nghost:    24771.8 ave 29721 max 20236 min
+Histogram: 4 0 0 0 0 0 0 0 1 3
 Neighs:    0 ave 0 max 0 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
-FullNghs:  3.00692e+07 ave 3.00692e+07 max 3.00692e+07 min
-Histogram: 1 0 0 0 0 0 0 0 0 0
+Histogram: 8 0 0 0 0 0 0 0 0 0
+FullNghs:  3.85036e+06 ave 5.09842e+06 max 2.64469e+06 min
+Histogram: 4 0 0 0 0 0 0 0 0 4
 
-Total # of neighbors = 30069160
-Ave neighs/atom = 55.952
-Neighbor list builds = 0
-Dangerous builds = 0
-Total wall time: 0:00:09
+Total # of neighbors = 30802880
+Ave neighs/atom = 57.3173
+Neighbor list builds = 200
+Dangerous builds = 200
+Total wall time: 0:13:43

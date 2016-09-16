@@ -44,8 +44,9 @@ group OGroup  type 2
 #compute chunkID all chunk/atom bin/1d x -10 10
 
 compute chunkID all chunk/atom bin/1d y 0 4
+#compute computeID SiGroup group/group/atom OGroup pair yes
 compute computeID SiGroup group/group/atom OGroup pair yes
-fix fixChunkID all ave/chunk 1 1 10 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt
+fix fixChunkID all ave/chunk 1 1 10 chunkID c_computeID[1] c_computeID[2] c_computeID[3] c_computeID[4] file forcesSi.txt
 #dump dumpID all custom 10 forces.txt id type c_computeID[*]
 
 run ${N}
@@ -57,24 +58,24 @@ Neighbor list info ...
   master list distance cutoff = 5.8
   ghost atom cutoff = 5.8
   binsize = 2.9 -> bins = 7 7 7
-Memory usage per processor = 7.49033 Mbytes
+Memory usage per processor = 7.49038 Mbytes
 Step Temp E_pair E_mol TotEng Press 
        0            0    -2.509984            0    -2.509984   -421.73775 
      100    8073.4826   -3.8500753            0   -2.8064958    817.91794 
-Loop time of 0.0145788 on 1 procs for 100 steps with 2 atoms
+Loop time of 0.0146251 on 1 procs for 100 steps with 2 atoms
 
-Performance: 1185.281 ns/day, 0.020 hours/ns, 6859.266 timesteps/s
-24.9% CPU use with 1 MPI tasks x no OpenMP threads
+Performance: 1181.533 ns/day, 0.020 hours/ns, 6837.573 timesteps/s
+24.5% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 0.00010943 | 0.00010943 | 0.00010943 |   0.0 |  0.75
-Neigh   | 5.3883e-05 | 5.3883e-05 | 5.3883e-05 |   0.0 |  0.37
-Comm    | 7.3433e-05 | 7.3433e-05 | 7.3433e-05 |   0.0 |  0.50
-Output  | 0.013298   | 0.013298   | 0.013298   |   0.0 | 91.21
-Modify  | 0.00088811 | 0.00088811 | 0.00088811 |   0.0 |  6.09
-Other   |            | 0.0001564  |            |       |  1.07
+Pair    | 9.4652e-05 | 9.4652e-05 | 9.4652e-05 |   0.0 |  0.65
+Neigh   | 5.5075e-05 | 5.5075e-05 | 5.5075e-05 |   0.0 |  0.38
+Comm    | 8.297e-05  | 8.297e-05  | 8.297e-05  |   0.0 |  0.57
+Output  | 0.013329   | 0.013329   | 0.013329   |   0.0 | 91.14
+Modify  | 0.0009129  | 0.0009129  | 0.0009129  |   0.0 |  6.24
+Other   |            | 0.0001507  |            |       |  1.03
 
 Nlocal:    2 ave 2 max 2 min
 Histogram: 1 0 0 0 0 0 0 0 0 0

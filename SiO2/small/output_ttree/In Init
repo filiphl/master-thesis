@@ -1,5 +1,0 @@
-  units         metal
-  boundary      p p p
-  atom_style    atomic
-  pair_style    vashishta
-  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!

@@ -24,13 +24,13 @@ for i in xrange(3):
     infile.readline()
 
 timestep, nChunks, nParticles = infile.readline().split()
-snChunks = int(np.sqrt(float(nChunks)))
+snChunks = int(np.sqrt(float(nChunks))) -1
 matrix = np.zeros([snChunks, snChunks])
 
 
 
 toolbar_width = 100
-ts = nSamples/100
+ts = nSamples/100.
 
 sys.stdout.write("Reading data...")
 
@@ -44,7 +44,7 @@ sys.stdout.write("\b" * (toolbar_width+1)) # return to start of line, after '['
 
 
 
-c = 0
+c = 1
 binWidth = 0
 first = True
 for line in infile:
@@ -58,7 +58,6 @@ for line in infile:
             matrix[x,y] = float(col[4])
         except:
             first = False
-            c+=1
             if not c%ts:
                 sys.stdout.write(u"\u25A1")
                 sys.stdout.flush()
@@ -93,11 +92,10 @@ def fmt(x, pos):
     b = int(b)
     return r'${} \times 10^{{{}}}$'.format(a, b)
 
-
+fig = plt.figure()
 plt.imshow(matrix, interpolation='none', cmap="hot_r", )
 cb = plt.colorbar(format=ticker.FuncFormatter(fmt))
 cb.ax.invert_yaxis()
-plt.show()
 
 
 
@@ -106,8 +104,8 @@ N = 31
 bins   = np.linspace(1,N, N)
 values = np.zeros(N)
 counts = np.zeros(N)
-xc = 22.5
-yc = 22.5
+xc = snChunks/2.
+yc = snChunks/2.
 
 for i in xrange(np.shape(matrix)[0]):
     for j in xrange(np.shape(matrix)[1]):
@@ -130,9 +128,11 @@ rc('text', usetex=True)
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 
+plt.figure()
 plt.plot(bins,values, "-*", color="#8080ff", linewidth=2)
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 plt.grid("on")
 plt.xlabel(r"Radial distance [\AA]")
 plt.ylabel(r"Stress in z-direction [eV/\AA]")
+
 plt.show()
