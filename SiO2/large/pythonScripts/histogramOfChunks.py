@@ -24,18 +24,13 @@ for i in xrange(3):
     infile.readline()
 
 timestep, nChunks, nParticles = infile.readline().split()
-snChunks = int(np.sqrt(float(nChunks))) -1
+snChunks = int(np.sqrt(float(nChunks)))-1
 matrix = np.zeros([snChunks, snChunks])
 
 
 
 toolbar_width = 100
-<<<<<<< HEAD
-ts = nSamples/100 + 1
-=======
-ts = nSamples/100.
->>>>>>> a7eaec87a21c68b04bad6a73a811f5ea0adc0756
-
+ts = int(nSamples/100.)+1
 sys.stdout.write("Reading data...")
 
 
