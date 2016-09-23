@@ -26,8 +26,9 @@ group OGroup  type 2
 #compute chunkID all chunk/atom bin/1d x -10 10
 
 compute chunkID all chunk/atom bin/1d y 0 4
+#compute computeID SiGroup group/group/atom OGroup pair yes
 compute computeID SiGroup group/group/atom OGroup pair yes
-fix fixChunkID all ave/chunk 1 1 10 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt
+fix fixChunkID all ave/chunk 1 1 10 chunkID c_computeID[1] c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt
 #dump dumpID all custom 10 forces.txt id type c_computeID[*]
 
 run ${N}

@@ -30,7 +30,7 @@ matrix = np.zeros([snChunks, snChunks])
 
 
 toolbar_width = 100
-ts = nSamples/100
+ts = nSamples/100 + 1
 
 sys.stdout.write("Reading data...")
 
