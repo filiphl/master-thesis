@@ -2,8 +2,10 @@ import re
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.ticker as ticker
+import sys
 
-infile = open('forces.txt', 'r')
+filepath = str(sys.argv[1])
+infile = open(filepath, 'r')
 
 for i in xrange(3):
     infile.readline()

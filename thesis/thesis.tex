@@ -59,6 +59,9 @@ How will this be of any contribution to anything?\\
 How is the thesis laid out?
 
 
+\chapter{Molecular dynamics}
+...
+Molecular dynamics simulations are computationally expensive. And often scientists must balance statistical precision and CPU time. Technological improvements have provided the ability to simulate larger systems and/or at longer time frames. 
 
 \chapter{LAMMPS}
 
@@ -127,8 +130,29 @@ In the example shown we installed the package manybody.
 \section{Running LAMMPS}
 
 
+\section{Parallelization}
+
+\subsection{Cell lists}
+
+\subsection{Neighbor lists}
+
+\subsection{Speedup}
+During this project the author has mainly been using the local supercomputer at the department of physics at the University of Oslo. It provides users with the possibility to run  up to 256 processes at once. Though, before doing so, it is good practice to check the speedup of using several cores. The speedup of a parallel implementation of a code using $p$ processors is seldom trivially $1/p$. This is due to the fact that there is a certain amount of time used in communication, excess computations and {\huge ONE MORE!} 
+The speedup is defined as 
+\begin{equation}
+	S = \frac{T_s}{T_p},
+\end{equation}
+where $T_s$ is the time used when executing the program on a single processor, and $T_p$ the time used when running on $p$ processors simultaneously.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{figures/speedup/15x15}
+\caption{Speedup as a function of number of processors.}
+\label{fig:15x15}
+\end{figure}
 
 
+ 
 \section{Creating a custom compute}
 A \textit{compute} is a LAMMPS command that defines a computation that will be performed on a group of atoms. The \textit{computes} produce instantaneous values, using information about the atoms on the current time step. 
 
@@ -158,11 +182,19 @@ We start out by creating a header file and decide upon a name for our class. We 
 
 \texttt{nmax} is the number of atoms which are subject to a non zero force from atoms of another group at the current time step; it may vary.
 
-\texttt{carray} is a two dimensional array, containing the force on atoms in one group induced by atoms of another group. 
+\texttt{carray} is a two dimensional array containing the force on atoms in one group induced by atoms of another group. Its dimension will necessarily be \texttt{nmax} $\times$ 3.
+
+\texttt{compute\_peratom()} and \texttt{pair\_contribution()} are functions which will be described below the corresponding source file. 
 
 
 
+\lstinputlisting[caption={Source file of compute: \texttt{compute\_group\_group\_atom.cpp}.}, label={groupGroupAtomHeader}, language=c++, firstline=19, lastline=300]{../../LAMMPS/src/compute_group_group_atom.cpp}
 
+In the constructor we set specific flags that LAMMPS uses to interpret what structure our data should have, and how to store them. We set the \texttt{peratom\_flag} to be \texttt{True}, which indicates that we desire to store some date for a set of atoms. \texttt{size\_peratom\_cols} defines the number of data values to store for each atom. Also, we set the \texttt{scalar\_flag} and \texttt{vector\_flag} to \texttt{False}, since we do not wish to return a vector or scalar value.
+
+Following the constructor is the destructor on line 40. Its only task is to free the memory occupied by the array once it is no longer needed.  
+
+\texttt{compute\_peratom()} will resize the array to the number of atoms of concern, \texttt{nmax}. It does this using LAMMPS internal functions, which we will not care to describe here. Finally it calls upon functions{\huge  I ENDED HERE LAST TIME!}
 
 
 
