@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.15)  24 SEP 2016 20:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.8.15)  25 SEP 2016 00:22
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1592,23 +1592,21 @@ LaTeX Font Info:    Try loading font information for T1+cmtt on input line 77.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 ) [5] [6]
-<figures/speedup/15x15.png, id=251, 578.16pt x 433.62pt>
+(../SiO2/small/continue.in [7])
+<figures/speedup/15x15.png, id=272, 578.16pt x 433.62pt>
 File: figures/speedup/15x15.png Graphic file (type png)
 
 <use figures/speedup/15x15.png>
-Package pdftex.def Info: figures/speedup/15x15.png used on input line 149.
+Package pdftex.def Info: figures/speedup/15x15.png used on input line 161.
 (pdftex.def)             Requested size: 287.79831pt x 215.84346pt.
- [7 <./figures/speedup/15x15.png>] [8]
+ [8 <./figures/speedup/15x15.png>]
 (../../LAMMPS/src/compute_group_group_atom.h
 LaTeX Font Info:    Try loading font information for T1+cmss on input line 14.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/t1cmss.fd
 File: t1cmss.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-))
-(../../LAMMPS/src/compute_group_group_atom.cpp [9]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [10]
+) [9])
+(../../LAMMPS/src/compute_group_group_atom.cpp [10]
 LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 75.
 
 
@@ -1621,50 +1619,53 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [12])
-[13] [14
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-]
+ [13]
+[14]
 Chapter 4.
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 217.
+(hyperref)                removing `math shift' on input line 229.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\beta' on input line 217.
+(hyperref)                removing `\beta' on input line 229.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 217.
+(hyperref)                removing `math shift' on input line 229.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/ucs/data/uni-0.def
 File: uni-0.def 2013/05/13 UCS: Unicode data U+0000..U+00FF
 )
 Underfull \vbox (badness 3713) has occurred while \output is active []
 
- [15]
-<figures/unitcell/unitcell.png, id=502, 1003.75pt x 1003.75pt>
+ [15
+
+]
+<figures/unitcell/unitcell.png, id=522, 1003.75pt x 1003.75pt>
 File: figures/unitcell/unitcell.png Graphic file (type png)
 
 <use figures/unitcell/unitcell.png>
-Package pdftex.def Info: figures/unitcell/unitcell.png used on input line 222.
+Package pdftex.def Info: figures/unitcell/unitcell.png used on input line 234.
 (pdftex.def)             Requested size: 287.79831pt x 287.80243pt.
  [16 <./figures/unitcell/unitcell.png>]
 (../SiO2/large/beta-cristobalite.lt) [17]
-<figures/CreatingSystem/hugeCube.png, id=553, 1003.75pt x 1003.75pt>
+<figures/CreatingSystem/hugeCube.png, id=572, 1003.75pt x 1003.75pt>
 File: figures/CreatingSystem/hugeCube.png Graphic file (type png)
 
 <use figures/CreatingSystem/hugeCube.png>
 Package pdftex.def Info: figures/CreatingSystem/hugeCube.png used on input line
- 249.
+ 261.
 (pdftex.def)             Requested size: 287.79831pt x 287.80243pt.
 
-<figures/CreatingSystem/drawing.pdf, id=554, 1610.12393pt x 1610.12381pt>
+<figures/CreatingSystem/drawing.pdf, id=573, 1610.12393pt x 1610.12381pt>
 File: figures/CreatingSystem/drawing.pdf Graphic file (type pdf)
 
 <use figures/CreatingSystem/drawing.pdf>
 Package pdftex.def Info: figures/CreatingSystem/drawing.pdf used on input line 
-258.
+270.
 (pdftex.def)             Requested size: 287.79831pt x 287.79517pt.
  (../SiO2/small/system.prepare.latex)
 [18 <./figures/CreatingSystem/hugeCube.png>] [19 <./figures/CreatingSystem/draw
@@ -1673,7 +1674,7 @@ ing.pdf>] [20
 ]
 Chapter 5.
 
-Overfull \hbox (55.6271pt too wide) in paragraph at lines 285--287
+Overfull \hbox (55.6271pt too wide) in paragraph at lines 297--299
 []\T1/cmr/m/n/12 Line 3 stores the sum of in-di-vid-ual stresses in each chunk 
 to the file \T1/cmtt/m/n/12 forcesInChunks.txt\T1/cmr/m/n/12 .
  []
@@ -1697,29 +1698,29 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (./thesis.bbl [29] [30
 
 ]) [31]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 323.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 323.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 335.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 335.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 323.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 323.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 335.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 335.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: BA31756106C06DE2704894F595D43D09;1697.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 323.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 335.
  ) 
 Here is how much of TeX's memory you used:
- 37452 strings out of 493013
- 752539 string characters out of 6133343
- 983505 words of memory out of 5000000
- 39769 multiletter control sequences out of 15000+600000
+ 37509 strings out of 493013
+ 753209 string characters out of 6133343
+ 983855 words of memory out of 5000000
+ 39805 multiletter control sequences out of 15000+600000
  32545 words of font info for 92 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  69i,12n,74p,10420b,2303s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
-}{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}<
+{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
+{/usr/local/texlive/2016/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<
 /usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
 usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></u
 sr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr
@@ -1747,10 +1748,10 @@ e1/public/cm-super/sfti1200.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1
 /public/cm-super/sftt1000.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/p
 ublic/cm-super/sftt1095.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pub
 lic/cm-super/sftt1200.pfb>
-Output written on thesis.pdf (41 pages, 2132515 bytes).
+Output written on thesis.pdf (41 pages, 2136005 bytes).
 PDF statistics:
- 1093 PDF objects out of 1200 (max. 8388607)
- 997 compressed objects within 10 object streams
- 564 named destinations out of 1000 (max. 500000)
+ 1117 PDF objects out of 1200 (max. 8388607)
+ 1020 compressed objects within 11 object streams
+ 581 named destinations out of 1000 (max. 500000)
  246 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -133,16 +133,28 @@ In the example shown we installed the package manybody.
 \section{Parallelization}
 
 \subsection{Cell lists}
-
+When computing the force acting on an atom, we should in theory include the contribution from all other atoms.
+However, many of the forces are short ranged...
 \subsection{Neighbor lists}
 
 \subsection{Speedup}
-During this project the author has mainly been using the local supercomputer at the department of physics at the University of Oslo. It provides users with the possibility to run  up to 256 processes at once. Though, before doing so, it is good practice to check the speedup of using several cores. The speedup of a parallel implementation of a code using $p$ processors is seldom trivially $1/p$. This is due to the fact that there is a certain amount of time used in communication, excess computations and {\huge ONE MORE!} 
+During this project the author has mainly been using the local supercomputer at the department of physics at the University of Oslo. It provides users with the possibility to run  up to 256 processes at once. Though, before doing so, it is good practice to check the speedup of using several cores. The speedup of a parallel implementation of a code using $p$ processors is seldom trivially $1/p$. This is due to the fact that there is a certain amount of time used on \textit{overhead}. This includes interprocess communications, idling and excess computations.
+
+In molecular dynamics simulations there will communication between processors when building the cell- and neighbor lists, and when computing thermodynamical properties such as energy, pressure, temperature, etc.. 
+
 The speedup is defined as 
 \begin{equation}
 	S = \frac{T_s}{T_p},
 \end{equation}
 where $T_s$ is the time used when executing the program on a single processor, and $T_p$ the time used when running on $p$ processors simultaneously.
+
+In order to compute the speedup we initialized a system containing $15\times15$ unit cells of beta-cristobalite and saved it as a restart file. We then remotely ran the input script shown in Listings \ref{lst:speedup} from the supercomputer using 1, 2, 4, 8, 16, 32 and 64 processors in the same fashion as shown in Listing \ref{speeduprun}.  
+
+\lstinputlisting[caption={LAMMPS input script executed using several numbers of processors, and timed separately.}, label={lst:speedup}]{../SiO2/small/continue.in}
+
+\begin{lstlisting}[caption={Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart.}, label={speeduprun}, language=c++]
+mpirun -n 8 lmp_mpi -in speedup.in -var filename speedup.restart
+\end{lstlisting}
 
 \begin{figure}
 \centering
