@@ -224,7 +224,7 @@ mpirun -n 8 lmp_mpi -in speedup.in -var filename speedup.restart
 \end{figure}
 
 {\large {\color{editColor}COMMENT ON THE RESULT}}
-
+... Though we clearly see the advantage, that when using 64 processors instead of 1 we can finish a job that would have take an hour in two minutes! Also, we can clearly see the initial argument that this is not more efficient when regarding CPU time. 
  
 \section{Creating a custom compute}
 A \textit{compute} is a LAMMPS command that defines a computation that will be performed on a group of atoms. The \textit{computes} produce instantaneous values, using information about the atoms on the current time step. 
