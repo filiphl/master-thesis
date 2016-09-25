@@ -1,0 +1,68 @@
+\begin{tikzpicture}
+
+\definecolor{p0}{HTML}{d7dfc0}
+\definecolor{p1}{HTML}{aecfa2}
+\definecolor{p2}{HTML}{82bc92}
+\definecolor{p3}{HTML}{5fa38e}
+\definecolor{p4}{HTML}{49848b}
+\definecolor{p5}{HTML}{3f5f7f}
+\definecolor{p6}{HTML}{383d65}
+\definecolor{p7}{HTML}{2c1e3e}
+
+\newcommand{\translatepoint}[1]%
+{   \coordinate (mytranslation) at (#1);
+}
+
+
+
+\newcommand{\drawCube}%
+{   
+	\coordinate (O) at (0,0,0);
+	\coordinate (A) at (0,1,0);
+	\coordinate (B) at (0,1,1);
+	\coordinate (C) at (0,0,1);
+	\coordinate (D) at (1,0,0);
+	\coordinate (E) at (1,1,0);
+	\coordinate (F) at (1,1,1);
+	\coordinate (G) at (1,0,1);
+	
+	\draw[p6,fill=\cubeColor, opacity=\myO] (O) -- (C) -- (G) -- (D) -- cycle;% Bottom Face
+	\draw[p6,fill=\cubeColor, opacity=\myO] (O) -- (A) -- (E) -- (D) -- cycle;% Back Face
+	\draw[p6,fill=\cubeColor, opacity=\myO] (O) -- (A) -- (B) -- (C) -- cycle;% Left Face
+	\draw[p6,fill=\cubeColor, opacity=\myO] (D) -- (E) -- (F) -- (G) -- cycle;% Right Face
+	\draw[p6,fill=\cubeColor, opacity=\myO] (C) -- (B) -- (F) -- (G) -- cycle;% Front Face
+	\draw[p6,fill=\cubeColor, opacity=\myO] (A) -- (B) -- (F) -- (E) -- cycle;% Top Face
+}
+
+\newcommand{\cubeColor}{p4}
+\newcommand{\myO}{0.5}
+
+\foreach \x in {0,1,2}{
+	\foreach \y in {0,1,2}{
+		\foreach \z in {0,1,2}{
+			\ifthenelse{\x=0 \OR \y=0 \OR\z=0}
+				{
+					\renewcommand{\cubeColor}{p4}
+					\renewcommand{\myO}{0.8}
+				}
+				{
+					\renewcommand{\cubeColor}{p4}
+					\renewcommand{\myO}{0}
+				}
+			\ifthenelse{\x=1 \AND \y=1 \AND \z=1}
+				{
+					\renewcommand{\cubeColor}{p5}
+					\renewcommand{\myO}{0.9}
+				}
+				{}
+			\translatepoint{\x,\y,\z}
+			\begin{scope}[shift=(mytranslation)]
+			\drawCube
+			\end{scope}
+		}
+	}
+}
+
+
+
+\end{tikzpicture}
