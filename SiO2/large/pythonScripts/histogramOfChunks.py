@@ -12,7 +12,9 @@ import re
 
 if len(sys.argv) > 1:
     filepath = str(sys.argv[1])
-
+else:
+    print 'Please provide a filepath as argument'
+    exit()
 infile   = open( filepath, "r")
 content  = infile.read()
 print "Measuring file size...\n"
@@ -32,7 +34,7 @@ matrix = np.zeros([snChunks, snChunks])
 toolbar_width = 100
 ts = int(nSamples/100.)+1
 sys.stdout.write("Reading data...")
-
+print nSamples, ts
 
 # setup toolbar
 sys.stdout.write("|%s|" % (" " * toolbar_width))
@@ -128,10 +130,16 @@ plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 
 plt.figure()
-plt.plot(bins,values, "-*", color="#8080ff", linewidth=2)
+plt.plot(bins,values,
+"-h",
+color="#478684",
+linewidth=2,
+markersize=7,
+markerfacecolor='#3b617c',
+fillstyle='full')
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 plt.grid("on")
-plt.xlabel(r"Radial distance [\AA]")
-plt.ylabel(r"Stress in z-direction [eV/\AA]")
+plt.xlabel(r"Radial distance [\AA]", fontsize=18)
+plt.ylabel(r"Stress in z-direction [eV/\AA]", fontsize=18)
 
 plt.show()
