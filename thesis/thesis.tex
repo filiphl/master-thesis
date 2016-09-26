@@ -233,21 +233,22 @@ In LAMMPS there are more than 100 computes already, and chances are they have wh
 
 In order to compute the normal forces acting on the sphere, we have written a custom compute class. The purpose of the class was to save the forces acting on atoms in one group from atoms of another group. In this section we will try do give brief instructions on how this was done.
 
-[MAYBE A FIGURE HERE]
+{\color{editColor}[MAYBE AN ILLUSTRATIVE FIGURE HERE]}
 
 \subsection{Find a similar compute}
 Obviously, before writing any code we should know what we want the compute to calculate and how this should be done. 
 Before starting off with a blank sheet in the editor, one should definitely search for similar computes in LAMMPS. This can potentially save hours of hard work!
 
-For instance there is a compute named \textit{group/group}\footnote{\href{http://lammps.sandia.gov/doc/compute_group_group.html}{http://lammps.sandia.gov/doc/compute\_group\_group.html}} which computes the total energy and force interaction between two groups of atoms. This is almost what we want, but we also need to know how many atoms contribute to this total force, and it should also work with the Vashishta potential. {\color{red} ++}
+For instance there is a compute named \textit{group/group}\footnote{\href{http://lammps.sandia.gov/doc/compute_group_group.html}{http://lammps.sandia.gov/doc/compute\_group\_group.html}} which computes the total energy and force interaction between two groups of atoms. 
+This is almost what we want, but we need to know the total force acting on all atoms from atoms of other groups. {\color{editColor}It should also work with the Vashishta potential.}
 
-Thus there are minor modifications needed, and we chose to make our compute a subclass of this one.
+Thus, there are minor modifications needed and because of the similarities we chose to make our compute a subclass of this one.
 
 
 \subsection{Creating the class}
-All computes in LAMMPS are subclasses of the class named  \textit{compute}. From this superclass they inherit a bunch of variables, functions and flags, which the user may decide to set. Functions are of course declared in the \texttt{.h}-file, while variables and flags are set in the constructor. The source code of the \textit{group/group} compute is shown in Appendix \ref{groupgrouph}. Since we will be making a subclass of it, we change the \textit{private} property to \textit{protected} so that we have access to all the variables and functions.
+All computes in LAMMPS are subclasses of the class named  \textit{compute}. From this superclass they inherit a bunch of variables, functions and flags, which the user may decide to set. Functions are of course declared in the header file, while variables and flags are set in the source file. The source code of the \textit{group/group} compute is shown in Appendix \ref{groupgrouph}. Since we will be making a subclass of it, we change the \textit{private} property to \textit{protected} so that we have access to all the variables and functions.
 
-We start out by creating a header file and decide upon a name for our class. We have chosen the name \textit{group/group/atom} since it is basically a per-atom version of already existing compute \textit{group/group}. A complete header file is shown in Listing \ref{groupGroupAtomHeader}, and explained in detail below.
+We start out by creating a header file and decide upon a name for our class. We have chosen the name \textit{group/group/atom} since it is basically a per-atom version of the already existing compute \textit{group/group}. A complete header file is shown in Listing \ref{groupGroupAtomHeader} and explained in detail below.
 
 \lstinputlisting[caption={Header file of our new compute: \texttt{compute\_group\_group\_atom.h}.}, label={groupGroupAtomHeader}, language=c++, firstline=14, lastline=40]{../../LAMMPS/src/compute_group_group_atom.h}
 

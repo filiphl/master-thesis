@@ -3,17 +3,12 @@ include "system.in.init"
 read_restart ${filename}
 include "system.in.settings"
 
-
-variable N equal 5000
-variable T equal 293
-variable compressionLength equal 0
-
 # -----------Freeze the "bottom" of the slab ----------------
 fix freezeID bottomAtomsID setforce 0 0 0
 velocity bottomAtomsID set 0 0 0
 
 
-variable N equal 20
+variable N equal 100
 variable T equal 293
 
 neighbor	0.3 bin
@@ -22,20 +17,14 @@ neigh_modify	delay 10
 thermo		100
 timestep	0.002
 
-dump myDump all atom 1 dumpFiles/hold*.dump
-
-#Move the top z-boundary downwards
-#fix deform all deform 1 z delta 0 -${compressionLength} remap x
-
-fix nvt all nvt temp ${T} ${T} 1.0
-
-
 fix nvt all nvt temp ${T} ${T} 1.0
 
 compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
-compute stressID all stress/atom NULL
-fix fixChunkID all ave/chunk 100 20 2000 chunkID c_stressID[3] file stress.txt
-#compute computeID slabGroup group/group/atom sphereGroup pair yes
-#fix fixComputeID slabGroup ave/chunk 1 1 20 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt ave running
+
+#compute stressID all stress/atom NULL
+#fix fixChunkID all ave/chunk 100 20 2000 chunkID c_stressID[3] file stress.txt
+
+compute computeID slabGroup group/group/atom sphereGroup pair yes
+fix fixComputeID slabGroup ave/chunk 10 10 100 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt ave running
 
 run ${N}

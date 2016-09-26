@@ -46,7 +46,7 @@ for x in xrange(snChunks):
     for y in xrange(snChunks):
         if count[x,y] > 0:
             matrix[x,y] /= count[x,y]*steps
-            absoluteForces[x,y] = matrix[x,y,2]
+            absoluteForces[x,y] = matrix[x,y,0]
             #absoluteForces[x,y] = sum(matrix[x,y])
         else:
             matrix[x,y] = [0,0,0]
