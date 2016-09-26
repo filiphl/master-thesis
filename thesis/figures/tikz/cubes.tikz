@@ -1,13 +1,13 @@
 \begin{tikzpicture}
 
-\definecolor{p0}{HTML}{d7dfc0}
-\definecolor{p1}{HTML}{aecfa2}
-\definecolor{p2}{HTML}{82bc92}
-\definecolor{p3}{HTML}{5fa38e}
-\definecolor{p4}{HTML}{49848b}
-\definecolor{p5}{HTML}{3f5f7f}
-\definecolor{p6}{HTML}{383d65}
-\definecolor{p7}{HTML}{2c1e3e}
+%\definecolor{p0}{HTML}{D7DFC0}
+%\definecolor{p1}{HTML}{AECFA2}
+%\definecolor{p2}{HTML}{82BC92}
+%\definecolor{p3}{HTML}{5FA38E}
+%\definecolor{p4}{HTML}{49848B}
+%\definecolor{p5}{HTML}{3F5F7F}
+%\definecolor{p6}{HTML}{383D65}
+%\definecolor{p7}{HTML}{2C1E3E}
 
 \newcommand{\translatepoint}[1]%
 {   \coordinate (mytranslation) at (#1);
