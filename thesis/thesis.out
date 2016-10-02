@@ -10,17 +10,18 @@
 \BOOKMARK [2][-]{subsection.3.3.1}{Cut-off}{section.3.3}% 10
 \BOOKMARK [2][-]{subsection.3.3.2}{Cell lists and neighbor lists}{section.3.3}% 11
 \BOOKMARK [2][-]{subsection.3.3.3}{Parallelization}{section.3.3}% 12
-\BOOKMARK [1][-]{section.3.4}{Creating a custom compute}{chapter.3}% 13
-\BOOKMARK [2][-]{subsection.3.4.1}{Find a similar compute}{section.3.4}% 14
-\BOOKMARK [2][-]{subsection.3.4.2}{Creating the class}{section.3.4}% 15
-\BOOKMARK [0][-]{chapter.4}{Setting up the system}{}% 16
-\BOOKMARK [1][-]{section.4.1}{Silica}{chapter.4}% 17
-\BOOKMARK [2][-]{subsection.4.1.1}{Unit cell of -cristobalite}{section.4.1}% 18
-\BOOKMARK [1][-]{section.4.2}{Building a crystal}{chapter.4}% 19
-\BOOKMARK [1][-]{section.4.3}{Shaping the silica}{chapter.4}% 20
-\BOOKMARK [0][-]{chapter.5}{This must be sorted in designated chapters}{}% 21
-\BOOKMARK [1][-]{section.5.1}{Radial distribution of normal force}{chapter.5}% 22
-\BOOKMARK [0][-]{appendix.A}{Source code}{}% 23
-\BOOKMARK [1][-]{section.A.1}{compute\137group\137group.h}{appendix.A}% 24
-\BOOKMARK [1][-]{section.A.2}{compute\137group\137group\137atom.h}{appendix.A}% 25
-\BOOKMARK [1][-]{section.A.3}{compute\137group\137group\137atom.cpp}{appendix.A}% 26
+\BOOKMARK [0][-]{chapter.4}{Setting up the system}{}% 13
+\BOOKMARK [1][-]{section.4.1}{Silica}{chapter.4}% 14
+\BOOKMARK [2][-]{subsection.4.1.1}{Unit cell of -cristobalite}{section.4.1}% 15
+\BOOKMARK [1][-]{section.4.2}{Building a crystal}{chapter.4}% 16
+\BOOKMARK [1][-]{section.4.3}{Shaping the silica}{chapter.4}% 17
+\BOOKMARK [0][-]{chapter.5}{This must be sorted in designated chapters}{}% 18
+\BOOKMARK [1][-]{section.5.1}{Radial distribution of normal force}{chapter.5}% 19
+\BOOKMARK [0][-]{chapter.6}{Computing the normal force distribution}{}% 20
+\BOOKMARK [1][-]{section.6.1}{Creating a custom compute}{chapter.6}% 21
+\BOOKMARK [2][-]{subsection.6.1.1}{Find a similar compute}{section.6.1}% 22
+\BOOKMARK [2][-]{subsection.6.1.2}{Creating the class}{section.6.1}% 23
+\BOOKMARK [0][-]{appendix.A}{Source code}{}% 24
+\BOOKMARK [1][-]{section.A.1}{compute\137group\137group.h}{appendix.A}% 25
+\BOOKMARK [1][-]{section.A.2}{compute\137group\137group\137atom.h}{appendix.A}% 26
+\BOOKMARK [1][-]{section.A.3}{compute\137group\137group\137atom.cpp}{appendix.A}% 27

@@ -11,17 +11,18 @@
 \contentsline {subsection}{\numberline {3.3.1}Cut-off}{7}{subsection.3.3.1}
 \contentsline {subsection}{\numberline {3.3.2}Cell lists and neighbor lists}{7}{subsection.3.3.2}
 \contentsline {subsection}{\numberline {3.3.3}Parallelization}{8}{subsection.3.3.3}
-\contentsline {section}{\numberline {3.4}Creating a custom compute}{10}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Find a similar compute}{10}{subsection.3.4.1}
-\contentsline {subsection}{\numberline {3.4.2}Creating the class}{10}{subsection.3.4.2}
-\contentsline {chapter}{\numberline {4}Setting up the system}{17}{chapter.4}
-\contentsline {section}{\numberline {4.1}Silica}{17}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Unit cell of $\beta $-cristobalite}{18}{subsection.4.1.1}
-\contentsline {section}{\numberline {4.2}Building a crystal}{18}{section.4.2}
-\contentsline {section}{\numberline {4.3}Shaping the silica}{20}{section.4.3}
-\contentsline {chapter}{\numberline {5}This must be sorted in designated chapters}{23}{chapter.5}
-\contentsline {section}{\numberline {5.1}Radial distribution of normal force}{23}{section.5.1}
-\contentsline {chapter}{\numberline {A}Source code}{25}{appendix.A}
-\contentsline {section}{\numberline {A.1}compute\_group\_group.h}{26}{section.A.1}
-\contentsline {section}{\numberline {A.2}compute\_group\_group\_atom.h}{27}{section.A.2}
-\contentsline {section}{\numberline {A.3}compute\_group\_group\_atom.cpp}{28}{section.A.3}
+\contentsline {chapter}{\numberline {4}Setting up the system}{11}{chapter.4}
+\contentsline {section}{\numberline {4.1}Silica}{11}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Unit cell of $\beta $-cristobalite}{12}{subsection.4.1.1}
+\contentsline {section}{\numberline {4.2}Building a crystal}{12}{section.4.2}
+\contentsline {section}{\numberline {4.3}Shaping the silica}{14}{section.4.3}
+\contentsline {chapter}{\numberline {5}This must be sorted in designated chapters}{17}{chapter.5}
+\contentsline {section}{\numberline {5.1}Radial distribution of normal force}{17}{section.5.1}
+\contentsline {chapter}{\numberline {6}Computing the normal force distribution}{19}{chapter.6}
+\contentsline {section}{\numberline {6.1}Creating a custom compute}{19}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Find a similar compute}{20}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}Creating the class}{20}{subsection.6.1.2}
+\contentsline {chapter}{\numberline {A}Source code}{27}{appendix.A}
+\contentsline {section}{\numberline {A.1}compute\_group\_group.h}{28}{section.A.1}
+\contentsline {section}{\numberline {A.2}compute\_group\_group\_atom.h}{29}{section.A.2}
+\contentsline {section}{\numberline {A.3}compute\_group\_group\_atom.cpp}{30}{section.A.3}

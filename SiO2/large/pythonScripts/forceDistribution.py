@@ -21,11 +21,11 @@ nChunks = int(content[0].split()[1])
 snChunks = int(np.sqrt(nChunks))
 
 
-absoluteForces = np.zeros([snChunks, snChunks])
-matrix = np.zeros([snChunks, snChunks, 3])
+NormalForces = np.zeros([snChunks, snChunks])
+Force = np.zeros([snChunks, snChunks, 3])
 count  = np.zeros([snChunks,snChunks])
 
-binWidth = 7.13
+binWidth = 7.12
 steps = 1
 for line in content:
     col = line.split()
@@ -35,7 +35,7 @@ for line in content:
         fx = float(col[4])
         fy = float(col[5])
         fz = float(col[6])
-        matrix[x,y] += [fx,fy,fz]
+        Force[x,y] += [fx,fy,fz]
         count [x,y] += 1
     else:
         steps += 1
@@ -45,11 +45,11 @@ ts = snChunks/100
 for x in xrange(snChunks):
     for y in xrange(snChunks):
         if count[x,y] > 0:
-            matrix[x,y] /= count[x,y]*steps
-            absoluteForces[x,y] = matrix[x,y,0]
-            #absoluteForces[x,y] = sum(matrix[x,y])
+            Force[x,y] /= count[x,y]*steps
+            NormalForces[x,y] = np.linalg.norm(Force[x,y]) * np.cos( getAngle(Force[x,y], normalVector[x,y]) )
+            #absoluteForces[x,y] = sum(Force[x,y])
         else:
-            matrix[x,y] = [0,0,0]
+            Force[x,y] = [0,0,0]
 
 #absoluteForces = np.sqrt(absoluteForces)
 
