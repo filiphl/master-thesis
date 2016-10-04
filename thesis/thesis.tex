@@ -381,11 +381,63 @@ Following the constructor is the destructor on line 40. Its only task is to free
 
 \texttt{compute\_peratom()} will resize the array to the number of atoms of concern, \texttt{nmax}. It does this using LAMMPS internal functions, which we will not care to describe here. Finally it calls upon functions{\huge  I ENDED HERE LAST TIME!}
 
+\newpage
+\section{Least squares regression}
+The method of least squares aims to find parameters which  minimize the sum of the squared residuals, where residuals are the difference between observed values and the approximated value. We will use this method to approximate the slope of the surface of the substrate. This will be done by partitioning the system in a grid and do a plane approximation on each cell of the grid. In other words, we seek the coefficients in the plane equation
+\begin{equation}
+	z = ax + by + c
+	\label{planeEquation}
+\end{equation}
+that minimizes the sum of the squared residuals
+\begin{equation}
+	S = \sum_{i=1}^{n} r_i^2 = \sum_{i=1}^{n} \lr{z_i - f(x_i, y_i, \vec{\beta)}}^2,
+	\label{leastSquaresPlane}
+\end{equation}
+where $f(x_i,y_i,\vec{\beta})$ is the right hand side of the plane equation and $\vec{\beta}$ is the set of coefficients.
+The minima has the property that the differential with respect to any coefficient is zero. 
+\begin{equation}
+	\frac{\partial S}{\partial \beta_j} 
+	=  \sum_{i=1}^{n}\frac{\partial r_i^2}{\partial \beta_j} 
+	=  \sum_{i=1}^{n}\frac{\partial r_i^2}{\partial r_i} \frac{\partial r_i}{\partial \beta_j} 
+	= -2 \sum_{i=1}^{n}r_i\frac{\partial f(x_i,y_i, \vec{\beta})}{\partial \beta_j}
+	= 0 , ~\forall ~\beta_j \in \vec{\beta}
+\end{equation}
+When approximating a plane we have three coefficients to account for: $a$, $b$ and $c$. This leaves us with the following set of equations:
 
+\begin{align}
+	&-2 \sum_{i=1}^{n} \lr{z_i - ax_i - by_i- c} \frac{\partial}{\partial a} \lr{ax_i + by_i + c} = 0 \\
+	&-2 \sum_{i=1}^{n} \lr{z_i - ax_i - by_i- c} \frac{\partial}{\partial b} \lr{ax_i + by_i + c} = 0 \\
+	&-2 \sum_{i=1}^{n} \lr{z_i - ax_i - by_i- c} \frac{\partial}{\partial c} \lr{ax_i + by_i + c} = 0,
+\end{align}
+ which corresponds to
+ \begin{align}
+ \hspace{25mm}&\sum_{i=1}^{n} z_ix_i& &=& &a\sum_{i=1}^{n} x_i^2& &+& &b\sum_{i=1}^{n} x_iy_i& &+& &c\sum_{i=1}^{n} x_i \hspace{15mm}\\
+ &\sum_{i=1}^{n} z_iy_i& &=& &a\sum_{i=1}^{n} x_iy_i& &+& &b\sum_{i=1}^{n} y_i^2& &+& &c\sum_{i=1}^{n} y_i \\
+ &\sum_{i=1}^{n} z_i& &=& &a\sum_{i=1}^{n} x_i& &+& &b\sum_{i=1}^{n} y_i& &+& &nc . 
+ \end{align}
+This can be expressed as a matrix equation.
 
-
-
-
+\begin{equation}
+\left[ \begin{array}{llc}
+\displaystyle \sum x_i^2  &\displaystyle \sum x_iy_i &\displaystyle \sum x_i \\[1em]
+\displaystyle \sum x_iy_i &\displaystyle \sum y_i^2  &\displaystyle \sum y_i \\[1em]
+\displaystyle \sum x _i   &\displaystyle \sum y_i    &\displaystyle n
+\end{array} \right]
+\left[ \begin{array}{c}
+\vspace{1mm}a\\[1em]
+\vspace{1mm}b\\[1em]
+\vspace{0.5mm}c
+\end{array} \right]
+=
+\left[ \begin{array}{l}
+\displaystyle \sum x_iz_i \\[1em] 
+\displaystyle \sum y_iz_i \\[1em]
+\displaystyle \sum z_i
+\end{array} \right]
+\label{linearSystemPlane}
+\end{equation}
+\\*
+Solving this linear system retrieves the optimal coefficients in the sense of the least squares method. The normal vector of the plane will be $\vec{n}=[1,a,b]$. This vector will be used to compute the size of the normal force.
 
 
 

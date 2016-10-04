@@ -4,6 +4,50 @@ from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 import sys
+from os import listdir
+
+
+
+
+def loadAll(N, path):
+    grid = []
+    for i in xrange(N):
+        grid.append([])
+        for j in xrange(N):
+            grid[i].append([])
+
+    directory = listdir(path)
+    for files in directory:
+        infile = open(path+files, 'r')
+
+        for i in xrange(9): # dump file
+            infile.readline()
+
+
+        p = np.zeros([4050, 3])
+        i=0
+        for line in infile:
+            col = line.split()
+            p[i,0] = float(col[2])
+            p[i,1] = float(col[3])
+            p[i,2] = float(col[4])
+            i+=1
+
+        x = np.linspace(0, 1, N+1)
+        y = np.linspace(0, 1, N+1)
+
+        for i in xrange(np.shape(p)[0]):
+            for j in xrange(len(x)-1, -1, -1):
+                if p[i,0] > x[j]:
+                    for k in xrange(len(y)-1, -1, -1):
+                        if p[i,1] > y[k]:
+                            grid[j][k].append(p[i])
+                            break
+                    break
+    return grid
+
+
+
 
 
 
@@ -70,47 +114,15 @@ def plotCell(i,j, parameter):
     plt.hold("on")
 
 # ---------------------------------------------------------------------------- #
-
-filepath = str(sys.argv[1])
-infile = open(filepath, 'r')
-
-for i in xrange(9):
-    infile.readline()
-
-
-p = np.zeros([4050, 3])
-i=0
-for line in infile:
-    col = line.split()
-    p[i,0] = float(col[2])
-    p[i,1] = float(col[3])
-    p[i,2] = float(col[4])
-    i+=1
-
-N = 10
-grid = []
-for i in xrange(N):
-    grid.append([])
-    for j in xrange(N):
-        grid[i].append([])
-
-x = np.linspace(0, 1, N+1)
-y = np.linspace(0, 1, N+1)
-
-for i in xrange(np.shape(p)[0]):
-    for j in xrange(len(x)-1, -1, -1):
-        if p[i,0] > x[j]:
-            for k in xrange(len(y)-1, -1, -1):
-                if p[i,1] > y[k]:
-                    grid[j][k].append(int(i))
-                    break
-            break
+N = 23
+path = str(sys.argv[1])
+grid = loadAll(N,path)
+print grid
 
 for i in xrange(N):
     for j in xrange(N):
         print len(grid[i][j])
-        points = [p[k] for k in grid[i][j]]
-        grid[i][j] = leastSquarePlane(points)
+        grid[i][j] = leastSquarePlane(grid[i][j])
 
 grid = np.asarray(grid)
 
@@ -123,6 +135,7 @@ for i in xrange(N):
 
 plt.xlabel('x')
 plt.ylabel('y')
+ax.set_zlim(0, 10)
 plt.show()
 
 

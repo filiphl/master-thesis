@@ -21,7 +21,8 @@
 \BOOKMARK [1][-]{section.6.1}{Creating a custom compute}{chapter.6}% 21
 \BOOKMARK [2][-]{subsection.6.1.1}{Find a similar compute}{section.6.1}% 22
 \BOOKMARK [2][-]{subsection.6.1.2}{Creating the class}{section.6.1}% 23
-\BOOKMARK [0][-]{appendix.A}{Source code}{}% 24
-\BOOKMARK [1][-]{section.A.1}{compute\137group\137group.h}{appendix.A}% 25
-\BOOKMARK [1][-]{section.A.2}{compute\137group\137group\137atom.h}{appendix.A}% 26
-\BOOKMARK [1][-]{section.A.3}{compute\137group\137group\137atom.cpp}{appendix.A}% 27
+\BOOKMARK [1][-]{section.6.2}{Least squares regression}{chapter.6}% 24
+\BOOKMARK [0][-]{appendix.A}{Source code}{}% 25
+\BOOKMARK [1][-]{section.A.1}{compute\137group\137group.h}{appendix.A}% 26
+\BOOKMARK [1][-]{section.A.2}{compute\137group\137group\137atom.h}{appendix.A}% 27
+\BOOKMARK [1][-]{section.A.3}{compute\137group\137group\137atom.cpp}{appendix.A}% 28
