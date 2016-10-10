@@ -1,93 +1,169 @@
 LAMMPS (27 Aug 2016-ICMS)
+include "system.in"
+
+
+# ----------------- Init Section -----------------
+
 include "system.in.init"
   units         metal
   boundary      p p p
   atom_style    atomic
   pair_style    vashishta
   #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+
+
+# ----------------- Atom Definition Section -----------------
+
 read_data "system.data"
-  orthogonal box = (-10 -10 -10) to (10 10 10)
+  orthogonal box = (0 0 0) to (106.8 106.8 106.8)
   1 by 1 by 1 MPI processor grid
   reading atoms ...
-  2 atoms
+  81000 atoms
+
+# ----------------- Settings Section -----------------
+
 include "system.in.settings"
   pair_coeff  * *  SiO2.vashishta Si O
 Reading potential file SiO2.vashishta with DATE: 2015-10-14
   pair_modify table 16
   pair_modify tabinner 0.1
 
-variable N equal 100
-variable T equal 500
-#variable compressionLength equal 10
 
+# ----------------- Run Section -----------------
+# The lines above define the system you want to simulate.
+# What you do next is up to you.
+# Typically a user would minimize and equilibrate
+# the system using commands similar to the following:
+#  ----   examples   ----
+#
+#  -- minimize --
+# minimize 1.0e-5 1.0e-7 1000 10000
+# (Note: Some fixes, for example "shake", interfere with the minimize command,
+#        You can use the "unfix" command to disable them before minimization.)
+#  -- declare time step for normal MD --
+# timestep 1.0
+#  -- run at constant pressure (Nose-Hoover)--
+# fix   fxnpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 1000.0 drag 1.0
+#  -- ALTERNATELY, run at constant volume (Nose-Hoover) --
+# fix   fxnvt all nvt temp 300.0 300.0 500.0 tchain 1
+#  -- ALTERNATELY, run at constant volume using Langevin dynamics. --
+#  -- (This is good for sparse CG polymers in implicit solvent.)   --
+# fix fxlan all langevin 300.0 300.0 5000 48279
+#  -- Now, finally run the simulation --
+# run   50000
+#  ---- (end of examples) ----
+
+
+variable N equal 10
+variable T equal 0
+variable compressionLength equal 5
+
+velocity	all create ${T} 277387 mom yes
 velocity	all create 0 277387 mom yes
+include "system.prepare"
+#region ID style args keyword arg ...
 
+
+
+#Define the region of the sphere
+#sphere args = x y z radius
+region sphereRegion sphere 53.4 53.4 226.8 150
+group  sphereGroup region sphereRegion
+17581 atoms in group sphereGroup
+
+#Define the region of the slab
+#Group the atoms in the slab
+#block args = xlo xhi ylo yhi zlo zhi
+region slabRegion block 0 INF 0 INF 0 35.6
+group  slabGroup region slabRegion
+27450 atoms in group slabGroup
+
+#Define the region that is outside the sphere and slab
+#union args = N reg-ID1 reg-ID2 ...
+region bothRegion union 2 sphereRegion slabRegion side out
+
+#Delete all atoms exterior to the sphere and slab
+#delete_atoms style args keyword value ...
+delete_atoms region bothRegion
+Deleted 35969 atoms, new total = 45031
+
+#Set up reflecting walls at top and bottom face in z-direction
+#fix ID group-ID wall/reflect face arg ... keyword value ...
+#fix zWallsID all wall/reflect zlo EDGE zhi EDGE
+
+
+#Freeze the "bottom" of the slab
+region RbottomAtomsID block 0.0 INF 0.0 INF 0.0 3.0
+group bottomAtomsID region RbottomAtomsID
+2700 atoms in group bottomAtomsID
+fix freezeID bottomAtomsID setforce 0 0 0
+velocity bottomAtomsID set 0 0 0
+
+#read_restart squeeze.1000.restart
+#include "system.in.settings"
+
+#restart 1000 restartFiles/squeeze*.restart
 neighbor	0.3 bin
 neigh_modify	delay 10
 
 thermo		100
 timestep	0.002
 
-dump myDump all atom 1 dumps/SiO2_*.dump
+dump myDump all atom 10 dumps/15x15_*.dump
 
-fix nvt all nvt temp ${T} ${T} 1.0
-fix nvt all nvt temp 500 ${T} 1.0
-fix nvt all nvt temp 500 500 1.0
+#Move the top z-boundary downwards
+#fix deform all deform 1 z delta 0 -${compressionLength} remap x
 
-group SiGroup type 1
-1 atoms in group SiGroup
-group OGroup  type 2
-1 atoms in group OGroup
-
-#compute ID group-ID chunk/atom style args keyword values ...
-#compute ID group-ID group/group group2-ID keyword value ...
-#compute chunkID all chunk/atom bin/1d x -10 10
-
-compute chunkID all chunk/atom bin/1d y 0 4
-#compute computeID SiGroup group/group/atom OGroup pair yes
-compute computeID SiGroup group/group/atom OGroup pair yes
-fix fixChunkID all ave/chunk 1 1 10 chunkID c_computeID[1] c_computeID[2] c_computeID[3] c_computeID[4] file forcesSi.txt
-#dump dumpID all custom 10 forces.txt id type c_computeID[*]
-
+fix nvt all nvt temp 1.0 1.0 1.0
 run ${N}
-run 100
+run 10
 Neighbor list info ...
-  2 neighbor list requests
+  1 neighbor list requests
   update every 1 steps, delay 10 steps, check yes
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 5.8
   ghost atom cutoff = 5.8
-  binsize = 2.9 -> bins = 7 7 7
-Memory usage per processor = 7.49038 Mbytes
+  binsize = 2.9 -> bins = 37 37 37
+Memory usage per processor = 20.9067 Mbytes
 Step Temp E_pair E_mol TotEng Press 
-       0            0    -2.509984            0    -2.509984   -421.73775 
-     100    8073.4826   -3.8500753            0   -2.8064958    817.91794 
-Loop time of 0.0146251 on 1 procs for 100 steps with 2 atoms
+       0            0   -143746.01            0   -143746.01    120450.68 
+      10    70.751086   -144163.36            0   -143751.55    118574.22 
+Loop time of 1.09752 on 1 procs for 10 steps with 45031 atoms
 
-Performance: 1181.533 ns/day, 0.020 hours/ns, 6837.573 timesteps/s
-24.5% CPU use with 1 MPI tasks x no OpenMP threads
+Performance: 1.574 ns/day, 15.243 hours/ns, 9.111 timesteps/s
+99.0% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 9.4652e-05 | 9.4652e-05 | 9.4652e-05 |   0.0 |  0.65
-Neigh   | 5.5075e-05 | 5.5075e-05 | 5.5075e-05 |   0.0 |  0.38
-Comm    | 8.297e-05  | 8.297e-05  | 8.297e-05  |   0.0 |  0.57
-Output  | 0.013329   | 0.013329   | 0.013329   |   0.0 | 91.14
-Modify  | 0.0009129  | 0.0009129  | 0.0009129  |   0.0 |  6.24
-Other   |            | 0.0001507  |            |       |  1.03
+Pair    | 0.86452    | 0.86452    | 0.86452    |   0.0 | 78.77
+Neigh   | 0.15547    | 0.15547    | 0.15547    |   0.0 | 14.17
+Comm    | 0.0040393  | 0.0040393  | 0.0040393  |   0.0 |  0.37
+Output  | 0.051666   | 0.051666   | 0.051666   |   0.0 |  4.71
+Modify  | 0.019155   | 0.019155   | 0.019155   |   0.0 |  1.75
+Other   |            | 0.002673   |            |       |  0.24
 
-Nlocal:    2 ave 2 max 2 min
+Nlocal:    45031 ave 45031 max 45031 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:    0 ave 0 max 0 min
+Nghost:    19470 ave 19470 max 19470 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Neighs:    1 ave 1 max 1 min
+Neighs:    0 ave 0 max 0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-FullNghs:  2 ave 2 max 2 min
+FullNghs:  2.59465e+06 ave 2.59465e+06 max 2.59465e+06 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 2
-Ave neighs/atom = 1
-Neighbor list builds = 9
-Dangerous builds = 4
-Total wall time: 0:00:00
+Total # of neighbors = 2594654
+Ave neighs/atom = 57.6193
+Neighbor list builds = 1
+Dangerous builds = 1
+
+#----------------------------------------------------
+
+#dump myDump all atom 500 dumpFiles/SiO2_*.dump
+
+#Move the top z-boundary downwards
+#fix deform all deform 1 z delta 0 -${compressionLength} remap x
+
+#fix nvt all nvt temp ${T} ${T} 1.0
+#run 20000
+Total wall time: 0:00:01

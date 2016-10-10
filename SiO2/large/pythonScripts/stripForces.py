@@ -8,6 +8,9 @@ infile = open('forces.txt', 'r')
 for i in xrange(3):
     infile.readline()
 content = infile.read()
+
+print content
+
 content = content.split('\n')
 for line in xrange(len(content)):
     content[line] = re.sub(r'\s*\d+\s\d*\.?\d*\s\d*\.?\d*\s\d+\s0\s0\s0\s?', r'', content[line])
@@ -43,13 +46,14 @@ ts = snChunks/100
 for x in xrange(snChunks):
     for y in xrange(snChunks):
         if count[x,y] > 0:
-            matrix[x,y] /= count[x,y]*steps
+            matrix[x,y] /= count[x,y]
             absoluteForces[x,y] += matrix[x,y,2]
             #for i in xrange(3):
                 #absoluteForces[x,y] += matrix[x,y,i]**2
         else:
             matrix[x,y] = [0,0,0]
-
+matrix /= steps
+absoluteForces /= steps
 #absoluteForces = np.sqrt(absoluteForces)
 
 def fmt(x, pos):

@@ -84,7 +84,7 @@ def leastSquarePlane(points):
 
 
 def getAngle(v1, v2):
-    'Computes angle between the vector and a line parallel to the normalvector'
+    'Computes angle between a vector and a line parallel to another vector'
     lv1 = np.linalg.norm(v1)
     lv2 = np.linalg.norm(v2)
 

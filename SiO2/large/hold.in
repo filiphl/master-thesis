@@ -25,7 +25,7 @@ compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
 #fix fixChunkID all ave/chunk 100 20 2000 chunkID c_stressID[3] file stress.txt
 
 compute computeID slabGroup group/group/atom sphereGroup pair yes
-fix fixComputeID slabGroup ave/chunk 10 10 100 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt ave running
+fix fixComputeID slabGroup ave/chunk 10 10 100 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces*.txt #ave running
 
 dump myDump surfaceGroup atom 1 dumpFiles/Surface*.dump
 

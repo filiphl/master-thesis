@@ -283,16 +283,47 @@ We use the unit cell as building blocks, placing them concurrently until we have
 
 \section{Shaping the silica}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.7\linewidth]{figures/CreatingSystem/drawing.pdf}
-	\caption{Illustrative drawing of what how the system should look. Red parallel stripes symbolize areas of silica. Red crossing stripes indicate areas of frozen silica. The boundaries are periodic in all dimensions, causing both the slab and the sphere to be connected to the frozen silica through the z-boundaries.}
-	\label{fig:drawing}
-\end{figure}
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{figures/CreatingSystem/drawing.pdf}
+%	\caption{Illustrative drawing of what how the system should look. Red parallel stripes symbolize areas of silica. Red crossing stripes indicate areas of frozen silica. The boundaries are periodic in all dimensions, causing both the slab and the sphere to be connected to the frozen silica through the z-boundaries.}
+%	\label{fig:drawing}
+%\end{figure}
 
-The huge cube of silica can be carved however we like by defining regions from which we delete the containing atoms. In LAMMPS this is done by using the \texttt{region}, \texttt{union}, \texttt{intersect} and \texttt{delete atoms} commands. Our implementation is stated in Listing \ref{lst:sculpting}, which is very simple due to the way we are going to treat the boundary conditions. 
+The huge cube of silica can be carved however we like by defining regions from which we delete the containing atoms. 
+In LAMMPS this is done by using the \texttt{region}, \texttt{union}, \texttt{intersect} and \texttt{delete\_atoms} commands. 
+Our implementation is stated in Listing \ref{lst:sculpting}, which is very simple due to the way we are going to treat the boundary conditions. 
+
+First, we define a spherical region,labeled \texttt{sphereRegion}, described by the xyz-coordinates of the center and the radius. The atoms within this region are assigned to a group labeled \texttt{sphereGroup}. 
+
+Next, we define a cuboid (block) region named \texttt{slabRegion}, described by the position of its faces in x-, y- and z-direction. The atoms within this region are assigned to a group, which we label \texttt{slabGroup}.  
+
+We combine these two regions using  the \texttt{union} command and label the region outside of these regions \texttt{outRegion}.
+Finally, we delete the atoms that are not in the sphere nor the slab; we delete the ones contained by \text{outRegion}.
 
 \lstinputlisting[caption={Defining regions to keep or delete from a system of dimensions $106.8\times106.8\times106.8$ Å.}, label={lst:sculpting}]{../SiO2/small/system.prepare.latex}
+
+For the purpose of deleting atoms, the creation of groups is redundant. However, at a later stage we will utilize them and this is an appropriate place for them to be defined.
+
+The appliance of the script in Listing \ref{lst:sculpting} on the system shown in figure \ref{fig:hugeCube} is shown in figure \ref{fig:carvedxz}, where our perspective is looking along the y-axis.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{figures/CreatingSystem/carved_xz.png}
+\caption{xz-perspective on a system built from $15\times15\times15$ unit cells of b-cristobalite, with certain regions carves out. This is a result from applying Listing \ref{lst:sculpting} to the system shown in figure \ref{fig:hugeCube}. The top shape is a sphere cap, while the bottom is a slab.}
+\label{fig:carvedxz}
+\end{figure}
+
+
+\section{Moving the sphere towards the slab}
+We wish to push the sphere down on the slab in order to create a deformation on the slab. There are probably a lot of smart ways to do this. The author has, however, settled on the following strategy:
+
+We apply periodic boundary conditions in all three dimensions. This will in practice imply that the sphere cap and the slab are connected though the z-boundaries. 
+Secondly, we freeze the atoms at the bottom of the slab, so that their positions are fixed. This will, in combination with the periodic boundaries, allow us to consider the sphere cap and the slab as though they are 
+
+Then, for every $N$ time step we decrease the hight of the system, while remapping the positions of the atoms. 
+The remapping is a very important procedure. It ensures that we do not loose any atoms that elsewise would be lost when moving the z-boundary. A side-effect of the remapping is that the atoms in the system will be somewhat compressed in the z-direction. Though, if we do the compression slowly, this will not be of any concern. 
+
 
 
 
@@ -375,7 +406,10 @@ We start out by creating a header file and decide upon a name for our class. We 
 
 \lstinputlisting[caption={Source file of compute: \texttt{compute\_group\_group\_atom.cpp}.}, label={groupGroupAtomHeader}, language=c++, firstline=19, lastline=300]{../../LAMMPS/src/compute_group_group_atom.cpp}
 
-In the constructor we set specific flags that LAMMPS uses to interpret what structure our data should have, and how to store them. We set the \texttt{peratom\_flag} to be \texttt{True}, which indicates that we desire to store some date for a set of atoms. \texttt{size\_peratom\_cols} defines the number of data values to store for each atom. Also, we set the \texttt{scalar\_flag} and \texttt{vector\_flag} to \texttt{False}, since we do not wish to return a vector or scalar value.
+In the constructor we set specific flags that LAMMPS uses to interpret what structure our data should have, and how to store them. 
+We set the \texttt{peratom\_flag} to be \texttt{True}, which indicates that we desire to store some date for each atom. 
+\texttt{size\_peratom\_cols} defines the number of data values to store for each atom. 
+Also, we set the \texttt{scalar\_flag} and \texttt{vector\_flag} to \texttt{False}, since we do not wish to return a vector or scalar value.
 
 Following the constructor is the destructor on line 40. Its only task is to free the memory occupied by the array once it is no longer needed.  
 
@@ -436,10 +470,29 @@ This can be expressed as a matrix equation.
 \end{array} \right]
 \label{linearSystemPlane}
 \end{equation}
-\\*
-Solving this linear system retrieves the optimal coefficients in the sense of the least squares method. The normal vector of the plane will be $\vec{n}=[1,a,b]$. This vector will be used to compute the size of the normal force.
+where we have emitted the indices to better readability.
+Solving this linear system retrieves the optimal coefficients in the sense of the least squares method. 
+The normal vector of the plane will be $\vec{n}=[1,a,b]$. 
+This vector will be used to compute the size of the normal force. 
+Since we know the average force on an atom in the chunk, and the normal vector from the approximated slope of the surface, we can compute the normal force simply as
 
+\begin{equation}
+	\vec{F_N} 
+	= |\vec{F}|\cos{\theta}\frac{\vec{n}}{|\vec{n}|} .
+\end{equation}
+The cosine of the angle between the two vectors is given as
+\begin{equation}
+	\cos{\theta} = \frac{\vec{F}\cdot\vec{n}}{|\vec{F}| \cdot |\vec{n}|},
+\end{equation} 
+meaning that the normal force may be expressed as
+\begin{equation} 
+%	\vec{F_N} = \frac{\lr{\vec{F}\cdot\vec{n}}}{|\vec{n}|} \frac{\vec{n}}{|\vec{n}|} .\\
+\vec{F_N} = \lr{\vec{F}\cdot\vec{n}} \frac{\vec{n}}{|\vec{n}|^2} .
+\end{equation}
 
+We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in Listing \ref{angleVecLine}.
+
+\lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=86, lastline=94]{../SiO2/large/pythonScripts/surface.py}
 
 
 

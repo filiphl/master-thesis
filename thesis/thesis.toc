@@ -16,6 +16,7 @@
 \contentsline {subsection}{\numberline {4.1.1}Unit cell of $\beta $-cristobalite}{12}{subsection.4.1.1}
 \contentsline {section}{\numberline {4.2}Building a crystal}{12}{section.4.2}
 \contentsline {section}{\numberline {4.3}Shaping the silica}{14}{section.4.3}
+\contentsline {section}{\numberline {4.4}Moving the sphere towards the slab}{16}{section.4.4}
 \contentsline {chapter}{\numberline {5}This must be sorted in designated chapters}{17}{chapter.5}
 \contentsline {section}{\numberline {5.1}Radial distribution of normal force}{17}{section.5.1}
 \contentsline {chapter}{\numberline {6}Computing the normal force distribution}{19}{chapter.6}

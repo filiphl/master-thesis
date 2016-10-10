@@ -14,14 +14,14 @@ write_once("In Settings") {
   pair_modify tabinner 0.1
 }
 
-import "smallTest.lt"
+import "beta-cristobalite.lt"
 
-SiO2 = new beta-cristobalite [1].move(2, 0.00, 0.00)
-                             [1].move(0.00, 2, 0.00)
-                             [1].move(0.00, 0.00, 2)
+SiO2 = new beta-cristobalite [15].move(7.12, 0.00, 0.00)
+                             [15].move(0.00, 7.12, 0.00)
+                             [15].move(0.00, 0.00, 7.12)
 
 write_once("Data Boundary") {
-  -10.0  10.0  xlo  xhi
-  -10.0  10.0  ylo  yhi
-  -10.0  10.0  zlo  zhi
+  0  106.8  xlo  xhi
+  0  106.8  ylo  yhi
+  0  106.8  zlo  zhi
 }
