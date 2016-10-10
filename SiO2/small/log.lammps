@@ -1,10 +1,10 @@
 LAMMPS (27 Aug 2016-ICMS)
-include "system.in"
+include "smallTest.in"
 
 
 # ----------------- Init Section -----------------
 
-include "system.in.init"
+include "smallTest.in.init"
   units         metal
   boundary      p p p
   atom_style    atomic
@@ -14,15 +14,15 @@ include "system.in.init"
 
 # ----------------- Atom Definition Section -----------------
 
-read_data "system.data"
-  orthogonal box = (0 0 0) to (106.8 106.8 106.8)
+read_data "smallTest.data"
+  orthogonal box = (0 0 0) to (12 12 12)
   1 by 1 by 1 MPI processor grid
   reading atoms ...
-  81000 atoms
+  2 atoms
 
 # ----------------- Settings Section -----------------
 
-include "system.in.settings"
+include "smallTest.in.settings"
   pair_coeff  * *  SiO2.vashishta Si O
 Reading potential file SiO2.vashishta with DATE: 2015-10-14
   pair_modify table 16
@@ -30,6 +30,7 @@ Reading potential file SiO2.vashishta with DATE: 2015-10-14
 
 
 # ----------------- Run Section -----------------
+
 # The lines above define the system you want to simulate.
 # What you do next is up to you.
 # Typically a user would minimize and equilibrate
@@ -48,122 +49,125 @@ Reading potential file SiO2.vashishta with DATE: 2015-10-14
 # fix   fxnvt all nvt temp 300.0 300.0 500.0 tchain 1
 #  -- ALTERNATELY, run at constant volume using Langevin dynamics. --
 #  -- (This is good for sparse CG polymers in implicit solvent.)   --
-# fix fxlan all langevin 300.0 300.0 5000 48279
+# fix fxLAN all langevin 300.0 300.0 5000 48279
+# fix fxNVE all nve  #(<--needed by fix langevin)
 #  -- Now, finally run the simulation --
 # run   50000
 #  ---- (end of examples) ----
 
 
-variable N equal 10
-variable T equal 0
-variable compressionLength equal 5
+variable N equal 100
+variable T equal 293
 
 velocity	all create ${T} 277387 mom yes
-velocity	all create 0 277387 mom yes
-include "system.prepare"
-#region ID style args keyword arg ...
+velocity	all create 293 277387 mom yes
 
-
-
-#Define the region of the sphere
-#sphere args = x y z radius
-region sphereRegion sphere 53.4 53.4 226.8 150
-group  sphereGroup region sphereRegion
-17581 atoms in group sphereGroup
-
-#Define the region of the slab
-#Group the atoms in the slab
-#block args = xlo xhi ylo yhi zlo zhi
-region slabRegion block 0 INF 0 INF 0 35.6
-group  slabGroup region slabRegion
-27450 atoms in group slabGroup
-
-#Define the region that is outside the sphere and slab
-#union args = N reg-ID1 reg-ID2 ...
-region bothRegion union 2 sphereRegion slabRegion side out
-
-#Delete all atoms exterior to the sphere and slab
-#delete_atoms style args keyword value ...
-delete_atoms region bothRegion
-Deleted 35969 atoms, new total = 45031
-
-#Set up reflecting walls at top and bottom face in z-direction
-#fix ID group-ID wall/reflect face arg ... keyword value ...
-#fix zWallsID all wall/reflect zlo EDGE zhi EDGE
-
-
-#Freeze the "bottom" of the slab
-region RbottomAtomsID block 0.0 INF 0.0 INF 0.0 3.0
-group bottomAtomsID region RbottomAtomsID
-2700 atoms in group bottomAtomsID
-fix freezeID bottomAtomsID setforce 0 0 0
-velocity bottomAtomsID set 0 0 0
-
-#read_restart squeeze.1000.restart
-#include "system.in.settings"
-
-#restart 1000 restartFiles/squeeze*.restart
 neighbor	0.3 bin
 neigh_modify	delay 10
 
-thermo		100
+thermo		0
 timestep	0.002
 
-dump myDump all atom 10 dumps/15x15_*.dump
+#dump myDump all atom 10 dumps/tiny*.dump
 
-#Move the top z-boundary downwards
-#fix deform all deform 1 z delta 0 -${compressionLength} remap x
+group group1 type 1
+1 atoms in group group1
+group group2 type 2
+1 atoms in group group2
 
-fix nvt all nvt temp 1.0 1.0 1.0
+fix nvt all nvt temp ${T} ${T} 1.0
+fix nvt all nvt temp 293 ${T} 1.0
+fix nvt all nvt temp 293 293 1.0
 run ${N}
-run 10
+run 100
 Neighbor list info ...
   1 neighbor list requests
   update every 1 steps, delay 10 steps, check yes
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 5.8
   ghost atom cutoff = 5.8
-  binsize = 2.9 -> bins = 37 37 37
-Memory usage per processor = 20.9067 Mbytes
+  binsize = 2.9 -> bins = 5 5 5
+Memory usage per processor = 6.36211 Mbytes
 Step Temp E_pair E_mol TotEng Press 
-       0            0   -143746.01            0   -143746.01    120450.68 
-      10    70.751086   -144163.36            0   -143751.55    118574.22 
-Loop time of 1.09752 on 1 procs for 10 steps with 45031 atoms
+       0          293  -0.18435649            0  -0.14648327   -349.08794 
+     100    495.21569  -0.71428316            0  -0.65027151   -785.16678 
+Loop time of 0.000164032 on 1 procs for 100 steps with 2 atoms
 
-Performance: 1.574 ns/day, 15.243 hours/ns, 9.111 timesteps/s
-99.0% CPU use with 1 MPI tasks x no OpenMP threads
+Performance: 105345.310 ns/day, 0.000 hours/ns, 609637.209 timesteps/s
+0.0% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 0.86452    | 0.86452    | 0.86452    |   0.0 | 78.77
-Neigh   | 0.15547    | 0.15547    | 0.15547    |   0.0 | 14.17
-Comm    | 0.0040393  | 0.0040393  | 0.0040393  |   0.0 |  0.37
-Output  | 0.051666   | 0.051666   | 0.051666   |   0.0 |  4.71
-Modify  | 0.019155   | 0.019155   | 0.019155   |   0.0 |  1.75
-Other   |            | 0.002673   |            |       |  0.24
+Pair    | 1.0729e-05 | 1.0729e-05 | 1.0729e-05 |   0.0 |  6.54
+Neigh   | 1.4782e-05 | 1.4782e-05 | 1.4782e-05 |   0.0 |  9.01
+Comm    | 2.6226e-05 | 2.6226e-05 | 2.6226e-05 |   0.0 | 15.99
+Output  | 1.4067e-05 | 1.4067e-05 | 1.4067e-05 |   0.0 |  8.58
+Modify  | 7.987e-05  | 7.987e-05  | 7.987e-05  |   0.0 | 48.69
+Other   |            | 1.836e-05  |            |       | 11.19
 
-Nlocal:    45031 ave 45031 max 45031 min
+Nlocal:    2 ave 2 max 2 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:    19470 ave 19470 max 19470 min
+Nghost:    10 ave 10 max 10 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Neighs:    0 ave 0 max 0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-FullNghs:  2.59465e+06 ave 2.59465e+06 max 2.59465e+06 min
+FullNghs:  2 ave 2 max 2 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 2594654
-Ave neighs/atom = 57.6193
-Neighbor list builds = 1
-Dangerous builds = 1
+Total # of neighbors = 2
+Ave neighs/atom = 1
+Neighbor list builds = 8
+Dangerous builds = 6
+
+compute chunkID all chunk/atom bin/2d x 0 4 y 0 4
+compute computeID group1 group/group/atom group2 pair yes
+fix fixComputeID group1 ave/chunk 1 1 1 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt #ave running
+
+run ${N}
+run 100
+Neighbor list info ...
+  2 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.8
+  ghost atom cutoff = 5.8
+  binsize = 2.9 -> bins = 5 5 5
+Memory usage per processor = 6.48773 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+     100    495.21569  -0.71428316            0  -0.65027151   -785.16678 
+     200    5157.1665   -2.6969949            0   -2.0303788   -1615.9864 
+Loop time of 0.0021739 on 1 procs for 100 steps with 2 atoms
+
+Performance: 7948.845 ns/day, 0.003 hours/ns, 46000.263 timesteps/s
+0.0% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 2.408e-05  | 2.408e-05  | 2.408e-05  |   0.0 |  1.11
+Neigh   | 1.8597e-05 | 1.8597e-05 | 1.8597e-05 |   0.0 |  0.86
+Comm    | 3.4809e-05 | 3.4809e-05 | 3.4809e-05 |   0.0 |  1.60
+Output  | 1.7881e-05 | 1.7881e-05 | 1.7881e-05 |   0.0 |  0.82
+Modify  | 0.0020473  | 0.0020473  | 0.0020473  |   0.0 | 94.18
+Other   |            | 3.123e-05  |            |       |  1.44
+
+Nlocal:    2 ave 2 max 2 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    10 ave 10 max 10 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    1 ave 1 max 1 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:  2 ave 2 max 2 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 2
+Ave neighs/atom = 1
+Neighbor list builds = 9
+Dangerous builds = 7
+
+
+
 
 #----------------------------------------------------
-
-#dump myDump all atom 500 dumpFiles/SiO2_*.dump
-
-#Move the top z-boundary downwards
-#fix deform all deform 1 z delta 0 -${compressionLength} remap x
-
-#fix nvt all nvt temp ${T} ${T} 1.0
-#run 20000
-Total wall time: 0:00:01
+Total wall time: 0:00:00

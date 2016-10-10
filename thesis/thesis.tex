@@ -194,7 +194,9 @@ We need to check which atoms are neighboring atoms, but obviously we do not need
 
 
 \subsection{Parallelization}
- It might be misguiding to refer to parallelization as an efficiency improvement, when on the contrary it most likely increases the CPU time usage. However, the real time consumed may be greatly decreased. It is intuitive that partitioning the work and processing these simultaneously will decrease the time with respect to processing it serially.   
+ It might be misguiding to refer to parallelization as an efficiency improvement, when on the contrary it most likely increases the CPU time usage. 
+ However, the real time consumed may be greatly decreased. 
+ It is intuitive that partitioning the work and processing these simultaneously will decrease the time as compared to processing it serially.   
  
  
  The speedup is defined as 
@@ -223,8 +225,10 @@ mpirun -n 8 lmp_mpi -in speedup.in -var filename speedup.restart
 \label{fig:speedup15x15}
 \end{figure}
 
-{\large {\color{editColor}COMMENT ON THE RESULT}}
-... Though we clearly see the advantage, that when using 64 processors instead of 1 we can finish a job that would have take an hour in two minutes! Also, we can clearly see the initial argument that this is not more efficient when regarding CPU time. 
+The result indicate that the speedup is in fact not simply $S=p$. 
+Anyhow, we clearly see the advantage of using 64 processors as opposed to 1. 
+We can finish a job that would have taken an hour in two minutes!
+Also, we clearly see that the initial claim holds; this is not more efficient when regarding CPU time. In fact this result suggest that using 1 processor is twice as energy efficient as using 64. 
  
 
 

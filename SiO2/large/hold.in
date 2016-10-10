@@ -8,25 +8,37 @@ fix freezeID bottomAtomsID setforce 0 0 0
 velocity bottomAtomsID set 0 0 0
 
 
-variable N equal 1
+
+variable N equal 100
 variable T equal 293
 
 neighbor	0.3 bin
 neigh_modify	delay 10
 
-thermo		100
+thermo		1000
 timestep	0.002
+
+#restart 5000 restartFiles/hold*.restart
 
 fix nvt all nvt temp ${T} ${T} 1.0
 
 compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
 
 #compute stressID all stress/atom NULL
-#fix fixChunkID all ave/chunk 100 20 2000 chunkID c_stressID[3] file stress.txt
+#fix fixChunkID all ave/chunk  100 10 1000 chunkID c_stressID[3] file stress50000.txt
 
-compute computeID slabGroup group/group/atom sphereGroup pair yes
-fix fixComputeID slabGroup ave/chunk 10 10 100 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces*.txt #ave running
+label sampleForceLoop
+variable i loop 10
+    fix nvt all nvt temp ${T} ${T} 1.0
+    run ${N}
+    compute computeID slabGroup group/group/atom sphereGroup pair yes
+    fix fixComputeID slabGroup ave/chunk 1 1 1 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces${i}.txt #ave running
+    run 0
+    uncompute computeID
+    unfix fixComputeID
+    unfix nvt
+next i
+jump SELF sampleForceLoop
 
-dump myDump surfaceGroup atom 1 dumpFiles/Surface*.dump
 
-run ${N}
+

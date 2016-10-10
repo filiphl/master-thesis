@@ -1,15 +1,39 @@
 # file "beta-cristobalite.lt"
 
+write_once("In Init") {
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+}
+
+write_once("In Settings") {
+  pair_coeff  * *  SiO2.vashishta Si O
+  pair_modify table 16
+  pair_modify tabinner 0.1
+}
+
+
 beta-cristobalite {
   write("Data Atoms") {
-    $atom:Si1    @atom:Si    -1.00    0.00    0.00
-    $atom:O1     @atom:O     1.00    0.00    0.00
-
+    $atom:Si1    @atom:Si    6.00    6.00    4.00
+    $atom:O1     @atom:O     6.00    6.00    8.00
   }
+
 
   write_once("Data Masses") {
     @atom:Si 28.0855
     @atom:O  15.9994
   }
-
 } # end definition of beta-cristobalite molecule type
+
+
+SiO2 = new beta-cristobalite
+
+
+write_once("Data Boundary") {
+  0  12  xlo  xhi
+  0  12  ylo  yhi
+  0  12  zlo  zhi
+}
