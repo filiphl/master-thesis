@@ -4,7 +4,7 @@
 
 #Define the region of the sphere
 #sphere args = x y z radius
-region sphereRegion sphere 53.4 53.4 226.8 150
+region sphereRegion sphere 53.4 53.4 85.44 30
 group  sphereGroup region sphereRegion
 
 #Define the region of the slab
@@ -20,10 +20,6 @@ region bothRegion union 2 sphereRegion slabRegion side out
 #Delete all atoms exterior to the sphere and slab
 #delete_atoms style args keyword value ...
 delete_atoms region bothRegion
-
-#Set up reflecting walls at top and bottom face in z-direction
-#fix ID group-ID wall/reflect face arg ... keyword value ...
-#fix zWallsID all wall/reflect zlo EDGE zhi EDGE
 
 
 #Freeze the "bottom" of the slab

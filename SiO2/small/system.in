@@ -15,6 +15,7 @@ include "system.in.settings"
 
 
 # ----------------- Run Section -----------------
+
 # The lines above define the system you want to simulate.
 # What you do next is up to you.
 # Typically a user would minimize and equilibrate
@@ -33,7 +34,8 @@ include "system.in.settings"
 # fix   fxnvt all nvt temp 300.0 300.0 500.0 tchain 1
 #  -- ALTERNATELY, run at constant volume using Langevin dynamics. --
 #  -- (This is good for sparse CG polymers in implicit solvent.)   --
-# fix fxlan all langevin 300.0 300.0 5000 48279
+# fix fxLAN all langevin 300.0 300.0 5000 48279
+# fix fxNVE all nve  #(<--needed by fix langevin)
 #  -- Now, finally run the simulation --
 # run   50000
 #  ---- (end of examples) ----

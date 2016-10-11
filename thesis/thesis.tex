@@ -254,7 +254,7 @@ In order to construct the unit cell of a material, one should look up the coordi
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\linewidth]{figures/unitcell/unitcell.png}
-	\caption{Unit cell of b-cristobalite. Tan and blue spheres represent silicon and oxygen atoms respectively.}
+	\caption{Unit cell of b-cristobalite. Tan and blue spheres represent silicon and oxygen atoms respectively. The unit cell is cubical, with edges of length 7.12Å.}
 	\label{fig:unitcellbcristobalite}
 \end{figure}
 
@@ -298,7 +298,7 @@ The huge cube of silica can be carved however we like by defining regions from w
 In LAMMPS this is done by using the \texttt{region}, \texttt{union}, \texttt{intersect} and \texttt{delete\_atoms} commands. 
 Our implementation is stated in Listing \ref{lst:sculpting}, which is very simple due to the way we are going to treat the boundary conditions. 
 
-First, we define a spherical region,labeled \texttt{sphereRegion}, described by the xyz-coordinates of the center and the radius. The atoms within this region are assigned to a group labeled \texttt{sphereGroup}. 
+First, we define a spherical region labeled \texttt{sphereRegion}, described by the xyz-coordinates of its center and a radii. The atoms within this region are assigned to a group labeled \texttt{sphereGroup}. 
 
 Next, we define a cuboid (block) region named \texttt{slabRegion}, described by the position of its faces in x-, y- and z-direction. The atoms within this region are assigned to a group, which we label \texttt{slabGroup}.  
 
@@ -320,7 +320,7 @@ The appliance of the script in Listing \ref{lst:sculpting} on the system shown i
 
 
 \section{Moving the sphere towards the slab}
-We wish to push the sphere down on the slab in order to create a deformation on the slab. There are probably a lot of smart ways to do this. The author has, however, settled on the following strategy:
+We wish to push the sphere down onto the slab in order to create a deformation on the slab. There are probably a lot of smart ways to do this. The author has settled on the following strategy:
 
 We apply periodic boundary conditions in all three dimensions. This will in practice imply that the sphere cap and the slab are connected though the z-boundaries. 
 Secondly, we freeze the atoms at the bottom of the slab, so that their positions are fixed. This will, in combination with the periodic boundaries, allow us to consider the sphere cap and the slab as though they are 

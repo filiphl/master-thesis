@@ -1,36 +1,32 @@
-include "system.in"
+#include "system.in"
+#
+#
+#velocity	all create 1 277387 mom yes
+#include "system.prepare"
+
+include "system.in.init"
+read_restart ${filename}
+include "system.in.settings"
+
+fix freezeID bottomAtomsID setforce 0 0 0
+velocity bottomAtomsID set 0 0 0
 
 variable N equal 10
-variable T equal 0
-variable compressionLength equal 5
+variable T equal 293
+variable compressionLength equal 10
 
-velocity	all create ${T} 277387 mom yes
-include "system.prepare"
 
-#read_restart squeeze.1000.restart
-#include "system.in.settings"
-
-#restart 1000 restartFiles/squeeze*.restart
 neighbor	0.3 bin
 neigh_modify	delay 10
 
 thermo		100
 timestep	0.002
 
-dump myDump all atom 10 dumps/15x15_*.dump
+fix nvt all nvt temp ${T} ${T} 1.0
+restart 1000 restartFiles/squeeze*.restart
+#dump myDump all atom 100 dumps/SiO2_*.dump
 
-#Move the top z-boundary downwards
-#fix deform all deform 1 z delta 0 -${compressionLength} remap x
+fix deform all deform 1 z delta 0 -${compressionLength} remap x
 
-fix nvt all nvt temp 1.0 1.0 1.0
+
 run ${N}
-
-#----------------------------------------------------
-
-#dump myDump all atom 500 dumpFiles/SiO2_*.dump
-
-#Move the top z-boundary downwards
-#fix deform all deform 1 z delta 0 -${compressionLength} remap x
-
-#fix nvt all nvt temp ${T} ${T} 1.0
-#run 20000
