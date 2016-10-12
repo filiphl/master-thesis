@@ -111,6 +111,15 @@ void ComputeGroupGroupAtom::pair_contribution()
     for (ii = 0; ii < inum; ii++) {
         i = ilist[ii];
 
+        array_atom[i][0] = 0;
+        array_atom[i][1] = 0;
+        array_atom[i][2] = 0;
+        array_atom[i][3] = 0;
+    }
+
+    for (ii = 0; ii < inum; ii++) {
+        i = ilist[ii];
+
         // skip if atom I is not in either group
         if (!(mask[i] & groupbit || mask[i] & jgroupbit)) continue;
 

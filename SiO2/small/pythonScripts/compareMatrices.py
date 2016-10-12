@@ -8,7 +8,6 @@ class forces:
 
     def __init__(self, path, name):
         self.name = name
-
         infile = open(path, 'r')
         for i in xrange(3):
             infile.readline()
@@ -45,15 +44,15 @@ class forces:
                 fz = float(col[6])
                 self.absoluteForces[x,y] += np.sqrt(fx**2 + fy**2 + fz**2)
             else:
-                self.name='time step %03d'%steps
+                #self.name='time step %03d'%steps
                 #plt.figure()
-                singlePlot = Plotter(self)
-                singlePlot.plotMatrix(save=False)
-                self.absoluteForces = np.zeros([self.snChunks, self.snChunks])
+                #inglePlot = Plotter(self)
+                #inglePlot.plotMatrix(save=False)
+                #self.absoluteForces = np.zeros([self.snChunks, self.snChunks])
                 steps += 1
 
         #self.matrix /= steps
-        #self.absoluteForces /= steps
+        self.absoluteForces /= steps
 
 class Plotter:
 
@@ -71,6 +70,7 @@ class Plotter:
 
 
     def average(self, objects, save=False):
+        print "In average"
         for forceObject in objects:
             self.absoluteForces += forceObject.absoluteForces
         self.absoluteForces /= len(objects)
@@ -92,27 +92,29 @@ class Plotter:
     def plotMatrix(self, save=False):
         plt.imshow(self.absoluteForces, interpolation='nearest', cmap="hot_r", )
         plt.colorbar(format=ticker.FuncFormatter(self.fmt))
-        plt.clim(0,4)
+        #plt.clim(0,0.05)
         #cb = plt.colorbar(format=ticker.FuncFormatter(self.fmt))
         #cb.ax.invert_yaxis()
         plt.title(self.name)
         if save:
+            print "In plotMatrix"
             name = "%s"%"".join(self.name.split())
             plt.savefig(name+".png", format="png")
             plt.close()
             print "Saved ", name
         else:
-            plt.draw()
-            plt.clf()
+            plt.show()
+            #plt.draw()
+            #plt.clf()
 
 
 
 plt.figure()
-plt.ion()
+#plt.ion()
 
 singleObject = forces('forceFiles/forcesAll.txt', 'all')
-#singlePlot = Plotter(singleObject)
-
+singlePlot = Plotter(singleObject)
+singlePlot.plotMatrix()
 
 """
 frame = 0
@@ -130,5 +132,5 @@ averagePlot = Plotter(myObjects)
 averagePlot.plotMatrix()
 """
 
-from scitools.std import *
-movie('timestep*.png', encoder='convert', fps=25, output_file='animation.gif')	# Make a gif
+#from scitools.std import *
+#movie('timestep*.png', encoder='convert', fps=25, output_file='animation.gif')	# Make a gif

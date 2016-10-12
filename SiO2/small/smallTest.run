@@ -1,6 +1,6 @@
 include "smallTest.in"
 
-variable N equal 2
+variable N equal 10000
 variable T equal 293
 
 velocity	all create ${T} 277387 mom yes
@@ -20,7 +20,7 @@ fix nvt all nvt temp ${T} ${T} 1.0
 
 compute chunkID all chunk/atom bin/2d x 0 4 y 0 4
 compute computeID group1 group/group/atom group2 pair yes
-fix fixComputeID group1 ave/chunk 1 2 2 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt #ave running
+fix fixComputeID group1 ave/chunk 10 100 10000 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt #ave running
 
 run ${N}
 

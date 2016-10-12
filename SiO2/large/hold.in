@@ -1,15 +1,10 @@
-package omp 8
-suffix omp
-
-
 include "system.in.init"
 read_restart ${filename}
 include "system.in.settings"
+
 # -----------Freeze the "bottom" of the slab ----------------
 fix freezeID bottomAtomsID setforce 0 0 0
 velocity bottomAtomsID set 0 0 0
-
-
 
 variable N equal 4001
 variable T equal 293
@@ -29,6 +24,8 @@ compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
 #compute stressID all stress/atom NULL
 #fix fixChunkID all ave/chunk  100 10 1000 chunkID c_stressID[3] file stress50000.txt
 
-compute computeID slabGroup group/group/atom sphereGroup pair yes
-fix fixComputeID slabGroup ave/chunk 10 40 400 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forcesAll.txt #ave running
+#compute computeID slabGroup group/group/atom sphereGroup pair yes
+#fix fixComputeID slabGroup ave/chunk 2 100 200 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forcesAll.txt #ave running
+
+dump myDump surfaceGroup atom 200 dumpFiles/Surface*.dump
 run ${N}

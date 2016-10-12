@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2015.12.4)  11 OCT 2016 14:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2015.12.4)  12 OCT 2016 13:25
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1572,31 +1572,31 @@ Chapter 2.
 
 ]
 Chapter 3.
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 103.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 104.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 ) [5] [6]
 (./figures/tikz/cubes.tikz) [7] [8] (../SiO2/small/continue.in)
-<figures/speedup/15x15.pdf, id=290, 578.16pt x 433.62pt>
+<figures/speedup/15x15.pdf, id=289, 578.16pt x 433.62pt>
 File: figures/speedup/15x15.pdf Graphic file (type pdf)
 
 <use figures/speedup/15x15.pdf>
-Package pdftex.def Info: figures/speedup/15x15.pdf used on input line 223.
+Package pdftex.def Info: figures/speedup/15x15.pdf used on input line 227.
 (pdftex.def)             Requested size: 287.79831pt x 215.84346pt.
  [9 <./figures/speedup/15x15.pdf>] [10]
 Chapter 4.
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 251.
+(hyperref)                removing `math shift' on input line 255.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\beta' on input line 251.
+(hyperref)                removing `\beta' on input line 255.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 251.
+(hyperref)                removing `math shift' on input line 255.
 
 (/usr/share/texlive/texmf-dist/tex/latex/ucs/data/uni-0.def
 File: uni-0.def 2013/05/13 UCS: Unicode data U+0000..U+00FF
@@ -1610,7 +1610,7 @@ Underfull \vbox (badness 3713) has occurred while \output is active []
 File: figures/unitcell/unitcell.png Graphic file (type png)
 
 <use figures/unitcell/unitcell.png>
-Package pdftex.def Info: figures/unitcell/unitcell.png used on input line 256.
+Package pdftex.def Info: figures/unitcell/unitcell.png used on input line 260.
 (pdftex.def)             Requested size: 287.79831pt x 287.80243pt.
  [12 <./figures/unitcell/unitcell.png>]
 (../SiO2/large/beta-cristobalite.lt) [13]
@@ -1619,7 +1619,7 @@ File: figures/CreatingSystem/hugeCube.png Graphic file (type png)
 
 <use figures/CreatingSystem/hugeCube.png>
 Package pdftex.def Info: figures/CreatingSystem/hugeCube.png used on input line
- 283.
+ 287.
 (pdftex.def)             Requested size: 287.79831pt x 287.80243pt.
  [14 <./figures/CreatingSystem/hugeCube.png>] (../SiO2/small/system.prepare.lat
 ex)
@@ -1628,12 +1628,12 @@ File: figures/CreatingSystem/carved_xz.png Graphic file (type png)
 
 <use figures/CreatingSystem/carved_xz.png>
 Package pdftex.def Info: figures/CreatingSystem/carved_xz.png used on input lin
-e 316.
+e 320.
 (pdftex.def)             Requested size: 287.79831pt x 285.33884pt.
  [15 <./figures/CreatingSystem/carved_xz.png>] [16]
 Chapter 5.
 
-Overfull \hbox (55.6271pt too wide) in paragraph at lines 350--352
+Overfull \hbox (55.6271pt too wide) in paragraph at lines 354--356
 []\T1/cmr/m/n/12 Line 3 stores the sum of in-di-vid-ual stresses in each chunk 
 to the file \T1/cmtt/m/n/12 forcesInChunks.txt\T1/cmr/m/n/12 .
  []
@@ -1662,8 +1662,11 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [22]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [23])
-[24] [25] [26] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+ [23]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [24])
+[25] [26] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
 (../SiO2/large/pythonScripts/surface.py) [27] [28
@@ -1683,23 +1686,23 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [34])
 (./thesis.bbl) [35]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 533.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 533.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 537.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 537.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 533.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 533.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 537.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 537.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 111C4124662CF3B361CC128E37161701;1952.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 533.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 537.
  ) 
 Here is how much of TeX's memory you used:
- 36006 strings out of 493085
- 722384 string characters out of 6136917
- 971233 words of memory out of 5000000
+ 36024 strings out of 493085
+ 722690 string characters out of 6136917
+ 971234 words of memory out of 5000000
  38189 multiletter control sequences out of 15000+600000
  35314 words of font info for 101 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1732,10 +1735,10 @@ lic/cm-super/sfti1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt100
 0.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1095.pfb></usr/share/te
 xmf/fonts/type1/public/cm-super/sftt1200.pfb></usr/share/texlive/texmf-dist/fon
 ts/type1/urw/ncntrsbk/uncr8a.pfb>
-Output written on thesis.pdf (45 pages, 2415273 bytes).
+Output written on thesis.pdf (45 pages, 2416248 bytes).
 PDF statistics:
- 1205 PDF objects out of 1440 (max. 8388607)
- 1103 compressed objects within 12 object streams
- 618 named destinations out of 1000 (max. 500000)
+ 1226 PDF objects out of 1440 (max. 8388607)
+ 1124 compressed objects within 12 object streams
+ 636 named destinations out of 1000 (max. 500000)
  270 words of extra memory for PDF output out of 10000 (max. 10000000)
 

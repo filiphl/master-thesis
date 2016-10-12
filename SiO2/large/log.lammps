@@ -1,0 +1,130 @@
+LAMMPS (27 Aug 2016-ICMS)
+include "system.in.init"
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+read_restart ${filename}
+read_restart restartFiles/hold195000.restart
+WARNING: Restart file used different # of processors (../read_restart.cpp:717)
+  orthogonal box = (0 0 0) to (320.4 320.4 138)
+  2 by 4 by 1 MPI processor grid
+  537410 atoms
+include "system.in.settings"
+  pair_coeff  * *  SiO2.vashishta Si O
+Reading potential file SiO2.vashishta with DATE: 2015-10-14
+  pair_modify table 16
+  pair_modify tabinner 0.1
+
+# -----------Freeze the "bottom" of the slab ----------------
+fix freezeID bottomAtomsID setforce 0 0 0
+velocity bottomAtomsID set 0 0 0
+
+variable N equal 4001
+variable T equal 293
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+#restart 5000 restartFiles/hold*.restart
+
+fix nvt all nvt temp ${T} ${T} 1.0
+fix nvt all nvt temp 293 ${T} 1.0
+fix nvt all nvt temp 293 293 1.0
+Resetting global state of Fix nvt Style nvt from restart file info
+
+compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+
+#compute stressID all stress/atom NULL
+#fix fixChunkID all ave/chunk  100 10 1000 chunkID c_stressID[3] file stress50000.txt
+
+#compute computeID slabGroup group/group/atom sphereGroup pair yes
+#fix fixComputeID slabGroup ave/chunk 2 100 200 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forcesAll.txt #ave running
+
+dump myDump surfaceGroup atom 200 dumpFiles/Surface*.dump
+run ${N}
+run 4001
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.8
+  ghost atom cutoff = 5.8
+  binsize = 2.9 -> bins = 111 111 48
+Memory usage per processor = 17.9731 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+  195000    292.84003     -1807372            0   -1787029.7    17260.277 
+  195100    293.08334   -1807406.2            0     -1787047    17354.212 
+  195200     292.9253   -1807410.6            0   -1787062.3    17281.977 
+  195300    292.47652   -1807392.4            0   -1787075.4    17320.598 
+  195400    292.46387   -1807403.3            0   -1787087.1    17329.517 
+  195500     292.6991     -1807428            0   -1787095.5     17335.04 
+  195600    292.62597   -1807428.5            0     -1787101    17307.622 
+  195700    292.59706   -1807428.9            0   -1787103.5    17332.388 
+  195800     292.1275   -1807394.6            0   -1787101.8    17341.408 
+  195900    292.82759   -1807439.2            0   -1787097.8    17268.392 
+  196000    292.22224   -1807388.8            0   -1787089.4    17243.734 
+  196100    292.48057   -1807395.7            0   -1787078.4    17249.115 
+  196200    292.67446   -1807395.2            0   -1787064.4    17305.209 
+  196300     292.8909   -1807393.3            0   -1787047.5    17209.105 
+  196400     292.5615     -1807351            0     -1787028    17222.132 
+  196500    292.93209   -1807356.5            0   -1787007.8    17277.963 
+  196600    292.75685   -1807323.6            0   -1786987.1    17220.913 
+  196700    293.25098   -1807337.1            0   -1786966.3    17301.059 
+  196800    293.63581   -1807343.7            0   -1786946.1    17336.883 
+  196900     293.5261   -1807317.9            0     -1786928    17232.571 
+  197000    293.78761     -1807321            0   -1786912.9    17192.487 
+  197100     294.2415   -1807341.1            0   -1786901.4    17243.616 
+  197200    293.45265   -1807278.1            0   -1786893.2    17301.313 
+  197300    293.67218   -1807290.1            0     -1786890    17304.623 
+  197400    293.78616   -1807299.5            0   -1786891.4    17391.394 
+  197500    293.61728     -1807294            0   -1786897.7    17368.193 
+  197600    293.74338   -1807313.8            0   -1786908.7     17345.24 
+  197700    293.85986   -1807336.4            0   -1786923.3    17355.308 
+  197800    293.82817   -1807352.9            0   -1786941.9    17313.982 
+  197900    293.21876   -1807331.2            0   -1786962.6    17317.348 
+  198000     292.8867   -1807330.7            0   -1786985.2    17308.746 
+  198100    292.55817   -1807331.6            0   -1787008.9    17302.285 
+  198200    292.16559   -1807327.4            0     -1787032      17228.8 
+  198300    293.01578   -1807409.4            0   -1787054.9    17206.825 
+  198400    292.42276   -1807387.8            0   -1787074.5    17192.424 
+  198500     292.5277   -1807411.8            0   -1787091.2     17179.09 
+  198600    292.16405     -1807399            0   -1787103.6    17294.413 
+  198700    291.88662   -1807388.2            0   -1787112.2    17195.891 
+  198800    292.24395     -1807417            0   -1787116.2    17191.407 
+  198900    292.00784   -1807399.8            0   -1787115.3    17237.454 
+  199000    292.58224   -1807435.6            0   -1787111.2     17243.76 
+  199001    292.47642     -1807428            0     -1787111    17235.149 
+Loop time of 2171.73 on 8 procs for 4001 steps with 537410 atoms
+
+Performance: 0.318 ns/day, 75.388 hours/ns, 1.842 timesteps/s
+74.2% CPU use with 8 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 1063.6     | 1397.2     | 1736.8     | 853.3 | 64.33
+Neigh   | 78.976     | 107.02     | 134.51     | 253.5 |  4.93
+Comm    | 194.2      | 570.46     | 940.94     |1479.5 | 26.27
+Output  | 0.3286     | 0.34934    | 0.37339    |   2.9 |  0.02
+Modify  | 77.52      | 86.168     | 96.184     |  85.8 |  3.97
+Other   |            | 10.57      |            |       |  0.49
+
+Nlocal:    67176.2 ave 84609 max 49848 min
+Histogram: 4 0 0 0 0 0 0 0 0 4
+Nghost:    24735 ave 29126 max 20414 min
+Histogram: 4 0 0 0 0 0 0 0 0 4
+Neighs:    0 ave 0 max 0 min
+Histogram: 8 0 0 0 0 0 0 0 0 0
+FullNghs:  3.82314e+06 ave 4.89535e+06 max 2.7512e+06 min
+Histogram: 4 0 0 0 0 0 0 0 0 4
+
+Total # of neighbors = 30585120
+Ave neighs/atom = 56.9121
+Neighbor list builds = 400
+Dangerous builds = 400
+Total wall time: 0:36:12
