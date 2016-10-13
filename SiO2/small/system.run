@@ -3,7 +3,13 @@
 #
 #velocity	all create 1 277387 mom yes
 #include "system.prepare"
+#/atom 1 silicon
+#/atom 2 oxygen
+#/bond 1 2 2.6
+package omp 2
+suffix omp
 
+variable filename string restartFiles/squeeze20000.restart
 include "system.in.init"
 read_restart ${filename}
 include "system.in.settings"
@@ -11,7 +17,7 @@ include "system.in.settings"
 fix freezeID bottomAtomsID setforce 0 0 0
 velocity bottomAtomsID set 0 0 0
 
-variable N equal 10
+variable N equal 10000
 variable T equal 293
 variable compressionLength equal 10
 

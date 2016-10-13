@@ -1,0 +1,8 @@
+variable filename string restartFiles/hold195000.restart
+package omp 8
+suffix omp
+#/atom 1 silicon
+#/atom 2 oxygen
+#/bond 1 2 2.6
+
+include hold.in

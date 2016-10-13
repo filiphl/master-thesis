@@ -79,3 +79,11 @@ Thumbs.db
 *.dump
 *.lammpstrj
 *.restart
+
+#LaTex
+*.out
+*.bbl
+*.blg
+*.aux
+*.log
+*.toc
