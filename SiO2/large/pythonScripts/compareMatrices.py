@@ -30,7 +30,6 @@ class Forces:
     def setup(self):
         self.nChunks        = int(self.content[0].split()[1])
         self.snChunks       = int(np.sqrt(self.nChunks))
-        print "snChunks =", self.snChunks
         self.absoluteForces = np.zeros([self.snChunks, self.snChunks])
         self.matrix         = np.zeros([self.snChunks, self.snChunks, 3])
         self.binWidth       = 7.121
@@ -127,6 +126,7 @@ class Forces:
                 plt.clf()
 
             if self.plotAverage:
+                #plt.plot(21.5,22.5, 'g*', markersize=10)
                 plt.show()
 
 #------------------------------------------------------------------------------#
@@ -136,4 +136,4 @@ class Forces:
 
 if __name__=='__main__':
 
-    singleObject = Forces('forceFiles/forcesAll.txt')
+    singleObject = Forces('../forceFiles/forcesAll.txt')

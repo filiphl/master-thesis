@@ -423,6 +423,7 @@ Following the constructor is the destructor on line 40. Its only task is to free
 
 \texttt{compute\_peratom()} will resize the array to the number of atoms of concern, \texttt{nmax}. It does this using LAMMPS internal functions, which we will not care to describe here. Finally it calls upon functions{\huge  I ENDED HERE LAST TIME!}
 
+{\color{editColor}Note that we should only compute the force for one of the groups. factor 2...}
 \newpage
 \section{Least squares regression}
 The method of least squares aims to find parameters which  minimize the sum of the squared residuals, where residuals are the difference between observed values and the approximated value. We will use this method to approximate the slope of the surface of the substrate. This will be done by partitioning the system in a grid and do a plane approximation on each cell of the grid. In other words, we seek the coefficients in the plane equation
@@ -500,7 +501,7 @@ meaning that the normal force may be expressed as
 
 We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in Listing \ref{angleVecLine}.
 
-\lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=86, lastline=94]{../SiO2/large/pythonScripts/surface.py}
+\lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=190, lastline=197]{../SiO2/large/pythonScripts/surface.py}
 
 
 

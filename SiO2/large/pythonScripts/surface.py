@@ -193,8 +193,7 @@ class SurfaceRegression:
         lv2 = np.linalg.norm(v2)
 
         angle = np.arccos(np.dot(v1,v2)/(lv1*lv2))
-        if np.absolute(angle-np.pi/2)<angle:
-            angle = np.absolute(angle-np.pi/2)
+        angle = min(angle, abs(np.pi-angle))
         return angle #[rad]
 
 
@@ -236,8 +235,8 @@ if __name__ == '__main__':
         print 'Please provide a valid path as an argument.'
         exit()
 
-    surf = surfaceRegression(path, N=45, plot="plot" in sys.argv, nn=0)
-
+    surf = SurfaceRegression(path, N=30, plot="plot" in sys.argv, nn=8)
+    surf.plotPlanes()
 # ---------------------------------------------------------------------------- #
 
 
