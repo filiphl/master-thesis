@@ -48,7 +48,7 @@ def r(x,y,cm):
     return np.sqrt((x-cm)**2 + (y-cm)**2)
 
 weights = np.zeros([N,N,nBins+1])
-bins = np.linspace(0,nBins, f*nBins+1)
+bins = np.linspace(0, nBins, f*nBins+1)
 for b in xrange(nBins):
     for i in xrange(N/2-1, N):
         for j in xrange(N/2-1, N):
@@ -70,7 +70,7 @@ for b in xrange(nBins):
                             weights[i,j,b] += trapzoidalIntegration(y, x1, x2, 100, bins[b+1], cm) - (x2-x1)*(j-w-cm)
                             #print i,j,x1,x2,weights[i,j,b]
                     if r(i+w, j+w, cm) >= bins[b]:  # NE Corner in bin?
-                        if r(i+w, j+w, cm) < bins[b+1]:
+                        if r(i+w, j+w, cm) <= bins[b+1]:
                             if r(i-w, y(i-w, bins[b], cm)+cm, cm) <= r(i-w, j+w, cm):
                                 x1 = i-w
                             else:
