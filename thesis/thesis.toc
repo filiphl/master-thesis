@@ -19,12 +19,13 @@
 \contentsline {section}{\numberline {4.4}Moving the sphere towards the slab}{16}{section.4.4}
 \contentsline {chapter}{\numberline {5}This must be sorted in designated chapters}{17}{chapter.5}
 \contentsline {section}{\numberline {5.1}Radial distribution of normal force}{17}{section.5.1}
-\contentsline {chapter}{\numberline {6}Computing the normal force distribution}{19}{chapter.6}
-\contentsline {section}{\numberline {6.1}Creating a custom compute}{19}{section.6.1}
-\contentsline {subsection}{\numberline {6.1.1}Find a similar compute}{20}{subsection.6.1.1}
-\contentsline {subsection}{\numberline {6.1.2}Creating the class}{20}{subsection.6.1.2}
-\contentsline {section}{\numberline {6.2}Least squares regression}{26}{section.6.2}
-\contentsline {chapter}{\numberline {A}Source code}{29}{appendix.A}
-\contentsline {section}{\numberline {A.1}compute\_group\_group.h}{30}{section.A.1}
-\contentsline {section}{\numberline {A.2}compute\_group\_group\_atom.h}{31}{section.A.2}
-\contentsline {section}{\numberline {A.3}compute\_group\_group\_atom.cpp}{32}{section.A.3}
+\contentsline {subsection}{\numberline {5.1.1}Radial binning}{17}{subsection.5.1.1}
+\contentsline {chapter}{\numberline {6}Computing the normal force distribution}{21}{chapter.6}
+\contentsline {section}{\numberline {6.1}Creating a custom compute}{21}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Find a similar compute}{22}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}Creating the class}{22}{subsection.6.1.2}
+\contentsline {section}{\numberline {6.2}Least squares regression}{28}{section.6.2}
+\contentsline {chapter}{\numberline {A}Source code}{31}{appendix.A}
+\contentsline {section}{\numberline {A.1}compute\_group\_group.h}{32}{section.A.1}
+\contentsline {section}{\numberline {A.2}compute\_group\_group\_atom.h}{33}{section.A.2}
+\contentsline {section}{\numberline {A.3}compute\_group\_group\_atom.cpp}{34}{section.A.3}

@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+\draw[fill=p2] (6,6) rectangle (12,12);
+\begin{scope}
+\clip (6,6) rectangle (12,12);
+\fill[thick, white] (0,0) circle (12);
+\draw[thick, p4, line width=3mm] (0,0) circle (12);
+\end{scope}
+\draw[gray] (6,6) rectangle (12,12);
+\end{tikzpicture}

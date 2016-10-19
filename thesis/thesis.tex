@@ -20,6 +20,7 @@
 \usepackage{tikz}
 %\usepackage{xcolor}
 \usepackage{xifthen}
+\usepackage{caption}
 
 \usepackage{HASstyle}
 
@@ -358,7 +359,56 @@ The data in stored from each time step can easily be averaged to produce a resul
 
 We can then find the radial distribution simply by binning this matrix in radial bins, and average the normal forces of the chunks within the bins.
 
+\subsection{Radial binning}
+Our system is partitioned into a grid. 
+Each cell in the grid holds an averaged value of the normal force in that cell. 
+The radial distribution of normal force should express the averaged value of the normal force at a given radial distance from the {\color{editColor}center of the sphere}. 
+A coarse method of doing this is to average the weights of the cells who's center is within the bin. 
+This is illustrated in figure \ref{fig:radialBinningChoars}. 
+In many applications where the bin size can be large compared to the length of the cells, this method might suffice.
+However, the current radii of the contact area between the sphere and the slab is only about 10 unit cells, and therefor having a large bin width will result in very few data points. 
 
+ \begin{figure}
+ 	\center
+ 	\resizebox{0.48\linewidth}{!}{
+ 		\input{figures/tikz/radialBinning.tikz}
+ 	}
+ 	\caption{Coarse radial binning. The value appointed to the radial bin is the average of the weights of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.}
+ 	\label{fig:radialBinningChoars}
+ \end{figure}
+
+A different, slightly more sophisticated approach is to compute the fraction of the area of the cells that actually are withing the bin, multiplied by the weight associated with the cell, and average these contributions. 
+This means that even cells that do not have their center within the bin might contribute to the resulting bin value. 
+How much, however, will depend on the fraction of the cell that is within the bin.
+This may be regarded as a smoothing of our coarse force distribution, and will probably give a more correct result than the coarse binning method already described. An illustration of this binning method is shown in figure \ref{fig:radialBinningSmooth} and \ref{fig:radialBinningSmoothCloseUp}.
+The figure clearly shows that some cells have a larger area within the bin than others, and thus contribute more. 
+
+{\color{editColor}{\Huge Computing the area of the cell within the bin should be described here!}}
+
+
+ 
+ 
+ 
+
+\begin{figure}
+\begin{minipage}[t]{0.49\linewidth}
+	\captionsetup{width=\textwidth}
+	\resizebox{\linewidth}{!}{
+		\input{figures/tikz/radialSmoothing.tikz}
+	}
+	\caption{Radial binning based on weighted contributions of intersecting cells. The third radial bin is colored, and its value will be the average of the intersecting cells weight times the fraction of the cells area that intersects the bin. A close-up of the outlined cell, is shown in figure \ref{fig:radialBinningSmoothCloseUp}.}
+	\label{fig:radialBinningSmooth}
+\end{minipage}
+\quad
+\begin{minipage}[t]{0.49\linewidth}
+	\captionsetup{width=\textwidth}
+	\resizebox{\linewidth}{!}{
+		\input{figures/tikz/radialSmoothingCloseUp.tikz}
+	}
+	\caption{Close-up of outlined cell in figure \ref{fig:radialBinningSmooth}. The contribution from this cell will be it weight multiplied by the fraction of its total area that is colored. }
+	\label{fig:radialBinningSmoothCloseUp}
+\end{minipage}
+\end{figure}
 
 
 \chapter{Computing the normal force distribution}

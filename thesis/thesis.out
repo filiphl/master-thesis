@@ -18,12 +18,13 @@
 \BOOKMARK [1][-]{section.4.4}{Moving the sphere towards the slab}{chapter.4}% 18
 \BOOKMARK [0][-]{chapter.5}{This must be sorted in designated chapters}{}% 19
 \BOOKMARK [1][-]{section.5.1}{Radial distribution of normal force}{chapter.5}% 20
-\BOOKMARK [0][-]{chapter.6}{Computing the normal force distribution}{}% 21
-\BOOKMARK [1][-]{section.6.1}{Creating a custom compute}{chapter.6}% 22
-\BOOKMARK [2][-]{subsection.6.1.1}{Find a similar compute}{section.6.1}% 23
-\BOOKMARK [2][-]{subsection.6.1.2}{Creating the class}{section.6.1}% 24
-\BOOKMARK [1][-]{section.6.2}{Least squares regression}{chapter.6}% 25
-\BOOKMARK [0][-]{appendix.A}{Source code}{}% 26
-\BOOKMARK [1][-]{section.A.1}{compute\137group\137group.h}{appendix.A}% 27
-\BOOKMARK [1][-]{section.A.2}{compute\137group\137group\137atom.h}{appendix.A}% 28
-\BOOKMARK [1][-]{section.A.3}{compute\137group\137group\137atom.cpp}{appendix.A}% 29
+\BOOKMARK [2][-]{subsection.5.1.1}{Radial binning}{section.5.1}% 21
+\BOOKMARK [0][-]{chapter.6}{Computing the normal force distribution}{}% 22
+\BOOKMARK [1][-]{section.6.1}{Creating a custom compute}{chapter.6}% 23
+\BOOKMARK [2][-]{subsection.6.1.1}{Find a similar compute}{section.6.1}% 24
+\BOOKMARK [2][-]{subsection.6.1.2}{Creating the class}{section.6.1}% 25
+\BOOKMARK [1][-]{section.6.2}{Least squares regression}{chapter.6}% 26
+\BOOKMARK [0][-]{appendix.A}{Source code}{}% 27
+\BOOKMARK [1][-]{section.A.1}{compute\137group\137group.h}{appendix.A}% 28
+\BOOKMARK [1][-]{section.A.2}{compute\137group\137group\137atom.h}{appendix.A}% 29
+\BOOKMARK [1][-]{section.A.3}{compute\137group\137group\137atom.cpp}{appendix.A}% 30

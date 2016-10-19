@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\begin{scope}
+\clip (-3,-3) rectangle (3,3);
+\draw[p4,line width=0.5mm, fill=p2] (0,0) circle (3cm);
+\draw[p4,line width=0.5mm, fill=white] (0,0) circle (2cm);
+\draw[p4,line width=0.5mm, fill=white] (0,0) circle (1cm);
+\draw[p4,line width=0.5mm] (0,0) circle (4cm);
+\end{scope}
+\draw[gray] (-3,-3) grid (3,3);
+\draw[fill=p6] (0,0) circle (1mm);
+\draw[thick, p6] (1,1) rectangle (2,2);
+\end{tikzpicture}
