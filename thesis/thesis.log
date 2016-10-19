@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  16 OCT 2016 12:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  19 OCT 2016 16:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1658,7 +1658,17 @@ Overfull \hbox (6.13927pt too wide) in paragraph at lines 394--411
 [][]  [] 
  []
 
-[18] [19] [20
+
+<figures/forceDistribution/radialDistribution/weights.pdf, id=451, 413.56433pt 
+x 360.81943pt>
+File: figures/forceDistribution/radialDistribution/weights.pdf Graphic file (ty
+pe pdf)
+ <use figures/forceDistribution/radialDistribution/weights.pdf>
+Package pdftex.def Info: figures/forceDistribution/radialDistribution/weights.p
+df used on input line 415.
+(pdftex.def)             Requested size: 224.78543pt x 196.1169pt.
+
+[18] [19 <./figures/forceDistribution/radialDistribution/weights.pdf>] [20
 
 ]
 Chapter 6.
@@ -1704,24 +1714,24 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [36])
 (./thesis.bbl) [37]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 588.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 588.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 595.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 595.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 588.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 588.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 595.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 595.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 9588A3D2002093A3E77083CD8CA73D7E;2020.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 588.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 595.
  ) 
 Here is how much of TeX's memory you used:
- 36046 strings out of 493089
- 725133 string characters out of 6134842
- 971790 words of memory out of 5000000
- 38198 multiletter control sequences out of 15000+600000
+ 36054 strings out of 493089
+ 725474 string characters out of 6134842
+ 971904 words of memory out of 5000000
+ 38203 multiletter control sequences out of 15000+600000
  35314 words of font info for 101 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  55i,12n,73p,10402b,2306s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1759,10 +1769,10 @@ lic/cm-super/sftt1000.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/publi
 c/cm-super/sftt1095.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/
 cm-super/sftt1200.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/ncntr
 sbk/uncr8a.pfb>
-Output written on thesis.pdf (47 pages, 2428761 bytes).
+Output written on thesis.pdf (47 pages, 2458818 bytes).
 PDF statistics:
- 1248 PDF objects out of 1440 (max. 8388607)
- 1142 compressed objects within 12 object streams
- 640 named destinations out of 1000 (max. 500000)
- 278 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1262 PDF objects out of 1440 (max. 8388607)
+ 1152 compressed objects within 12 object streams
+ 641 named destinations out of 1000 (max. 500000)
+ 283 words of extra memory for PDF output out of 10000 (max. 10000000)
 
