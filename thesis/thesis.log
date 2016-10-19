@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  19 OCT 2016 16:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  19 OCT 2016 21:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1659,14 +1659,14 @@ Overfull \hbox (6.13927pt too wide) in paragraph at lines 394--411
  []
 
 
-<figures/forceDistribution/radialDistribution/weights.pdf, id=451, 413.56433pt 
-x 360.81943pt>
+<figures/forceDistribution/radialDistribution/weights.pdf, id=451, 414.23422pt 
+x 359.70203pt>
 File: figures/forceDistribution/radialDistribution/weights.pdf Graphic file (ty
 pe pdf)
  <use figures/forceDistribution/radialDistribution/weights.pdf>
 Package pdftex.def Info: figures/forceDistribution/radialDistribution/weights.p
 df used on input line 415.
-(pdftex.def)             Requested size: 224.78543pt x 196.1169pt.
+(pdftex.def)             Requested size: 224.42899pt x 194.88101pt.
 
 [18] [19 <./figures/forceDistribution/radialDistribution/weights.pdf>] [20
 
@@ -1769,7 +1769,7 @@ lic/cm-super/sftt1000.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/publi
 c/cm-super/sftt1095.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/
 cm-super/sftt1200.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/ncntr
 sbk/uncr8a.pfb>
-Output written on thesis.pdf (47 pages, 2458818 bytes).
+Output written on thesis.pdf (47 pages, 2459310 bytes).
 PDF statistics:
  1262 PDF objects out of 1440 (max. 8388607)
  1152 compressed objects within 12 object streams
