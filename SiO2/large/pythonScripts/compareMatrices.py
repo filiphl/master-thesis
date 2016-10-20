@@ -127,7 +127,7 @@ class Forces:
 
             if self.plotAverage:
                 #plt.plot(21.5,22.5, 'g*', markersize=10)
-                plt.show()
+                plt.draw()
 
 #------------------------------------------------------------------------------#
 

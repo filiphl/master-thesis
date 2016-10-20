@@ -1,5 +1,6 @@
 from surface import *
 from compareMatrices import *
+from radialBinning2 import smooth
 from matplotlib import rc
 import pickle
 
@@ -40,7 +41,9 @@ def loadForces(filePath=False):
 surf = loadSurface('../dataFiles/surface.pkl')
 
 force = loadForces('../dataFiles/forces.pkl')
-force.plotMatrix()
+
+#plt.figure()
+#force.plotMatrix()
 
 for i in xrange(45):
     for j in xrange(45):
@@ -52,8 +55,28 @@ for i in xrange(45):
 
 
 
-xc = 22.5
-yc = 22.5
+
+
+
+radialBinning = smooth(45,22, binWidth=2)
+radialBinning.show(3)
+r = radialBinning.bins[1:]
+F = np.zeros(radialBinning.nBins)
+
+for k in xrange(radialBinning.nBins):
+    area = np.pi * (radialBinning.bins[k+1]**2-radialBinning.bins[k]**2)
+    value = 0
+    for i in xrange(45):
+        for j in xrange(45):
+            if not np.isnan(force.absoluteForces[i,j]):
+                value += force.absoluteForces[i,j] * radialBinning.weights[i,j,k]
+                #print force.absoluteForces[i,j], radialBinning.weights[i,j,k]
+    F[k] = value/area
+
+print F
+'''
+xc = 22
+yc = 22
 R  = 10
 M  = 10
 
@@ -77,6 +100,7 @@ for i in xrange(M):
         F[i]/=count[i]
         if not F[i] > 0:
             F[i] = 0
+'''
 #------------------------------------------------------------------------------#
 
 
@@ -86,6 +110,7 @@ rc('text', usetex=True)
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 
+plt.figure()
 plt.plot(r,F,
  '-h',
  color="#478684",
@@ -96,6 +121,6 @@ plt.plot(r,F,
 plt.title(r"$ $Radial distribution of normal force", fontsize=18)
 plt.xlabel(r"$r$", fontsize=18)
 plt.ylabel(r"$eV/\AA$", fontsize=16)
-plt.xlim([0,R])
+plt.xlim([0,12 ])
 plt.grid('on')
 plt.show()
