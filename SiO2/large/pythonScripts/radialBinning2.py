@@ -127,12 +127,50 @@ class smooth:
         ax.set_xticklabels([])
         ax.set_yticklabels([])
         plt.axis([-0.5, self.N-0.5, -0.5, self.N-0.5])
-        plt.savefig('weights.pdf')
+        #plt.savefig('weights.pdf')
         plt.draw()
+
+
+
+
+
 
 if __name__ == '__main__':
 
     rb = smooth(16,7.5, pBin=2)
 
-    print rb.weights[:,:,2]
-    print rb.weights.max
+    l, = plt.imshow(rb.weights[:,:,Bin], cmap='gray_r', interpolation='nearest', origin='lower', vmin=0, vmax=1)
+
+    from matplotlib.widgets import Slider, Button, RadioButtons
+
+    axcolor = 'lightgoldenrodyellow'
+    axBin = plt.axes([0.25, 0.15, 0.65, 0.03], axisbg=axcolor)
+
+    sBin = Slider(axBin, 'Freq', 1, 10, valinit=2)
+
+
+    def update(val):
+        Bin = sBin.val
+        plt.imshow(rb.weights[:,:,Bin], cmap='gray_r', interpolation='nearest', origin='lower', vmin=0, vmax=1)
+
+        fig.canvas.draw_idle()
+    sBin.on_changed(update)
+
+    resetax = plt.axes([0.8, 0.025, 0.1, 0.04])
+    button = Button(resetax, 'Reset', color=axcolor, hovercolor='0.975')
+
+
+    def reset(event):
+        sBin.reset()
+    button.on_clicked(reset)
+
+    rax = plt.axes([0.025, 0.5, 0.15, 0.15], axisbg=axcolor)
+    radio = RadioButtons(rax, ('red', 'blue', 'green'), active=0)
+
+
+    def colorfunc(label):
+        l.set_color(label)
+        fig.canvas.draw_idle()
+    radio.on_clicked(colorfunc)
+
+    plt.show()

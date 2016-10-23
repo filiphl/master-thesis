@@ -137,3 +137,7 @@ class Forces:
 if __name__=='__main__':
 
     singleObject = Forces('../forceFiles/forcesAll.txt')
+    singleObject.name = 'whatever'
+    singleObject.plotAverage = True
+    singleObject.plotMatrix()
+    plt.show()
