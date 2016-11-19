@@ -146,7 +146,7 @@ class ForceDistribution:
 
 if __name__ == '__main__':
 
-    for bw in np.linspace(1,1,1):
+    for bw in np.linspace(1,2,11):
         N = 45
         surfN = 11
         nn = 0

@@ -1,48 +1,53 @@
-LAMMPS (7 Sep 2016-ICMS)
-WARNING: OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (../comm.cpp:90)
-  using 1 OpenMP thread(s) per MPI task
-variable filename string restartFiles/hold195000.restart 
-package omp 8 
-set 8 OpenMP thread(s) per MPI task
-using multi-threaded neighbor list subroutines
-suffix omp 
-units metal 
-boundary p p p 
-atom_style atomic 
-pair_style vashishta 
-#pair_modify mix arithmetic # LEAVE THIS UNSPECIFIED! 
-read_restart ${filename} 
-read_restart restartFiles/hold195000.restart 
+LAMMPS (27 Aug 2016-ICMS)
+include "system.in.init"
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+read_restart ${filename}
+read_restart restartFiles/hold195000.restart
 WARNING: Restart file used different # of processors (../read_restart.cpp:717)
   orthogonal box = (0 0 0) to (320.4 320.4 138)
-  1 by 1 by 1 MPI processor grid
+  2 by 2 by 1 MPI processor grid
   537410 atoms
-pair_coeff * * SiO2.vashishta Si O 
+include "system.in.settings"
+  pair_coeff  * *  SiO2.vashishta Si O
 Reading potential file SiO2.vashishta with DATE: 2015-10-14
-pair_modify table 16 
-pair_modify tabinner 0.1 
-# -----------Freeze the "bottom" of the slab ---------------- 
-fix freezeID bottomAtomsID setforce 0 0 0 
-velocity bottomAtomsID set 0 0 0 
-variable N equal 4001 
-variable T equal 293 
-neighbor 0.3 bin 
-neigh_modify delay 10 
-thermo 100 
-timestep 0.002 
-#restart 5000 restartFiles/hold*.restart 
-fix nvt all nvt temp ${T} ${T} 1.0 
-fix nvt all nvt temp 293 ${T} 1.0 
-fix nvt all nvt temp 293 293 1.0 
+  pair_modify table 16
+  pair_modify tabinner 0.1
+
+# -----------Freeze the "bottom" of the slab ----------------
+fix freezeID bottomAtomsID setforce 0 0 0
+velocity bottomAtomsID set 0 0 0
+
+variable N equal 1
+variable T equal 293
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+#restart 5000 restartFiles/hold*.restart
+
+fix nvt all nvt temp ${T} ${T} 1.0
+fix nvt all nvt temp 293 ${T} 1.0
+fix nvt all nvt temp 293 293 1.0
 Resetting global state of Fix nvt Style nvt from restart file info
-compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12 
-#compute stressID all stress/atom NULL 
-#fix fixChunkID all ave/chunk 100 10 1000 chunkID c_stressID[3] file stress50000.txt 
-#compute computeID slabGroup group/group/atom sphereGroup pair yes 
-#fix fixComputeID slabGroup ave/chunk 2 100 200 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forcesAll.txt #ave running 
-dump myDump surfaceGroup atom 200 dumpFiles/Surface*.dump 
-run 1 pre yes post no start 195000 stop 199001
-Last active /omp style is pair_style vashishta/omp
+
+compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+
+#compute stressID all stress/atom NULL
+#fix fixChunkID all ave/chunk  100 10 1000 chunkID c_stressID[3] file stress50000.txt
+
+#compute computeID slabGroup group/group/atom sphereGroup pair yes
+#fix fixComputeID slabGroup ave/chunk 2 100 200 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forcesAll.txt #ave running
+
+dump myDump surfaceGroup atom 1 surfaceFiles/Surface*.dump
+run ${N}
+run 1
 Neighbor list info ...
   1 neighbor list requests
   update every 1 steps, delay 10 steps, check yes
@@ -50,323 +55,36 @@ Neighbor list info ...
   master list distance cutoff = 5.8
   ghost atom cutoff = 5.8
   binsize = 2.9 -> bins = 111 111 48
-Memory usage per processor = 250.571 Mbytes
+Memory usage per processor = 35.7108 Mbytes
 Step Temp E_pair E_mol TotEng Press 
   195000    292.84003     -1807372            0   -1787029.7    17260.277 
   195001    292.69285   -1807361.6            0   -1787029.6    17263.691 
-Loop time of 0.31596 on 8 procs for 1 steps with 537410 atoms
+Loop time of 2.42264 on 4 procs for 1 steps with 537410 atoms
 
-716.5% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195001    292.69285   -1807361.6            0   -1787029.6    17263.691 
-  195002    292.49403   -1807347.6            0   -1787029.3    17268.879 
-Loop time of 0.324677 on 8 procs for 1 steps with 537410 atoms
+Performance: 0.071 ns/day, 336.478 hours/ns, 0.413 timesteps/s
+34.4% CPU use with 4 MPI tasks x no OpenMP threads
 
-720.7% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195002    292.49403   -1807347.6            0   -1787029.3    17268.879 
-  195003    292.33902   -1807336.6            0   -1787029.1    17272.784 
-Loop time of 0.308417 on 8 procs for 1 steps with 537410 atoms
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 2.2738     | 2.2813     | 2.2898     |   0.4 | 94.16
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.005981   | 0.014428   | 0.021561   |   5.0 |  0.60
+Output  | 0.095371   | 0.095485   | 0.095594   |   0.0 |  3.94
+Modify  | 0.028893   | 0.029855   | 0.03062    |   0.4 |  1.23
+Other   |            | 0.001614   |            |       |  0.07
 
-695.2% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195003    292.33902   -1807336.6            0   -1787029.1    17272.784 
-  195004    292.30079   -1807334.1            0   -1787029.2     17273.23 
-Loop time of 0.257396 on 8 procs for 1 steps with 537410 atoms
+Nlocal:    134352 ave 134474 max 134211 min
+Histogram: 1 0 0 0 0 2 0 0 0 1
+Nghost:    37728.8 ave 37814 max 37634 min
+Histogram: 1 1 0 0 0 0 0 0 0 2
+Neighs:    0 ave 0 max 0 min
+Histogram: 4 0 0 0 0 0 0 0 0 0
+FullNghs:  7.64707e+06 ave 7.65534e+06 max 7.6418e+06 min
+Histogram: 1 0 1 1 0 0 0 0 0 1
 
-738.2% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195004    292.30079   -1807334.1            0   -1787029.2     17273.23 
-  195005    292.40008   -1807341.3            0   -1787029.6    17269.799 
-Loop time of 0.281235 on 8 procs for 1 steps with 537410 atoms
-
-728.2% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195005    292.40008   -1807341.3            0   -1787029.6    17269.799 
-  195006     292.6011   -1807355.8            0   -1787030.1    17263.911 
-Loop time of 0.261771 on 8 procs for 1 steps with 537410 atoms
-
-739.6% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195006     292.6011   -1807355.8            0   -1787030.1    17263.911 
-  195007    292.82831   -1807372.1            0   -1787030.6    17258.136 
-Loop time of 0.277808 on 8 procs for 1 steps with 537410 atoms
-
-719.9% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195007    292.82831   -1807372.1            0   -1787030.6    17258.136 
-  195008    293.00276   -1807384.6            0     -1787031    17255.129 
-Loop time of 0.260329 on 8 procs for 1 steps with 537410 atoms
-
-740.6% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195008    293.00276   -1807384.6            0     -1787031    17255.129 
-  195009    293.08042   -1807390.1            0   -1787031.1    17256.411 
-Loop time of 0.277601 on 8 procs for 1 steps with 537410 atoms
-
-727.7% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195009    293.08042   -1807390.1            0   -1787031.1    17256.411 
-  195010    293.06386     -1807389            0   -1787031.2    17261.773 
-Loop time of 0.550465 on 8 procs for 1 steps with 537410 atoms
-
-698.3% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195010    293.06386     -1807389            0   -1787031.2    17261.773 
-  195011     292.9877   -1807383.7            0   -1787031.1    17269.701 
-Loop time of 0.268598 on 8 procs for 1 steps with 537410 atoms
-
-726.7% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195011     292.9877   -1807383.7            0   -1787031.1    17269.701 
-  195012    292.89472   -1807377.3            0   -1787031.2    17278.488 
-Loop time of 0.303544 on 8 procs for 1 steps with 537410 atoms
-
-701.1% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195012    292.89472   -1807377.3            0   -1787031.2    17278.488 
-  195013    292.81627     -1807372            0   -1787031.3    17286.768 
-Loop time of 0.262276 on 8 procs for 1 steps with 537410 atoms
-
-748.8% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195013    292.81627     -1807372            0   -1787031.3    17286.768 
-  195014    292.76951   -1807368.9            0   -1787031.5    17293.404 
-Loop time of 0.276164 on 8 procs for 1 steps with 537410 atoms
-
-738.7% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195014    292.76951   -1807368.9            0   -1787031.5    17293.404 
-  195015    292.76683   -1807368.8            0   -1787031.6    17297.539 
-Loop time of 0.272293 on 8 procs for 1 steps with 537410 atoms
-
-730.1% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195015    292.76683   -1807368.8            0   -1787031.6    17297.539 
-  195016    292.82081   -1807372.7            0   -1787031.7    17298.582 
-Loop time of 0.26683 on 8 procs for 1 steps with 537410 atoms
-
-743.5% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195016    292.82081   -1807372.7            0   -1787031.7    17298.582 
-  195017    292.93552   -1807380.9            0     -1787032    17296.505 
-Loop time of 0.273618 on 8 procs for 1 steps with 537410 atoms
-
-730.9% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195017    292.93552   -1807380.9            0     -1787032    17296.505 
-  195018    293.08886     -1807392            0   -1787032.4    17292.366 
-Loop time of 0.277226 on 8 procs for 1 steps with 537410 atoms
-
-722.9% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195018    293.08886     -1807392            0   -1787032.4    17292.366 
-  195019    293.22364   -1807401.9            0   -1787032.9    17288.278 
-Loop time of 0.271375 on 8 procs for 1 steps with 537410 atoms
-
-741.4% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195019    293.22364   -1807401.9            0   -1787032.9    17288.278 
-  195020    293.26826   -1807405.3            0   -1787033.3     17287.01 
-Loop time of 0.505679 on 8 procs for 1 steps with 537410 atoms
-
-739.6% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195020    293.26826   -1807405.3            0   -1787033.3     17287.01 
-  195021    293.18556   -1807399.6            0   -1787033.3     17290.07 
-Loop time of 0.263523 on 8 procs for 1 steps with 537410 atoms
-
-748.3% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195021    293.18556   -1807399.6            0   -1787033.3     17290.07 
-  195022    293.00852   -1807387.1            0   -1787033.1    17296.563 
-Loop time of 0.282327 on 8 procs for 1 steps with 537410 atoms
-
-718.3% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195022    293.00852   -1807387.1            0   -1787033.1    17296.563 
-  195023    292.82372   -1807374.1            0   -1787032.9    17303.737 
-Loop time of 0.279451 on 8 procs for 1 steps with 537410 atoms
-
-731.4% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195023    292.82372   -1807374.1            0   -1787032.9    17303.737 
-  195024    292.71553   -1807366.6            0   -1787032.9    17308.539 
-Loop time of 0.283683 on 8 procs for 1 steps with 537410 atoms
-
-705.0% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195024    292.71553   -1807366.6            0   -1787032.9    17308.539 
-  195025    292.71728     -1807367            0   -1787033.3    17309.757 
-Loop time of 0.271732 on 8 procs for 1 steps with 537410 atoms
-
-734.5% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195025    292.71728     -1807367            0   -1787033.3    17309.757 
-  195026    292.80316   -1807373.4            0   -1787033.7    17308.039 
-Loop time of 0.253621 on 8 procs for 1 steps with 537410 atoms
-
-768.1% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195026    292.80316   -1807373.4            0   -1787033.7    17308.039 
-  195027    292.91918   -1807381.9            0   -1787034.1    17304.931 
-Loop time of 0.254275 on 8 procs for 1 steps with 537410 atoms
-
-759.8% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195027    292.91918   -1807381.9            0   -1787034.1    17304.931 
-  195028    293.02074   -1807389.2            0   -1787034.3    17301.793 
-Loop time of 0.256258 on 8 procs for 1 steps with 537410 atoms
-
-755.5% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195028    293.02074   -1807389.2            0   -1787034.3    17301.793 
-  195029    293.08749     -1807394            0   -1787034.5    17299.378 
-Loop time of 0.256146 on 8 procs for 1 steps with 537410 atoms
-
-754.3% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195029    293.08749     -1807394            0   -1787034.5    17299.378 
-  195030    293.11889   -1807396.3            0   -1787034.6    17297.722 
-Loop time of 0.524993 on 8 procs for 1 steps with 537410 atoms
-
-725.3% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195030    293.11889   -1807396.3            0   -1787034.6    17297.722 
-  195031    293.12521   -1807396.8            0   -1787034.7    17296.186 
-Loop time of 0.266307 on 8 procs for 1 steps with 537410 atoms
-
-743.5% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195031    293.12521   -1807396.8            0   -1787034.7    17296.186 
-  195032    293.11762   -1807396.5            0   -1787034.9    17294.158 
-Loop time of 0.264944 on 8 procs for 1 steps with 537410 atoms
-
-735.2% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195032    293.11762   -1807396.5            0   -1787034.9    17294.158 
-  195033    293.10004   -1807395.4            0   -1787035.1    17291.506 
-Loop time of 0.265097 on 8 procs for 1 steps with 537410 atoms
-
-745.4% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195033    293.10004   -1807395.4            0   -1787035.1    17291.506 
-  195034    293.06704   -1807393.4            0   -1787035.3    17288.566 
-Loop time of 0.269859 on 8 procs for 1 steps with 537410 atoms
-
-724.8% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195034    293.06704   -1807393.4            0   -1787035.3    17288.566 
-  195035    293.00946   -1807389.5            0   -1787035.5    17285.746 
-Loop time of 0.267257 on 8 procs for 1 steps with 537410 atoms
-
-716.9% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195035    293.00946   -1807389.5            0   -1787035.5    17285.746 
-  195036    292.92636   -1807383.9            0   -1787035.6    17283.217 
-Loop time of 0.250903 on 8 procs for 1 steps with 537410 atoms
-
-770.0% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195036    292.92636   -1807383.9            0   -1787035.6    17283.217 
-  195037    292.82994   -1807377.3            0   -1787035.7    17281.156 
-Loop time of 0.265476 on 8 procs for 1 steps with 537410 atoms
-
-739.8% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195037    292.82994   -1807377.3            0   -1787035.7    17281.156 
-  195038     292.7346   -1807370.8            0   -1787035.8    17279.598 
-Loop time of 0.25941 on 8 procs for 1 steps with 537410 atoms
-
-752.5% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195038     292.7346   -1807370.8            0   -1787035.8    17279.598 
-  195039    292.64364   -1807364.7            0     -1787036    17278.942 
-Loop time of 0.251668 on 8 procs for 1 steps with 537410 atoms
-
-766.1% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195039    292.64364   -1807364.7            0     -1787036    17278.942 
-  195040    292.55115   -1807358.4            0   -1787036.2    17279.721 
-Loop time of 0.52854 on 8 procs for 1 steps with 537410 atoms
-
-713.7% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 1 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195040    292.55115   -1807358.4            0   -1787036.2    17279.721 
-  195041    292.45861   -1807352.1            0   -1787036.3    17282.027 
-Loop time of 0.269975 on 8 procs for 1 steps with 537410 atoms
-
-727.5% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 100 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195041    292.45861   -1807352.1            0   -1787036.3    17282.027 
-  195100    293.08334   -1807406.2            0     -1787047    17354.212 
-  195141    292.50847   -1807372.3            0     -1787053    17354.676 
-Loop time of 20.9936 on 8 procs for 100 steps with 537410 atoms
-
-763.5% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 100 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195141    292.50847   -1807372.3            0     -1787053    17354.676 
-  195200     292.9253   -1807410.6            0   -1787062.3    17281.977 
-  195241    292.54762   -1807389.9            0   -1787067.9    17329.968 
-Loop time of 20.9678 on 8 procs for 100 steps with 537410 atoms
-
-760.3% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 100 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195241    292.54762   -1807389.9            0   -1787067.9    17329.968 
-  195300    292.47652   -1807392.4            0   -1787075.4    17320.598 
-  195341    292.55466     -1807403            0   -1787080.6    17331.382 
-Loop time of 20.9165 on 8 procs for 100 steps with 537410 atoms
-
-763.3% CPU use with 1 MPI tasks x 8 OpenMP threads
-run 100 pre no post no start 195000 stop 199001
-Step Temp E_pair E_mol TotEng Press 
-  195341    292.55466     -1807403            0   -1787080.6    17331.382 
-  195400    292.46387   -1807403.3            0   -1787087.1    17329.517 
-  195441    292.77984   -1807429.1            0     -1787091    17372.072 
-Loop time of 20.9125 on 8 procs for 100 steps with 537410 atoms
-
-763.3% CPU use with 1 MPI tasks x 8 OpenMP threads
-Total wall time: 0:02:19
+Total # of neighbors = 30588286
+Ave neighs/atom = 56.918
+Neighbor list builds = 0
+Dangerous builds = 0
+Total wall time: 0:00:05

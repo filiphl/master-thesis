@@ -2,6 +2,10 @@
 
 import "beta-cristobalite.lt"
 
-SiO2 = new beta-cristobalite [15].move(7.12, 0.00, 0.00)
-                             [15].move(0.00, 7.12, 0.00)
-                             [15].move(0.00, 0.00, 7.12)
+SiO2 = new beta-cristobalite [5].move(7.12, 0.00, 0.00)
+                             [5].move(0.00, 7.12, 0.00)
+                             [5].move(0.00, 0.00, 7.12)
+
+SiO2 = new beta-cristobalite.move(35.6, 0.0, 0.0).rot(90, 1, 0, 0) [5].move(7.12, 0.00, 0.00)
+                                                                   [5].move(0.00, 7.12, 0.00)
+                                                                   [5].move(0.00, 0.00, 7.12)

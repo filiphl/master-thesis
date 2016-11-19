@@ -180,10 +180,11 @@ class smooth:
 
 
         def up(event):
-            if sBin.val < 8:
+            if sBin.val < self.nBins - 1:
                 sBin.val += 1
             Bin = int(sBin.val)
             im.set_data(self.weights[:,:,Bin])
+            #plt.title('Bin = %d'%int(sBin.val))
             fig.canvas.draw_idle()
         upbutton.on_clicked(up)
 
@@ -193,6 +194,7 @@ class smooth:
                 sBin.val -= 1
             Bin = int(sBin.val)
             im.set_data(self.weights[:,:,Bin])
+            #plt.title('Bin = %d'%int(sBin.val))
             fig.canvas.draw_idle()
         downbutton.on_clicked(down)
 

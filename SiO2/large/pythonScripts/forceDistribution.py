@@ -1,64 +1,168 @@
-import re
-import numpy as np
-from matplotlib import pyplot as plt
-import matplotlib.ticker as ticker
-import sys
+from surface import *
+from compareMatrices import *
+from radialBinning import smooth
+from matplotlib import rc
+from scipy import ndimage
+import matplotlib as mpl
+import pickle
 
-filepath = str(sys.argv[1])
-infile = open(filepath, 'r')
+class ForceDistribution:
 
-for i in xrange(3):
-    infile.readline()
-content = infile.read()
-content = content.split('\n')
-for line in xrange(len(content)):
-    content[line] = re.sub(r'\s*\d+\s\d*\.?\d*\s\d*\.?\d*\s\d+\s0\s0\s0\s?', r'', content[line])
+    def __init__(self, N, surfN, nearestNeighbor, binWidth, cx, cy):
+        self.N = N
+        self.surfN = surfN
+        self.nn = nearestNeighbor
+        self.bw = binWidth
+        self.cx=cx
+        self.cy=cy
+        self.mapping = float(N)/surfN
+
+        self.surf  = self.loadSurface('../dataFiles/surface.pkl', N=surfN, s=nn)
+        self.force = self.loadForces('../dataFiles/forces.pkl')
+        #self.radialBinning = smooth(N, cx, cy, binWidth, nBins=int(16/binWidth))
+        self.surf.plotPlanes()
+
+    def loadSurface(self, filePath=False, N=46, s=5):
+        if filePath:
+            filePath = filePath.rstrip('.pkl') + 'N%ds%d.pkl'%(N,s)
+            try:
+                with open(filePath, 'rb') as input:
+                    print "Loaded surface file with N=%d and s=%d."%(N,s)
+                    return pickle.load(input)
+            except:
+                print "Couldn't load surface file."
+        s = SurfaceRegression('../surfaceFiles/', N, False, s)
+        if filePath:
+            with open(filePath, 'wb') as output:
+                pickle.dump(s, output, pickle.HIGHEST_PROTOCOL)
+        return s
+
+    def loadForces(self, filePath=False):
+        if filePath:
+            try:
+                with open(filePath, 'rb') as input:
+                    print "Loaded force file."
+                    return pickle.load(input)
+            except:
+                print "Couldn't load force file."
+        F = Forces('../forceFiles/forcesAll.txt')
+        F.plotAverage = True
+        F.name = 'Averaged normal force'
+        if filePath:
+            with open(filePath, 'wb') as output:
+                pickle.dump(F, output, pickle.HIGHEST_PROTOCOL)
+        return F
+
+    def transform(self, matrix, N, M, R, cx, cy):
+
+        r = np.linspace(0,R,N)
+        theta = np.linspace(0, 2*np.pi, M)
+        myevalmatrix = np.zeros((N, M, 2))
+        for i in range(N):
+            for j in range(M):
+                myevalmatrix[i, j,:] = np.asarray([cx+r[i]*np.cos(theta[j]), cy+r[i]*np.sin(theta[j])])
+
+        return ndimage.map_coordinates(matrix, np.transpose(myevalmatrix[:, :]), order=1)
+
+#------------------------------------------------------------------------------#
+    def computeDistributions(self):
 
 
-content = filter(None, content)
+    #surf.plotPlanes()
+    #plt.figure()
+    #force.plotMatrix()
+    #plt.show()
+    #radialBinning.show(3)
 
-nChunks = int(content[0].split()[1])
-snChunks = int(np.sqrt(nChunks))
+        self.normal = copy.deepcopy(self.force.absoluteForces)
+        self.shear  = copy.deepcopy(self.force.absoluteForces)
+        Fs = np.zeros((self.N, self.N, 3))
+
+        for i in xrange(self.N):
+            for j in xrange(self.N):
+                if not np.isnan( np.cos( self.surf.getAngle( self.force.matrix[i][j], self.surf.grid[ int(i/self.mapping),int(j/self.mapping) ] ) ) ):
+
+                    a = np.dot( self.force.matrix[i,j], self.surf.grid[ int(i/self.mapping),int(j/self.mapping) ] )
+                    b = np.dot(self.force.matrix[i][j], -self.surf.grid[int(i/self.mapping)][int(j/self.mapping)] )
+                    if a > b:
+                        self.normal[i,j] = a
+                        Fs[i,j] = self.force.matrix[i,j] - self.surf.grid[ int(i/self.mapping), int(j/self.mapping) ] * self.normal[i,j]
+                    else:
+                        self.normal[i,j] = b
+                        Fs[i,j] = self.force.matrix[i,j] + self.surf.grid[ int(i/self.mapping), int(j/self.mapping) ] * self.normal[i,j]
+
+                    self.shear [i,j] = np.sqrt(sum(Fs[i,j]**2))
+                    #x = i-self.cx
+                    #y = j-self.cy
+                    #self.shear[i,j] *= np.dot( self.surf.Norm(np.asarray([x,y])), Fs[i,j,:2] )
+                    #angle = self.surf.getAngle( self.shear[i,j], self.surf.grid[ int(i/self.mapping), int(j/self.mapping) ] )
+                    # Dot product of shear vector with unit vector from center to current point (i,j).
 
 
-NormalForces = np.zeros([snChunks, snChunks])
-Force = np.zeros([snChunks, snChunks, 3])
-count  = np.zeros([snChunks,snChunks])
 
-binWidth = 7.12
-steps = 1
-for line in content:
-    col = line.split()
-    if len(col)>3:
-        x = int(round(float(col[1])/binWidth))
-        y = int(round(float(col[2])/binWidth))
-        fx = float(col[4])
-        fy = float(col[5])
-        fz = float(col[6])
-        Force[x,y] += [fx,fy,fz]
-        count [x,y] += 1
-    else:
-        steps += 1
 
-ts = snChunks/100
 
-for x in xrange(snChunks):
-    for y in xrange(snChunks):
-        if count[x,y] > 0:
-            Force[x,y] /= count[x,y]*steps
-            NormalForces[x,y] = np.linalg.norm(Force[x,y]) * np.cos( getAngle(Force[x,y], normalVector[x,y]) )
-            #absoluteForces[x,y] = sum(Force[x,y])
-        else:
-            Force[x,y] = [0,0,0]
+    def plotDistributions(self):
+        fig, ax = plt.subplots(2,3, figsize=(15,10), sharey='row', sharex='col')
+        cmax = max(self.force.absoluteForces.max(), self.normal.max(), self.shear.max())
 
-#absoluteForces = np.sqrt(absoluteForces)
+        N = 46
+        M = 46
+        R = 16
 
-def fmt(x, pos):
-    a, b = '{:.2e}'.format(x).split('e')
-    b = int(b)
-    return r'${} \times 10^{{{}}}$'.format(a, b)
 
-plt.imshow(absoluteForces, interpolation='nearest', cmap="hot_r", )
-cb = plt.colorbar(format=ticker.FuncFormatter(fmt))
-#cb.ax.invert_yaxis()
-plt.show()
+        c=0
+        for f in [self.force.absoluteForces, self.normal, self.shear]:
+            output = self.transform(f,N,M,R,22.5,22.5)
+            im=ax[0,c].pcolor(output, vmin=0, vmax=cmax)
+
+            radialDist = np.mean(output,0)
+            ax[1,c].plot(radialDist, linewidth=2, color="#478684")
+            ax[0,c].set_xlim([0,46])
+            ax[1,c].set_xlabel(r"$r$", fontsize=18)
+            ax[1,c].set_xticks(np.linspace(0,N,6))
+            ax[1,c].set_xticklabels(['%.0f'%i for i in np.linspace(0,R,6)])
+            #ax[0,c].set_ylim([0,ymax*1.05])
+            ax[1,c].grid('on')
+            c+=1
+
+        fig.subplots_adjust(right=0.85)
+        cbar_ax = fig.add_axes([0.89, 0.535, 0.02, 0.3648])
+        fig.colorbar(im, cax=cbar_ax, format=ticker.FuncFormatter(self.force.fmt))
+
+
+        rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+        rc('text', usetex=True)
+        plt.rc('text', usetex=True)
+        plt.rc('font', family='serif')
+
+
+        ax[0,0].set_ylim([0,46])
+        ax[0,0].set_ylabel(r"$\theta$", fontsize=18)
+        ax[1,0].set_ylabel(r"$eV/\AA$", fontsize=16)
+        ax[0,0].set_title(r"$ $Magnitude", fontsize=16)
+        ax[0,1].set_title(r"$ $Normal", fontsize=16)
+        ax[0,2].set_title(r"$ $Shear", fontsize=16)
+
+        ax[0,0].set_yticks(np.linspace(0,M,5))
+        ax[0,0].set_yticklabels([r'$0$', r'$\pi/2$', r'$\pi$', r'$3\pi/2$', r'$2\pi$'],  fontsize=14)
+
+
+
+#------------------------------------------------------------------------------#
+
+if __name__ == '__main__':
+
+    for bw in np.linspace(1,1,1):
+        N = 45
+        surfN = 40
+        #bw = 1.2
+        cx=21.5
+        cy=22
+        nn=8
+        dist = ForceDistribution(N, surfN, nn, bw, cx, cy)
+        dist.computeDistributions()
+        dist.plotDistributions()
+
+
+    plt.show()

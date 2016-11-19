@@ -3,27 +3,37 @@
 
 
 #Define the region of the sphere
-#sphere args = x y z radius
 region sphereRegion sphere 53.4 53.4 85.44 30
+region smallSphereRegion sphere 53.4 53.4 85.44 25 side out
+region shellRegion intersect 2 sphereRegion smallSphereRegion
 group  sphereGroup region sphereRegion
+group  shellGroup region shellRegion
+
 
 #Define the region of the slab
-#Group the atoms in the slab
 #block args = xlo xhi ylo yhi zlo zhi
 region slabRegion block 0 INF 0 INF 0 35.6
 group  slabGroup region slabRegion
 
+region slabBottomRegion block 0.0 INF 0.0 INF 0.0 3.0
+group  slabBottomGroup region slabBottomRegion
+
 #Define the region that is outside the sphere and slab
-#union args = N reg-ID1 reg-ID2 ...
-region bothRegion union 2 sphereRegion slabRegion side out
+region bothRegion union 3 sphereRegion slabRegion slabBottomRegion side out
 
 #Delete all atoms exterior to the sphere and slab
 #delete_atoms style args keyword value ...
 delete_atoms region bothRegion
 
 
-#Freeze the "bottom" of the slab
-region RbottomAtomsID block 0.0 INF 0.0 INF 0.0 3.0
-group bottomAtomsID region RbottomAtomsID
-fix freezeID bottomAtomsID setforce 0 0 0
-velocity bottomAtomsID set 0 0 0
+#Freeze volumes
+
+region slabUpperRegion block 0.0 INF 0.0 INF 32.6 35.6
+group slabUpperGroup region slabUpperRegion
+
+fix bottomFreezeID slabBottomGroup setforce 0 0 0
+fix upperFreezeID  slabUpperGroup  setforce 0 0 0
+fix shellFreezeID  shellGroup      setforce 0 0 0
+velocity slabBottomGroup set 0 0 0
+velocity slabUpperGroup  set 0 0 0
+velocity shellGroup      set 0 0 0

@@ -16,12 +16,17 @@ write_once("In Settings") {
 
 import "beta-cristobalite.lt"
 
-SiO2 = new beta-cristobalite [15].move(7.12, 0.00, 0.00)
-                             [15].move(0.00, 7.12, 0.00)
-                             [12].move(0.00, 0.00, 7.12)
+SiO2 = new beta-cristobalite [4].move(7.12, 0.00, 0.00)
+                             [4].move(0.00, 7.12, 0.00)
+                             [10].move(0.00, 0.00, 7.12)
 
+
+SiO22 = new beta-cristobalite.move(0.0, 0.0, 91.2) [4].move(7.12, 0.00, 0.00)
+                                                   [4].move(0.00, 7.12, 0.00)
+                                                   [10].move(0.00, 0.00, 7.12)
+SiO22[*][*][*].rot(90, 0, 0, 1, 14.24, 14.28, 126.8)
 write_once("Data Boundary") {
-  0  106.8  xlo  xhi
-  0  106.8  ylo  yhi
-  0  85.44  zlo  zhi
+  0  28.48  xlo  xhi
+  0  28.48  ylo  yhi
+  0  162.4  zlo  zhi
 }
