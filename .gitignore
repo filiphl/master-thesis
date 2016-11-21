@@ -80,6 +80,8 @@ Thumbs.db
 *.lammpstrj
 *.restart
 
+*.pkl
+
 #LaTex
 *.out
 *.bbl
