@@ -11,9 +11,9 @@ include "system.in.init"
   pair_style    vashishta
   #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
 read_restart ${filename}
-read_restart restartFiles/SiO2_210000.restart
+read_restart restartFiles/SiO2_90000.restart
 WARNING: Restart file used different # of processors (../read_restart.cpp:717)
-  orthogonal box = (0 0 0) to (327.52 327.52 134.14)
+  orthogonal box = (0 0 0) to (327.52 327.52 131.64)
   1 by 1 by 1 MPI processor grid
   641608 atoms
 include "system.in.settings"
@@ -63,13 +63,13 @@ Neighbor list info ...
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 5.8
   ghost atom cutoff = 5.8
-  binsize = 2.9 -> bins = 113 113 47
-Memory usage per processor = 126.529 Mbytes
+  binsize = 2.9 -> bins = 113 113 46
+Memory usage per processor = 126.476 Mbytes
 Step Temp E_pair E_mol TotEng Press 
-  210000    293.49173   -2111765.1            0   -2087424.6     29657.52 
-Loop time of 2e-06 on 1 procs for 0 steps with 641608 atoms
+   90000    293.08994   -2103387.5            0   -2079080.3    32667.036 
+Loop time of 6.19888e-06 on 1 procs for 0 steps with 641608 atoms
 
-100.0% CPU use with 1 MPI tasks x no OpenMP threads
+48.4% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
@@ -79,19 +79,19 @@ Neigh   | 0          | 0          | 0          |   0.0 |  0.00
 Comm    | 0          | 0          | 0          |   0.0 |  0.00
 Output  | 0          | 0          | 0          |   0.0 |  0.00
 Modify  | 0          | 0          | 0          |   0.0 |  0.00
-Other   |            | 2e-06      |            |       |100.00
+Other   |            | 6.199e-06  |            |       |100.00
 
 Nlocal:    641608 ave 641608 max 641608 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:    106712 ave 106712 max 106712 min
+Nghost:    107001 ave 107001 max 107001 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Neighs:    0 ave 0 max 0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-FullNghs:  3.58525e+07 ave 3.58525e+07 max 3.58525e+07 min
+FullNghs:  3.60838e+07 ave 3.60838e+07 max 3.60838e+07 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 35852532
-Ave neighs/atom = 55.8792
+Total # of neighbors = 36083758
+Ave neighs/atom = 56.2396
 Neighbor list builds = 0
 Dangerous builds = 0
-Total wall time: 0:00:05
+Total wall time: 0:00:08

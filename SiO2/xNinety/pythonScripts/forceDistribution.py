@@ -34,7 +34,8 @@ class ForceDistribution:
             try:
                 with open(filePath, 'rb') as input:
                     print "Loaded surface file", filePath
-                    return pickle.load(input)
+                    pkl = pickle.load(input)
+                    return pkl
             except:
                 print "Couldn't load surface file."
 
@@ -55,8 +56,9 @@ class ForceDistribution:
                 filePath = filePath.rstrip('.pkl') + '_t%d.pkl'%self.timeStep
             try:
                 with open(filePath, 'rb') as input:
+                    pkl = pickle.load(input)
                     print "Loaded force file  ", filePath
-                    return pickle.load(input)
+                    return pkl
             except:
                 print "Couldn't load force file."
 

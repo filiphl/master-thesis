@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#for f in restartFiles/*
-#do
-#  lmp_mpi -in hold.in -var filename $f
-#done
+for f in restartFiles/*
+do
+  lmp_mpi -in hold.in -var filename $f
+done
 
 for f in surfaceFiles/*
 do
