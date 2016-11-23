@@ -290,6 +290,20 @@ We use the unit cell as building blocks, placing them concurrently until we have
 	\label{fig:hugeCube}
 \end{figure}
 
+
+\section{Verifications}
+\subsection{Melting point}
+Finding the melting point is a very important verification of our system. There are several factors that may affect the result. For instance, if the density of the system is too high, the melting point will be at a higher temperature than it normally would. Also, errors in the potential model may affect temperature og the melting point. 
+In the phase transition from a solid state to a liquid the atoms of the silica will have energy great enough to break the interatomic bonds. They will break loose from their regular arrangement and move about much more freely. 
+An approach to computing the melting point is therefore to systematically increase the temperature stepwise and sample the mean square displacement of the atoms at each designated temperature.  
+The mean square displacement is the average of the square of the displacement every atom has from it's initial position. It can be expressed as:
+\begin{equation}
+\langle r^2(t)\rangle = \frac{1}{N}\sum_{i=1}^{N}\lr{\vec{r}_i(t)-\vec{r}_i(0)}^2. \label{eq: diffusion constant}
+\end{equation}
+where $\vec{r}_i(t)$ is the position of atom $i$ at time $t$ and $N$ is the total number of atoms. 
+In practice the mean square displacement was computed using a standard \textit{compute} in LAMMPS, namely the \textit{msd compute}. At every time step it stores a vector of 4 elements. The first 3 are the squared $dx$, $dy$ and $dz$ displacements averaged over the atoms of the specific group, while the 4th is the total mean square displacement for the specific group, i.e. $(dx^2 + dy^2 + dz^2)$. 
+
+
 \section{Shaping the silica}
 
 %\begin{figure}
@@ -327,12 +341,25 @@ The appliance of the script in Listing \ref{lst:sculpting} on the system shown i
 \section{Moving the sphere towards the slab}
 We wish to push the sphere down onto the slab in order to create a deformation on the slab. There are probably a lot of smart ways to do this. The author has settled on the following strategy:
 
-We apply periodic boundary conditions in all three dimensions. This will in practice imply that the sphere cap and the slab are connected though the z-boundaries. 
-Secondly, we freeze the atoms at the bottom of the slab, so that their positions are fixed. This will, in combination with the periodic boundaries, allow us to consider the sphere cap and the slab as though they are 
+We apply periodic boundary conditions in all three dimensions. 
+%This will in practice imply that the sphere cap and the slab are connected through the z-boundaries. 
+Secondly, we freeze the atoms at the bottom of the slab so that their positions are fixed. 
+This will, due to the periodic boundary conditions, allow us to consider the sphere cap and the slab as if they are not connected to each other, but to independent blocks of silica glass.  
+Then, for every $N$ time steps we decrease the hight of the system, while remapping the positions of the atoms. 
+The remapping is a very important procedure. 
+It ensures that we do not loose any atoms that elsewise would be lost when moving the z-boundary. 
+A side-effect of the remapping is that the atoms in the system will be somewhat compressed in the z-direction. 
+Though, if we do the compression slowly, this will not be of any concern. 
 
-Then, for every $N$ time step we decrease the hight of the system, while remapping the positions of the atoms. 
-The remapping is a very important procedure. It ensures that we do not loose any atoms that elsewise would be lost when moving the z-boundary. A side-effect of the remapping is that the atoms in the system will be somewhat compressed in the z-direction. Though, if we do the compression slowly, this will not be of any concern. 
+\begin{lstlisting}[caption={LAMMPS commands for hard coding the forces and velocities of atoms within a specific group. Effectively freezing them.}, label={Deform}, language=c++]
+fix freezeID groupID setforce 0 0 0
+velocity groupID set 0 0 0
+\end{lstlisting}
 
+\begin{lstlisting}[caption={LAMMPS command for changing the size of the simulation box.}, label={Deform}, language=c++]
+fix ID all deform 1 z delta 0 -${compressionLength} remap x
+\end{lstlisting}
+ 
 
 
 
@@ -555,11 +582,9 @@ meaning that the normal force may be expressed as
 %	\vec{F_N} = \frac{\lr{\vec{F}\cdot\vec{n}}}{|\vec{n}|} \frac{\vec{n}}{|\vec{n}|} .\\
 \vec{F_N} = \lr{\vec{F}\cdot\vec{n}} \frac{\vec{n}}{|\vec{n}|^2} .
 \end{equation}
-
 We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in Listing \ref{angleVecLine}.
 
 \lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=190, lastline=197]{../SiO2/large/pythonScripts/surface.py}
-
 
 
 % ---------------------------------------------------------------------------- %

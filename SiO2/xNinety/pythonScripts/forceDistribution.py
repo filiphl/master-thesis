@@ -33,8 +33,8 @@ class ForceDistribution:
 
             try:
                 with open(filePath, 'rb') as input:
-                    print "Loaded surface file", filePath
                     pkl = pickle.load(input)
+                    print "Loaded surface file", filePath
                     return pkl
             except:
                 print "Couldn't load surface file."
@@ -90,13 +90,6 @@ class ForceDistribution:
 #------------------------------------------------------------------------------#
     def computeDistributions(self):
 
-
-    #surf.plotPlanes()
-    #plt.figure()
-    #force.plotMatrix()
-    #plt.show()
-    #radialBinning.show(3)
-
         self.normal = copy.deepcopy(self.force.absoluteForces)
         self.shear  = copy.deepcopy(self.force.absoluteForces)
         Fs = np.zeros((self.N, self.N, 3))
@@ -151,6 +144,7 @@ class ForceDistribution:
             ax[1,c].set_ylim([-0.01,0.025])
             c+=1
 
+
         fig.subplots_adjust(right=0.85)
         cbar_ax = fig.add_axes([0.89, 0.535, 0.02, 0.3648])
         fig.colorbar(im, cax=cbar_ax, format=ticker.FuncFormatter(self.force.fmt))
@@ -186,7 +180,7 @@ if __name__ == '__main__':
         cx=22.5
         cy=22.5
         nn=5
-        dist = ForceDistribution(N, surfN, nn, bw, cx, cy, timeStep=False)
+        dist = ForceDistribution(N, surfN, nn, bw, cx, cy, timeStep=150000)
         dist.computeDistributions()
         dist.plotDistributions()
 
