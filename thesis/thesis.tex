@@ -90,6 +90,45 @@ How is the thesis laid out?
 ...
 Molecular dynamics simulations are computationally expensive. And often scientists must balance statistical precision and CPU time. Technological improvements have provided the ability to simulate larger systems and/or at longer time frames. 
 
+\section{Boundary conditions}
+Boundary conditions is a crucial detail to decide upon when setting up a molecular dynamic experiment. The way we treat atoms at the boundary can have an immense effect on their behavior and how physically reasonable the results will be. There are several types of boundary conditions one may desire, and one may define custom conditions. A few examples are listed below. 
+
+
+
+\begin{tabular}{p{0.6\textwidth} p{0.3\textwidth}}
+	\vspace{0pt} 	{\it No boundary conditions}. Particles are not subject to any special rules at any boundry. The system size may be regarded as infinite. This  might be a reasonable choise when studying explosions for instance, or in experiments that is on a really short time scale.  
+	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/no.pdf} 
+	\\*
+	\vspace{0pt} {\it Reflecting boundary conditions}, which acts as hard walls. In stead of passing through the boundary, the velocity component in the direction normal to the face of the boundary changes sign, thus causing the atoms to be confined within the simulation box. 
+	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/reflecting.pdf} 
+	\\*
+	 \vspace{0pt} {\it Periodic boundary conditions}, which allow atoms on separate sides of a boundary to interact through the boundary as if they were neighbors, and atoms crossing the boundary reappears on the other side of the simulation box. This is useful when studying bulk areas of a material or materials that has a periodic structure.
+	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/periodic.pdf}
+\end{tabular}
+
+
+
+
+\newpage
+\subsection{Minimum image convention}
+\begin{figure}[H]
+	\centering{
+		\input{figures/minimumImageConvention/1D.pdf_tex}
+		\caption{Minimum image convention in 1 dimension. If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $L-\Delta x$. The white space indicates the system, while the gray area is periodic replications of the system. The replica on the other side is omitted, because it is not }
+		\label{fig:minimumImageConvention1D}
+	}
+\end{figure}
+
+\begin{figure}[H]
+	\centering{
+		\input{figures/minimumImageConvention/2D.pdf_tex}
+		\caption{Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images of the other atom that has the shortest distance to the reference atom. The shortest distance in this case is marked with a two-sided arrow. Thus, when computing positional dependent quantities it is the position of the north-west replica that will be considered as the position of the blue atom.}
+		\label{fig:minimumImageConvention2D}
+	}
+\end{figure}
+
+
+
 \chapter{LAMMPS}
 
 LAMMPS stands for \textit{Large-scale Atomic/Molecular Massively Parallel Simulator}. It is a classical molecular dynamics simulation code designed to run efficiently on parallel computers. It's development began in the mid 1990s at Sandia National Laboratories, with funding from the U.S. Department of Energy. It was a cooperative project between two DOE labs and three private companies. The development is still ongoing and contributions are revised thoroughly. 
@@ -296,7 +335,7 @@ We use the unit cell as building blocks, placing them concurrently until we have
 Finding the melting point is a very important verification of our system. There are several factors that may affect the result. For instance, if the density of the system is too high, the melting point will be at a higher temperature than it normally would. Also, errors in the potential model may affect temperature og the melting point. 
 In the phase transition from a solid state to a liquid the atoms of the silica will have energy great enough to break the interatomic bonds. They will break loose from their regular arrangement and move about much more freely. 
 An approach to computing the melting point is therefore to systematically increase the temperature stepwise and sample the mean square displacement of the atoms at each designated temperature.  
-The mean square displacement is the average of the square of the displacement every atom has from it's initial position. It can be expressed as:
+The mean square displacement is the average of the square of the displacement every atom has from its initial position. It can be expressed as:
 \begin{equation}
 \langle r^2(t)\rangle = \frac{1}{N}\sum_{i=1}^{N}\lr{\vec{r}_i(t)-\vec{r}_i(0)}^2. \label{eq: diffusion constant}
 \end{equation}
@@ -585,6 +624,7 @@ meaning that the normal force may be expressed as
 We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in Listing \ref{angleVecLine}.
 
 \lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=190, lastline=197]{../SiO2/large/pythonScripts/surface.py}
+
 
 
 % ---------------------------------------------------------------------------- %

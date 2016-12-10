@@ -26,94 +26,100 @@
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Molecular dynamics}{3}{chapter.2}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}LAMMPS}{5}{chapter.3}}
-\@writefile{lof}{\addvspace {10\p@ }}
-\@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Installation}{5}{section.3.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Linux}{5}{subsection.3.1.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Mac OS X with Homebrew}{6}{subsection.3.1.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Windows}{7}{subsection.3.1.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Running LAMMPS}{7}{section.3.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Efficiency improvements}{7}{section.3.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Cut-off}{7}{subsection.3.3.1}}
-\newlabel{eq: LJ-potential}{{3.1}{7}{Cut-off}{equation.3.3.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Cell lists and neighbor lists}{7}{subsection.3.3.2}}
-\pgfsyspdfmark {pgfid1}{16825374}{38859298}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }}{8}{figure.caption.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Boundary conditions}{3}{section.2.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Minimum image convention}{5}{subsection.2.1.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Minimum image convention in 1 dimension. If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $L-\Delta x$. The white space indicates the system, while the gray area is periodic replications of the system. The replica on the other side is omitted, because it is not \relax }}{5}{figure.caption.2}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:neighbourcells}{{3.1}{8}{Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }{figure.caption.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Parallelization}{8}{subsection.3.3.3}}
-\newlabel{lst:speedup}{{3.1}{9}{LAMMPS input script executed using several numbers of processors, and timed separately}{lstlisting.3.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}LAMMPS input script executed using several numbers of processors, and timed separately.}{9}{lstlisting.3.1}}
-\newlabel{speeduprun}{{3.2}{9}{Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart}{lstlisting.3.2}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.2}Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart.}{9}{lstlisting.3.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Speedup as a function of number of processors.\relax }}{9}{figure.caption.3}}
-\newlabel{fig:speedup15x15}{{3.2}{9}{Speedup as a function of number of processors.\relax }{figure.caption.3}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Setting up the system}{11}{chapter.4}}
+\newlabel{fig:minimumImageConvention1D}{{2.1}{5}{Minimum image convention in 1 dimension. If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $L-\Delta x$. The white space indicates the system, while the gray area is periodic replications of the system. The replica on the other side is omitted, because it is not \relax }{figure.caption.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images of the other atom that has the shortest distance to the reference atom. The shortest distance in this case is marked with a two-sided arrow. Thus, when computing positional dependent quantities it is the position of the north-west replica that will be considered as the position of the blue atom.\relax }}{5}{figure.caption.3}}
+\newlabel{fig:minimumImageConvention2D}{{2.2}{5}{Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images of the other atom that has the shortest distance to the reference atom. The shortest distance in this case is marked with a two-sided arrow. Thus, when computing positional dependent quantities it is the position of the north-west replica that will be considered as the position of the blue atom.\relax }{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}LAMMPS}{7}{chapter.3}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Silica}{11}{section.4.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Unit cell of b-cristobalite. Tan and blue spheres represent silicon and oxygen atoms respectively. The unit cell is cubical, with edges of length 7.12\IeC {\r A}.\relax }}{12}{figure.caption.4}}
-\newlabel{fig:unitcellbcristobalite}{{4.1}{12}{Unit cell of b-cristobalite. Tan and blue spheres represent silicon and oxygen atoms respectively. The unit cell is cubical, with edges of length 7.12Å.\relax }{figure.caption.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Unit cell of $\beta $-cristobalite}{12}{subsection.4.1.1}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Building a crystal}{12}{section.4.2}}
-\newlabel{lst:beta-cristobalite.lt}{{4.1}{13}{Typical moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units}{lstlisting.4.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.1}Typical moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units.}{13}{lstlisting.4.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces System built from $15\times 15\times 15$ unit cells of b-cristobalite.\relax }}{14}{figure.caption.5}}
-\newlabel{fig:hugeCube}{{4.2}{14}{System built from $15\times 15\times 15$ unit cells of b-cristobalite.\relax }{figure.caption.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Verifications}{14}{section.4.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Melting point}{14}{subsection.4.3.1}}
-\newlabel{eq: diffusion constant}{{4.1}{15}{Melting point}{equation.4.3.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Shaping the silica}{15}{section.4.4}}
-\newlabel{lst:sculpting}{{4.2}{15}{Defining regions to keep or delete from a system of dimensions $106.8\times 106.8\times 106.8$ Å}{lstlisting.4.2}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.2}Defining regions to keep or delete from a system of dimensions $106.8\times 106.8\times 106.8$ \IeC {\r A}.}{15}{lstlisting.4.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces xz-perspective on a system built from $15\times 15\times 15$ unit cells of b-cristobalite, with certain regions carves out. This is a result from applying Listing \ref  {lst:sculpting} to the system shown in figure \ref  {fig:hugeCube}. The top shape is a sphere cap, while the bottom is a slab.\relax }}{16}{figure.caption.6}}
-\newlabel{fig:carvedxz}{{4.3}{16}{xz-perspective on a system built from $15\times 15\times 15$ unit cells of b-cristobalite, with certain regions carves out. This is a result from applying Listing \ref {lst:sculpting} to the system shown in figure \ref {fig:hugeCube}. The top shape is a sphere cap, while the bottom is a slab.\relax }{figure.caption.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Moving the sphere towards the slab}{16}{section.4.5}}
-\newlabel{Deform}{{4.3}{17}{LAMMPS commands for hard coding the forces and velocities of atoms within a specific group. Effectively freezing them}{lstlisting.4.3}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.3}LAMMPS commands for hard coding the forces and velocities of atoms within a specific group. Effectively freezing them.}{17}{lstlisting.4.3}}
-\newlabel{Deform}{{4.4}{17}{LAMMPS command for changing the size of the simulation box}{lstlisting.4.4}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.4}LAMMPS command for changing the size of the simulation box.}{17}{lstlisting.4.4}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}This must be sorted in designated chapters}{19}{chapter.5}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Installation}{7}{section.3.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Linux}{7}{subsection.3.1.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Mac OS X with Homebrew}{8}{subsection.3.1.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Windows}{9}{subsection.3.1.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Running LAMMPS}{9}{section.3.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Efficiency improvements}{9}{section.3.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Cut-off}{9}{subsection.3.3.1}}
+\newlabel{eq: LJ-potential}{{3.1}{9}{Cut-off}{equation.3.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Cell lists and neighbor lists}{9}{subsection.3.3.2}}
+\pgfsyspdfmark {pgfid1}{16825374}{38859298}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }}{10}{figure.caption.4}}
+\newlabel{fig:neighbourcells}{{3.1}{10}{Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Parallelization}{10}{subsection.3.3.3}}
+\newlabel{lst:speedup}{{3.1}{11}{LAMMPS input script executed using several numbers of processors, and timed separately}{lstlisting.3.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}LAMMPS input script executed using several numbers of processors, and timed separately.}{11}{lstlisting.3.1}}
+\newlabel{speeduprun}{{3.2}{11}{Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart}{lstlisting.3.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.2}Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart.}{11}{lstlisting.3.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Speedup as a function of number of processors.\relax }}{11}{figure.caption.5}}
+\newlabel{fig:speedup15x15}{{3.2}{11}{Speedup as a function of number of processors.\relax }{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Setting up the system}{13}{chapter.4}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Radial distribution of normal force}{19}{section.5.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}Radial binning}{19}{subsection.5.1.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Silica}{13}{section.4.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Unit cell of b-cristobalite. Tan and blue spheres represent silicon and oxygen atoms respectively. The unit cell is cubical, with edges of length 7.12\IeC {\r A}.\relax }}{14}{figure.caption.6}}
+\newlabel{fig:unitcellbcristobalite}{{4.1}{14}{Unit cell of b-cristobalite. Tan and blue spheres represent silicon and oxygen atoms respectively. The unit cell is cubical, with edges of length 7.12Å.\relax }{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Unit cell of $\beta $-cristobalite}{14}{subsection.4.1.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Building a crystal}{14}{section.4.2}}
+\newlabel{lst:beta-cristobalite.lt}{{4.1}{15}{Typical moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units}{lstlisting.4.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.1}Typical moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units.}{15}{lstlisting.4.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces System built from $15\times 15\times 15$ unit cells of b-cristobalite.\relax }}{16}{figure.caption.7}}
+\newlabel{fig:hugeCube}{{4.2}{16}{System built from $15\times 15\times 15$ unit cells of b-cristobalite.\relax }{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Verifications}{16}{section.4.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Melting point}{16}{subsection.4.3.1}}
+\newlabel{eq: diffusion constant}{{4.1}{17}{Melting point}{equation.4.3.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Shaping the silica}{17}{section.4.4}}
+\newlabel{lst:sculpting}{{4.2}{17}{Defining regions to keep or delete from a system of dimensions $106.8\times 106.8\times 106.8$ Å}{lstlisting.4.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.2}Defining regions to keep or delete from a system of dimensions $106.8\times 106.8\times 106.8$ \IeC {\r A}.}{17}{lstlisting.4.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces xz-perspective on a system built from $15\times 15\times 15$ unit cells of b-cristobalite, with certain regions carves out. This is a result from applying Listing \ref  {lst:sculpting} to the system shown in figure \ref  {fig:hugeCube}. The top shape is a sphere cap, while the bottom is a slab.\relax }}{18}{figure.caption.8}}
+\newlabel{fig:carvedxz}{{4.3}{18}{xz-perspective on a system built from $15\times 15\times 15$ unit cells of b-cristobalite, with certain regions carves out. This is a result from applying Listing \ref {lst:sculpting} to the system shown in figure \ref {fig:hugeCube}. The top shape is a sphere cap, while the bottom is a slab.\relax }{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Moving the sphere towards the slab}{18}{section.4.5}}
+\newlabel{Deform}{{4.3}{19}{LAMMPS commands for hard coding the forces and velocities of atoms within a specific group. Effectively freezing them}{lstlisting.4.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.3}LAMMPS commands for hard coding the forces and velocities of atoms within a specific group. Effectively freezing them.}{19}{lstlisting.4.3}}
+\newlabel{Deform}{{4.4}{19}{LAMMPS command for changing the size of the simulation box}{lstlisting.4.4}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.4}LAMMPS command for changing the size of the simulation box.}{19}{lstlisting.4.4}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}This must be sorted in designated chapters}{21}{chapter.5}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Radial distribution of normal force}{21}{section.5.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}Radial binning}{21}{subsection.5.1.1}}
 \pgfsyspdfmark {pgfid2}{19861835}{41230083}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces Coarse radial binning. The value appointed to the radial bin is the average of the weights of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.\relax }}{20}{figure.caption.7}}
-\newlabel{fig:radialBinningChoars}{{5.1}{20}{Coarse radial binning. The value appointed to the radial bin is the average of the weights of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.\relax }{figure.caption.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces Coarse radial binning. The value appointed to the radial bin is the average of the weights of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.\relax }}{22}{figure.caption.9}}
+\newlabel{fig:radialBinningChoars}{{5.1}{22}{Coarse radial binning. The value appointed to the radial bin is the average of the weights of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.\relax }{figure.caption.9}{}}
 \pgfsyspdfmark {pgfid3}{11084873}{39417608}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Radial binning based on weighted contributions of intersecting cells. The third radial bin is colored, and its value will be the average of the intersecting cells weight times the fraction of the cells area that intersects the bin. A close-up of the outlined cell, is shown in figure \ref  {fig:radialBinningSmoothCloseUp}.\relax }}{21}{figure.caption.8}}
-\newlabel{fig:radialBinningSmooth}{{5.2}{21}{Radial binning based on weighted contributions of intersecting cells. The third radial bin is colored, and its value will be the average of the intersecting cells weight times the fraction of the cells area that intersects the bin. A close-up of the outlined cell, is shown in figure \ref {fig:radialBinningSmoothCloseUp}.\relax }{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Radial binning based on weighted contributions of intersecting cells. The third radial bin is colored, and its value will be the average of the intersecting cells weight times the fraction of the cells area that intersects the bin. A close-up of the outlined cell, is shown in figure \ref  {fig:radialBinningSmoothCloseUp}.\relax }}{23}{figure.caption.10}}
+\newlabel{fig:radialBinningSmooth}{{5.2}{23}{Radial binning based on weighted contributions of intersecting cells. The third radial bin is colored, and its value will be the average of the intersecting cells weight times the fraction of the cells area that intersects the bin. A close-up of the outlined cell, is shown in figure \ref {fig:radialBinningSmoothCloseUp}.\relax }{figure.caption.10}{}}
 \pgfsyspdfmark {pgfid4}{8446713}{22635497}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces Close-up of outlined cell in figure \ref  {fig:radialBinningSmooth}. The contribution from this cell will be it weight multiplied by the fraction of its total area that is colored. I might use this figure to explain the procedure. \relax }}{21}{figure.caption.8}}
-\newlabel{fig:radialBinningSmoothCloseUp}{{5.3}{21}{Close-up of outlined cell in figure \ref {fig:radialBinningSmooth}. The contribution from this cell will be it weight multiplied by the fraction of its total area that is colored. I might use this figure to explain the procedure. \relax }{figure.caption.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces Fraction of cell's area that are within the third radial bin. \relax }}{21}{figure.caption.9}}
-\newlabel{fig:radialBinningWeights}{{5.4}{21}{Fraction of cell's area that are within the third radial bin. \relax }{figure.caption.9}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Computing the normal force distribution}{23}{chapter.6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces Close-up of outlined cell in figure \ref  {fig:radialBinningSmooth}. The contribution from this cell will be it weight multiplied by the fraction of its total area that is colored. I might use this figure to explain the procedure. \relax }}{23}{figure.caption.10}}
+\newlabel{fig:radialBinningSmoothCloseUp}{{5.3}{23}{Close-up of outlined cell in figure \ref {fig:radialBinningSmooth}. The contribution from this cell will be it weight multiplied by the fraction of its total area that is colored. I might use this figure to explain the procedure. \relax }{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces Fraction of cell's area that are within the third radial bin. \relax }}{23}{figure.caption.11}}
+\newlabel{fig:radialBinningWeights}{{5.4}{23}{Fraction of cell's area that are within the third radial bin. \relax }{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Computing the normal force distribution}{25}{chapter.6}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}Creating a custom compute}{23}{section.6.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Find a similar compute}{24}{subsection.6.1.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Creating the class}{24}{subsection.6.1.2}}
-\newlabel{groupGroupAtomHeader}{{6.1}{24}{Header file of our new compute: \texttt {compute\_group\_group\_atom.h}}{lstlisting.6.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {6.1}Header file of our new compute: \texttt  {compute\_group\_group\_atom.h}.}{24}{lstlisting.6.1}}
-\newlabel{groupGroupAtomHeader}{{6.2}{25}{Source file of compute: \texttt {compute\_group\_group\_atom.cpp}}{lstlisting.6.2}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {6.2}Source file of compute: \texttt  {compute\_group\_group\_atom.cpp}.}{25}{lstlisting.6.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Least squares regression}{30}{section.6.2}}
-\newlabel{planeEquation}{{6.1}{30}{Least squares regression}{equation.6.2.1}{}}
-\newlabel{leastSquaresPlane}{{6.2}{30}{Least squares regression}{equation.6.2.2}{}}
-\newlabel{linearSystemPlane}{{6.10}{31}{Least squares regression}{equation.6.2.10}{}}
-\newlabel{angleVecLine}{{6.3}{31}{Python function to compute the smallest angle between a vector and a line parallel to another vector}{lstlisting.6.3}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {6.3}Python function to compute the smallest angle between a vector and a line parallel to another vector.}{31}{lstlisting.6.3}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Source code}{33}{appendix.A}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Creating a custom compute}{25}{section.6.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Find a similar compute}{26}{subsection.6.1.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Creating the class}{26}{subsection.6.1.2}}
+\newlabel{groupGroupAtomHeader}{{6.1}{26}{Header file of our new compute: \texttt {compute\_group\_group\_atom.h}}{lstlisting.6.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6.1}Header file of our new compute: \texttt  {compute\_group\_group\_atom.h}.}{26}{lstlisting.6.1}}
+\newlabel{groupGroupAtomHeader}{{6.2}{27}{Source file of compute: \texttt {compute\_group\_group\_atom.cpp}}{lstlisting.6.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6.2}Source file of compute: \texttt  {compute\_group\_group\_atom.cpp}.}{27}{lstlisting.6.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Least squares regression}{32}{section.6.2}}
+\newlabel{planeEquation}{{6.1}{32}{Least squares regression}{equation.6.2.1}{}}
+\newlabel{leastSquaresPlane}{{6.2}{32}{Least squares regression}{equation.6.2.2}{}}
+\newlabel{linearSystemPlane}{{6.10}{33}{Least squares regression}{equation.6.2.10}{}}
+\newlabel{angleVecLine}{{6.3}{33}{Python function to compute the smallest angle between a vector and a line parallel to another vector}{lstlisting.6.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6.3}Python function to compute the smallest angle between a vector and a line parallel to another vector.}{33}{lstlisting.6.3}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Source code}{35}{appendix.A}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {A.1}compute\_group\_group.h}{34}{section.A.1}}
-\newlabel{groupgrouph}{{A.1}{34}{compute\_group\_group.h}{section.A.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{../../LAMMPS/src/compute\textunderscore group\textunderscore group.h}{34}{lstlisting.A.-10}}
-\@writefile{toc}{\contentsline {section}{\numberline {A.2}compute\_group\_group\_atom.h}{35}{section.A.2}}
-\@writefile{lol}{\contentsline {lstlisting}{../../LAMMPS/src/compute\textunderscore group\textunderscore group\textunderscore atom.h}{35}{lstlisting.A.-11}}
-\@writefile{toc}{\contentsline {section}{\numberline {A.3}compute\_group\_group\_atom.cpp}{36}{section.A.3}}
-\@writefile{lol}{\contentsline {lstlisting}{../../LAMMPS/src/compute\textunderscore group\textunderscore group\textunderscore atom.cpp}{36}{lstlisting.A.-12}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.1}compute\_group\_group.h}{36}{section.A.1}}
+\newlabel{groupgrouph}{{A.1}{36}{compute\_group\_group.h}{section.A.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{../../LAMMPS/src/compute\textunderscore group\textunderscore group.h}{36}{lstlisting.A.-10}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.2}compute\_group\_group\_atom.h}{37}{section.A.2}}
+\@writefile{lol}{\contentsline {lstlisting}{../../LAMMPS/src/compute\textunderscore group\textunderscore group\textunderscore atom.h}{37}{lstlisting.A.-11}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.3}compute\_group\_group\_atom.cpp}{38}{section.A.3}}
+\@writefile{lol}{\contentsline {lstlisting}{../../LAMMPS/src/compute\textunderscore group\textunderscore group\textunderscore atom.cpp}{38}{lstlisting.A.-12}}
 \bibdata{resources/Library.bib}

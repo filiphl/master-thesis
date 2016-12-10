@@ -61,7 +61,7 @@ temperature = []
 diffusionConstant = []
 msd = {}
 for f in directory:
-    t,d = D(folderPath+f, 0, 0)
+    t,d = D(folderPath+f, 0, 1)
     msd[t] = d
 
 
@@ -83,4 +83,5 @@ plt.grid('on')
 plt.ylim([min(diffusionConstant)*1.1,max(diffusionConstant)*1.1])
 if True:
     plt.savefig('msd.pdf')
-plt.show()
+if True:
+    plt.show()

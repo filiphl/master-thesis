@@ -2,12 +2,13 @@
 
 
 
+
 #Define the region of the sphere
-region sphereRegion sphere 53.4 53.4 85.44 30
-region smallSphereRegion sphere 53.4 53.4 85.44 25 side out
-region shellRegion intersect 2 sphereRegion smallSphereRegion
+region sphereRegion sphere 17.8 17.8 60.52 15.664
+#region smallSphereRegion sphere 53.4 53.4 85.44 25 side out
+#region shellRegion intersect 2 sphereRegion smallSphereRegion
 group  sphereGroup region sphereRegion
-group  shellGroup region shellRegion
+#group  shellGroup region shellRegion
 
 
 #Define the region of the slab
@@ -33,7 +34,7 @@ group slabUpperGroup region slabUpperRegion
 
 fix bottomFreezeID slabBottomGroup setforce 0 0 0
 fix upperFreezeID  slabUpperGroup  setforce 0 0 0
-fix shellFreezeID  shellGroup      setforce 0 0 0
+#fix shellFreezeID  shellGroup      setforce 0 0 0
 velocity slabBottomGroup set 0 0 0
 velocity slabUpperGroup  set 0 0 0
-velocity shellGroup      set 0 0 0
+#velocity shellGroup      set 0 0 0
