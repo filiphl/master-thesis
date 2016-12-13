@@ -1,90 +1,134 @@
 LAMMPS (27 Aug 2016-ICMS)
+include "system.in"
+
+
+# ----------------- Init Section -----------------
+
 include "system.in.init"
   units         metal
   boundary      p p p
   atom_style    atomic
   pair_style    vashishta
   #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
-read_restart ${filename}
-read_restart restartFiles/hold195000.restart
-WARNING: Restart file used different # of processors (../read_restart.cpp:717)
-  orthogonal box = (0 0 0) to (320.4 320.4 138)
-  2 by 2 by 1 MPI processor grid
-  537410 atoms
+
+
+# ----------------- Atom Definition Section -----------------
+
+read_data "system.data"
+  orthogonal box = (0 0 0) to (327.52 327.52 156.64)
+  2 by 4 by 1 MPI processor grid
+  reading atoms ...
+  1015680 atoms
+
+# ----------------- Settings Section -----------------
+
 include "system.in.settings"
   pair_coeff  * *  SiO2.vashishta Si O
 Reading potential file SiO2.vashishta with DATE: 2015-10-14
   pair_modify table 16
   pair_modify tabinner 0.1
 
-# -----------Freeze the "bottom" of the slab ----------------
-fix freezeID bottomAtomsID setforce 0 0 0
-velocity bottomAtomsID set 0 0 0
 
-variable N equal 1
-variable T equal 293
+# ----------------- Run Section -----------------
 
+# The lines above define the system you want to simulate.
+# What you do next is up to you.
+# Typically a user would minimize and equilibrate
+# the system using commands similar to the following:
+#  ----   examples   ----
+#
+#  -- minimize --
+# minimize 1.0e-5 1.0e-7 1000 10000
+# (Note: Some fixes, for example "shake", interfere with the minimize command,
+#        You can use the "unfix" command to disable them before minimization.)
+#  -- declare time step for normal MD --
+# timestep 1.0
+#  -- run at constant pressure (Nose-Hoover)--
+# fix   fxnpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 1000.0 drag 1.0
+#  -- ALTERNATELY, run at constant volume (Nose-Hoover) --
+# fix   fxnvt all nvt temp 300.0 300.0 500.0 tchain 1
+#  -- ALTERNATELY, run at constant volume using Langevin dynamics. --
+#  -- (This is good for sparse CG polymers in implicit solvent.)   --
+# fix fxLAN all langevin 300.0 300.0 5000 48279
+# fix fxNVE all nve  #(<--needed by fix langevin)
+#  -- Now, finally run the simulation --
+# run   50000
+#  ---- (end of examples) ----
+
+
+variable N equal 5000
+variable T equal 500
+variable compressionLength equal 5
+
+velocity	all create ${T} 277387 mom yes
+velocity	all create 500 277387 mom yes
+include "system.prepare"
+#region ID style args keyword arg ...
+
+
+
+#Define the region of the sphere
+region sphereRegion sphere 163.76 163.76 271.2 200
+region smallSphereRegion sphere 163.76 163.76 271.2 197 side out
+region shellRegion intersect 2 sphereRegion smallSphereRegion
+region sphereUpperRegion block 0 INF 0 INF 153 INF
+group  sphereGroup region sphereRegion
+257512 atoms in group sphereGroup
+group  shellGroup region shellRegion
+20554 atoms in group shellGroup
+group  sphereUpperGroup region sphereUpperRegion
+16928 atoms in group sphereUpperGroup
+
+#Define the region of the slab
+region slabRegion block 0 INF 0 INF 3.1 53.4
+group  slabGroup region slabRegion
+359720 atoms in group slabGroup
+
+region slabBottomRegion block 0.0 INF 0.0 INF 0.0 3.0
+group  slabBottomGroup region slabBottomRegion
+25392 atoms in group slabBottomGroup
+
+#Define the region that is outside the sphere and slab
+region bothRegion union 3 sphereRegion slabRegion slabBottomRegion side out
+
+#Delete all atoms exterior to the sphere and slab
+delete_atoms region bothRegion
+Deleted 373056 atoms, new total = 642624
+
+#Define the surface
+region surfaceRegion block 0 INF 0 INF 53.0 53.4
+group  surfaceGroup  region surfaceRegion
+4232 atoms in group surfaceGroup
+
+#Freeze some volumes
+
+region slabUpperRegion block 0.0 INF 0.0 INF 50.4 53.4
+group slabUpperGroup region slabUpperRegion
+25392 atoms in group slabUpperGroup
+
+
+fix upperFreezeID  slabUpperGroup   setforce 0 0 0
+fix shellFreezeID  shellGroup       setforce 0 0 0
+fix bottomFreezeID slabBottomGroup  setforce 0 0 0
+fix topFreezeID    sphereUpperGroup setforce 0 0 0
+velocity slabBottomGroup  set 0 0 0
+velocity slabUpperGroup   set 0 0 0
+velocity shellGroup       set 0 0 0
+velocity sphereUpperGroup set 0 0 0
+
+#read_restart squeeze.1000.restart
+#include "system.in.settings"
+
+restart ${N} restartFiles/squeeze*.restart
+restart 5000 restartFiles/squeeze*.restart
 neighbor	0.3 bin
 neigh_modify	delay 10
 
 thermo		100
 timestep	0.002
 
-#restart 5000 restartFiles/hold*.restart
+dump myDump all atom ${N} dumpFiles/SiO2_*.dump
+dump myDump all atom 5000 dumpFiles/SiO2_*.dump
 
-fix nvt all nvt temp ${T} ${T} 1.0
-fix nvt all nvt temp 293 ${T} 1.0
-fix nvt all nvt temp 293 293 1.0
-Resetting global state of Fix nvt Style nvt from restart file info
-
-compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
-
-#compute stressID all stress/atom NULL
-#fix fixChunkID all ave/chunk  100 10 1000 chunkID c_stressID[3] file stress50000.txt
-
-#compute computeID slabGroup group/group/atom sphereGroup pair yes
-#fix fixComputeID slabGroup ave/chunk 2 100 200 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forcesAll.txt #ave running
-
-dump myDump surfaceGroup atom 1 surfaceFiles/Surface*.dump
-run ${N}
-run 1
-Neighbor list info ...
-  1 neighbor list requests
-  update every 1 steps, delay 10 steps, check yes
-  max neighbors/atom: 2000, page size: 100000
-  master list distance cutoff = 5.8
-  ghost atom cutoff = 5.8
-  binsize = 2.9 -> bins = 111 111 48
-Memory usage per processor = 35.7108 Mbytes
-Step Temp E_pair E_mol TotEng Press 
-  195000    292.84003     -1807372            0   -1787029.7    17260.277 
-  195001    292.69285   -1807361.6            0   -1787029.6    17263.691 
-Loop time of 2.42264 on 4 procs for 1 steps with 537410 atoms
-
-Performance: 0.071 ns/day, 336.478 hours/ns, 0.413 timesteps/s
-34.4% CPU use with 4 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 2.2738     | 2.2813     | 2.2898     |   0.4 | 94.16
-Neigh   | 0          | 0          | 0          |   0.0 |  0.00
-Comm    | 0.005981   | 0.014428   | 0.021561   |   5.0 |  0.60
-Output  | 0.095371   | 0.095485   | 0.095594   |   0.0 |  3.94
-Modify  | 0.028893   | 0.029855   | 0.03062    |   0.4 |  1.23
-Other   |            | 0.001614   |            |       |  0.07
-
-Nlocal:    134352 ave 134474 max 134211 min
-Histogram: 1 0 0 0 0 2 0 0 0 1
-Nghost:    37728.8 ave 37814 max 37634 min
-Histogram: 1 1 0 0 0 0 0 0 0 2
-Neighs:    0 ave 0 max 0 min
-Histogram: 4 0 0 0 0 0 0 0 0 0
-FullNghs:  7.64707e+06 ave 7.65534e+06 max 7.6418e+06 min
-Histogram: 1 0 1 1 0 0 0 0 0 1
-
-Total # of neighbors = 30588286
-Ave neighs/atom = 56.918
-Neighbor list builds = 0
-Dangerous builds = 0
-Total wall time: 0:00:05
+#Move the top z-boundary downwards
+#fix deform 

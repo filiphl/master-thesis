@@ -1,4 +1,5 @@
-# file "system.lt"
+# file "setup.lt"
+
 
 write_once("In Init") {
   units         metal
@@ -14,21 +15,15 @@ write_once("In Settings") {
   pair_modify tabinner 0.1
 }
 
+
 import "beta-cristobalite.lt"
 
-SiO2 = new beta-cristobalite [5].move(7.12, 0.00, 0.00)
-                             [5].move(0.00, 7.12, 0.00)
-                             [5].move(0.00, 0.00, 7.12)
-
-
-SiO22 = new beta-cristobalite.move(0.0, 0.0, 42.72) [8].move(7.12, 0.00, 0.00)
-                                                   [8].move(0.00, 7.12, 0.00)
-                                                   [5].move(0.00, 0.00, 7.12)
-SiO22[*][*][*].rot(45, 0, 0, 1, 28.48, 28.48, 85.44)
-SiO22[*][*][*].move(-10, -10, 0)
+SiO2 = new beta-cristobalite [15].move(7.12, 0.00, 0.00)
+                             [15].move(0.00, 7.12, 0.00)
+                             [15].move(0.00, 0.00, 7.12)
 
 write_once("Data Boundary") {
-  0  35.6  xlo  xhi
-  0  35.6  ylo  yhi
-  0  78.32  zlo  zhi
+  0  106.8  xlo  xhi
+  0  106.8  ylo  yhi
+  0  106.8  zlo  zhi
 }

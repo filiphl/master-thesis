@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-from os import listdir
+from os import listdir, system
 import argparse
 import numpy as np
 import sys
@@ -43,7 +43,7 @@ def D(filepath, PLOT=False, SAVE=False):
         #plt.axis([dt, (timeSteps+1)*dt, 0, 1.1*max(msd)])
         plt.title("Temperature: %s\nDiffusion constant: %.2g"%(temperature,diffusionConstant))
         if SAVE:
-            filepath = "msdplot_%05d"%temperature
+            filepath = "msdplot_%05d.pdf"%temperature
             print "Figure saved as %s" %filepath
             plt.savefig(filepath)
             plt.clf()
@@ -85,3 +85,5 @@ if True:
     plt.savefig('msd.pdf')
 if True:
     plt.show()
+
+system("mv msd*.pdf figures")

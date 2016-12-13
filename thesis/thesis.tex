@@ -122,7 +122,10 @@ Boundary conditions is a crucial detail to decide upon when setting up a molecul
 \begin{figure}[H]
 	\centering{
 		\input{figures/minimumImageConvention/2D.pdf_tex}
-		\caption{Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images of the other atom that has the shortest distance to the reference atom. The shortest distance in this case is marked with a two-sided arrow. Thus, when computing positional dependent quantities it is the position of the north-west replica that will be considered as the position of the blue atom.}
+		\caption{Minimum image convention in 2 dimensions.
+			The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images of the other atom that has the shortest distance to the reference atom. 
+			The shortest distance in this case is marked with a two-sided arrow. 
+			Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.}
 		\label{fig:minimumImageConvention2D}
 	}
 \end{figure}
@@ -306,10 +309,11 @@ In order to construct the unit cell of a material, one should look up the coordi
 
 \section{Building a crystal}
 The coordinates gotten from the \texttt{.cif}-file can now be implemented into \textit{moltemplate} together with whatever bond and angle data required by the potential. In our simulations we will use the Vashishta potential, which does not require these. 
-
-Moltemplate has its own structure and syntax. The first step to build up a larger material is, as mentioned, to create the unit cell. Data concerning the unit cell are placed in a \texttt{.lt}-file, which is readable by Moltemplate. Such a file is shown in Listing \ref{lst:beta-cristobalite.lt}. 
-
-For a more profound understanding of the structure and syntax of these files, the reader is advised to read the moltemplate manual  
+Moltemplate has its own structure and syntax. 
+The first step to build up a larger material is, as mentioned, to create the unit cell. 
+Data concerning the unit cell are placed in a \texttt{.lt}-file, which is readable by Moltemplate. 
+Such a file is shown in Listing \ref{lst:beta-cristobalite.lt}. 
+For a more profound understanding of the structure and syntax of these files, the reader is advised to read the moltemplate manual\footnote{\url{http://www.moltemplate.org/doc/moltemplate_manual.pdf}}.
 
 \begin{center}
 \begin{minipage}{\linewidth}
@@ -332,15 +336,36 @@ We use the unit cell as building blocks, placing them concurrently until we have
 
 \section{Verifications}
 \subsection{Melting point}
-Finding the melting point is a very important verification of our system. There are several factors that may affect the result. For instance, if the density of the system is too high, the melting point will be at a higher temperature than it normally would. Also, errors in the potential model may affect temperature og the melting point. 
-In the phase transition from a solid state to a liquid the atoms of the silica will have energy great enough to break the interatomic bonds. They will break loose from their regular arrangement and move about much more freely. 
+Finding the melting point is a very important verification of our system. 
+There are several factors that may affect the result. For instance, if the density of the system is too high, the melting point will be at a higher temperature than it normally would. 
+Also, errors in the potential model may affect the temperature of the melting point. 
+When increasing the temperature of the system that is in a solid state, we will eventually reach the melting point.
+At the phase transition from a solid state to a liquid the atoms of the silica will have energy great enough to break the interatomic bonds. 
+They will break loose from their regular arrangement and move about much more freely. 
 An approach to computing the melting point is therefore to systematically increase the temperature stepwise and sample the mean square displacement of the atoms at each designated temperature.  
 The mean square displacement is the average of the square of the displacement every atom has from its initial position. It can be expressed as:
 \begin{equation}
 \langle r^2(t)\rangle = \frac{1}{N}\sum_{i=1}^{N}\lr{\vec{r}_i(t)-\vec{r}_i(0)}^2. \label{eq: diffusion constant}
 \end{equation}
 where $\vec{r}_i(t)$ is the position of atom $i$ at time $t$ and $N$ is the total number of atoms. 
-In practice the mean square displacement was computed using a standard \textit{compute} in LAMMPS, namely the \textit{msd compute}. At every time step it stores a vector of 4 elements. The first 3 are the squared $dx$, $dy$ and $dz$ displacements averaged over the atoms of the specific group, while the 4th is the total mean square displacement for the specific group, i.e. $(dx^2 + dy^2 + dz^2)$. 
+In practice the mean square displacement was computed using a standard \textit{compute} in LAMMPS, namely the \textit{msd compute}\footnote{\url{http://lammps.sandia.gov/doc/compute_msd.html}}. 
+At every time step it stores a vector of 4 elements; the first 3 are the squared $dx$, $dy$ and $dz$ displacements averaged over the atoms of the specific group, while the 4th is the total mean square displacement for the specific group, i.e. $(dx^2 + dy^2 + dz^2)$. 
+The $15\times15\times15$ system is sufficient for this test. The procedure is rather simple. For $\beta$-cristobalite the melting point is know to be 
+We expect the melting point to be about 1900K, so we start out at 1500K, compute the msd for $N$ time steps, increase the temperature, equilibrate at this temperature, and repeat. 
+
+\lstinputlisting[caption={Main blalbabla.}, label={lst:msd}, firstline=14, lastline=40]{../SiO2/msd/continue.in}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msd}
+\caption{Mean square displacement as a function of temperature. The face transition occurs where we see a rapid change in the behavior.}
+\label{fig:msd}
+\end{figure}
+
+
+
+
 
 
 \section{Shaping the silica}
@@ -602,7 +627,7 @@ This can be expressed as a matrix equation.
 \end{array} \right]
 \label{linearSystemPlane}
 \end{equation}
-where we have emitted the indices to better readability.
+where we have omitted the indices to better readability.
 Solving this linear system retrieves the optimal coefficients in the sense of the least squares method. 
 The normal vector of the plane will be $\vec{n}=[1,a,b]$. 
 This vector will be used to compute the size of the normal force. 
