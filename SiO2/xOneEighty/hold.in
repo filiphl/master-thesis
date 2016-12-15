@@ -26,8 +26,13 @@ neigh_modify	delay 10
 thermo		10000
 timestep	0.002
 
-dump allDumpID all atom 1 dumpFiles/SiO2_*.dump
-#dump surfaceDumpID  surfaceGroup  atom 1 surfaceFiles/Surface*.dump
+
+region thirdRegion block 0.0 INF 0.0 INF 0.0 57.0
+
+group dynamicGroupID dynamic slabGroup region thirdRegion every 1
+dump myDump2 dynamicGroupID atom 1 dumpFiles/dynamic*.dump
+
+#dump mydump3 dynamicGroupID  atom 1 dumpFiles/dyanmicSlab*.dump
 #dump surfaceDump2ID surfaceGroup2 atom 10000 surfaceFiles/Surface*_2.dump
 
 #Move the top z-boundary downwards

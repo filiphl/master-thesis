@@ -94,9 +94,9 @@ Molecular dynamics simulations are computationally expensive. And often scientis
 Boundary conditions is a crucial detail to decide upon when setting up a molecular dynamic experiment. The way we treat atoms at the boundary can have an immense effect on their behavior and how physically reasonable the results will be. There are several types of boundary conditions one may desire, and one may define custom conditions. A few examples are listed below. 
 
 
-
-\begin{tabular}{p{0.6\textwidth} p{0.3\textwidth}}
-	\vspace{0pt} 	{\it No boundary conditions}. Particles are not subject to any special rules at any boundry. The system size may be regarded as infinite. This  might be a reasonable choise when studying explosions for instance, or in experiments that is on a really short time scale.  
+\hspace{-9.37mm}
+\begin{tabular}{p{0.65\textwidth} p{0.3\textwidth}}
+	\vspace{0pt}  {\it No boundary conditions}. Particles are not subject to any special rules at any boundry. The system size may be regarded as infinite. This  might be a reasonable choise when studying explosions for instance, or in experiments that is on a really short time scale.  
 	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/no.pdf} 
 	\\*
 	\vspace{0pt} {\it Reflecting boundary conditions}, which acts as hard walls. In stead of passing through the boundary, the velocity component in the direction normal to the face of the boundary changes sign, thus causing the atoms to be confined within the simulation box. 
@@ -105,16 +105,34 @@ Boundary conditions is a crucial detail to decide upon when setting up a molecul
 	 \vspace{0pt} {\it Periodic boundary conditions}, which allow atoms on separate sides of a boundary to interact through the boundary as if they were neighbors, and atoms crossing the boundary reappears on the other side of the simulation box. This is useful when studying bulk areas of a material or materials that has a periodic structure.
 	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/periodic.pdf}
 \end{tabular}
+\vspace{10mm}
+
+\noindent
+The boundary conditions may include more details than only how to handle the trajectory of atoms intersecting the boundaries. 
+For instance with periodic boundaries, atoms that are far apart are effectively close. 
+These atoms should therefore interact, since their motion would seem artificial otherwise. 
+Thus, the interpretation of atoms positions must in some cases be included in the boundary conditions. 
+In order to interpret atoms positions in the case of periodic boundaries, one has to remember that an atom should not interact with multiple images of another atom. 
+Which image, if not the original, must therefore be decided. 
+Also, an atom should not interact with an image of itself. That could potentially cause strange correlations. 
+The standard way of determining atoms positions is by using the {\it minimum image convention}.
 
 
-
-
-\newpage
 \subsection{Minimum image convention}
+The minimum image convention simply states that the image closest to the reference atom, is the one to consider as the position of the atom. 
+Example cases from 1D and 2D systems are shown in figure \ref{fig:minimumImageConvention1D} and figure \ref{fig:minimumImageConvention2D} respectfully. 
+In the examples we look at systems consisting of two atoms and we try to determine the minimum image of the smaller, blue atom with respect to the larger, red reference atom. The original system is distinguishable from the periodic copies by the background color; the periodic copies have slightly darker background. Also, we only bother showing the periodic copies of the atom of consideration, the blue one. 
+
+
+ Also, show programmatic test.
+
 \begin{figure}[H]
 	\centering{
-		\input{figures/minimumImageConvention/1D.pdf_tex}
-		\caption{Minimum image convention in 1 dimension. If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $L-\Delta x$. The white space indicates the system, while the gray area is periodic replications of the system. The replica on the other side is omitted, because it is not }
+		\def\svgwidth{\linewidth}
+		\input{figures/minimumImageConvention/1D_2.pdf_tex}
+		\caption{Minimum image convention in 1 dimension. 
+		If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $L-\Delta x$. 
+		The white area indicates the system, while the gray areas are periodic replications of the system. Atoms in the gray areas are periodic images of the atom of consideration in the white area.}
 		\label{fig:minimumImageConvention1D}
 	}
 \end{figure}
@@ -350,9 +368,12 @@ The mean square displacement is the average of the square of the displacement ev
 where $\vec{r}_i(t)$ is the position of atom $i$ at time $t$ and $N$ is the total number of atoms. 
 In practice the mean square displacement was computed using a standard \textit{compute} in LAMMPS, namely the \textit{msd compute}\footnote{\url{http://lammps.sandia.gov/doc/compute_msd.html}}. 
 At every time step it stores a vector of 4 elements; the first 3 are the squared $dx$, $dy$ and $dz$ displacements averaged over the atoms of the specific group, while the 4th is the total mean square displacement for the specific group, i.e. $(dx^2 + dy^2 + dz^2)$. 
-The $15\times15\times15$ system is sufficient for this test. The procedure is rather simple. For $\beta$-cristobalite the melting point is know to be 
-We expect the melting point to be about 1900K, so we start out at 1500K, compute the msd for $N$ time steps, increase the temperature, equilibrate at this temperature, and repeat. 
-
+The $15\times15\times15$ system is sufficient for this test. The procedure is rather simple. For $\beta$-cristobalite we expect the melting point to be about 1986K\footnote{\url{https://en.wikipedia.org/wiki/Cristobalite}}, so we start out at 1500K. After equilibration the following steps are repeated until we reach a target temperature. 
+\begin{itemize}
+	\item equilibrate for the current temperature
+	\item compute the msd for $N$ time steps
+	\item increase the temperature by a given step size
+\end{itemize}
 \lstinputlisting[caption={Main blalbabla.}, label={lst:msd}, firstline=14, lastline=40]{../SiO2/msd/continue.in}
 
 
@@ -379,12 +400,8 @@ We expect the melting point to be about 1900K, so we start out at 1500K, compute
 
 The huge cube of silica can be carved however we like by defining regions from which we delete the containing atoms. 
 In LAMMPS this is done by using the \texttt{region}, \texttt{union}, \texttt{intersect} and \texttt{delete\_atoms} commands. 
-Our implementation is stated in Listing \ref{lst:sculpting}, which is very simple due to the way we are going to treat the boundary conditions. 
-
-First, we define a spherical region labeled \texttt{sphereRegion}, described by the xyz-coordinates of its center and a radii. The atoms within this region are assigned to a group labeled \texttt{sphereGroup}. 
-
+Our implementation is stated in Listing \ref{lst:sculpting}, which is very simple due to the way we are going to treat the boundary conditions. We start out by defining a spherical region labeled \texttt{sphereRegion}, described by the xyz-coordinates of its center and a radii. The atoms within this region are assigned to a group labeled \texttt{sphereGroup}. 
 Next, we define a cuboid (block) region named \texttt{slabRegion}, described by the position of its faces in x-, y- and z-direction. The atoms within this region are assigned to a group, which we label \texttt{slabGroup}.  
-
 We combine these two regions using  the \texttt{union} command and label the region outside of these regions \texttt{outRegion}.
 Finally, we delete the atoms that are not in the sphere nor the slab; we delete the ones contained by \text{outRegion}.
 

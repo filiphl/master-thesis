@@ -2,7 +2,7 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {chapter}{\numberline {2}Molecular dynamics}{3}{chapter.2}
 \contentsline {section}{\numberline {2.1}Boundary conditions}{3}{section.2.1}
-\contentsline {subsection}{\numberline {2.1.1}Minimum image convention}{5}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.1}Minimum image convention}{4}{subsection.2.1.1}
 \contentsline {chapter}{\numberline {3}LAMMPS}{7}{chapter.3}
 \contentsline {section}{\numberline {3.1}Installation}{7}{section.3.1}
 \contentsline {subsection}{\numberline {3.1.1}Linux}{7}{subsection.3.1.1}

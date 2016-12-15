@@ -11,9 +11,9 @@ include "system.in.init"
   pair_style    vashishta
   #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
 read_restart ${filename}
-read_restart restartFiles/SiO2_90000.restart
+read_restart restartFiles/SiO2_110000.restart
 WARNING: Restart file used different # of processors (../read_restart.cpp:717)
-  orthogonal box = (0 0 0) to (327.52 327.52 106.64)
+  orthogonal box = (0 0 0) to (327.52 327.52 146.64)
   1 by 1 by 1 MPI processor grid
   641608 atoms
 include "system.in.settings"
@@ -41,8 +41,14 @@ neigh_modify	delay 10
 thermo		10000
 timestep	0.002
 
-dump allDumpID all atom 1 dumpFiles/SiO2_*.dump
-#dump surfaceDumpID  surfaceGroup  atom 1 surfaceFiles/Surface*.dump
+
+region thirdRegion block 0.0 INF 0.0 INF 0.0 57.0
+
+group dynamicGroupID dynamic slabGroup region thirdRegion every 1
+dynamic group dynamicGroupID defined
+dump myDump2 dynamicGroupID atom 1 dumpFiles/dynamic*.dump
+
+#dump mydump3 dynamicGroupID  atom 1 dumpFiles/dyanmicSlab*.dump
 #dump surfaceDump2ID surfaceGroup2 atom 10000 surfaceFiles/Surface*_2.dump
 
 #Move the top z-boundary downwards
@@ -63,13 +69,13 @@ Neighbor list info ...
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 5.8
   ghost atom cutoff = 5.8
-  binsize = 2.9 -> bins = 113 113 37
-Memory usage per processor = 174.266 Mbytes
+  binsize = 2.9 -> bins = 113 113 51
+Memory usage per processor = 152.201 Mbytes
 Step Temp E_pair E_mol TotEng Press 
-   90000    293.13627   -1996989.6            0   -1972678.6    78256.681 
-Loop time of 5.00679e-06 on 1 procs for 0 steps with 641608 atoms
+  110000    292.55628   -2141339.8            0   -2117076.8    18028.861 
+Loop time of 6.19888e-06 on 1 procs for 0 steps with 641608 atoms
 
-79.9% CPU use with 1 MPI tasks x no OpenMP threads
+64.5% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
@@ -79,19 +85,19 @@ Neigh   | 0          | 0          | 0          |   0.0 |  0.00
 Comm    | 0          | 0          | 0          |   0.0 |  0.00
 Output  | 0          | 0          | 0          |   0.0 |  0.00
 Modify  | 0          | 0          | 0          |   0.0 |  0.00
-Other   |            | 5.007e-06  |            |       |100.00
+Other   |            | 6.199e-06  |            |       |100.00
 
 Nlocal:    641608 ave 641608 max 641608 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:    116606 ave 116606 max 116606 min
+Nghost:    103501 ave 103501 max 103501 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Neighs:    0 ave 0 max 0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-FullNghs:  3.88298e+07 ave 3.88298e+07 max 3.88298e+07 min
+FullNghs:  3.56799e+07 ave 3.56799e+07 max 3.56799e+07 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 38829816
-Ave neighs/atom = 60.5195
+Total # of neighbors = 35679868
+Ave neighs/atom = 55.6101
 Neighbor list builds = 0
 Dangerous builds = 0
-Total wall time: 0:00:11
+Total wall time: 0:00:08

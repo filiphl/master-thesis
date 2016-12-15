@@ -1,6 +1,6 @@
 #!/bin/bash
 #BATCH --partition=normal
-#SBATCH --ntasks=56
+#SBATCH --ntasks=64
 #SBATCH --time=1-01:00:00
 #SBATCH --job-name=F
-mpirun -n 56 ../../../lammps/src/lmp_mpi -in hysteresis.in
+mpirun -n 64 ../../../lammps/src/lmp_mpi -in hysteresis.in
