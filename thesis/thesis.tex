@@ -72,7 +72,9 @@ This is an abstract text.
 
 \begin{acknowledgements}
   Flora Joelle Larsen\\*
-  Anders Hafreager
+  Anders Hafreager \\*
+  Henrik Sveinson \\*
+  Kjetil
 \end{acknowledgements}
 
 \tableofcontents
@@ -89,6 +91,10 @@ How is the thesis laid out?
 \chapter{Molecular dynamics}
 ...
 Molecular dynamics simulations are computationally expensive. And often scientists must balance statistical precision and CPU time. Technological improvements have provided the ability to simulate larger systems and/or at longer time frames. 
+
+\section{Potentials}
+
+\section{Time-integration}
 
 \section{Boundary conditions}
 Boundary conditions is a crucial detail to decide upon when setting up a molecular dynamic experiment. The way we treat atoms at the boundary can have an immense effect on their behavior and how physically reasonable the results will be. There are several types of boundary conditions one may desire, and one may define custom conditions. A few examples are listed below. 
@@ -120,18 +126,34 @@ The standard way of determining atoms positions is by using the {\it minimum ima
 
 \subsection{Minimum image convention}
 The minimum image convention simply states that the image closest to the reference atom, is the one to consider as the position of the atom. 
-Example cases from 1D and 2D systems are shown in figure \ref{fig:minimumImageConvention1D} and figure \ref{fig:minimumImageConvention2D} respectfully. 
-In the examples we look at systems consisting of two atoms and we try to determine the minimum image of the smaller, blue atom with respect to the larger, red reference atom. The original system is distinguishable from the periodic copies by the background color; the periodic copies have slightly darker background. Also, we only bother showing the periodic copies of the atom of consideration, the blue one. 
+Example cases of 1D and 2D systems are shown in figure \ref{fig:minimumImageConvention1D} and figure \ref{fig:minimumImageConvention2D} respectfully. 
+In the examples we look at systems consisting of two atoms and we try to determine the minimum image of the smaller, blue atom with respect to the larger, red reference atom. 
+The original system is distinguishable from the periodic copies by the background color; they have a slightly darker background. 
+Also, we only bother showing the periodic copies of the atom of consideration, the blue one.  
+The systems depicted are of size $L$ and $L\times L$ in the 1D and 2D cases respectfully.
 
+By studying figure \ref{fig:minimumImageConvention1D} it becomes apparent that if the atom of consideration is closer to the reference atom than half the system length, the original image will be used to interpret it's position. Otherwise, if it's farther apart than half the system length, a periodic image will be closer and therefor used as the atoms position.  
+This principle is applicable at higher dimensions as well. We simply decompose the positions and check each dimension separately. For a system of arbitrary number of dimensions the minimum image convention is assured by using the progression of lisiting \ref{mic}. 
+Figure \ref{fig:minimumImageConvention2D} illustrate how we decompose the positional separation of the atoms in the 2D case.
 
- Also, show programmatic test.
+\begin{lstlisting}[caption={Loop to compute the position of the closest image of atom $j$ with respect to the referance atom $i$.}, label={mic}, language=c++]
+for (int k=0; k<numberOfDimension; k++){
+	delta[k] = atom[j].pos[k] - atom[i].pos[k]
+	if (delta[k] > L/2) {
+		delta[k] = delta[k] - L
+	}
+	else if (delta[k] < -L/2){
+		delta[k] = delta[k] + L
+	}
+}
+\end{lstlisting}
 
 \begin{figure}[H]
 	\centering{
 		\def\svgwidth{\linewidth}
 		\input{figures/minimumImageConvention/1D_2.pdf_tex}
 		\caption{Minimum image convention in 1 dimension. 
-		If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $L-\Delta x$. 
+		If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $|\Delta x - L|$. 
 		The white area indicates the system, while the gray areas are periodic replications of the system. Atoms in the gray areas are periodic images of the atom of consideration in the white area.}
 		\label{fig:minimumImageConvention1D}
 	}
@@ -139,10 +161,10 @@ In the examples we look at systems consisting of two atoms and we try to determi
 
 \begin{figure}[H]
 	\centering{
-		\input{figures/minimumImageConvention/2D.pdf_tex}
+		\input{figures/minimumImageConvention/2D_2.pdf_tex}
 		\caption{Minimum image convention in 2 dimensions.
 			The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images of the other atom that has the shortest distance to the reference atom. 
-			The shortest distance in this case is marked with a two-sided arrow. 
+			The shortest distance in this case is marked with an arrow. 
 			Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.}
 		\label{fig:minimumImageConvention2D}
 	}
@@ -153,7 +175,6 @@ In the examples we look at systems consisting of two atoms and we try to determi
 \chapter{LAMMPS}
 
 LAMMPS stands for \textit{Large-scale Atomic/Molecular Massively Parallel Simulator}. It is a classical molecular dynamics simulation code designed to run efficiently on parallel computers. It's development began in the mid 1990s at Sandia National Laboratories, with funding from the U.S. Department of Energy. It was a cooperative project between two DOE labs and three private companies. The development is still ongoing and contributions are revised thoroughly. 
-
 Today LAMMPS is an open-source code with extensive and user friendly documentation. 
 This is one of the main reasons why we have chosen to use LAMMPS as opposed to other molecular dynamics software. 
 
@@ -199,7 +220,6 @@ brew install lammps --with-mpi   # mpi support
 Where the user obviously should choose either line 2 or line 3, depending on if the user wants MPI comparability.
 This will install an executable named "lammps", a python module named "lammps", and resources with standard packages. 
 This is basically it. LAMMPS is now ready to run, however, not all packages are installed.
-
 The location of the resources and available packages can be found using the following command.
 \begin{lstlisting}
 brew info lammps 
@@ -283,7 +303,7 @@ The resulting speedup of using the respective number of processors is plotted in
 mpirun -n 8 lmp_mpi -in speedup.in -var filename speedup.restart
 \end{lstlisting}
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=0.7\linewidth]{figures/speedup/15x15.pdf}
 \caption{Speedup as a function of number of processors.}

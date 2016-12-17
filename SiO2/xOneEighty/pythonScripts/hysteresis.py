@@ -63,7 +63,7 @@ for pair in pairs:
     print pair
     if d < 61:
         d+=2.0
-    #fig, ax = plt.subplots(1,1)
+    fig, ax = plt.subplots(1,1)
     for i in xrange(2):
         dist = dists[pair[i]]
         fn = dist.normal
@@ -76,21 +76,21 @@ for pair in pairs:
             FN.append(float(sum(sum(fn))))
             FS.append(float(sum(sum(fs))))
 
-    #    output = dist.transform(fn,N,M,R,22.5,22.5)
-    #    radialDist = np.mean(output,0)
-    #    ax.plot(radialDist, linewidth=2, label='Time step %d'%pair[i], color=lc[i])
-    #    ax.set_xticks(np.linspace(0,N,9))
-    #    ax.set_xticklabels(['%.0f'%i for i in np.linspace(0,R,9)])
-    #    plt.ylim([-0.01, 0.035])
-    #    plt.grid('on')
-    #    plt.hold('on')
-#
-    #plt.legend()
-    #ax.set_ylabel(r"$eV/\AA$", fontsize=16)
-    #ax.set_xlabel(r"$r$", fontsize=18)
-    #plt.title(r'$ $Compression length: %.1f \AA'%d)
-    ##if not d%3:
-    #plt.savefig('compression%07d.pdf'%pair[0])
+        output = dist.transform(fn,N,M,R,22.5,22.5)
+        radialDist = np.mean(output,0)
+        ax.plot(radialDist, linewidth=2, label='Time step %d'%pair[i], color=lc[i])
+        ax.set_xticks(np.linspace(0,N,9))
+        ax.set_xticklabels(['%.0f'%i for i in np.linspace(0,R,9)])
+        plt.ylim([-0.01, 0.035])
+        plt.grid('on')
+        plt.hold('on')
+
+    plt.legend()
+    ax.set_ylabel(r"$eV/\AA$", fontsize=16)
+    ax.set_xlabel(r"$r$", fontsize=18)
+    plt.title(r'$ $Compression length: %.1f \AA'%d)
+    #if not d%3:
+    plt.savefig('compression%07d.pdf'%pair[0])
 
     ds.append(float(d))
 

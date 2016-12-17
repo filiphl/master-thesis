@@ -1,6 +1,6 @@
 %% Creator: Inkscape inkscape 0.91, www.inkscape.org
 %% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
-%% Accompanies image file '1D_2.pdf' (pdf, eps, ps)
+%% Accompanies image file '2D_2.pdf' (pdf, eps, ps)
 %%
 %% To include the image in your LaTeX document, write
 %%   \input{<filename>.pdf_tex}
@@ -36,7 +36,7 @@
   }%
   \providecommand\rotatebox[2]{#2}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{478.4bp}%
+    \setlength{\unitlength}{240.56256104bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -48,11 +48,9 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,0.23177437)%
-    \put(0,0){\includegraphics[width=\unitlength,page=1]{figures/minimumImageConvention/1D_2.pdf}}%
-    \put(0.65690281,0.21271671){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$L$}}}%
-    \put(0.32697638,0.21271671){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$0$}}}%
-    \put(0.22939446,0.13746587){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\Delta x - L$}}}%
-    \put(0.41974898,0.13746587){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\Delta x$}}}%
+  \begin{picture}(1,1)%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{figures/minimumImageConvention/2D_2.pdf}}%
+    \put(0.44645843,0.35115266){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\Delta x$}}}%
+    \put(0.33745724,0.45513885){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\Delta y$}}}%
   \end{picture}%
 \endgroup%

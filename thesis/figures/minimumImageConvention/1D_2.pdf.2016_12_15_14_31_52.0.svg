@@ -16,7 +16,8 @@
    id="svg11275"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="1D_2.svg">
+   sodipodi:docname="1D_2.pdf"
+   inkscape:dataloss="true">
   <defs
      id="defs11277">
     <marker
@@ -169,7 +170,7 @@
        fy="125.50134"
        r="157.23685"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.08767062,0.13348335,-0.10965802,0.07202223,189.7131,954.76133)" />
+       gradientTransform="matrix(0.08767062,0.13348334,-0.10965803,0.07202222,189.71311,954.76137)" />
     <linearGradient
        inkscape:collect="always"
        id="linearGradient4148">
@@ -196,7 +197,7 @@
        fy="125.50134"
        r="157.23685"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.06888405,0.1048798,-0.08615987,0.05658891,322.31032,964.96173)" />
+       gradientTransform="matrix(0.07514624,0.11441433,-0.09399259,0.06173336,321.61126,961.56171)" />
     <linearGradient
        id="linearGradient4230"
        inkscape:collect="always">
@@ -253,7 +254,7 @@
        fy="125.50134"
        r="157.23685"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.06888405,0.1048798,-0.08615987,0.05658891,123.31032,964.96173)" />
+       gradientTransform="matrix(0.07514624,0.11441433,-0.09399259,0.06173336,122.61126,961.56171)" />
     <marker
        inkscape:stockid="StopL"
        orient="auto"
@@ -354,7 +355,7 @@
        fy="125.50134"
        r="157.23685"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.06888405,0.1048798,-0.08615987,0.05658891,521.31032,964.96174)" />
+       gradientTransform="matrix(0.07514624,0.11441433,-0.09399259,0.06173336,520.61126,961.56172)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -363,11 +364,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.19"
-     inkscape:cx="214.77395"
-     inkscape:cy="101.33938"
+     inkscape:zoom="1.52"
+     inkscape:cx="259.56072"
+     inkscape:cy="30.166668"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer3"
      showgrid="false"
      showguides="false"
      inkscape:window-width="1440"
@@ -383,7 +384,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -410,11 +411,11 @@
        rx="1.0280871"
        ry="0.54940242" />
     <circle
-       style="display:inline;fill:url(#radialGradient4154-4-01-3);fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="display:inline;fill:url(#radialGradient4154-4-01-3);fill-opacity:1.0;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path4138-3-3-2"
        cx="131"
        cy="1002.3622"
-       r="11" />
+       r="12" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#363636;stroke-width:1.50000012;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#TriangleInM-0);marker-end:url(#TriangleOutM-7)"
        d="m 136.10631,978.7123 58.15113,0"
@@ -441,7 +442,7 @@
        id="path4138-3-3-2-8"
        cx="529"
        cy="1002.3622"
-       r="11" />
+       r="12" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -458,7 +459,7 @@
        id="path4138-3-3"
        cx="330"
        cy="1002.3622"
-       r="11" />
+       r="12" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#363636;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#StopL);marker-mid:url(#StopM);marker-end:url(#StopL)"
        d="m 200.06304,937.58221 98.43696,0 99.93171,0"
@@ -507,9 +508,9 @@
        id="text17389-0-7-7"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
+         id="tspan4766"
          x="137.17789"
-         y="970.15759"
-         id="tspan4310">$\Delta x - L$</tspan></text>
+         y="970.15759">$L-\Delta x$</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
