@@ -363,9 +363,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.19"
-     inkscape:cx="214.77395"
-     inkscape:cy="101.33938"
+     inkscape:zoom="1.34"
+     inkscape:cx="330.4062"
+     inkscape:cy="69.107305"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -383,7 +383,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -410,13 +410,13 @@
        rx="1.0280871"
        ry="0.54940242" />
     <circle
-       style="display:inline;fill:url(#radialGradient4154-4-01-3);fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="display:inline;fill:url(#radialGradient4154-4-01-3);fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;opacity:0.6"
        id="path4138-3-3-2"
        cx="131"
        cy="1002.3622"
        r="11" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#363636;stroke-width:1.50000012;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#TriangleInM-0);marker-end:url(#TriangleOutM-7)"
+       style="fill:none;fill-rule:evenodd;stroke:#363636;stroke-width:1.50000012;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#TriangleInM-0);marker-end:"
        d="m 136.10631,978.7123 58.15113,0"
        id="path11888-0-0"
        inkscape:connector-curvature="0"
@@ -437,7 +437,7 @@
        rx="1.0280871"
        ry="0.54940242" />
     <circle
-       style="display:inline;fill:url(#radialGradient4154-4-01-3-2);fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="display:inline;fill:url(#radialGradient4154-4-01-3-2);fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;opacity:0.6"
        id="path4138-3-3-2-8"
        cx="529"
        cy="1002.3622"
@@ -466,8 +466,8 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccc" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#363636;stroke-width:1.50000024;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#TriangleInM);marker-end:url(#TriangleOutM)"
-       d="m 204.7259,978.7123 120.39125,0"
+       style="fill:none;fill-rule:evenodd;stroke:#363636;stroke-width:1.50048482;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleOutM)"
+       d="m 204.64532,978.7123 120.46906,0"
        id="path11888-0"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />

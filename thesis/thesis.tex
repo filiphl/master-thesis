@@ -187,7 +187,7 @@ Users with a Unix based OS may download the lammps distribution as a tarball fro
 gunzip filename.tar.gz
 tar xvf filename.tar
 \end{lstlisting}
-The user may then change directory into \texttt{/path/to/lammps/src/}, and execute the following commands in order to list available packages. 
+The user should then change directory into \texttt{/path/to/lammps/src/}, and execute the following commands in order to list available packages. 
 \begin{lstlisting}
 make package-status
 \end{lstlisting}
@@ -203,12 +203,11 @@ make serial
 make mpi
 \end{lstlisting}
 At this point there should be an executable in the \texttt{/path/to/lammps/src/} directory named \texttt{lmp\_serial} or \texttt{lmp\_mpi}, depending on the previous choice. These are now ready to run.
-To use it one has to point to this file from the command line at every run. It may be practical to set up a symlink as follows shown below.
-
+To use it one has to point to this file from the command line at every run. It may be practical to set up a symlink as shown below.
 \begin{lstlisting}
 sudo ln -s /path/to/lammps/src/lmp_mpi /usr/local/bin/lmp_mpi
 \end{lstlisting}
-The executable is now available as \texttt{lmp\_serial} or \texttt{lmp\_mpi} from anywhere.
+Then the executable will available as \texttt{lmp\_serial} or \texttt{lmp\_mpi} from any directory. 
 
 \subsection{Mac OS X with Homebrew}
 Mac users can follow the procedure described above, however they may also install even easier using \textit{Homebrew}\footnote{\href{http://brew.sh/}{http://brew.sh/}}. 
@@ -217,14 +216,14 @@ brew tap homebrew/science
 brew install lammps              # serial version
 brew install lammps --with-mpi   # mpi support 
 \end{lstlisting}
-Where the user obviously should choose either line 2 or line 3, depending on if the user wants MPI comparability.
+Where the user obviously should choose either line 2 or line 3, depending on whether the user wants MPI comparability.
 This will install an executable named "lammps", a python module named "lammps", and resources with standard packages. 
 This is basically it. LAMMPS is now ready to run, however, not all packages are installed.
 The location of the resources and available packages can be found using the following command.
 \begin{lstlisting}
 brew info lammps 
 \end{lstlisting}
-Specific packages are available as options, and may be installed with the following command.
+Specific packages are available as options, and may be installed using the following syntax.
 
 \begin{lstlisting}
 brew install lammps --enable-manybody 
