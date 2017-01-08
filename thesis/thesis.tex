@@ -72,6 +72,7 @@ This is an abstract text.
 
 \begin{acknowledgements}
   Flora Joelle Larsen\\*
+  Anders Malthe-Sørenssen \\*
   Anders Hafreager \\*
   Henrik Sveinson \\*
   Kjetil
@@ -92,20 +93,87 @@ How is the thesis laid out?
 ...
 Molecular dynamics simulations are computationally expensive. And often scientists must balance statistical precision and CPU time. Technological improvements have provided the ability to simulate larger systems and/or at longer time frames. 
 
-\section{Potentials}
-
 \section{Time-integration}
+
+\section{Potentials}
+\subsection{Lennard-Jones} \label{Lennard-Jones-section}
+One of the simplest and most known potentials is the Lennard-Jones potential. It was first proposed in 1924 by John Edward Lennard-Jones.  It takes the form
+\begin{equation}
+	V(r) = 4\epsilon\left[\lr{\frac{\theta}{r}}^{12} -  \lr{\frac{\theta}{r}}^6 \right], \label{eq:Lennard-Jones}
+\end{equation}
+%giving rise to the force distribution 
+%\begin{equation}
+%F(r) = -\frac{\partial V(r)}{\partial r} = \frac{24\epsilon}{r}\left[2\lr{\frac{\theta}{r}}^{12} - \lr{\frac{\theta}{r}}^{6}\right], \label{eq:Lennard-Jones}
+%\end{equation}
+where the first term represents Pauli repulsion due to overlapping electron orbitals, and the last represents the van der Waal force. 
+The constant $\theta$ express the distance at which the inter-atomic potential is zero, while $\epsilon$ is the depth of the well. 
+$r$ is of course the inter-atomic distance. 
+A plot of the potential is shown in figure \ref{fig:Lennard-Jones}.
+The inter-atomic distance at which the potential is at it's minimum can easily be shown to be $r=2^{1/6}\theta$. 
+
+\begin{figure}[H]
+	\centering{
+		\def\svgwidth{\linewidth}
+		\input{figures/potentials/LJ.pdf_tex}
+		\caption{Lennard-Jones potential as function of inter-atomic distance, $r$, in units of $\theta$. }
+		\label{fig:Lennard-Jones}
+	}
+\end{figure}
+
+Since the potential only account for the Pauli repulsion and van der Waal forces, its applicability is limited to systems consisting of neutral atoms or molecules, where there are no bonds present. It would suffice for studying noble gases, for instance, but that quickly becomes quite dull. 
+
+
+ 
+\subsection{Stillinger-Weber}
+
+\subsection{Vashishta}
+The Vashishta potential consists of two terms that represent two- and three-body interactions respectively. These incorporate physical effects such as steric repulsion, coulomb interaction, dipole interaction, Van der Waal interaction and energy related to covalent bonds. It can be expressed as
+
+\begin{equation}
+V = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k} V_{ijk}^{(3)}(\vec{r}_{ij}, \vec{r}_{ik}) , \label{vashistaTwoTerm}
+\end{equation}
+
+\noindent
+where $\vec{r}_i$ represents the position of the i-th atom, $\vec{r}_{ij} = \vec{r}_j - \vec{r}_i$, and $r_{ij} = |\vec{r}_{ij}|$ is the distance between atom $i$ and atom $j$.
+The two-body term, denoted by superscript $(2)$, sums over all atoms $j$ within a cutoff range $r_c$ from atom $i$, and is given as
+
+\begin{equation}
+	 V_{ij}^{(2)}(r) = 
+	 \frac{H_{ij}}{\displaystyle r^{\eta_{ij}}} +
+	 \frac{Z_iZ_j}{r}e^{-r/r_{1s}} -
+	 \frac{D_{ij}}{2r^4}e^{-r/r_{4s}} - 
+	 \frac{W_{ij}}{r^6}.
+\end{equation}
+
+\noindent 
+where $H_{ij}$ and $\eta_{ij}$ are the strength and exponent of the steric repulsion respectively, $Z_i$ is the effective charge of atom $i$, $r_{1s}$ and $r_{4s}$ are screening lengths for the coulomb and dipole interaction respectively, $D_{ij}$ is the strength of the dipole interaction, and $W_{ij}$ is the strength of the Van der Waal interaction.
+
+The three-body term of the potential, denoted by superscript $(3)$, sums over all atoms $j$ and $k$ , that are covalently bonded to atom $i$, within a cutoff range of $r_0$, and is expressed as
+\begin{equation}
+	V_{ijk}^{(3)}(\vec{r}_{ij}, \vec{r}_{ik}) = 
+	B_{ijk} \exp\lr{\frac{\xi}{r_{ij}-r_0} + \frac{\xi}{r_{ik}-r_0}}
+	\frac{\lr{\cos \theta_{ijk} - \cos \theta_0}^2}{1 + C_{ijk}\lr{\cos \theta_{ijk} - \cos \theta_0}^2}
+\end{equation}  
+where $B_{ijk}$ is the strength of the three-body term, $\xi$ and $C_{ijk}$ are constant parameters, and $\theta_{ijk}$ is the angle between $\vec{r}_{ij}$ and $\vec{r}_{ik}$.
+
+The values of all these parameters depend on the system at hand. For instance, the strength of the steric repulsion, $H_{ij}$, for Si-Si interaction is different from that of Si-O interactions. For the case of silica, these metrics have been computed already, and when using the Vashishta potential in LAMMPS there is a file containing them.
+
+As for the Lennard-Jones potential, the two-body potential term is truncated and shifted to prevent unphysical jerks, and retain stability. This is done the same way as in equation \ref{eq:shiftedPotential}.
+
+
+
+
 
 \section{Boundary conditions}
 Boundary conditions is a crucial detail to decide upon when setting up a molecular dynamic experiment. The way we treat atoms at the boundary can have an immense effect on their behavior and how physically reasonable the results will be. There are several types of boundary conditions one may desire, and one may define custom conditions. A few examples are listed below. 
-
+ 
 
 \hspace{-9.37mm}
 \begin{tabular}{p{0.65\textwidth} p{0.3\textwidth}}
 	\vspace{0pt}  {\it No boundary conditions}. Particles are not subject to any special rules at any boundry. The system size may be regarded as infinite. This  might be a reasonable choise when studying explosions for instance, or in experiments that is on a really short time scale.  
 	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/no.pdf} 
 	\\*
-	\vspace{0pt} {\it Reflecting boundary conditions}, which acts as hard walls. In stead of passing through the boundary, the velocity component in the direction normal to the face of the boundary changes sign, thus causing the atoms to be confined within the simulation box. 
+	\vspace{0pt} {\it Reflecting boundary conditions}, which act as hard walls. In stead of passing through the boundary, the velocity component in the direction normal to the face of the boundary changes sign, thus causing the atoms to be confined within the simulation box. 
 	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/reflecting.pdf} 
 	\\*
 	 \vspace{0pt} {\it Periodic boundary conditions}, which allow atoms on separate sides of a boundary to interact through the boundary as if they were neighbors, and atoms crossing the boundary reappears on the other side of the simulation box. This is useful when studying bulk areas of a material or materials that has a periodic structure.
@@ -125,18 +193,27 @@ The standard way of determining atoms positions is by using the {\it minimum ima
 
 
 \subsection{Minimum image convention}
-The minimum image convention simply states that the image closest to the reference atom, is the one to consider as the position of the atom. 
+The minimum image convention simply states that the periodic image of an atom closest to the reference atom is the one to consider as its position. 
 Example cases of 1D and 2D systems are shown in figure \ref{fig:minimumImageConvention1D} and figure \ref{fig:minimumImageConvention2D} respectfully. 
-In the examples we look at systems consisting of two atoms and we try to determine the minimum image of the smaller, blue atom with respect to the larger, red reference atom. 
+In the examples we look at systems consisting of two atoms and we try to determine the minimum image of the smaller, blue atom with respect to the larger, red, reference atom. 
 The original system is distinguishable from the periodic copies by the background color; they have a slightly darker background. 
 Also, we only bother showing the periodic copies of the atom of consideration, the blue one.  
 The systems depicted are of size $L$ and $L\times L$ in the 1D and 2D cases respectfully.
 
-By studying figure \ref{fig:minimumImageConvention1D} it becomes apparent that if the atom of consideration is closer to the reference atom than half the system length, the original image will be used to interpret it's position. Otherwise, if it's farther apart than half the system length, a periodic image will be closer and therefor used as the atoms position.  
+By studying figure \ref{fig:minimumImageConvention1D} it becomes apparent that if the atom of consideration is closer to the reference atom than half the system length, the original image will be used to interpret its position. 
+Otherwise, if it's farther apart than half the system length, a periodic image will be closer and therefor used as the atoms position.  
+%Mathematically we can deduce that the position of the minimum image can be found as
+%\begin{align}
+%	\vec{r}_{ij}  = 
+%	\begin{cases}
+%	\vec{r}_{ij} - L, & \vec{r}_{ij} > L/2 \\
+%	\vec{r}_{ij} + L, & \vec{r}_{ij} < -L/2
+%	\end{cases}
+%\end{align}  
 This principle is applicable at higher dimensions as well. We simply decompose the positions and check each dimension separately. For a system of arbitrary number of dimensions the minimum image convention is assured by using the progression of lisiting \ref{mic}. 
 Figure \ref{fig:minimumImageConvention2D} illustrate how we decompose the positional separation of the atoms in the 2D case.
 
-\begin{lstlisting}[caption={Loop to compute the position of the closest image of atom $j$ with respect to the referance atom $i$.}, label={mic}, language=c++]
+\begin{lstlisting}[caption={Loop to compute the position of the closest periodic image of atom $j$ with respect to the referance atom $i$.}, label={mic}, language=c++]
 for (int k=0; k<numberOfDimension; k++){
 	delta[k] = atom[j].pos[k] - atom[i].pos[k]
 	if (delta[k] > L/2) {
@@ -163,12 +240,114 @@ for (int k=0; k<numberOfDimension; k++){
 	\centering{
 		\input{figures/minimumImageConvention/2D_2.pdf_tex}
 		\caption{Minimum image convention in 2 dimensions.
-			The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images of the other atom that has the shortest distance to the reference atom. 
+			The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images that has the shortest distance to the reference atom. 
+			The minimum image is found by decomposing the atoms position, and carry out the 
 			The shortest distance in this case is marked with an arrow. 
 			Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.}
 		\label{fig:minimumImageConvention2D}
 	}
 \end{figure}
+
+
+
+\section{Thermostats}
+
+
+\section{Efficiency improvements}
+The major part of the CPU time is spent in the force loop. 
+At every time step we must recompute the force acting on each individual atom. 
+When doing so, we should in theory include the contribution from all other atoms. 
+Having a system consisting of $N$ atoms would result in $N(N-1)/2 \propto N^2$ computations, if we apply Newtons third law.
+In this section we will look at the most fundamental efficiency improvements applied in molecular dynamics simulations.
+
+\subsection{Cut-off}
+Depending on the potential in use, the forces become negligible at certain distances. 
+For instance if one use the Lennard-Jones potential, introduced in section \ref{Lennard-Jones-section}, 
+the contributions are practically zero for atoms positioned at a distance $r\geq2.5\sigma$.
+Therefore, during a simulation we choose to only account for the contributions from atoms closer than this \textit{cut-off} distance, denoted $r_c$.  
+%Atoms within the cut-off length from the atom of consideration are referred to as \textit{neighbor atoms}.
+The number of contributions will then only depend on the density, which is an intensive\footnote{Physical property of a system that does not depend on the system size.} property. 
+Thus, the number of computations is reduced to $\mathcal{O} (N)$, which is an immense relief in computational expense!
+For the Lennard-Jones potentials the cut-off range is usually set to $2.5\theta$. 
+Past this range, the pair-potential is practically zero. 
+It's not zero, though. 
+Without any alterations, particles intersecting the cut-off limit will experience an unphysical jerk, which may render the simulation unstable.  
+To counteract this effect, we raise the potential, ensuring it and it's derivative to be zero at the cut-off. 
+We use the following adjustment.
+
+\begin{equation}
+	V(r) = 
+	\begin{cases}
+		\left.V(r) - V(r_c) - \frac{\partial V(r)}{\partial r}\right\rvert_{r=r_c} (r-r_c) &, r\leq r_c \\
+		0 &, r>r_c 
+	\end{cases}
+\end{equation}
+which implies the force
+\begin{equation}
+F(r) = 
+\begin{cases}
+F(r) = F(r) - F(r_c) &, r\leq r_c \\
+0 &, r>r_c 
+\end{cases}
+\end{equation}
+
+In practice we need to keep track of which atoms are within the cut-off range of each atom. 
+This is achieved using cell lists and neighbor lists. 
+
+\subsection{Cell lists and neighbor lists}
+The main purpose of the cell list is to make the building of neighbor lists more efficient. 
+We need to check which atoms are neighboring atoms, but obviously we do not need to check the entire domain, since the cut-off length is relatively small. Therefore, we partition the system into several cubes of size equal to the cut-off length. We store the atoms contained by a specific cell in a \textit{cell list}. Finally, when we build the neighbor lists we check only the atoms within the neighboring cells and those in the same cell, 27 cells in total. {\large {\color{editColor} By neighboring cells we mean...}} This is illustrated in figure \ref{fig:neighbourcells}.
+
+\begin{figure}
+	\center
+	\resizebox{0.45\linewidth}{!}{
+		\input{figures/tikz/cubes.tikz}
+	}
+	\caption{Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. }
+	\label{fig:neighbourcells}
+\end{figure}
+
+
+
+
+\subsection{Parallelization}
+It might be misguiding to refer to parallelization as an efficiency improvement, when on the contrary it most likely increases the CPU time usage. 
+However, the real time consumed may be greatly decreased. 
+It is intuitive that partitioning the work and processing these simultaneously will decrease the time as compared to processing it serially.   
+
+
+The speedup is defined as 
+\begin{equation}
+S = \frac{T_s}{T_p},
+\end{equation}
+where $T_s$ is the time used when executing the program on a single processor, and $T_p$ the time used when running on $p$ processors simultaneously.
+
+The time spent running a parallel implementation of a code using $p$ processors is seldom trivially $T_p=T_s/p$. This is due to the fact that there is a certain amount of time used on \textit{overhead}. This includes interprocess communications, idling and excess computations.
+In molecular dynamics simulations there is communication between processors when building the cell- and neighbor lists, and when computing thermodynamical properties such as energy, pressure, temperature, etc.. 
+
+During this project the author has mainly been using the local supercomputer at the department of physics at the University of Oslo. It provides users with the possibility to run  up to 256 processes at once. Though, before doing so, it is considered as good practice to check the speedup obtained by using several numbers of cores.
+
+In order to compute the speedup we initialized a system containing $15\times15\times15$ unit cells of beta-cristobalite and saved it as a restart file. 
+We then remotely ran the input script shown in Listings \ref{lst:speedup} from the supercomputer using 1, 2, 4, 8, 16, 32 and 64 processors in the same fashion as shown in Listing \ref{speeduprun}.  
+The resulting speedup of using the respective number of processors is plotted in figure \ref{fig:speedup15x15}.
+
+\lstinputlisting[caption={LAMMPS input script executed using several numbers of processors, and timed separately.}, label={lst:speedup}]{../SiO2/small/continue.in}
+
+\begin{lstlisting}[caption={Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart.}, label={speeduprun}, language=c++]
+mpirun -n 8 lmp_mpi -in speedup.in -var filename speedup.restart
+\end{lstlisting}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/speedup/15x15.pdf}
+	\caption{Speedup as a function of number of processors.}
+	\label{fig:speedup15x15}
+\end{figure}
+
+The result indicate that the speedup is in fact not simply $S=p$. 
+Anyhow, we clearly see the advantage of using 64 processors as opposed to 1. 
+We can finish a job that would have taken an hour in two minutes!
+Also, we clearly see that the initial claim holds; this is not more efficient when regarding CPU time. In fact this result suggest that using 1 processor is twice as energy efficient as using 64. 
 
 
 
@@ -238,82 +417,6 @@ In the example shown we installed the package manybody.
 \section{Running LAMMPS}
 
 
-\section{Efficiency improvements}
-The major part of the CPU time is spent in the force loop. 
-At every time step we must recompute the force acting on each individual atom. 
-When doing so, we should in theory include the contribution from all other atoms. 
-Having a system consisting of $N$ atoms would result in $N(N-1)/2 \propto N^2$ computations, if we apply Newtons third law.
-In this section we will look at the most fundamental efficiency improvements applied in molecular dynamics simulations.
-
-\subsection{Cut-off}
-Depending on the potential in use, the forces become negligible at certain distances. 
-For instance if one use the Lennard-Jones potential
-\begin{equation}
-V(r)= 4 \epsilon \left [ {\left (\dfrac{\sigma}{r} \right )}^{12}-{\left (\dfrac{\sigma}{r} \right )}^{6}  \right] \label{eq: LJ-potential}
-\end{equation}
-the contributions are practically zero for atoms positioned at a distance $r\geq3\sigma$.
-Therefore, during a simulation we choose to only account for the contributions from atoms closer than this \textit{cut-off} length.  
-%Atoms within the cut-off length from the atom of consideration are referred to as \textit{neighbor atoms}.
-The number of contributions will then only depend on the density, which is an intensive\footnote{Physical property of a system that does not depend on the system size.} property. Thus, the number of computations is reduced to $\propto N$, which is an immense relief in computational expense!
-
-In order to actually do this we must keep track of which atoms are within the cut-off length of each atom. 
-This is achieved using cell lists and neighbor lists. 
-
-\subsection{Cell lists and neighbor lists}
-The main purpose of the cell list is to make the building of neighbor lists more efficient. 
-We need to check which atoms are neighboring atoms, but obviously we do not need to check the entire domain, since the cut-off length is relatively small. Therefore, we partition the system into several cubes of size equal to the cut-off length. We store the atoms contained by a specific cell in a \textit{cell list}. Finally, when we build the neighbor lists we check only the atoms within the neighboring cells and those in the same cell, 27 cells in total. {\large {\color{editColor} By neighboring cells we mean...}} This is illustrated in figure \ref{fig:neighbourcells}.
-
-\begin{figure}
-	\center
-	\resizebox{0.45\linewidth}{!}{
-	\input{figures/tikz/cubes.tikz}
-	}
-	\caption{Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. }
-	\label{fig:neighbourcells}
-\end{figure}
-
-
-
-
-\subsection{Parallelization}
- It might be misguiding to refer to parallelization as an efficiency improvement, when on the contrary it most likely increases the CPU time usage. 
- However, the real time consumed may be greatly decreased. 
- It is intuitive that partitioning the work and processing these simultaneously will decrease the time as compared to processing it serially.   
- 
- 
- The speedup is defined as 
- \begin{equation}
- S = \frac{T_s}{T_p},
- \end{equation}
- where $T_s$ is the time used when executing the program on a single processor, and $T_p$ the time used when running on $p$ processors simultaneously.
- 
- The time spent running a parallel implementation of a code using $p$ processors is seldom trivially $T_p=T_s/p$. This is due to the fact that there is a certain amount of time used on \textit{overhead}. This includes interprocess communications, idling and excess computations.
- In molecular dynamics simulations there is communication between processors when building the cell- and neighbor lists, and when computing thermodynamical properties such as energy, pressure, temperature, etc.. 
-
-During this project the author has mainly been using the local supercomputer at the department of physics at the University of Oslo. It provides users with the possibility to run  up to 256 processes at once. Though, before doing so, it is considered as good practice to check the speedup obtained by using several numbers of cores.
-
-In order to compute the speedup we initialized a system containing $15\times15\times15$ unit cells of beta-cristobalite and saved it as a restart file. 
-We then remotely ran the input script shown in Listings \ref{lst:speedup} from the supercomputer using 1, 2, 4, 8, 16, 32 and 64 processors in the same fashion as shown in Listing \ref{speeduprun}.  
-The resulting speedup of using the respective number of processors is plotted in figure \ref{fig:speedup15x15}.
-
-\lstinputlisting[caption={LAMMPS input script executed using several numbers of processors, and timed separately.}, label={lst:speedup}]{../SiO2/small/continue.in}
-
-\begin{lstlisting}[caption={Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart.}, label={speeduprun}, language=c++]
-mpirun -n 8 lmp_mpi -in speedup.in -var filename speedup.restart
-\end{lstlisting}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.7\linewidth]{figures/speedup/15x15.pdf}
-\caption{Speedup as a function of number of processors.}
-\label{fig:speedup15x15}
-\end{figure}
-
-The result indicate that the speedup is in fact not simply $S=p$. 
-Anyhow, we clearly see the advantage of using 64 processors as opposed to 1. 
-We can finish a job that would have taken an hour in two minutes!
-Also, we clearly see that the initial claim holds; this is not more efficient when regarding CPU time. In fact this result suggest that using 1 processor is twice as energy efficient as using 64. 
- 
 
 
 
