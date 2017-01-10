@@ -39,26 +39,30 @@
 \newlabel{vashistaTwoTerm}{{2.2}{4}{Vashishta}{equation.2.2.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.3}Boundary conditions}{5}{section.2.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Minimum image convention}{6}{subsection.2.3.1}}
-\newlabel{mic}{{2.1}{7}{Loop to compute the position of the closest periodic image of atom $j$ with respect to the referance atom $i$}{lstlisting.2.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}Loop to compute the position of the closest periodic image of atom $j$ with respect to the referance atom $i$.}{7}{lstlisting.2.1}}
+\newlabel{mic}{{2.1}{6}{Loop to compute the position of the closest periodic image of atom $j$ with respect to the referance atom $i$}{lstlisting.2.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}Loop to compute the position of the closest periodic image of atom $j$ with respect to the referance atom $i$.}{6}{lstlisting.2.1}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Minimum image convention in 1 dimension. If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $|\Delta x - L|$. The white area indicates the system, while the gray areas are periodic replications of the system. Atoms in the gray areas are periodic images of the atom of consideration in the white area.\relax }}{7}{figure.caption.3}}
 \newlabel{fig:minimumImageConvention1D}{{2.2}{7}{Minimum image convention in 1 dimension. If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $|\Delta x - L|$. The white area indicates the system, while the gray areas are periodic replications of the system. Atoms in the gray areas are periodic images of the atom of consideration in the white area.\relax }{figure.caption.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images that has the shortest distance to the reference atom. The minimum image is found by decomposing the atoms position, and carry out the The shortest distance in this case is marked with an arrow. Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.\relax }}{8}{figure.caption.4}}
-\newlabel{fig:minimumImageConvention2D}{{2.3}{8}{Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images that has the shortest distance to the reference atom. The minimum image is found by decomposing the atoms position, and carry out the The shortest distance in this case is marked with an arrow. Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.\relax }{figure.caption.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images that has the shortest distance to the reference atom. The minimum image is found by decomposing the atoms position, and carry out the The shortest distance in this case is marked with an arrow. Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.\relax }}{7}{figure.caption.4}}
+\newlabel{fig:minimumImageConvention2D}{{2.3}{7}{Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images that has the shortest distance to the reference atom. The minimum image is found by decomposing the atoms position, and carry out the The shortest distance in this case is marked with an arrow. Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.\relax }{figure.caption.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.4}Thermostats}{8}{section.2.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Berendsen}{8}{subsection.2.4.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Andersen}{8}{subsection.2.4.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Nos\IeC {\'e}-Hoover}{8}{subsection.2.4.3}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.5}Efficiency improvements}{8}{section.2.5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}Cut-off}{8}{subsection.2.5.1}}
+\newlabel{eq:truncation}{{2.5}{8}{Cut-off}{equation.2.5.5}{}}
+\pgfsyspdfmark {pgfid1}{15053934}{38859298}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }}{9}{figure.caption.5}}
+\newlabel{fig:neighbourcells}{{2.4}{9}{Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }{figure.caption.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Cell lists and neighbor lists}{9}{subsection.2.5.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}Parallelization}{9}{subsection.2.5.3}}
-\pgfsyspdfmark {pgfid1}{16825374}{38859298}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }}{10}{figure.caption.5}}
-\newlabel{fig:neighbourcells}{{2.4}{10}{Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }{figure.caption.5}{}}
 \newlabel{lst:speedup}{{2.2}{10}{LAMMPS input script executed using several numbers of processors, and timed separately}{lstlisting.2.2}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {2.2}LAMMPS input script executed using several numbers of processors, and timed separately.}{10}{lstlisting.2.2}}
+\newlabel{speeduprun}{{2.3}{10}{Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart}{lstlisting.2.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.3}Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart.}{10}{lstlisting.2.3}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Speedup as a function of number of processors.\relax }}{11}{figure.caption.6}}
 \newlabel{fig:speedup15x15}{{2.5}{11}{Speedup as a function of number of processors.\relax }{figure.caption.6}{}}
-\newlabel{speeduprun}{{2.3}{11}{Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart}{lstlisting.2.3}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.3}Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart.}{11}{lstlisting.2.3}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}LAMMPS}{13}{chapter.3}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -67,7 +71,7 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Mac OS X with Homebrew}{14}{subsection.3.1.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Windows}{15}{subsection.3.1.3}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}Running LAMMPS}{15}{section.3.2}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Setting up the system}{17}{chapter.4}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Preparing a molecular dynamics simulation}{17}{chapter.4}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}Silica}{17}{section.4.1}}
@@ -84,9 +88,9 @@
 \newlabel{eq: diffusion constant}{{4.1}{21}{Melting point}{equation.4.3.1}{}}
 \newlabel{lst:msd}{{4.2}{21}{Main blalbabla}{lstlisting.4.2}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {4.2}Main blalbabla.}{21}{lstlisting.4.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Shaping the silica}{21}{section.4.4}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Mean square displacement as a function of temperature. The face transition occurs where we see a rapid change in the behavior.\relax }}{22}{figure.caption.9}}
 \newlabel{fig:msd}{{4.3}{22}{Mean square displacement as a function of temperature. The face transition occurs where we see a rapid change in the behavior.\relax }{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Shaping the silica}{22}{section.4.4}}
 \newlabel{lst:sculpting}{{4.3}{22}{Defining regions to keep or delete from a system of dimensions $106.8\times 106.8\times 106.8$ Å}{lstlisting.4.3}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {4.3}Defining regions to keep or delete from a system of dimensions $106.8\times 106.8\times 106.8$ \IeC {\r A}.}{22}{lstlisting.4.3}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces xz-perspective on a system built from $15\times 15\times 15$ unit cells of b-cristobalite, with certain regions carves out. This is a result from applying Listing \ref  {lst:sculpting} to the system shown in figure \ref  {fig:hugeCube}. The top shape is a sphere cap, while the bottom is a slab.\relax }}{23}{figure.caption.10}}

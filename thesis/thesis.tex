@@ -24,7 +24,7 @@
 
 \usepackage{HASstyle}
 
-
+\setlength{\parskip}{0em}
 % ---------Custom commands-------------
 \newcommand\lr[1]{\left(#1\right)} 
 
@@ -90,8 +90,15 @@ How is the thesis laid out?
 
 
 \chapter{Molecular dynamics}
-...
-Molecular dynamics simulations are computationally expensive. And often scientists must balance statistical precision and CPU time. Technological improvements have provided the ability to simulate larger systems and/or at longer time frames. 
+Molecular dynamics is a method that uses Newton’s equations of motion to simulate the movement of interacting atoms. 
+Each atom is treated as a point particle with a mass, and the interaction between them is described by a force field. 
+Molecular dynamics aid our understanding of macroscopic phenomena by giving us insight in microscopic effects. 
+It can be used if an experiment is to difficult, dangerous or expensive to do otherwise, for instance experiments at extreme temperatures or pressure. 
+The areas of application are wide, and it has become a very popular field in material science, biochemistry and biophysics.
+
+In this chapter we will present the basic principals of molecular dynamics, including essential algorithms, common methods and efficiency improvements.
+
+%Molecular dynamics simulations are computationally expensive. And often scientists must balance statistical precision and CPU time. Technological improvements have provided us the ability to simulate larger systems and/or at longer time frames than ever before. 
 
 \section{Time-integration}
 
@@ -156,9 +163,11 @@ The three-body term of the potential, denoted by superscript $(3)$, sums over al
 \end{equation}  
 where $B_{ijk}$ is the strength of the three-body term, $\xi$ and $C_{ijk}$ are constant parameters, and $\theta_{ijk}$ is the angle between $\vec{r}_{ij}$ and $\vec{r}_{ik}$.
 
-The values of all these parameters depend on the system at hand. For instance, the strength of the steric repulsion, $H_{ij}$, for Si-Si interaction is different from that of Si-O interactions. For the case of silica, these metrics have been computed already, and when using the Vashishta potential in LAMMPS there is a file containing them.
-
-As for the Lennard-Jones potential, the two-body potential term is truncated and shifted to prevent unphysical jerks, and retain stability. This is done the same way as in equation \ref{eq:shiftedPotential}.
+The values of all these parameters depend on the system at hand. 
+For instance, the strength of the steric repulsion, $H_{ij}$, for Si-Si interaction is different from that of Si-O interactions. 
+For the case of silica, these metrics have been computed already, and when using the Vashishta potential in LAMMPS there is a file containing them.
+As for the Lennard-Jones potential, the two-body potential term is truncated and shifted to prevent unphysical jerks, and retain stability. 
+This is done the same way as in equation (\ref{eq:truncation}).
 
 
 
@@ -176,7 +185,7 @@ Boundary conditions is a crucial detail to decide upon when setting up a molecul
 	\vspace{0pt} {\it Reflecting boundary conditions}, which act as hard walls. In stead of passing through the boundary, the velocity component in the direction normal to the face of the boundary changes sign, thus causing the atoms to be confined within the simulation box. 
 	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/reflecting.pdf} 
 	\\*
-	 \vspace{0pt} {\it Periodic boundary conditions}, which allow atoms on separate sides of a boundary to interact through the boundary as if they were neighbors, and atoms crossing the boundary reappears on the other side of the simulation box. This is useful when studying bulk areas of a material or materials that has a periodic structure.
+	 \vspace{0pt} {\it Periodic boundary conditions}, which allow atoms on separate sides of a boundary to interact through the boundary as if they were neighbors, and atoms crossing the boundary reappears on the other side of the simulation box. This is useful when studying bulk atoms of a material or materials that has a periodic structure.
 	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/periodic.pdf}
 \end{tabular}
 \vspace{10mm}
@@ -251,7 +260,9 @@ for (int k=0; k<numberOfDimension; k++){
 
 
 \section{Thermostats}
-
+\subsection{Berendsen}
+\subsection{Andersen}
+\subsection{Nosé-Hoover}
 
 \section{Efficiency improvements}
 The major part of the CPU time is spent in the force loop. 
@@ -262,12 +273,9 @@ In this section we will look at the most fundamental efficiency improvements app
 
 \subsection{Cut-off}
 Depending on the potential in use, the forces become negligible at certain distances. 
-For instance if one use the Lennard-Jones potential, introduced in section \ref{Lennard-Jones-section}, 
-the contributions are practically zero for atoms positioned at a distance $r\geq2.5\sigma$.
+For instance if one uses the Lennard-Jones potential (introduced in section \ref{Lennard-Jones-section}) the contributions are practically zero for atoms positioned at a distance $r\geq2.5\sigma$.
 Therefore, during a simulation we choose to only account for the contributions from atoms closer than this \textit{cut-off} distance, denoted $r_c$.  
 %Atoms within the cut-off length from the atom of consideration are referred to as \textit{neighbor atoms}.
-The number of contributions will then only depend on the density, which is an intensive\footnote{Physical property of a system that does not depend on the system size.} property. 
-Thus, the number of computations is reduced to $\mathcal{O} (N)$, which is an immense relief in computational expense!
 For the Lennard-Jones potentials the cut-off range is usually set to $2.5\theta$. 
 Past this range, the pair-potential is practically zero. 
 It's not zero, though. 
@@ -281,6 +289,7 @@ We use the following adjustment.
 		\left.V(r) - V(r_c) - \frac{\partial V(r)}{\partial r}\right\rvert_{r=r_c} (r-r_c) &, r\leq r_c \\
 		0 &, r>r_c 
 	\end{cases}
+	\label{eq:truncation}
 \end{equation}
 which implies the force
 \begin{equation}
@@ -290,13 +299,20 @@ F(r) = F(r) - F(r_c) &, r\leq r_c \\
 0 &, r>r_c 
 \end{cases}
 \end{equation}
-
 In practice we need to keep track of which atoms are within the cut-off range of each atom. 
 This is achieved using cell lists and neighbor lists. 
 
 \subsection{Cell lists and neighbor lists}
 The main purpose of the cell list is to make the building of neighbor lists more efficient. 
-We need to check which atoms are neighboring atoms, but obviously we do not need to check the entire domain, since the cut-off length is relatively small. Therefore, we partition the system into several cubes of size equal to the cut-off length. We store the atoms contained by a specific cell in a \textit{cell list}. Finally, when we build the neighbor lists we check only the atoms within the neighboring cells and those in the same cell, 27 cells in total. {\large {\color{editColor} By neighboring cells we mean...}} This is illustrated in figure \ref{fig:neighbourcells}.
+We need to check which atoms are neighboring atoms, but obviously we do not need to check the entire domain, since the cut-off length is relatively small. 
+Therefore, we partition the system into several cubes of size equal to the cut-off length. 
+We store the atoms contained by each cell in a \textit{cell list}. 
+Finally, when we build the neighbor lists we check only the atoms within the neighboring cells and those in the same cell, 27 cells in total. 
+In this sense, by neighboring cells we mean any cells that share a face, edge or vertex. 
+This is illustrated in figure \ref{fig:neighbourcells}.
+The pay-off of using cell- and neighbor lists is tremendous. Since we now, for each atom, only include contributions from atoms within a constant volume of size $4\pi r_c^3/3$, 
+the number of contributions will only depend on the density, which is an intensive\footnote{Physical property of a system that does not depend on the system size.} property. 
+Thus, the number of computations is reduced to $\mathcal{O} (N)$, which is an immense relief in computational expense!
 
 \begin{figure}
 	\center
@@ -337,7 +353,7 @@ The resulting speedup of using the respective number of processors is plotted in
 mpirun -n 8 lmp_mpi -in speedup.in -var filename speedup.restart
 \end{lstlisting}
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{figures/speedup/15x15.pdf}
 	\caption{Speedup as a function of number of processors.}
@@ -422,7 +438,7 @@ In the example shown we installed the package manybody.
 
 
 
-\chapter{Setting up the system}
+\chapter{Preparing a molecular dynamics simulation}
 
 We wish to construct a system consisting of {\color{red} two} elements made out of silica: a slab and a sphere cap. In order to do this we need to generate the spacial position coordinates (x,y,z) of every single atom. Considering that we are making a system consisting of about $10^5$ atoms, this is obviously not done manually. We have chosen to use a tool named \textit{Moltemplate}\footnote{\href{http://www.moltemplate.org/index.html}{http://www.moltemplate.org/index.html}}, which is included in the LAMMPS distribution.
 
@@ -430,8 +446,8 @@ The main idea is to manually enter the coordinates of only the atoms in a unit c
 
 \section{Silica}
 Silica is a chemical compound also known as Silicon dioxide, having the chemical formula SiO$_2$. It has several polymorph structures, the most common being quartz, which is one of the most abundant minerals in the Earth's crust. Other polymorphs include cristobalite, tridymite, coesite and more.    
-
-For our purpose it is insignificant which one we choose. Once the material is melted, it is indifferent which configuration we started from, as long as the density is correct.
+For our purpose it is insignificant which one we choose. 
+Once the material is melted, it is indifferent which configuration we started from, as long as the density is correct.
 In this project we will build the constituents of the system from a type of cristobalite named $\beta$-cristobalite. This is mainly because it has a simple structure and a cubical unit cell.
 
 
@@ -499,7 +515,7 @@ The $15\times15\times15$ system is sufficient for this test. The procedure is ra
 \lstinputlisting[caption={Main blalbabla.}, label={lst:msd}, firstline=14, lastline=40]{../SiO2/msd/continue.in}
 
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msd}
 \caption{Mean square displacement as a function of temperature. The face transition occurs where we see a rapid change in the behavior.}
