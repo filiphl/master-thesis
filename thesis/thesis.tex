@@ -337,12 +337,10 @@ The speedup is defined as
 S = \frac{T_s}{T_p},
 \end{equation}
 where $T_s$ is the time used when executing the program on a single processor, and $T_p$ the time used when running on $p$ processors simultaneously.
-
 The time spent running a parallel implementation of a code using $p$ processors is seldom trivially $T_p=T_s/p$. This is due to the fact that there is a certain amount of time used on \textit{overhead}. This includes interprocess communications, idling and excess computations.
 In molecular dynamics simulations there is communication between processors when building the cell- and neighbor lists, and when computing thermodynamical properties such as energy, pressure, temperature, etc.. 
 
-During this project the author has mainly been using the local supercomputer at the department of physics at the University of Oslo. It provides users with the possibility to run  up to 256 processes at once. Though, before doing so, it is considered as good practice to check the speedup obtained by using several numbers of cores.
-
+During this project we have mainly been using the local supercomputer at the department of physics at the University of Oslo. It provides users with the possibility to run  up to 256 processes at once. Though, before doing so, it is considered as good practice to check the speedup obtained by using several numbers of cores.
 In order to compute the speedup we initialized a system containing $15\times15\times15$ unit cells of beta-cristobalite and saved it as a restart file. 
 We then remotely ran the input script shown in Listings \ref{lst:speedup} from the supercomputer using 1, 2, 4, 8, 16, 32 and 64 processors in the same fashion as shown in Listing \ref{speeduprun}.  
 The resulting speedup of using the respective number of processors is plotted in figure \ref{fig:speedup15x15}.
@@ -784,7 +782,7 @@ This can be expressed as a matrix equation.
 \end{equation}
 where we have omitted the indices to better readability.
 Solving this linear system retrieves the optimal coefficients in the sense of the least squares method. 
-The normal vector of the plane will be $\vec{n}=[1,a,b]$. 
+The normal vector of the plane will be $\vec{n}=[a,b,1]$. 
 This vector will be used to compute the size of the normal force. 
 Since we know the average force on an atom in the chunk, and the normal vector from the approximated slope of the surface, we can compute the normal force simply as
 
