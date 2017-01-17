@@ -18,6 +18,7 @@
 \usepackage{float}
 
 \usepackage{tikz}
+\usepackage{tikz-3dplot}
 %\usepackage{xcolor}
 \usepackage{xifthen}
 \usepackage{caption}
@@ -263,6 +264,8 @@ for (int k=0; k<numberOfDimension; k++){
 \subsection{Berendsen}
 \subsection{Andersen}
 \subsection{Nosé-Hoover}
+
+
 
 \section{Efficiency improvements}
 The major part of the CPU time is spent in the force loop. 
@@ -659,6 +662,17 @@ The figure clearly shows that some cells have a larger area within the bin than 
 	\includegraphics[height=0.474\linewidth]{figures/forceDistribution/radialDistribution/weights.pdf}
 	\caption{Fraction of cell's area that are within the third radial bin. }
 	\label{fig:radialBinningWeights}
+\end{figure}
+
+
+
+\begin{figure}
+	\center
+	\resizebox{0.5\linewidth}{!}{
+		\input{figures/tikz/stressTensor/stressTensor.tikz}
+	}
+	\caption{Stress}
+	\label{fig:neighbourcells}
 \end{figure}
 
 

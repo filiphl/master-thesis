@@ -17,7 +17,7 @@ velocity sphereUpperGroup set 0 0 0
 
 variable N equal 30000
 variable T equal 293
-variable compressionLength equal 60
+variable compressionLength equal 55
 
 neighbor	0.3 bin
 neigh_modify	delay 10
@@ -25,18 +25,16 @@ neigh_modify	delay 10
 thermo		10000
 timestep	0.002
 
-run 3000
-
 region thirdRegion block 0.0 INF 0.0 INF 0.0 58.0
 
-group dynamicSlabGroup dynamic    slabGroup    region thirdRegion every 100
+#group dynamicSlabGroup dynamic    slabGroup    region thirdRegion every 100
 group dynamicSurfaceGroup dynamic surfaceGroup region thirdRegion every 100
 
 
 
-restart 10000 restartFiles/SiO2_*_m4.restart
+restart 10000 restartFiles/SiO2_*_m5.restart
 #dump allDumpID all atom 10000 dumpFiles/SiO2_*.dump
-dump surfaceDumpID  dynamicSurfaceGroup  atom 1000 surfaceFiles/Surface*_m4.dump
+dump surfaceDumpID  dynamicSurfaceGroup  atom 1000 surfaceFiles/Surface*_m5.dump
 #dump surfaceDump2ID surfaceGroup2 atom 10000 surfaceFiles/Surface*_2.dump
 
 #Move the top z-boundary downwards
@@ -46,8 +44,8 @@ fix nvt all nvt temp ${T} ${T} 1.0
 
 compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
 
-compute computeID dynamicSlabGroup group/group/atom sphereGroup pair yes
-fix fixComputeID dynamicSlabGroup ave/chunk 1 1000 1000 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forces_m4.txt #ave running
+compute computeID slabGroup group/group/atom sphereGroup pair yes
+fix fixComputeID slabGroup ave/chunk 1 1000 1000 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forces_m5.txt #ave running
 
 run ${N}
 

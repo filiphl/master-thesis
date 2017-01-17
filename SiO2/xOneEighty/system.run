@@ -1,8 +1,12 @@
-include "system.in"
-velocity	all create 1 277387 mom yes
+#include "system.in"
+#velocity	all create 1 277387 mom yes
 
 
-include "system.prepare"
+#include "system.prepare"
+
+include "system.in.init"
+read_restart 
+include "system.in.settings"
 
 variable N equal 20000
 variable T equal 293

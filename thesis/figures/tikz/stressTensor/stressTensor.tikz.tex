@@ -1,0 +1,35 @@
+%http://latex-community.org/know-how/440-tikz-3dplot
+
+\tdplotsetmaincoords{75}{123}
+\begin{tikzpicture}[
+		tdplot_main_coords,
+		grid/.style={very thin,gray},
+		axis/.style={->,blue,thick},
+		cube/.style={very thick, fill=black!5, fill opacity=0.9},
+		cube hidden/.style={very thick,dashed}]
+		%draw the axes
+	\draw[axis, very thick, black, dashed] (0,0,0) -- (5,0,0) node[anchor=north east]{\normalsize$x$};
+	\draw[axis, very thick, black, dashed] (0,0,0) -- (0,5,0) node[anchor=west]{\normalsize$y$};
+	\draw[axis, very thick, black, dashed] (0,0,0) -- (0,0,5) node[anchor=south]{\normalsize$z$};
+
+	%draw the front-right of the cube
+	\draw[cube] (4,0,0) -- (4,4,0) -- (4,4,4) -- (4,0,4) -- cycle;
+	\draw[axis, very thick, black] (4,2,2) -- (5,2,2) node[anchor=south, inner sep=6]{\normalsize$\sigma_x$};
+	\draw[axis, very thick, black] (4,2,2) -- (4,3,2) node[anchor=north, inner sep=5]{\normalsize$\tau_{xy}$};
+	\draw[axis, very thick, black] (4,2,2) -- (4,2,3) node[anchor=west]{\normalsize$\tau_{xz}$};
+	%draw the front-left of the cube
+	\draw[cube] (0,4,0) -- (4,4,0) -- (4,4,4) -- (0,4,4) -- cycle;
+	\draw[axis, very thick, black] (2,4,2) -- (2,5,2) node[anchor=north, inner sep=5]{\normalsize$\sigma_y$};
+	\draw[axis, very thick, black] (2,4,2) -- (3,4,2) node[anchor=south, inner sep=5]{\normalsize$\tau_{yx}$};
+	\draw[axis, very thick, black] (2,4,2) -- (2,4,3) node[anchor=west]{\normalsize$\tau_{yz}$};
+	%draw the top of the cube
+	\draw[cube] (0,0,4) -- (0,4,4) -- (4,4,4) -- (4,0,4) -- cycle;
+	\draw[axis, very thick, black] (2,2,4) -- (2,2,5) node[anchor=west]{\normalsize$\sigma_z$};
+	\draw[axis, very thick, black] (2,2,4) -- (3,2,4) node[anchor=south, inner sep=5]{\normalsize$\tau_{zx}$};
+	\draw[axis, very thick, black] (2,2,4) -- (2,3,4) node[anchor=north, inner sep=4, pos=0.75]{\normalsize$\tau_{zy}$};
+	%draw dashed lines to represent hidden edges
+%	\draw[cube hidden] (0,0,0) -- (4,0,0);
+%	\draw[cube hidden] (0,0,0) -- (0,4,0);
+%	\draw[cube hidden] (0,0,0) -- (0,0,4);
+	
+\end{tikzpicture}
