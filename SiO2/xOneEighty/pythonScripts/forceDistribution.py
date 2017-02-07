@@ -18,8 +18,8 @@ class ForceDistribution:
         self.mapping = float(N)/surfN
 
         self.timeStep = timeStep    # Only analyse single frame
-        self.surf  = self.loadSurface('../dataFiles/m4/surface.pkl', N=self.surfN, s=self.nn)
-        self.force = self.loadForces('../dataFiles/m4/forces.pkl')
+        self.surf  = self.loadSurface('../dataFiles/m5/surface.pkl', N=self.surfN, s=self.nn)
+        self.force = self.loadForces('../dataFiles/m5/forces.pkl')
         #self.radialBinning = smooth(N, cx, cy, binWidth, nBins=int(16/binWidth))
         #self.surf.plotPlanes()
 
@@ -40,9 +40,9 @@ class ForceDistribution:
                 print "Couldn't load surface file."
 
         if self.timeStep:
-            s = SurfaceRegression('../surfaceFiles/m4/Surface%d_m4/'%self.timeStep, N, False, s)
+            s = SurfaceRegression('../surfaceFiles/m5/Surface%d_m5/'%self.timeStep, N, False, s)
         else:
-            s = SurfaceRegression('../surfaceFiles/', N, False, s)
+            s = SurfaceRegression('../surfaceFiles/m5/', N, False, s)
 
         if filePath:
             with open(filePath, 'wb') as output:
@@ -63,9 +63,9 @@ class ForceDistribution:
                 print "Couldn't load force file."
 
         if self.timeStep:
-            F = Forces('../forceFiles/m4/forces%d.txt'%self.timeStep)
+            F = Forces('../forceFiles/m5/forces%d.txt'%self.timeStep)
         else:
-            F = Forces('../forceFiles/forcesAll.txt')
+            F = Forces('../forceFiles/m5/forcesAll.txt')
 
         F.plotAverage = True
         F.name = 'Averaged normal force'
@@ -126,13 +126,13 @@ class ForceDistribution:
 
         N = 46
         M = 46
-        R = 16
+        R = 20
 
 
         c=0
         for f in [self.force.absoluteForces, self.normal, self.shear]:
             output = self.transform(f,N,M,R,22.5,22.5)
-            im=ax[0,c].pcolor(output, vmin=0, vmax=cmax)
+            im=ax[0,c].pcolor(output, vmin=-0.01, vmax=0.1)
 
             radialDist = np.mean(output,0)
             ax[1,c].plot(radialDist, linewidth=2, color="#478684")
@@ -142,7 +142,7 @@ class ForceDistribution:
             ax[1,c].set_xticklabels(['%.0f'%i for i in np.linspace(0,R,6)])
             #ax[0,c].set_ylim([0,ymax*1.05])
             ax[1,c].grid('on')
-            ax[1,c].set_ylim([-0.01,0.025])
+            ax[1,c].set_ylim([-0.01,0.05])
             c+=1
 
 
@@ -169,7 +169,7 @@ class ForceDistribution:
 
         if self.timeStep:
             fig.suptitle(r"$ $Time step %d"%self.timeStep, fontsize=16)
-
+            plt.savefig('timeSteps/timestep%06d.pdf'%self.timeStep)
 #------------------------------------------------------------------------------#
 
 if __name__ == '__main__':
@@ -181,9 +181,9 @@ if __name__ == '__main__':
         cx=22.5
         cy=22.5
         nn=5
-        dist = ForceDistribution(N, surfN, nn, bw, cx, cy, timeStep=90000)
-        dist.computeDistributions()
-        dist.plotDistributions()
-
+        for i in xrange(60000, 150000, 1000):
+            dist = ForceDistribution(N, surfN, nn, bw, cx, cy, timeStep=i)
+            dist.computeDistributions()
+            dist.plotDistributions()
 
     plt.show()

@@ -17,6 +17,11 @@
 %\usepackage{siunitx}
 \usepackage{float}
 
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\usepackage{booktabs}   
+
 \usepackage{tikz}
 \usepackage{tikz-3dplot}
 %\usepackage{xcolor}
@@ -163,7 +168,6 @@ The three-body term of the potential, denoted by superscript $(3)$, sums over al
 	\frac{\lr{\cos \theta_{ijk} - \cos \theta_0}^2}{1 + C_{ijk}\lr{\cos \theta_{ijk} - \cos \theta_0}^2}
 \end{equation}  
 where $B_{ijk}$ is the strength of the three-body term, $\xi$ and $C_{ijk}$ are constant parameters, and $\theta_{ijk}$ is the angle between $\vec{r}_{ij}$ and $\vec{r}_{ik}$.
-
 The values of all these parameters depend on the system at hand. 
 For instance, the strength of the steric repulsion, $H_{ij}$, for Si-Si interaction is different from that of Si-O interactions. 
 For the case of silica, these metrics have been computed already, and when using the Vashishta potential in LAMMPS there is a file containing them.
@@ -403,7 +407,7 @@ To use it one has to point to this file from the command line at every run. It m
 \begin{lstlisting}
 sudo ln -s /path/to/lammps/src/lmp_mpi /usr/local/bin/lmp_mpi
 \end{lstlisting}
-Then the executable will available as \texttt{lmp\_serial} or \texttt{lmp\_mpi} from any directory. 
+Then the executable will be available as \texttt{lmp\_serial} or \texttt{lmp\_mpi} from any directory. 
 
 \subsection{Mac OS X with Homebrew}
 Mac users can follow the procedure described above, however they may also install even easier using \textit{Homebrew}\footnote{\href{http://brew.sh/}{http://brew.sh/}}. 
@@ -431,9 +435,58 @@ In the example shown we installed the package manybody.
 
 
 
-\section{Running LAMMPS}
+\section{Input scripts}
+The executable made in the previous section can be used to read so-called input scripts. The input scripts contain LAMMPS commands to configure the simulation. This includes all settings and actions. This is naturally partitioned into two sections: \textit{system configurations} and \textit{run-time commands}.
+
+\subsection{System configurations}
+The first part of every input script contains information of the system properties. This includes: size, number of dimensions, boundary conditions, potentials, unit convention, information on the containing atoms, time step length, neighbor list update frequency and possibly a lot more.   
+Listing \ref{lampsInput1} show the configurations that has been used for the entire duration of this project. 
+Below there is a description of each command and its purpose.
 
 
+\begin{lstlisting}[language=LammpsInput, caption={Typical system configurations applied in this project.}, label={lampsInput1}]
+units        metal
+boundary     p p p
+atom_style   atomic
+read_data    "system.data"
+pair_style   vashishta
+pair_coeff   * *  SiO2.vashishta Si O
+pair_modify  table 16
+pair_modify  tabinner 0.1
+neighbor	   0.3 bin
+neigh_modify delay 10
+timestep	   0.002
+\end{lstlisting} 
+\paragraph{\texttt{units}} determines what unit convention should be used for the simulation. It might not seem like a difficult decision, but if you import data from a file for instance, it is crucial that LAMMPS interpret the data correctly. In this project we have chosen \textit{metal} as the unit convention. The units are therefore as shown in table \ref{tab:unitsMetal}.
+
+\paragraph{\texttt{boundary}}  sets the style of boundaries for the simulation box in each dimension. There are four options: \texttt{p}, \texttt{f}, \texttt{s} and \texttt{m}. In the example above, we have chosen to use periodic boundaries through all the faces of the simulation box. It's possible to set different conditions in separate dimensions, e.g. \texttt{boundary   p f p} sets fixed boundaries on the faces normal to the y-direction.  One can even set different conditions on the two faces in the same dimension by using two letters, e.g.   \texttt{boundary   p fs p}, where the first letter indicates the boundary to be used on the \textit{low face} and the last on the \textit{high face}. 
+
+\paragraph{\texttt{atom\_style}} tells LAMMPS the structure of atom related data stored in a data file, which contains information about particle types, positions, charges, mass,  bonds, angles, and potentially more, depending on the \texttt{atom\_style}. 
+
+\paragraph{\texttt{read\_data}} reads a data file containing information as described above and additional information about the system, such as its size and shape. 
+This is one of three ways to distribute initial atom positions. 
+Another is the \texttt{read\_restart} command, which is used extensively to load saved states from restart files. 
+The last option is to use \texttt{create atoms}, which distributes atoms in a predefined way, i.e. in a lattice or a random collection. 
+To use this last option, one has to first create a simulation box using the \texttt{create box} command.  
+
+\paragraph{\texttt{pair\_style}}
+
+\paragraph{\texttt{pair\_coeff}}
+
+\paragraph{\texttt{neighbor}}
+
+\paragraph{\texttt{neigh\_modify} }
+
+\paragraph{\texttt{timestep}}
+
+
+
+
+
+
+
+
+\subsection{Run-time commands} 
 
 
 
@@ -453,11 +506,16 @@ In this project we will build the constituents of the system from a type of cris
 
 
 \subsection{Unit cell of $\beta$-cristobalite}
-In order to construct the unit cell of a material, one should look up the coordinates of the atoms in a crystallography database. We have used the unit cell of $\beta$-cristobalite found at \textit{Crystallography Open Database}\footnote{\href{http://www.crystallography.net/cod/1010944.html}{http://www.crystallography.net/cod/1010944.html}}. At this site one can download a \texttt{.cif}-file consisting of the spatial positions of each atom, the length of the unit cell edges and angles between faces of the cell. In the case of $\beta$-cristobalite the unit cell is cubical with edges of length 7.12Å. It contain 8 silicon atoms and 16 oxygen atoms. The density of the unit cell can easily be computed and is 2.2114 g/cm$^3$.
+In order to construct the unit cell of a material, one should look up the coordinates of the atoms in a crystallography database. We have used the unit cell of $\beta$-cristobalite found at \textit{Crystallography Open Database}\footnote{\href{http://www.crystallography.net/cod/1010944.html}{http://www.crystallography.net/cod/1010944.html}}. 
+At this site one can download a \texttt{.cif}-file (Crystallographic Information Framework) containing information about the spatial positions of each atom, the length of the unit cell edges and angles between faces of the cell. 
+In the case of $\beta$-cristobalite the unit cell is cubical with edges of length 7.12Å. 
+It contain 8 silicon atoms and 16 oxygen atoms. 
+The density of the unit cell can easily be computed and is 2.2114 g/cm$^3$.
+The format of th \texttt{.cif}-file is not easily readable. To extract the information we have used a tool named \texttt{cif2file}\footnote{\href{http://www.cif2cell.com-about.com/}{http://www.cif2cell.com-about.com/}}, developed by Torbjörn Björkman. 
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{figures/unitcell/unitcell.png}
+	\includegraphics[width=0.6\linewidth]{figures/unitcell/unitcell.png}
 	\caption{Unit cell of b-cristobalite. Tan and blue spheres represent silicon and oxygen atoms respectively. The unit cell is cubical, with edges of length 7.12Å.}
 	\label{fig:unitcellbcristobalite}
 \end{figure}
@@ -472,12 +530,9 @@ Data concerning the unit cell are placed in a \texttt{.lt}-file, which is readab
 Such a file is shown in Listing \ref{lst:beta-cristobalite.lt}. 
 For a more profound understanding of the structure and syntax of these files, the reader is advised to read the moltemplate manual\footnote{\url{http://www.moltemplate.org/doc/moltemplate_manual.pdf}}.
 
-\begin{center}
-\begin{minipage}{\linewidth}
-	\lstinputlisting[caption={Typical moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units.}, label=lst:beta-cristobalite.lt,
-	language=LammpsData]{../SiO2/large/beta-cristobalite.lt}
-\end{minipage}
-\end{center}
+
+\lstinputlisting[caption={Typical Moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units.}, label=lst:beta-cristobalite.lt, language=LammpsData]{../SiO2/large/beta-cristobalite.lt}
+
 
 We use the unit cell as building blocks, placing them concurrently until we have a crystal of the desired size. For our purpose, we generate a large cube of $15\times15\times15$ unit cells. This is done as follows.
 
@@ -694,7 +749,7 @@ Finally, we project the average force of the atoms in a cell onto the normal vec
 \section{Creating a custom compute}
 A \textit{compute} is a LAMMPS command that defines a computation that will be performed on a group of atoms. The \textit{computes} produce instantaneous values, using information about the atoms on the current time step. 
 
-In LAMMPS there are more than 100 computes already, and chances are they have what you're looking for. If not, one might treat the data from other computes in some way to get the desired information. However, if there are no compute command that does the desired task, it is possible to create an own custom class.  
+In LAMMPS there are more than 100 computes and chances are, they already have what you're looking for. If not, one might treat the data from other computes in some way to get the desired information. However, if there are no compute command that does the desired task, it is possible to create an own custom class and thereby expanding the LAMMPS library.  
 
 In order to compute the normal forces acting on the sphere, we have written a custom compute class. The purpose of the class was to save the forces acting on atoms in one group from atoms of another group. In this section we will try do give brief instructions on how this was done.
 
@@ -713,7 +768,7 @@ Thus, there are minor modifications needed and because of the similarities we ch
 \subsection{Creating the class}
 All computes in LAMMPS are subclasses of the class named  \textit{compute}. From this superclass they inherit a bunch of variables, functions and flags, which the user may decide to set. Functions are of course declared in the header file, while variables and flags are set in the source file. The source code of the \textit{group/group} compute is shown in Appendix \ref{groupgrouph}. Since we will be making a subclass of it, we change the \textit{private} property to \textit{protected} so that we have access to all the variables and functions.
 
-We start out by creating a header file and decide upon a name for our class. We have chosen the name \textit{group/group/atom} since it is basically a per-atom version of the already existing compute \textit{group/group}. A complete header file is shown in Listing \ref{groupGroupAtomHeader} and explained in detail below.
+We start out by creating a header file and decide upon a name for our class. We have chosen the name \textit{group/group/atom} since it is basically a per-atom version of the already existing compute \textit{group/group}. A complete header-file is shown in Listing \ref{groupGroupAtomHeader} and explained in detail below.
 
 \lstinputlisting[caption={Header file of our new compute: \texttt{compute\_group\_group\_atom.h}.}, label={groupGroupAtomHeader}, language=c++, firstline=14, lastline=40]{../../LAMMPS/src/compute_group_group_atom.h}
 
@@ -837,6 +892,53 @@ We will assume that the normal vector $\vec{n}$ is always in the same general di
 \newpage
 \section{compute\_group\_group\_atom.cpp}
 \lstinputlisting[language=c++, firstline=19]{../../LAMMPS/src/compute_group_group_atom.cpp}
+
+
+\chapter{Something}
+\section{LAMMPS units}
+
+\begin{table}[H]
+	\begin{center}
+		\caption{Unit convention of the \textit{metal} unit style in LAMMPS.}
+		\begin{tabularx}{0.8\textwidth}{  @{\hspace{2em}} @{}XX@{} @{\hspace{2em}} }
+			%Measurement			 & unit	\\
+			\toprule
+			Mass 					   & grams/mole\\ 
+			\midrule
+			Distance 		   		  & Angstroms\\
+			\midrule
+			Time 				 		& picoseconds\\
+			\midrule
+			Energy 			   		  & eV\\
+			\midrule
+			Velocity 		   		  & Angstroms/picosecond\\
+			\midrule
+			Force 			    	   & eV/Angstrom\\
+			\midrule
+			Torque 			    	  & eV\\
+			\midrule
+			Temperature    		  & Kelvin\\
+			\midrule
+			Pressure 		 		 & bars\\
+			\midrule
+			Dynamic viscosity & Poise\\
+			\midrule
+			Charge 					 & multiple of electron charge\\
+			\midrule
+			Dipole 					 & charge $\cdot$ Angstroms\\
+			\midrule
+			Electric field 		    & volts $/$ Angstrom\\
+			\midrule
+			Density 				& gram $/$ cm\^{}dim\\
+			\bottomrule
+		\end{tabularx}
+		\label{tab:unitsMetal}
+	\end{center}
+\end{table}
+
+
+
+
 
 
 \bibliography{resources/Library.bib}

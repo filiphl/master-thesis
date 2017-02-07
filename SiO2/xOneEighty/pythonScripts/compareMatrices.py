@@ -32,7 +32,7 @@ class Forces:
         self.snChunks       = int(np.sqrt(self.nChunks))
         self.absoluteForces = np.zeros([self.snChunks, self.snChunks])
         self.matrix         = np.zeros([self.snChunks, self.snChunks, 3])
-        self.binWidth       = 7.1201
+        self.binWidth       = 7.120
         self.nCells         = 0
         self.steps          = 0
 
@@ -56,15 +56,12 @@ class Forces:
 
 
     def loadMatrix(self):
-
-
-
         for line in self.content:
             col = line.split()
 
             if len(col)>3:
-                x = int(round(float(col[1])/self.binWidth))
-                y = int(round(float(col[2])/self.binWidth))
+                x = int(float(col[1])/self.binWidth)
+                y = int(float(col[2])/self.binWidth)
                 fx = float(col[4])
                 fy = float(col[5])
                 fz = float(col[6])
@@ -124,13 +121,13 @@ class Forces:
         output = ndimage.map_coordinates(self.absoluteForces, np.transpose(myevalmatrix[:, :]), order=1)
         radialDist = np.mean(output, 0)
 
-        im0 = self.ax[0].imshow(self.absoluteForces, interpolation='nearest', cmap="hot_r", vmin=0, vmax=0.05)
+        im0 = self.ax[0].imshow(self.absoluteForces, interpolation='nearest', cmap="hot_r")
         im1 = self.ax[1].pcolor(output)
         self.ax[2].plot(radialDist, linewidth=2, color="#478684")
 
         a = 100
         p0 = max(radialDist)
-        pd = lambda p0, r, a: p0*np.sqrt(1-np.linspace(0,100,100)**2/a**2)
+        pd = lambda p0, r, a: p0*np.sqrt(1-np.linspace(0,a,100)**2/a**2)
         p  = pd(p0, r, a)
 
         self.ax[2].hold('on')
@@ -187,7 +184,7 @@ class Forces:
 
 if __name__=='__main__':
 
-    singleObject = Forces('../forceFiles/m3/forces87000.txt')
+    singleObject = Forces('../forceFiles/m4/forces80000.txt')
     singleObject.name = 'whatever'
     singleObject.plotAverage = True
     singleObject.plotMatrix()
