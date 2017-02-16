@@ -5,4 +5,4 @@ region slabRegion block 0 INF 0 INF 0 35.6
 group  slabGroup region slabRegion
 
 region outRegion union 2 sphereRegion slabRegion side out
-delete_atoms region bothRegion
+delete_atoms region outRegion

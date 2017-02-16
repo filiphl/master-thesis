@@ -378,6 +378,7 @@ LAMMPS stands for \textit{Large-scale Atomic/Molecular Massively Parallel Simula
 Today LAMMPS is an open-source code with extensive and user friendly documentation. 
 This is one of the main reasons why we have chosen to use LAMMPS as opposed to other molecular dynamics software. 
 
+In this chapter we will be presented with a guide to install LAMMPS, a brief explanation of commands and syntax, and an example of a valid input script.
 \section{Installation}
 Installing LAMMPS is a fairly simple procedure if only the basic settings are needed.
 
@@ -431,37 +432,44 @@ brew install lammps --enable-manybody
 In the example shown we installed the package manybody.
 
 
-\subsection{Windows}
+%\subsection{Windows}
 
 
 
 \section{Input scripts}
-The executable made in the previous section can be used to read so-called input scripts. The input scripts contain LAMMPS commands to configure the simulation. This includes all settings and actions. This is naturally partitioned into two sections: \textit{system configurations} and \textit{run-time commands}.
-
+The executable made in the previous section can be used to read so-called input scripts. 
+The input scripts contain LAMMPS commands to configure the simulation. This includes all settings and actions. 
+This is naturally partitioned into two sections: \textit{system configurations} and \textit{run-time commands}.
+The scripts are executed on 8 CPU's in parallel as
+\begin{lstlisting}[language=c++]
+mpirun -n 8 lmp_mpi -in in.system
+\end{lstlisting} 
+Despite the widely common convention of letting the file type be determined by the letters following the punctuation mark, it's common in the LAMMPS manuals to name the input scripts with the name last. i.e. \texttt{in.name}. Luckily, both conventions are meretricious since the executable accepts any name/type for the input script.
 \subsection{System configurations}
 The first part of every input script contains information of the system properties. This includes: size, number of dimensions, boundary conditions, potentials, unit convention, information on the containing atoms, time step length, neighbor list update frequency and possibly a lot more.   
-Listing \ref{lampsInput1} show the configurations that has been used for the entire duration of this project. 
+Listing \ref{lammpsInput1} show the configurations that has been used for the entire duration of this project. 
 Below there is a description of each command and its purpose.
 
 
-\begin{lstlisting}[language=LammpsInput, caption={Typical system configurations applied in this project.}, label={lampsInput1}]
+\begin{lstlisting}[language=LammpsInput, caption={Typical system configurations applied in this project.}, label={lammpsInput1}]
 units        metal
 boundary     p p p
 atom_style   atomic
 read_data    "system.data"
 pair_style   vashishta
-pair_coeff   * *  SiO2.vashishta Si O
-pair_modify  table 16
-pair_modify  tabinner 0.1
 neighbor	   0.3 bin
 neigh_modify delay 10
 timestep	   0.002
 \end{lstlisting} 
+%pair_coeff   * *  SiO2.vashishta Si O
+%pair_modify  table 16
+%pair_modify  tabinner 0.1
+
 \paragraph{\texttt{units}} determines what unit convention should be used for the simulation. It might not seem like a difficult decision, but if you import data from a file for instance, it is crucial that LAMMPS interpret the data correctly. In this project we have chosen \textit{metal} as the unit convention. The units are therefore as shown in table \ref{tab:unitsMetal}.
 
 \paragraph{\texttt{boundary}}  sets the style of boundaries for the simulation box in each dimension. There are four options: \texttt{p}, \texttt{f}, \texttt{s} and \texttt{m}. In the example above, we have chosen to use periodic boundaries through all the faces of the simulation box. It's possible to set different conditions in separate dimensions, e.g. \texttt{boundary   p f p} sets fixed boundaries on the faces normal to the y-direction.  One can even set different conditions on the two faces in the same dimension by using two letters, e.g.   \texttt{boundary   p fs p}, where the first letter indicates the boundary to be used on the \textit{low face} and the last on the \textit{high face}. 
 
-\paragraph{\texttt{atom\_style}} tells LAMMPS the structure of atom related data stored in a data file, which contains information about particle types, positions, charges, mass,  bonds, angles, and potentially more, depending on the \texttt{atom\_style}. 
+\paragraph{\texttt{atom\_style}} tells LAMMPS the structure of atom related data stored in a data file. This includes information about particle types, positions, charges, mass,  bonds, angles, and potentially more, depending on the \texttt{atom\_style}. 
 
 \paragraph{\texttt{read\_data}} reads a data file containing information as described above and additional information about the system, such as its size and shape. 
 This is one of three ways to distribute initial atom positions. 
@@ -469,15 +477,16 @@ Another is the \texttt{read\_restart} command, which is used extensively to load
 The last option is to use \texttt{create atoms}, which distributes atoms in a predefined way, i.e. in a lattice or a random collection. 
 To use this last option, one has to first create a simulation box using the \texttt{create box} command.  
 
-\paragraph{\texttt{pair\_style}}
+\paragraph{\texttt{pair\_style}} determines which potential to use in the simulation.
 
-\paragraph{\texttt{pair\_coeff}}
+%\paragraph{\texttt{pair\_coeff}}
 
-\paragraph{\texttt{neighbor}}
+\paragraph{\texttt{neighbor}} sets the additional range of the neighbor list cutoff, and the method of constructing the neighbor lists. 
+The consequence of having a larger range for the neighbor lists is that there are more particles to check for force contribution, however, we don't have to update the neighbor lists as often.  
 
-\paragraph{\texttt{neigh\_modify} }
+\paragraph{\texttt{neigh\_modify}} determines how often to update the neighbor lists. 
 
-\paragraph{\texttt{timestep}}
+\paragraph{\texttt{timestep}} self-explanatory.
 
 
 
@@ -487,6 +496,88 @@ To use this last option, one has to first create a simulation box using the \tex
 
 
 \subsection{Run-time commands} 
+\subsubsection{Variables}
+LAMMPS offer the ability to store values in variables. These can be constants or dependent on other variables, like the time step for instance. Declaration of variables is done using the following syntax.
+\begin{lstlisting}[language=LammpsInput, caption={Declaration of variables.}, label={lammpsVariable}]
+variable A equal 1000
+variable B equal step/${A}
+variable C equal ${B}
+variable D equal v_B
+\end{lstlisting} 
+All of the above are valid variables. 
+The \texttt{step} variable is a LAMMPS standard for current time step.
+We attend for \texttt{B} to be a linear function running from 0 to 1 over the course of \texttt{A} time steps. 
+\texttt{C} evaluates \texttt{B} at the time step it is declared and returns that value whenever called upon. 
+Thus, \texttt{C} will be a constant value.
+\texttt{D} will evaluate \texttt{B} whenever called upon, and return the current value of variable \texttt{B}. 
+The variables \texttt{C} and \texttt{D} are of course superfluous, since we could only use \texttt{B} directly.
+The user can use math operations on variables, such as: addition, subtraction, multiplication, division, as well as square roots, logarithms, exponentials, and lots more.
+
+
+\subsubsection{Region \& Group}
+In almost all simulations it is necessary to define regions and groups in order to give certain parts of the domain special properties. 
+If the user wish to create a sphere of atoms, the typical process is to start from a block of atoms, define a spherical region in the block and remove exterior atoms. 
+The regions specified can take the shapes: block, cone, cylinder, plane, prism or sphere, and regions can be combined.
+An example of removing atoms within a combined region is shown in listing \ref{lst:sculpting}. 
+This example also show how to assign a group to atoms within a region. 
+Each atom can be part of up to 32 different groups at a time. 
+The user can do tons of actions on groups. 
+Most computes and fixes act on specific groups. 
+There is only one standard group in LAMMPS; the group \texttt{all}.
+
+\subsubsection{Computes}
+A compute defines a computation that will be performed on a group of atoms. As an example the 
+\begin{lstlisting}[language=LammpsInput]
+compute comID groupID com
+\end{lstlisting} 
+computes the center of mass of all atoms within the specified \texttt{groupID}.
+Their returned values are instantaneous. 
+That is, they are computed from information about atoms on the current time step. 
+The returned  values can be global, local or per-atom quantities.
+
+
+\subsubsection{Fix}
+A fix is an operation that's applied to the system during time iteration. 
+Examples include time evolution of atoms, i.e. updating their positions and velocities, using thermostats, applying external forces to atoms, averaging, etc. 
+There are numerous fixes and computes in LAMMPS, and you can easily add new ones if you knows the structure of the framework.
+
+
+% In LAMMPS, a “fix” is any operation that is applied to the system during timestepping or minimization. Examples include updating of atom positions and velocities due to time integration, controlling temperature, applying constraint forces to atoms, enforcing boundary conditions, computing diagnostics, etc. There are dozens of fixes defined in LAMMPS and new ones can be added; see this section for a discussion.
+\subsection{Output}
+In order to benefit from our simulations, we need to be able to extract the data of interest somehow. 
+Here we will present the four most basic types of output.
+
+
+\subsubsection{Thermodynamic output} 
+prints computed values to the screen and logfile every $N$ time steps. It is activated by the command 
+\begin{lstlisting}[language=LammpsInput]
+thermo N
+\end{lstlisting} 
+where N should be replaced by the desired frequency of the output. This can be a variable.
+The default quantities given in the output are: time step,  temperature,  pairwise energy, molecular energy,  total energy and pressure.
+The user can specify what values should be included by using the \texttt{thermo\_style} command with the syntax of the following example.
+\begin{lstlisting}[language=LammpsInput]
+thermo_style custom step c_comID v_Fz f_addforceID[3]
+\end{lstlisting} 
+This line specifies that when the thermodynamic output is printed, it should contain the time step, all quantities returned by the compute \texttt{comID}, the current value of the variable \texttt{Fz} and the third element of the vector retrieved by the fix \texttt{addforceID}. The naming of the compute- and fix names can be whatever desired, even numbers.
+I just find it convenient to name them by what they represent. 
+
+\subsubsection{Dump} 
+Dump files  store data about the state of atoms in a specified group with the given frequency. 
+Below we illustrate two quite different dump commands.
+\begin{lstlisting}[language=LammpsInput]
+dump dumpID1 all atom 100 name.dump
+dump dumpID2 groupID custom 50 name*.dump id x y vx fx
+\end{lstlisting} 
+Line 1 creates a file named \texttt{name.dump}. Every 100 time steps it writes data to this file in the \textit{atom} format, i.e. \texttt{id type xs ys zs}, where \texttt{xs}, \texttt{ys} and \texttt{zs} are scaled coordinates relative to the size of the simulation box. 
+Line 2 creates a file for every time step, where the asterisk in the name is replaced by the current time step. Also we define the format of the output to be unscaled x- and y-coordinates, as well as velocity and force in the x-direction. 
+ 
+Common visualization software can read most of the predefined formats in LAMMPS: atom, xyz, cfg, etc..
+
+
+%, which contain snapshots of atoms and various per-atom values and are written at a specified frequency.
+\subsubsection{fixes} can output user-specified quantities to files: fix ave/time for time averaging, fix ave/chunk for spatial or other averaging, and fix print for single-line output of variables. Fix print can also output to the screen.
+\paragraph{Restart files}.
 
 
 
@@ -569,15 +660,16 @@ The $15\times15\times15$ system is sufficient for this test. The procedure is ra
 	\item increase the temperature by a given step size
 \end{itemize}
 \lstinputlisting[caption={Main blalbabla.}, label={lst:msd}, firstline=14, lastline=40]{../SiO2/msd/continue.in}
-
-
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msd}
 \caption{Mean square displacement as a function of temperature. The face transition occurs where we see a rapid change in the behavior.}
 \label{fig:msd}
 \end{figure}
-
+This result infer a melting point somewhere in the range 1800K-1900K. 
+Believe it or not, this is actually a pass on the test! 
+In fact, anything deviating less than $20\%$ from the experimental results is considered a pass, as stated by the developers of the potential. 
+Unfortunately, this also show that there are some qualitative detail that is lost, and that when using this potential we should probably focus on the quantitative behavior. 
 
 
 
@@ -593,17 +685,18 @@ The $15\times15\times15$ system is sufficient for this test. The procedure is ra
 %\end{figure}
 
 The huge cube of silica can be carved however we like by defining regions from which we delete the containing atoms. 
-In LAMMPS this is done by using the \texttt{region}, \texttt{union}, \texttt{intersect} and \texttt{delete\_atoms} commands. 
-Our implementation is stated in Listing \ref{lst:sculpting}, which is very simple due to the way we are going to treat the boundary conditions. We start out by defining a spherical region labeled \texttt{sphereRegion}, described by the xyz-coordinates of its center and a radii. The atoms within this region are assigned to a group labeled \texttt{sphereGroup}. 
-Next, we define a cuboid (block) region named \texttt{slabRegion}, described by the position of its faces in x-, y- and z-direction. The atoms within this region are assigned to a group, which we label \texttt{slabGroup}.  
+In LAMMPS this is done using the \texttt{region}, \texttt{union}, \texttt{intersect} and \texttt{delete\_atoms} commands. 
+Our implementation is stated in Listing \ref{lst:sculpting}, which is very simple due to the way we are going to treat the boundary conditions. 
+We start out by defining a spherical region labeled \texttt{sphereRegion}, described by the xyz-coordinates of its center and a radii. 
+The atoms within this region are assigned to a group labeled \texttt{sphereGroup}. 
+Next, we define a cuboid (block) region named \texttt{slabRegion}, described by the position of its faces in x-, y- and z-direction. 
+The atoms within this region are assigned to a group, which we label \texttt{slabGroup}.  
 We combine these two regions using  the \texttt{union} command and label the region outside of these regions \texttt{outRegion}.
-Finally, we delete the atoms that are not in the sphere nor the slab; we delete the ones contained by \text{outRegion}.
-
+Finally, we delete the atoms that are not in the sphere nor the slab; we delete the ones contained by \texttt{outRegion}.
 \lstinputlisting[caption={Defining regions to keep or delete from a system of dimensions $106.8\times106.8\times106.8$ Å.}, label={lst:sculpting}]{../SiO2/small/system.prepare.latex}
-
-For the purpose of deleting atoms, the creation of groups is redundant. However, at a later stage we will utilize them and this is an appropriate place for them to be defined.
-
-The appliance of the script in Listing \ref{lst:sculpting} on the system shown in figure \ref{fig:hugeCube} is shown in figure \ref{fig:carvedxz}, where our perspective is looking along the y-axis.
+For the purpose of deleting atoms, the creation of groups was superfluous. %redundant
+However, at a later stage we will utilize them and this is an appropriate place for them to be assigned. 
+The appliance of the script in Listing \ref{lst:sculpting} on the system is shown in figure \ref{fig:hugeCube} is shown in figure \ref{fig:carvedxz}, where our perspective is along the y-axis.
 
 \begin{figure}[H]
 \centering

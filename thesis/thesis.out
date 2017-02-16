@@ -19,10 +19,10 @@
 \BOOKMARK [1][-]{section.3.1}{Installation}{chapter.3}% 19
 \BOOKMARK [2][-]{subsection.3.1.1}{Linux}{section.3.1}% 20
 \BOOKMARK [2][-]{subsection.3.1.2}{Mac OS X with Homebrew}{section.3.1}% 21
-\BOOKMARK [2][-]{subsection.3.1.3}{Windows}{section.3.1}% 22
-\BOOKMARK [1][-]{section.3.2}{Input scripts}{chapter.3}% 23
-\BOOKMARK [2][-]{subsection.3.2.1}{System configurations}{section.3.2}% 24
-\BOOKMARK [2][-]{subsection.3.2.2}{Run-time commands}{section.3.2}% 25
+\BOOKMARK [1][-]{section.3.2}{Input scripts}{chapter.3}% 22
+\BOOKMARK [2][-]{subsection.3.2.1}{System configurations}{section.3.2}% 23
+\BOOKMARK [2][-]{subsection.3.2.2}{Run-time commands}{section.3.2}% 24
+\BOOKMARK [2][-]{subsection.3.2.3}{Output}{section.3.2}% 25
 \BOOKMARK [0][-]{chapter.4}{Preparing a molecular dynamics simulation}{}% 26
 \BOOKMARK [1][-]{section.4.1}{Silica}{chapter.4}% 27
 \BOOKMARK [2][-]{subsection.4.1.1}{Unit cell of -cristobalite}{section.4.1}% 28
