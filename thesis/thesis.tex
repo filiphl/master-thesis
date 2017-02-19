@@ -265,8 +265,55 @@ for (int k=0; k<numberOfDimension; k++){
 
 
 \section{Thermostats}
+
+From thermodynamics
+we have that the kinetic energy, or total thermal energy is 
+\begin{equation}
+	E_k = \frac{f}{2} Nk_bT 
+\end{equation}
+, for a system of $N$ atoms with$f$ degrees of freedom and temperature $T$.  
+$k_b$ is the Boltzmann constant. 
+If we assume newtonian motion, the total kinetic energy in a system is statistically 
+\begin{equation}
+    E_k = \frac{1}{2}\langle m_i \vec{v_i}^2\rangle.
+\end{equation}
+We can equate these to find the statistical temperature given as
+\begin{equation}\label{eq:MDtemperature}
+	T = \frac{\langle m_i \vec{v_i}^2\rangle}{fNk_b}.
+\end{equation}
+Thus, we can approximate the instantaneous temperature using the atoms velocity.
+This value will fluctuate about the real value, so time-averaging is often used when measuring.
+
+Often, we want to control the temperature of our simulated system.
+This is done by fixing the temperature in equation \eqref{eq:MDtemperature} and manipulate the atoms velocities.
+There are several methods to manipulating the velocities, and these are called \textit{thermostats}. 
+There are many different types of thermostats, and they all have their strengths and weaknesses.
+
+We will look at two quite basic and different thermostats, as well as one that is common in professional use.   
+
+
 \subsection{Berendsen}
+The Berendsen thermostat rescales the velocity of all atoms in the system so that the temperature approaches that of the surrounding heat bath.
+It rescales the atoms velocity by multiplying them by a scaling factor $\gamma$, given as 
+\begin{equation}
+\gamma = \sqrt{1+\frac{\Delta t}{\tau}\lr{\frac{T_{bath}}{T}-1}},
+\end{equation}
+where $\Delta t$ is the time step length, and $\tau$ is a relaxation time, which tune the coupling to the heat bath. 
+$T_{bath}$ and $T$ is the temperature of the heat bath and the current temperature of the system, respectfully.
+Typically the relaxation time is set to $\tau \approx 20\Delta t$. 
+Using $\tau = \Delta t$ would result in the velocities rescaling so the temperature would be exactly the target temperature, $T_{bath}$, every time step. 
+This thermostat suppress temperature fluctuations efficiently, rendering it well suitable for equilibration procedures.
+However, because it rescales the velocities, it produce dynamics that are inconsistent with the canonical ensemble.
+
+
+
 \subsection{Andersen}
+The Andersen thermostat simulates (hard) collisions between atoms inside the system and in the heat bath. 
+Atoms which collide will gain a new normally distributed
+velocity with standard deviation  $\sqrt{k_BT_{bath}/m}$. For all atoms, a random uniformly
+distributed number in the interval $[0,1]$ is generated. If this number is less than
+$\Delta t/\tau$, the atom is considered to have collided, and is assigned a new velocity. In this case, $\tau$ is treated as a collision
+time, and should have about the same value as the $\tau$ in the Berendsen thermostat ($20\Delta t$). The Andersen thermostat is very useful when equilibrating systems, but disturbs the dynamics of e.g. lattice vibrations.
 \subsection{Nosé-Hoover}
 
 
@@ -287,7 +334,7 @@ For the Lennard-Jones potentials the cut-off range is usually set to $2.5\theta$
 Past this range, the pair-potential is practically zero. 
 It's not zero, though. 
 Without any alterations, particles intersecting the cut-off limit will experience an unphysical jerk, which may render the simulation unstable.  
-To counteract this effect, we raise the potential, ensuring it and it's derivative to be zero at the cut-off. 
+To counteract this effect, we raise the potential, ensuring it and its derivative to be zero at the cut-off. 
 We use the following adjustment.
 
 \begin{equation}
@@ -317,7 +364,7 @@ We store the atoms contained by each cell in a \textit{cell list}.
 Finally, when we build the neighbor lists we check only the atoms within the neighboring cells and those in the same cell, 27 cells in total. 
 In this sense, by neighboring cells we mean any cells that share a face, edge or vertex. 
 This is illustrated in figure \ref{fig:neighbourcells}.
-The pay-off of using cell- and neighbor lists is tremendous. Since we now, for each atom, only include contributions from atoms within a constant volume of size $4\pi r_c^3/3$, 
+The pay-off of using cell- and neighbor lists is tremendous. Since we now, for each atom, only include contributions from atoms within a constant volume of size $4\pi {r_c}^3/3$, 
 the number of contributions will only depend on the density, which is an intensive\footnote{Physical property of a system that does not depend on the system size.} property. 
 Thus, the number of computations is reduced to $\mathcal{O} (N)$, which is an immense relief in computational expense!
 
@@ -337,8 +384,6 @@ Thus, the number of computations is reduced to $\mathcal{O} (N)$, which is an im
 It might be misguiding to refer to parallelization as an efficiency improvement, when on the contrary it most likely increases the CPU time usage. 
 However, the real time consumed may be greatly decreased. 
 It is intuitive that partitioning the work and processing these simultaneously will decrease the time as compared to processing it serially.   
-
-
 The speedup is defined as 
 \begin{equation}
 S = \frac{T_s}{T_p},
@@ -357,24 +402,27 @@ The resulting speedup of using the respective number of processors is plotted in
 \begin{lstlisting}[caption={Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart.}, label={speeduprun}, language=c++]
 mpirun -n 8 lmp_mpi -in speedup.in -var filename speedup.restart
 \end{lstlisting}
-
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{figures/speedup/15x15.pdf}
 	\caption{Speedup as a function of number of processors.}
 	\label{fig:speedup15x15}
 \end{figure}
-
 The result indicate that the speedup is in fact not simply $S=p$. 
-Anyhow, we clearly see the advantage of using 64 processors as opposed to 1. 
+Anyhow, we clearly see the advantage of using 64 processors in parallel as opposed to 1. 
 We can finish a job that would have taken an hour in two minutes!
-Also, we clearly see that the initial claim holds; this is not more efficient when regarding CPU time. In fact this result suggest that using 1 processor is twice as energy efficient as using 64. 
+Also, we clearly see that the initial claim holds; this is not more efficient when regarding CPU time. 
+In fact this result suggest that using 1 processor is twice as energy efficient as using 64. 
 
 
 
 \chapter{LAMMPS}
 
-LAMMPS stands for \textit{Large-scale Atomic/Molecular Massively Parallel Simulator}. It is a classical molecular dynamics simulation code designed to run efficiently on parallel computers. It's development began in the mid 1990s at Sandia National Laboratories, with funding from the U.S. Department of Energy. It was a cooperative project between two DOE labs and three private companies. The development is still ongoing and contributions are revised thoroughly. 
+LAMMPS is an acronym for \textit{Large-scale Atomic/Molecular Massively Parallel Simulator}. 
+It is a classical molecular dynamics simulation code designed to run efficiently on parallel computers. 
+It's development began in the mid 1990s at Sandia National Laboratories, with funding from the U.S. Department of Energy. 
+It was a cooperative project between two DOE labs and three private companies. 
+The development is still ongoing and contributions are revised thoroughly. 
 Today LAMMPS is an open-source code with extensive and user friendly documentation. 
 This is one of the main reasons why we have chosen to use LAMMPS as opposed to other molecular dynamics software. 
 
@@ -526,26 +574,59 @@ Most computes and fixes act on specific groups.
 There is only one standard group in LAMMPS; the group \texttt{all}.
 
 \subsubsection{Computes}
-A compute defines a computation that will be performed on a group of atoms. As an example the 
+A compute defines a computation that will be performed on a group of atoms. 
+This does not affect the dynamics in any way.
+The returned values are instantaneous. 
+That is, they are computed from information about atoms on the current time step. 
+The returned  values can be global, local or per-atom quantities.
+These can be retrieved by an output commands using the following syntax:
+\begin{lstlisting}[language=LammpsInput]
+c_computeID
+c_computeID[1]
+c_computeID[*][2]
+\end{lstlisting} 
+The first alternative would return all values (scalars, vectors, arrays) computed. 
+The second would return only the first element of a vector, or row of an array, 
+and the last one would return the second element of all rows of an array. 
+Note that LAMMPS counts from 1, which also deviate from other established standards.
+In section \ref{section:LAMMPSOutput} we will see this in several example, where we refer to the \texttt{compute com} command. 
 \begin{lstlisting}[language=LammpsInput]
 compute comID groupID com
 \end{lstlisting} 
-computes the center of mass of all atoms within the specified \texttt{groupID}.
-Their returned values are instantaneous. 
-That is, they are computed from information about atoms on the current time step. 
-The returned  values can be global, local or per-atom quantities.
+This computes the position of the center of mass of all atoms within the specified group, and stores the result in a 3-element vector.
+ 
+
+
+
 
 
 \subsubsection{Fix}
 A fix is an operation that's applied to the system during time iteration. 
-Examples include time evolution of atoms, i.e. updating their positions and velocities, using thermostats, applying external forces to atoms, averaging, etc. 
+Examples include time evolution of atoms, i.e. updating their positions and velocities, using thermostats, applying external force on atoms, averaging values, etc. 
 There are numerous fixes and computes in LAMMPS, and you can easily add new ones if you knows the structure of the framework.
+Some Fixes also compute and store values that can be retrieved by output commands. 
+For instance the \texttt{fix addforce} command
+\begin{lstlisting}[language=LammpsInput]
+fix addforceID groupID addforce fx fy fz
+\end{lstlisting} 
+adds a given force to all atoms within the specified group. 
+This \texttt{fix} stores the total force acting on the group before the force was added. 
+This is stored as a 3-element vector.
+Its values can be obtained in the same manner as for computes:
+\begin{lstlisting}[language=LammpsInput]
+f_fixID
+f_fixID[1]
+f_fixID[*][2]
+\end{lstlisting} 
+
 
 
 % In LAMMPS, a “fix” is any operation that is applied to the system during timestepping or minimization. Examples include updating of atom positions and velocities due to time integration, controlling temperature, applying constraint forces to atoms, enforcing boundary conditions, computing diagnostics, etc. There are dozens of fixes defined in LAMMPS and new ones can be added; see this section for a discussion.
-\subsection{Output}
+\subsection{Output} \label{section:LAMMPSOutput}
 In order to benefit from our simulations, we need to be able to extract the data of interest somehow. 
 Here we will present the four most basic types of output.
+
+
 
 
 \subsubsection{Thermodynamic output} 
@@ -576,12 +657,48 @@ Common visualization software can read most of the predefined formats in LAMMPS:
 
 
 %, which contain snapshots of atoms and various per-atom values and are written at a specified frequency.
-\subsubsection{fixes} can output user-specified quantities to files: fix ave/time for time averaging, fix ave/chunk for spatial or other averaging, and fix print for single-line output of variables. Fix print can also output to the screen.
-\paragraph{Restart files}.
+\subsubsection{Fixes} 
+Certain fixes can also write specified quantities to files. For instance the commands 
+\begin{lstlisting}[language=LammpsInput]
+fix timeAvgID all ave/time 100 5 1000 c_comID file name.avg
+fix spatialAvgID all ave/chunk 100 10 1000 chunkID c_comID file vel.profile
+\end{lstlisting} 
+do respectfully time- and spatial averaging of the values returned by the compute \texttt{comID}. The numbers indicate how many values should be sampled, number of time steps between each sample, and how often to write this average to file. Note that the last command refers to a \texttt{compute chunk}, which governs how to grid the system. 
+There is also a \texttt{fix print} command that writes single-line output to screen or file with a prescribed frequency.
+\begin{lstlisting}[language=LammpsInput]
+fix printID all print 100 "z-component of COM: c_comID[3]" 
+\end{lstlisting} 
+This acts practically like the \texttt{thermo} command.
+
+
+\subsubsection{Restart files}
+In many cases it is practical to save certain checkpoints in a simulation, in order to be able to start a new simulation from said point. 
+The \texttt{restart} command does just that. 
+\begin{lstlisting}[language=LammpsInput]
+restart N name.*.restart
+\end{lstlisting} 
+This command saves the state of the system every \texttt{N} time step to individual restart files, distinguishable by the number representing the time step of the save. 
+By "state of the system" we mean positions and velocities of all atoms, information of what groups each atom belongs to, the size and shape of the simulation box, boundary conditions, potential,  etc.. 
+When starting a new simulation, one of these "snapshots" can be loaded using the \texttt{read\_restart} command as illustrated below.
+\begin{lstlisting}[language=LammpsInput]
+read_restart name.timeStep.restart
+\end{lstlisting} 
 
 
 
+\section{Visualization}
+The LAMMPS package does not provide high-quality visualization software. However, the default formats of the dump command are well known to most of the ones out there. 
+A couple of so-called high-quality visualization tools are listed below:
+\begin{itemize}
+	\item VMD
+	\item AtomEye
+	\item OVITO
+	\item ParaView
+	\item PyMol 
+\end{itemize}
+In this section we will discuss hos to visualize an MD simulation and some of the features of one of the softwares listed, namely Ovito. Lastly we will be presented with a new concept that is currently under development here at the University of Oslo; a software named Atomify.
 
+\subsection{OVITO}
 
 \chapter{Preparing a molecular dynamics simulation}
 
@@ -772,11 +889,12 @@ However, the current radii of the contact area between the sphere and the slab i
  	\label{fig:radialBinningChoars}
  \end{figure}
 
-A different, slightly more sophisticated approach is to compute the fraction of the area of the cells that actually are withing the bin, multiplied by the weight associated with the cell, and average these contributions. 
+A different, slightly more sophisticated approach is to compute the fraction of the area of each cell that actually is withing the bin, and multiply this by the weight associated with the cell.
+We can sum all these contributions and average them by dividing by the area of the bin. 
 This means that even cells that do not have their center within the bin might contribute to the resulting bin value. 
 How much, however, will depend on the fraction of the cell that is within the bin.
-This may be regarded as a smoothing of our coarse force distribution, and will probably give a more correct result than the coarse binning method already described. An illustration of this binning method is shown in figure \ref{fig:radialBinningSmooth} and \ref{fig:radialBinningSmoothCloseUp}.
-The figure clearly shows that some cells have a larger area within the bin than others, and thus contribute more. 
+This may be regarded as a smoothing of our coarse force distribution, and will probably give a more correct result than the coarse binning method already described. An illustration of this binning method is shown in figure \ref{fig:radialBinningSmooth}.
+The figure clearly show that some cells have a larger area within the bin than others, and thus contribute more. 
 
 {\color{editColor}{\Huge Computing the area of the cell within the bin should be described here!}}
 
@@ -786,28 +904,30 @@ The figure clearly shows that some cells have a larger area within the bin than 
  
 
 \begin{figure}
-\begin{minipage}[t]{0.49\linewidth}
-	\captionsetup{width=\textwidth}
-	\resizebox{\linewidth}{!}{
+%\begin{minipage}[t]{0.49\linewidth}
+%	\captionsetup{width=\textwidth}
+    \centering
+	\resizebox{0.5\linewidth}{!}{
 		\input{figures/tikz/radialSmoothing.tikz}
 	}
-	\caption{Radial binning based on weighted contributions of intersecting cells. The third radial bin is colored, and its value will be the average of the intersecting cells weight times the fraction of the cells area that intersects the bin. A close-up of the outlined cell, is shown in figure \ref{fig:radialBinningSmoothCloseUp}.}
+	\caption{Radial binning based on weighted contributions of intersecting cells. The third radial bin is colored, and its value will be the average of the intersecting cells weight times the fraction of the cells area that intersects the bin.}% A close-up of the outlined cell, is shown in figure \ref{fig:radialBinningSmoothCloseUp}.}
 	\label{fig:radialBinningSmooth}
-\end{minipage}
-\quad
-\begin{minipage}[t]{0.49\linewidth}
-	\captionsetup{width=\textwidth}
-	\resizebox{\linewidth}{!}{
-		\input{figures/tikz/radialSmoothingCloseUp.tikz}
-	}
-	\caption{Close-up of outlined cell in figure \ref{fig:radialBinningSmooth}. The contribution from this cell will be it weight multiplied by the fraction of its total area that is colored. I might use this figure to explain the procedure. }
-	\label{fig:radialBinningSmoothCloseUp}
-\end{minipage}
+%\end{minipage}
+%\quad
+%\begin{minipage}[t]{0.49\linewidth}
+%	\captionsetup{width=\textwidth}
+%	\resizebox{\linewidth}{!}{
+%		\input{figures/tikz/radialSmoothingCloseUp.tikz}
+%	}
+%	\caption{Close-up of outlined cell in figure \ref{fig:radialBinningSmooth}. The contribution from this cell will be it weight multiplied by the fraction of its total area that is colored. I might use this figure to explain the procedure. }
+%	\label{fig:radialBinningSmoothCloseUp}
+%\end{minipage}
 \end{figure}
 
 \begin{figure}
 	\centering
-	\includegraphics[height=0.474\linewidth]{figures/forceDistribution/radialDistribution/weights.pdf}
+	\hspace{0.87cm}
+	\includegraphics[height=0.482\linewidth]{figures/forceDistribution/radialDistribution/weights.pdf}
 	\caption{Fraction of cell's area that are within the third radial bin. }
 	\label{fig:radialBinningWeights}
 \end{figure}

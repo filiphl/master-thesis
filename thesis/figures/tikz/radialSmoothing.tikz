@@ -8,5 +8,5 @@
 \end{scope}
 \draw[gray] (-3,-3) grid (3,3);
 \draw[fill=p6] (0,0) circle (1mm);
-\draw[thick, p6] (1,1) rectangle (2,2);
+%\draw[thick, p6] (1,1) rectangle (2,2);
 \end{tikzpicture}
