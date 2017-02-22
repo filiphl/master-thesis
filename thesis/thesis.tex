@@ -8,7 +8,8 @@
 \usepackage{graphicx}  
 \usepackage{subcaption} 
 \usepackage{color}
-\usepackage{amsmath}  
+%\usepackage{amsmath}  
+\usepackage{mathtools}
 \usepackage{hyperref}
 \usepackage{braket} 
 \usepackage{multicol}
@@ -49,7 +50,14 @@
 \definecolor{p6}{HTML}{383D65}
 \definecolor{p7}{HTML}{2C1E3E}
 
-
+\hypersetup{
+	colorlinks = true,
+	linkbordercolor = white,
+%	linkcolor = blue,
+	urlcolor  = p5,
+	citecolor = p5,
+	citebordercolor= white,
+}
 
 
 
@@ -83,9 +91,10 @@ This is an abstract text.
   Henrik Sveinson \\*
   Kjetil
 \end{acknowledgements}
-
+{
+\hypersetup{linkcolor = black}
 \tableofcontents
-
+}
 \chapter{Introduction}
 
 Why is the subject of this thesis of any interest?\\
@@ -98,7 +107,7 @@ How is the thesis laid out?
 \chapter{Molecular dynamics}
 Molecular dynamics is a method that uses Newton’s equations of motion to simulate the movement of interacting atoms. 
 Each atom is treated as a point particle with a mass, and the interaction between them is described by a force field. 
-Molecular dynamics aid our understanding of macroscopic phenomena by giving us insight in microscopic effects. 
+Molecular dynamics aid our understanding of macroscopic phenomena by giving us insight in microscopic effects and behavior. 
 It can be used if an experiment is to difficult, dangerous or expensive to do otherwise, for instance experiments at extreme temperatures or pressure. 
 The areas of application are wide, and it has become a very popular field in material science, biochemistry and biophysics.
 
@@ -107,6 +116,94 @@ In this chapter we will present the basic principals of molecular dynamics, incl
 %Molecular dynamics simulations are computationally expensive. And often scientists must balance statistical precision and CPU time. Technological improvements have provided us the ability to simulate larger systems and/or at longer time frames than ever before. 
 
 \section{Time-integration}
+The evolution of particles position and velocity is carried out through time integration.
+In molecular dynamics, atoms movement is governed by Newton's second law
+\begin{equation}
+	\sum_{i=1}^{N}\vec{F_i} = m_i\vec{a_i}
+\end{equation}
+Theoretically, the computation of particles movement is easy to assimilate.
+We know that acceleration is the derivative of velocity, which in turn is the derivative of position.
+Thus we should be able to retrieve the velocities and positions using time-integration of the acceleration.
+\begin{align}
+	\vec{v_i}(t) &= \vec{v_i}(0) + \int_{0}^{t}\vec{a_i}(t) dt \\
+	\vec{r_i}(t) &= \vec{r_i}(0) + \int_{0}^{t}\vec{v_i}(t) dt
+\end{align}
+When solving an integral numerically, we're forced to discretize the problem and use an approximation method.
+This is done by dividing the domain into steps of size $\Delta t$ and approximate the area of the function inside each such partition.
+Typically, the error of the approximation decreases when reducing the time step $\Delta t$. 
+However, a smaller step length leads to higher computational expense, and may limit the size or time-frame we are able to compute. 
+These are common considerations when doing computational research. 
+One has to balance precision, size/time-frame, time and expense. 
+It is therefore very important to choose a numerical scheme that has a satisfying level of precision as well as speed. 
+
+There are numerous numerical integration methods, but not all these have properties that are desirable for molecular dynamics simulation. 
+The most fundamental features the scheme should have are high precision, computationally cheap, good energy conservation, reversibility and be deterministic, 
+Molecular dynamics simulations are computational expensive, which the reason for the second point.
+Conservation of energy is fundamental in physics, and in order to simulate the micro-canonical ensemble (NVE), the integration method cannot have an energy drift.
+The dynamics should be reversible, meaning one should be able to simulate the system in the opposite direction in time, and arrive at past states.
+It should be deterministic in the sense that by the information about a specific state $(r(t_0), v(t_0))$ one should be able to compute the the state at any other time $(r(t), v(t))$, be it future of past.
+
+\subsection{Velocity verlet}
+In molecular dynamics the most common scheme for time-integration is the \textit{velocity verlet} algorithm, which is a specific type of verlet integration.
+It is derived by taylor expanding the position both one time step forward and one backwards as follows: 
+\begin{align}
+	r(t+\Delta t) &= r(t) + \frac{\Delta t}{1!}r'(t) + \frac{\Delta t^2}{2!}r''(t) + \frac{\Delta t^3}{3!}r'''(t) + \mathcal{O}(\Delta t^4)\\[1ex]
+	r(t-\Delta t) &= r(t) - \frac{\Delta t}{1!}r'(t) + \frac{\Delta t^2}{2!}r''(t) - \frac{\Delta t^3}{3!}r'''(t) + \mathcal{O}(\Delta t^4)
+\end{align}
+If we add these two together, the odd terms cancel. 
+After rearranging, we are left with the very simple verlet algorithm. 
+\begin{equation}
+r(t+\Delta t) = 2r(t) - r(t-\Delta t) + \Delta t^2r''(t) + \mathcal{O}(\Delta t^4)
+\end{equation}
+Or written in a compact notation where
+\begin{align}
+	&\vec{r}^n = r(t)& &\vec{r}^{n\pm 1} = r(t\pm \Delta t)&  &\vec{a}^n = \frac{\partial \vec{v}^n}{\partial t} = \frac{\partial^2 \vec{r}^n}{\partial t ^2}
+\end{align}
+this can be expressed as
+\begin{equation}\label{eq:stromer-verlet}
+\vec{r}^{n+1} = 2\vec{r}^n - \vec{r}^{n-1} + \Delta t^2\vec{a}^n ~.
+\end{equation}
+Notice that we do not rely on information about the velocity in order to predict the next position. 
+This algorithm in equation \eqref{eq:stromer-verlet} is known as Strömer-Verlet. 
+It has a high order truncation error, however it may suffer from round-off errors. 
+The last term is proportional to $\Delta t^2$, and is potentially much smaller than the other terms.
+When trying to add it with the other terms, this may be a source of round-off error \cite{MATINF1100}. 
+As a remedy to this problem, the Velocity Verlet algorithm incorporates a second order differential approximation of the velocity.
+ \begin{equation}\label{eq:velocity-verlet-velocity}
+\vec{v}^n = \frac{ \vec{r}^{n+1}-\vec{r}^{n-1} }{2\Delta t} + \mathcal{O}(\Delta t^2)
+\end{equation}
+Resulting in 
+\begin{align}\label{eq:velocity-verlet}
+	\vec{r}^{n+1} &= \vec{r}^n + \Delta t\vec{v}^n + \frac{\Delta t^2}{2}\vec{a}^n\\
+	\vec{r}^{n+1} &= \vec{r}^n + \Delta t\lr{\vec{v}^n + \frac{\Delta t}{2}\vec{a}^n}	
+\end{align}    
+We may recognize the parenthesis as $\vec{v}^{n+1/2}$, leaving us with
+\begin{align}\label{eq:velocity-verlet2}
+\vec{r}^{n+1} &= \vec{r}^n + \Delta t \vec{v}^{n+1/2}~.
+\end{align}  
+Next, we taylor expand the velocity and use a first order approximation of the acceleration.
+\begin{align}
+\vec{v}^{n+1} &= \vec{v}^n + \Delta t \vec{a}^{n} +  \frac{\Delta t^2}{2}\vec{\dot{a}}^n + \mathcal{O}(\Delta t^3)\\
+\vec{v}^{n+1} &= \vec{v}^n + \Delta t \vec{a}^{n} +  \frac{\Delta t^2}{2}\frac{\vec{a}^{n+1} - \vec{a}^n}{\Delta t} \\
+\vec{v}^{n+1} &= \vec{v}^n + \frac{\Delta t}{2} \lr{\vec{a}^{n+1} + \vec{a}^n} \\
+\vec{v}^{n+1} &= \vec{v}^{n+1/2} + \frac{\Delta t}{2} \vec{a}^{n+1}
+\end{align}
+The final Velocity Verlet algorithm is thus:
+\savebox\strutbox{$\vphantom{\dfrac{\Delta t}{2}}$}
+\begin{align}
+\vec{v}^{n+1/2}	 &= \vec{v}^{n} +  \frac{\Delta t}{2}\vec{a}^n\\
+\vec{r}^{n+1} &= \vec{r}^n + \Delta t \vec{v}^{n+1/2}	\\
+\vec{a}^{n+1} &= -\nabla U(\vec{r}^{n+1})/m\\
+\vec{v}^{n+1} &= \vec{v}^{n+1/2} + \frac{\Delta t}{2} \vec{a}^{n+1}
+\end{align}
+The Velocity Verlet algorithms has the same truncation error as the original, but a lower round-off error. 
+This algorithm has good energy conservation, and is symplectic.
+
+SOME MORE
+
+
+
+
 
 \section{Potentials}
 \subsection{Lennard-Jones} \label{Lennard-Jones-section}
@@ -286,7 +383,7 @@ This value will fluctuate about the real value, so time-averaging is often used 
 
 Often, we want to control the temperature of our simulated system.
 This is done by fixing the temperature in equation \eqref{eq:MDtemperature} and manipulate the atoms velocities.
-There are several methods to manipulating the velocities, and these are called \textit{thermostats}. 
+There are several methods of manipulating the velocities, and these are called \textit{thermostats}. 
 There are many different types of thermostats, and they all have their strengths and weaknesses.
 
 We will look at two quite basic and different thermostats, as well as one that is common in professional use.   
@@ -308,12 +405,14 @@ However, because it rescales the velocities, it produce dynamics that are incons
 
 
 \subsection{Andersen}
-The Andersen thermostat simulates (hard) collisions between atoms inside the system and in the heat bath. 
-Atoms which collide will gain a new normally distributed
-velocity with standard deviation  $\sqrt{k_BT_{bath}/m}$. For all atoms, a random uniformly
-distributed number in the interval $[0,1]$ is generated. If this number is less than
-$\Delta t/\tau$, the atom is considered to have collided, and is assigned a new velocity. In this case, $\tau$ is treated as a collision
-time, and should have about the same value as the $\tau$ in the Berendsen thermostat ($20\Delta t$). The Andersen thermostat is very useful when equilibrating systems, but disturbs the dynamics of e.g. lattice vibrations.
+The Andersen thermostat simulates the coupling between the system and an imaginary heat bath as collisions between their atoms. 
+Atoms that collide are assigned a new normally distributed velocity with standard deviation  $\sqrt{3k_BT_{bath}/m}$ about the target temperature, $T_{bath}$.
+The procedure of the thermostat goes as follows:
+For each atom in the system, we generate a random uniformly distributed number in the interval $[0,1]$. 
+If this number is less than $\Delta t/\tau$, the atom is considered to be colliding, and is assigned a new velocity. 
+Here, $\tau$ is regarded as a collision time, and its value should be similar to $\tau$ in the Berendsen thermostat ($20\Delta t$). 
+The Andersen thermostat is useful when equilibrating systems, but because randomly chosen particles are assigned randomly distributed velocities, it disturbs the dynamics of e.g. lattice vibrations. 
+Also, this disturbance will decorrelate the system, rendering this thermostat ill-equipped when measuring e.g. diffusion coefficient.  
 \subsection{Nosé-Hoover}
 
 
@@ -434,7 +533,7 @@ Installing LAMMPS is a fairly simple procedure if only the basic settings are ne
 Users with a Unix based OS may download the lammps distribution as a tarball from LAMMPS' download page\footnote{\href{http://lammps.sandia.gov/download.html}{http://lammps.sandia.gov/download.html}} and then unpack it from the command line.
 \begin{lstlisting}
 gunzip filename.tar.gz
-tar xvf filename.tar
+tar xzvf filename.tar
 \end{lstlisting}
 The user should then change directory into \texttt{/path/to/lammps/src/}, and execute the following commands in order to list available packages. 
 \begin{lstlisting}
@@ -1153,7 +1252,7 @@ We will assume that the normal vector $\vec{n}$ is always in the same general di
 
 
 
-
+\bibliographystyle{plain}
 \bibliography{resources/Library.bib}
 
 
