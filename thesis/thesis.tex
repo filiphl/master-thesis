@@ -137,14 +137,16 @@ One has to balance precision, size/time-frame, time and expense.
 It is therefore very important to choose a numerical scheme that has a satisfying level of precision as well as speed. 
 
 There are numerous numerical integration methods, but not all these have properties that are desirable for molecular dynamics simulation. 
-The most fundamental features the scheme should have are high precision, computationally cheap, good energy conservation, reversibility and be deterministic, 
-Molecular dynamics simulations are computational expensive, which the reason for the second point.
+The most fundamental features the scheme should have are high precision, computationally cheap, good energy conservation, reversibility and be deterministic.
 Conservation of energy is fundamental in physics, and in order to simulate the micro-canonical ensemble (NVE), the integration method cannot have an energy drift.
 The dynamics should be reversible, meaning one should be able to simulate the system in the opposite direction in time, and arrive at past states.
 It should be deterministic in the sense that by the information about a specific state $(r(t_0), v(t_0))$ one should be able to compute the the state at any other time $(r(t), v(t))$, be it future of past.
+Molecular dynamics simulations are computational expensive, and practically all the work lies in the time-integration loop. More precisely computing the sum of forces on each atom. 
+The choice of integration scheme is therefore very important. 
+As it turns out, probably the best scheme for the task is also one of the simplest. 
 
-\subsection{Velocity verlet}
-In molecular dynamics the most common scheme for time-integration is the \textit{velocity verlet} algorithm, which is a specific type of verlet integration.
+\subsection{Velocity Verlet}
+In molecular dynamics the most common scheme for time-integration is the \textit{Velocity Verlet} algorithm, which is a specific type of Verlet integration.
 It is derived by taylor expanding the position both one time step forward and one backwards as follows: 
 \begin{align}
 	r(t+\Delta t) &= r(t) + \frac{\Delta t}{1!}r'(t) + \frac{\Delta t^2}{2!}r''(t) + \frac{\Delta t^3}{3!}r'''(t) + \mathcal{O}(\Delta t^4)\\[1ex]
@@ -164,9 +166,11 @@ this can be expressed as
 \vec{r}^{n+1} = 2\vec{r}^n - \vec{r}^{n-1} + \Delta t^2\vec{a}^n ~.
 \end{equation}
 Notice that we do not rely on information about the velocity in order to predict the next position. 
-This algorithm in equation \eqref{eq:stromer-verlet} is known as Strömer-Verlet. 
-It has a high order truncation error, however it may suffer from round-off errors. 
-The last term is proportional to $\Delta t^2$, and is potentially much smaller than the other terms.
+The algorithm in equation \eqref{eq:stromer-verlet} is known as Strömer-Verlet. 
+It's not self-starting, since you need to know the previous and current steps to predict the next. 
+Thus, it needs to be initialized in a way, e.g. by using algorithm \eqref{eq:velocity-verlet} for the first step. 
+It has a high order truncation error, proportional to $\mathcal{O}(\Delta t^4)$, however it's vulnerable to round-off errors. 
+This is because the last term is proportional to $\Delta t^2$, and is potentially much smaller than the other terms.
 When trying to add it with the other terms, this may be a source of round-off error \cite{MATINF1100}. 
 As a remedy to this problem, the Velocity Verlet algorithm incorporates a second order differential approximation of the velocity.
  \begin{equation}\label{eq:velocity-verlet-velocity}
@@ -178,16 +182,17 @@ Resulting in
 	\vec{r}^{n+1} &= \vec{r}^n + \Delta t\lr{\vec{v}^n + \frac{\Delta t}{2}\vec{a}^n}	
 \end{align}    
 We may recognize the parenthesis as $\vec{v}^{n+1/2}$, leaving us with
-\begin{align}\label{eq:velocity-verlet2}
-\vec{r}^{n+1} &= \vec{r}^n + \Delta t \vec{v}^{n+1/2}~.
+\begin{align}
+\vec{r}^{n+1} &= \vec{r}^n + \Delta t \vec{v}^{n+1/2}~. \label{eq:velocity-verlet-position-final}
 \end{align}  
 Next, we taylor expand the velocity and use a first order approximation of the acceleration.
 \begin{align}
 \vec{v}^{n+1} &= \vec{v}^n + \Delta t \vec{a}^{n} +  \frac{\Delta t^2}{2}\vec{\dot{a}}^n + \mathcal{O}(\Delta t^3)\\
 \vec{v}^{n+1} &= \vec{v}^n + \Delta t \vec{a}^{n} +  \frac{\Delta t^2}{2}\frac{\vec{a}^{n+1} - \vec{a}^n}{\Delta t} \\
 \vec{v}^{n+1} &= \vec{v}^n + \frac{\Delta t}{2} \lr{\vec{a}^{n+1} + \vec{a}^n} \\
-\vec{v}^{n+1} &= \vec{v}^{n+1/2} + \frac{\Delta t}{2} \vec{a}^{n+1}
+\vec{v}^{n+1} &= \vec{v}^{n+1/2} + \frac{\Delta t}{2} \vec{a}^{n+1} \label{eq:velocity-verlet-velocity-final}
 \end{align}
+Equations \eqref{eq:velocity-verlet-position-final} and \eqref{eq:velocity-verlet-velocity-final} define the Velocity Verlet algorithms. 
 The final Velocity Verlet algorithm is thus:
 \savebox\strutbox{$\vphantom{\dfrac{\Delta t}{2}}$}
 \begin{align}
@@ -359,7 +364,11 @@ for (int k=0; k<numberOfDimension; k++){
 	}
 \end{figure}
 
-
+\section{Measuring physical quantities}
+\subsection{Energy}
+\subsection{Temperature}
+\subsection{Pressure}
+\subsection{Something else?}
 
 \section{Thermostats}
 

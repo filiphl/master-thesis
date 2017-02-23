@@ -2,21 +2,26 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {chapter}{\numberline {2}Molecular dynamics}{3}{chapter.2}
 \contentsline {section}{\numberline {2.1}Time-integration}{3}{section.2.1}
-\contentsline {subsection}{\numberline {2.1.1}Velocity verlet}{4}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.1}Velocity Verlet}{4}{subsection.2.1.1}
 \contentsline {section}{\numberline {2.2}Potentials}{6}{section.2.2}
 \contentsline {subsection}{\numberline {2.2.1}Lennard-Jones}{6}{subsection.2.2.1}
-\contentsline {subsection}{\numberline {2.2.2}Stillinger-Weber}{6}{subsection.2.2.2}
-\contentsline {subsection}{\numberline {2.2.3}Vashishta}{6}{subsection.2.2.3}
-\contentsline {section}{\numberline {2.3}Boundary conditions}{7}{section.2.3}
-\contentsline {subsection}{\numberline {2.3.1}Minimum image convention}{8}{subsection.2.3.1}
-\contentsline {section}{\numberline {2.4}Thermostats}{10}{section.2.4}
-\contentsline {subsection}{\numberline {2.4.1}Berendsen}{11}{subsection.2.4.1}
-\contentsline {subsection}{\numberline {2.4.2}Andersen}{11}{subsection.2.4.2}
-\contentsline {subsection}{\numberline {2.4.3}Nos\IeC {\'e}-Hoover}{12}{subsection.2.4.3}
-\contentsline {section}{\numberline {2.5}Efficiency improvements}{12}{section.2.5}
-\contentsline {subsection}{\numberline {2.5.1}Cut-off}{12}{subsection.2.5.1}
-\contentsline {subsection}{\numberline {2.5.2}Cell lists and neighbor lists}{13}{subsection.2.5.2}
-\contentsline {subsection}{\numberline {2.5.3}Parallelization}{13}{subsection.2.5.3}
+\contentsline {subsection}{\numberline {2.2.2}Stillinger-Weber}{7}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}Vashishta}{7}{subsection.2.2.3}
+\contentsline {section}{\numberline {2.3}Boundary conditions}{8}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Minimum image convention}{9}{subsection.2.3.1}
+\contentsline {section}{\numberline {2.4}Measuring physical quantities}{11}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}Energy}{11}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}Temperature}{11}{subsection.2.4.2}
+\contentsline {subsection}{\numberline {2.4.3}Pressure}{11}{subsection.2.4.3}
+\contentsline {subsection}{\numberline {2.4.4}Something else?}{11}{subsection.2.4.4}
+\contentsline {section}{\numberline {2.5}Thermostats}{11}{section.2.5}
+\contentsline {subsection}{\numberline {2.5.1}Berendsen}{12}{subsection.2.5.1}
+\contentsline {subsection}{\numberline {2.5.2}Andersen}{12}{subsection.2.5.2}
+\contentsline {subsection}{\numberline {2.5.3}Nos\IeC {\'e}-Hoover}{13}{subsection.2.5.3}
+\contentsline {section}{\numberline {2.6}Efficiency improvements}{13}{section.2.6}
+\contentsline {subsection}{\numberline {2.6.1}Cut-off}{13}{subsection.2.6.1}
+\contentsline {subsection}{\numberline {2.6.2}Cell lists and neighbor lists}{14}{subsection.2.6.2}
+\contentsline {subsection}{\numberline {2.6.3}Parallelization}{14}{subsection.2.6.3}
 \contentsline {chapter}{\numberline {3}LAMMPS}{17}{chapter.3}
 \contentsline {section}{\numberline {3.1}Installation}{17}{section.3.1}
 \contentsline {subsection}{\numberline {3.1.1}Linux}{17}{subsection.3.1.1}

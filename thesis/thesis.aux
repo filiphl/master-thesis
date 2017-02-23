@@ -27,49 +27,55 @@
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}Time-integration}{3}{section.2.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Velocity Verlet}{4}{subsection.2.1.1}}
 \citation{MATINF1100}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Velocity verlet}{4}{subsection.2.1.1}}
-\newlabel{eq:stromer-verlet}{{2.8}{4}{Velocity verlet}{equation.2.1.8}{}}
-\newlabel{eq:velocity-verlet-velocity}{{2.9}{5}{Velocity verlet}{equation.2.1.9}{}}
-\newlabel{eq:velocity-verlet}{{2.10}{5}{Velocity verlet}{equation.2.1.10}{}}
-\newlabel{eq:velocity-verlet2}{{2.12}{5}{Velocity verlet}{equation.2.1.12}{}}
+\newlabel{eq:stromer-verlet}{{2.8}{5}{Velocity Verlet}{equation.2.1.8}{}}
+\newlabel{eq:velocity-verlet-velocity}{{2.9}{5}{Velocity Verlet}{equation.2.1.9}{}}
+\newlabel{eq:velocity-verlet}{{2.10}{5}{Velocity Verlet}{equation.2.1.10}{}}
+\newlabel{eq:velocity-verlet-position-final}{{2.12}{5}{Velocity Verlet}{equation.2.1.12}{}}
+\newlabel{eq:velocity-verlet-velocity-final}{{2.16}{5}{Velocity Verlet}{equation.2.1.16}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}Potentials}{6}{section.2.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Lennard-Jones}{6}{subsection.2.2.1}}
 \newlabel{Lennard-Jones-section}{{2.2.1}{6}{Lennard-Jones}{subsection.2.2.1}{}}
 \newlabel{eq:Lennard-Jones}{{2.21}{6}{Lennard-Jones}{equation.2.2.21}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Lennard-Jones potential as function of inter-atomic distance, $r$, in units of $\theta $. \relax }}{6}{figure.caption.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Lennard-Jones potential as function of inter-atomic distance, $r$, in units of $\theta $. \relax }}{7}{figure.caption.2}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:Lennard-Jones}{{2.1}{6}{Lennard-Jones potential as function of inter-atomic distance, $r$, in units of $\theta $. \relax }{figure.caption.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Stillinger-Weber}{6}{subsection.2.2.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Vashishta}{6}{subsection.2.2.3}}
+\newlabel{fig:Lennard-Jones}{{2.1}{7}{Lennard-Jones potential as function of inter-atomic distance, $r$, in units of $\theta $. \relax }{figure.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Stillinger-Weber}{7}{subsection.2.2.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Vashishta}{7}{subsection.2.2.3}}
 \newlabel{vashistaTwoTerm}{{2.22}{7}{Vashishta}{equation.2.2.22}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Boundary conditions}{7}{section.2.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Minimum image convention}{8}{subsection.2.3.1}}
-\newlabel{mic}{{2.1}{9}{Loop to compute the position of the closest periodic image of atom $j$ with respect to the referance atom $i$}{lstlisting.2.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}Loop to compute the position of the closest periodic image of atom $j$ with respect to the referance atom $i$.}{9}{lstlisting.2.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Minimum image convention in 1 dimension. If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $|\Delta x - L|$. The white area indicates the system, while the gray areas are periodic replications of the system. Atoms in the gray areas are periodic images of the atom of consideration in the white area.\relax }}{9}{figure.caption.3}}
-\newlabel{fig:minimumImageConvention1D}{{2.2}{9}{Minimum image convention in 1 dimension. If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $|\Delta x - L|$. The white area indicates the system, while the gray areas are periodic replications of the system. Atoms in the gray areas are periodic images of the atom of consideration in the white area.\relax }{figure.caption.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images that has the shortest distance to the reference atom. The minimum image is found by decomposing the atoms position, and carry out the The shortest distance in this case is marked with an arrow. Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.\relax }}{10}{figure.caption.4}}
-\newlabel{fig:minimumImageConvention2D}{{2.3}{10}{Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images that has the shortest distance to the reference atom. The minimum image is found by decomposing the atoms position, and carry out the The shortest distance in this case is marked with an arrow. Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.\relax }{figure.caption.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Thermostats}{10}{section.2.4}}
-\newlabel{eq:MDtemperature}{{2.27}{10}{Thermostats}{equation.2.4.27}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Berendsen}{11}{subsection.2.4.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Andersen}{11}{subsection.2.4.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Nos\IeC {\'e}-Hoover}{12}{subsection.2.4.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.5}Efficiency improvements}{12}{section.2.5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}Cut-off}{12}{subsection.2.5.1}}
-\newlabel{eq:truncation}{{2.29}{12}{Cut-off}{equation.2.5.29}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Boundary conditions}{8}{section.2.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Minimum image convention}{9}{subsection.2.3.1}}
+\newlabel{mic}{{2.1}{10}{Loop to compute the position of the closest periodic image of atom $j$ with respect to the referance atom $i$}{lstlisting.2.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}Loop to compute the position of the closest periodic image of atom $j$ with respect to the referance atom $i$.}{10}{lstlisting.2.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Minimum image convention in 1 dimension. If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $|\Delta x - L|$. The white area indicates the system, while the gray areas are periodic replications of the system. Atoms in the gray areas are periodic images of the atom of consideration in the white area.\relax }}{10}{figure.caption.3}}
+\newlabel{fig:minimumImageConvention1D}{{2.2}{10}{Minimum image convention in 1 dimension. If an atom is separated from the reference atom (red) by more than half the system length, $L/2$, the minimum image convention states that the distance between the two is the distance to the periodic copy, which is $|\Delta x - L|$. The white area indicates the system, while the gray areas are periodic replications of the system. Atoms in the gray areas are periodic images of the atom of consideration in the white area.\relax }{figure.caption.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images that has the shortest distance to the reference atom. The minimum image is found by decomposing the atoms position, and carry out the The shortest distance in this case is marked with an arrow. Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.\relax }}{11}{figure.caption.4}}
+\newlabel{fig:minimumImageConvention2D}{{2.3}{11}{Minimum image convention in 2 dimensions. The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images that has the shortest distance to the reference atom. The minimum image is found by decomposing the atoms position, and carry out the The shortest distance in this case is marked with an arrow. Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.\relax }{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Measuring physical quantities}{11}{section.2.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Energy}{11}{subsection.2.4.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Temperature}{11}{subsection.2.4.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Pressure}{11}{subsection.2.4.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.4}Something else?}{11}{subsection.2.4.4}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Thermostats}{11}{section.2.5}}
+\newlabel{eq:MDtemperature}{{2.27}{12}{Thermostats}{equation.2.5.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}Berendsen}{12}{subsection.2.5.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Andersen}{12}{subsection.2.5.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}Nos\IeC {\'e}-Hoover}{13}{subsection.2.5.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.6}Efficiency improvements}{13}{section.2.6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.1}Cut-off}{13}{subsection.2.6.1}}
+\newlabel{eq:truncation}{{2.29}{13}{Cut-off}{equation.2.6.29}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.2}Cell lists and neighbor lists}{14}{subsection.2.6.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.3}Parallelization}{14}{subsection.2.6.3}}
 \pgfsyspdfmark {pgfid1}{15053934}{38859298}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }}{13}{figure.caption.5}}
-\newlabel{fig:neighbourcells}{{2.4}{13}{Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }{figure.caption.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Cell lists and neighbor lists}{13}{subsection.2.5.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}Parallelization}{13}{subsection.2.5.3}}
-\newlabel{lst:speedup}{{2.2}{14}{LAMMPS input script executed using several numbers of processors, and timed separately}{lstlisting.2.2}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.2}LAMMPS input script executed using several numbers of processors, and timed separately.}{14}{lstlisting.2.2}}
-\newlabel{speeduprun}{{2.3}{14}{Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart}{lstlisting.2.3}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.3}Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart.}{14}{lstlisting.2.3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Speedup as a function of number of processors.\relax }}{15}{figure.caption.6}}
-\newlabel{fig:speedup15x15}{{2.5}{15}{Speedup as a function of number of processors.\relax }{figure.caption.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }}{15}{figure.caption.5}}
+\newlabel{fig:neighbourcells}{{2.4}{15}{Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. \relax }{figure.caption.5}{}}
+\newlabel{lst:speedup}{{2.2}{15}{LAMMPS input script executed using several numbers of processors, and timed separately}{lstlisting.2.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.2}LAMMPS input script executed using several numbers of processors, and timed separately.}{15}{lstlisting.2.2}}
+\newlabel{speeduprun}{{2.3}{16}{Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart}{lstlisting.2.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.3}Command used to excecute the input script speedup.in on 8 parallel processors and set the filename variable to speedup.restart.}{16}{lstlisting.2.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Speedup as a function of number of processors.\relax }}{16}{figure.caption.6}}
+\newlabel{fig:speedup15x15}{{2.5}{16}{Speedup as a function of number of processors.\relax }{figure.caption.6}{}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}LAMMPS}{17}{chapter.3}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
