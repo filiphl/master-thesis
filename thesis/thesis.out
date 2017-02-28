@@ -21,35 +21,36 @@
 \BOOKMARK [2][-]{subsection.2.6.1}{Cut-off}{section.2.6}% 21
 \BOOKMARK [2][-]{subsection.2.6.2}{Cell lists and neighbor lists}{section.2.6}% 22
 \BOOKMARK [2][-]{subsection.2.6.3}{Parallelization}{section.2.6}% 23
-\BOOKMARK [0][-]{chapter.3}{LAMMPS}{}% 24
-\BOOKMARK [1][-]{section.3.1}{Installation}{chapter.3}% 25
-\BOOKMARK [2][-]{subsection.3.1.1}{Linux}{section.3.1}% 26
-\BOOKMARK [2][-]{subsection.3.1.2}{Mac OS X with Homebrew}{section.3.1}% 27
-\BOOKMARK [1][-]{section.3.2}{Input scripts}{chapter.3}% 28
-\BOOKMARK [2][-]{subsection.3.2.1}{System configurations}{section.3.2}% 29
-\BOOKMARK [2][-]{subsection.3.2.2}{Run-time commands}{section.3.2}% 30
-\BOOKMARK [2][-]{subsection.3.2.3}{Output}{section.3.2}% 31
-\BOOKMARK [1][-]{section.3.3}{Visualization}{chapter.3}% 32
-\BOOKMARK [2][-]{subsection.3.3.1}{OVITO}{section.3.3}% 33
-\BOOKMARK [0][-]{chapter.4}{Preparing a molecular dynamics simulation}{}% 34
-\BOOKMARK [1][-]{section.4.1}{Silica}{chapter.4}% 35
-\BOOKMARK [2][-]{subsection.4.1.1}{Unit cell of -cristobalite}{section.4.1}% 36
-\BOOKMARK [1][-]{section.4.2}{Building a crystal}{chapter.4}% 37
-\BOOKMARK [1][-]{section.4.3}{Verifications}{chapter.4}% 38
-\BOOKMARK [2][-]{subsection.4.3.1}{Melting point}{section.4.3}% 39
-\BOOKMARK [1][-]{section.4.4}{Shaping the silica}{chapter.4}% 40
-\BOOKMARK [1][-]{section.4.5}{Moving the sphere towards the slab}{chapter.4}% 41
-\BOOKMARK [0][-]{chapter.5}{This must be sorted in designated chapters}{}% 42
-\BOOKMARK [1][-]{section.5.1}{Radial distribution of normal force}{chapter.5}% 43
-\BOOKMARK [2][-]{subsection.5.1.1}{Radial binning}{section.5.1}% 44
-\BOOKMARK [0][-]{chapter.6}{Computing the normal force distribution}{}% 45
-\BOOKMARK [1][-]{section.6.1}{Creating a custom compute}{chapter.6}% 46
-\BOOKMARK [2][-]{subsection.6.1.1}{Find a similar compute}{section.6.1}% 47
-\BOOKMARK [2][-]{subsection.6.1.2}{Creating the class}{section.6.1}% 48
-\BOOKMARK [1][-]{section.6.2}{Least squares regression}{chapter.6}% 49
-\BOOKMARK [0][-]{appendix.A}{Source code}{}% 50
-\BOOKMARK [1][-]{section.A.1}{compute\137group\137group.h}{appendix.A}% 51
-\BOOKMARK [1][-]{section.A.2}{compute\137group\137group\137atom.h}{appendix.A}% 52
-\BOOKMARK [1][-]{section.A.3}{compute\137group\137group\137atom.cpp}{appendix.A}% 53
-\BOOKMARK [0][-]{appendix.B}{Something}{}% 54
-\BOOKMARK [1][-]{section.B.1}{LAMMPS units}{appendix.B}% 55
+\BOOKMARK [0][-]{chapter.3}{Friction}{}% 24
+\BOOKMARK [0][-]{chapter.4}{LAMMPS}{}% 25
+\BOOKMARK [1][-]{section.4.1}{Installation}{chapter.4}% 26
+\BOOKMARK [2][-]{subsection.4.1.1}{Linux}{section.4.1}% 27
+\BOOKMARK [2][-]{subsection.4.1.2}{Mac OS X with Homebrew}{section.4.1}% 28
+\BOOKMARK [1][-]{section.4.2}{Input scripts}{chapter.4}% 29
+\BOOKMARK [2][-]{subsection.4.2.1}{System configurations}{section.4.2}% 30
+\BOOKMARK [2][-]{subsection.4.2.2}{Run-time commands}{section.4.2}% 31
+\BOOKMARK [2][-]{subsection.4.2.3}{Output}{section.4.2}% 32
+\BOOKMARK [1][-]{section.4.3}{Visualization}{chapter.4}% 33
+\BOOKMARK [2][-]{subsection.4.3.1}{OVITO}{section.4.3}% 34
+\BOOKMARK [0][-]{chapter.5}{Preparing a molecular dynamics simulation}{}% 35
+\BOOKMARK [1][-]{section.5.1}{Silica}{chapter.5}% 36
+\BOOKMARK [2][-]{subsection.5.1.1}{Unit cell of -cristobalite}{section.5.1}% 37
+\BOOKMARK [1][-]{section.5.2}{Building a crystal}{chapter.5}% 38
+\BOOKMARK [1][-]{section.5.3}{Verifications}{chapter.5}% 39
+\BOOKMARK [2][-]{subsection.5.3.1}{Melting point}{section.5.3}% 40
+\BOOKMARK [1][-]{section.5.4}{Shaping the silica}{chapter.5}% 41
+\BOOKMARK [1][-]{section.5.5}{Moving the sphere towards the slab}{chapter.5}% 42
+\BOOKMARK [0][-]{chapter.6}{This must be sorted in designated chapters}{}% 43
+\BOOKMARK [1][-]{section.6.1}{Radial distribution of normal force}{chapter.6}% 44
+\BOOKMARK [2][-]{subsection.6.1.1}{Radial binning}{section.6.1}% 45
+\BOOKMARK [0][-]{chapter.7}{Computing the normal force distribution}{}% 46
+\BOOKMARK [1][-]{section.7.1}{Creating a custom compute}{chapter.7}% 47
+\BOOKMARK [2][-]{subsection.7.1.1}{Find a similar compute}{section.7.1}% 48
+\BOOKMARK [2][-]{subsection.7.1.2}{Creating the class}{section.7.1}% 49
+\BOOKMARK [1][-]{section.7.2}{Least squares regression}{chapter.7}% 50
+\BOOKMARK [0][-]{appendix.A}{Source code}{}% 51
+\BOOKMARK [1][-]{section.A.1}{compute\137group\137group.h}{appendix.A}% 52
+\BOOKMARK [1][-]{section.A.2}{compute\137group\137group\137atom.h}{appendix.A}% 53
+\BOOKMARK [1][-]{section.A.3}{compute\137group\137group\137atom.cpp}{appendix.A}% 54
+\BOOKMARK [0][-]{appendix.B}{Something}{}% 55
+\BOOKMARK [1][-]{section.B.1}{LAMMPS units}{appendix.B}% 56

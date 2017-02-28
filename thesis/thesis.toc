@@ -22,51 +22,52 @@
 \contentsline {subsection}{\numberline {2.6.1}Cut-off}{13}{subsection.2.6.1}
 \contentsline {subsection}{\numberline {2.6.2}Cell lists and neighbor lists}{14}{subsection.2.6.2}
 \contentsline {subsection}{\numberline {2.6.3}Parallelization}{14}{subsection.2.6.3}
-\contentsline {chapter}{\numberline {3}LAMMPS}{17}{chapter.3}
-\contentsline {section}{\numberline {3.1}Installation}{17}{section.3.1}
-\contentsline {subsection}{\numberline {3.1.1}Linux}{17}{subsection.3.1.1}
-\contentsline {subsection}{\numberline {3.1.2}Mac OS X with Homebrew}{18}{subsection.3.1.2}
-\contentsline {section}{\numberline {3.2}Input scripts}{19}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}System configurations}{19}{subsection.3.2.1}
-\contentsline {paragraph}{\texttt {units}}{19}{section*.7}
-\contentsline {paragraph}{\texttt {boundary}}{20}{section*.8}
-\contentsline {paragraph}{\texttt {atom\_style}}{20}{section*.9}
-\contentsline {paragraph}{\texttt {read\_data}}{20}{section*.10}
-\contentsline {paragraph}{\texttt {pair\_style}}{20}{section*.11}
-\contentsline {paragraph}{\texttt {neighbor}}{20}{section*.12}
-\contentsline {paragraph}{\texttt {neigh\_modify}}{20}{section*.13}
-\contentsline {paragraph}{\texttt {timestep}}{20}{section*.14}
-\contentsline {subsection}{\numberline {3.2.2}Run-time commands}{20}{subsection.3.2.2}
-\contentsline {subsubsection}{Variables}{20}{section*.15}
-\contentsline {subsubsection}{Region \& Group}{21}{section*.16}
-\contentsline {subsubsection}{Computes}{21}{section*.17}
-\contentsline {subsubsection}{Fix}{22}{section*.18}
-\contentsline {subsection}{\numberline {3.2.3}Output}{22}{subsection.3.2.3}
-\contentsline {subsubsection}{Thermodynamic output}{22}{section*.19}
-\contentsline {subsubsection}{Dump}{23}{section*.20}
-\contentsline {subsubsection}{Fixes}{23}{section*.21}
-\contentsline {subsubsection}{Restart files}{24}{section*.22}
-\contentsline {section}{\numberline {3.3}Visualization}{24}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}OVITO}{24}{subsection.3.3.1}
-\contentsline {chapter}{\numberline {4}Preparing a molecular dynamics simulation}{25}{chapter.4}
-\contentsline {section}{\numberline {4.1}Silica}{25}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Unit cell of $\beta $-cristobalite}{26}{subsection.4.1.1}
-\contentsline {section}{\numberline {4.2}Building a crystal}{26}{section.4.2}
-\contentsline {section}{\numberline {4.3}Verifications}{28}{section.4.3}
-\contentsline {subsection}{\numberline {4.3.1}Melting point}{28}{subsection.4.3.1}
-\contentsline {section}{\numberline {4.4}Shaping the silica}{30}{section.4.4}
-\contentsline {section}{\numberline {4.5}Moving the sphere towards the slab}{32}{section.4.5}
-\contentsline {chapter}{\numberline {5}This must be sorted in designated chapters}{33}{chapter.5}
-\contentsline {section}{\numberline {5.1}Radial distribution of normal force}{33}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}Radial binning}{33}{subsection.5.1.1}
-\contentsline {chapter}{\numberline {6}Computing the normal force distribution}{37}{chapter.6}
-\contentsline {section}{\numberline {6.1}Creating a custom compute}{37}{section.6.1}
-\contentsline {subsection}{\numberline {6.1.1}Find a similar compute}{38}{subsection.6.1.1}
-\contentsline {subsection}{\numberline {6.1.2}Creating the class}{38}{subsection.6.1.2}
-\contentsline {section}{\numberline {6.2}Least squares regression}{44}{section.6.2}
-\contentsline {chapter}{\numberline {A}Source code}{47}{appendix.A}
-\contentsline {section}{\numberline {A.1}compute\_group\_group.h}{48}{section.A.1}
-\contentsline {section}{\numberline {A.2}compute\_group\_group\_atom.h}{49}{section.A.2}
-\contentsline {section}{\numberline {A.3}compute\_group\_group\_atom.cpp}{50}{section.A.3}
-\contentsline {chapter}{\numberline {B}Something}{55}{appendix.B}
-\contentsline {section}{\numberline {B.1}LAMMPS units}{55}{section.B.1}
+\contentsline {chapter}{\numberline {3}Friction}{17}{chapter.3}
+\contentsline {chapter}{\numberline {4}LAMMPS}{19}{chapter.4}
+\contentsline {section}{\numberline {4.1}Installation}{19}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Linux}{19}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Mac OS X with Homebrew}{20}{subsection.4.1.2}
+\contentsline {section}{\numberline {4.2}Input scripts}{21}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}System configurations}{21}{subsection.4.2.1}
+\contentsline {paragraph}{\texttt {units}}{21}{section*.9}
+\contentsline {paragraph}{\texttt {boundary}}{22}{section*.10}
+\contentsline {paragraph}{\texttt {atom\_style}}{22}{section*.11}
+\contentsline {paragraph}{\texttt {read\_data}}{22}{section*.12}
+\contentsline {paragraph}{\texttt {pair\_style}}{22}{section*.13}
+\contentsline {paragraph}{\texttt {neighbor}}{22}{section*.14}
+\contentsline {paragraph}{\texttt {neigh\_modify}}{22}{section*.15}
+\contentsline {paragraph}{\texttt {timestep}}{22}{section*.16}
+\contentsline {subsection}{\numberline {4.2.2}Run-time commands}{22}{subsection.4.2.2}
+\contentsline {subsubsection}{Variables}{22}{section*.17}
+\contentsline {subsubsection}{Region \& Group}{23}{section*.18}
+\contentsline {subsubsection}{Computes}{23}{section*.19}
+\contentsline {subsubsection}{Fix}{24}{section*.20}
+\contentsline {subsection}{\numberline {4.2.3}Output}{24}{subsection.4.2.3}
+\contentsline {subsubsection}{Thermodynamic output}{24}{section*.21}
+\contentsline {subsubsection}{Dump}{25}{section*.22}
+\contentsline {subsubsection}{Fix}{25}{section*.23}
+\contentsline {subsubsection}{Restart files}{26}{section*.24}
+\contentsline {section}{\numberline {4.3}Visualization}{26}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}OVITO}{26}{subsection.4.3.1}
+\contentsline {chapter}{\numberline {5}Preparing a molecular dynamics simulation}{27}{chapter.5}
+\contentsline {section}{\numberline {5.1}Silica}{27}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Unit cell of $\beta $-cristobalite}{28}{subsection.5.1.1}
+\contentsline {section}{\numberline {5.2}Building a crystal}{28}{section.5.2}
+\contentsline {section}{\numberline {5.3}Verifications}{31}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Melting point}{31}{subsection.5.3.1}
+\contentsline {section}{\numberline {5.4}Shaping the silica}{33}{section.5.4}
+\contentsline {section}{\numberline {5.5}Moving the sphere towards the slab}{35}{section.5.5}
+\contentsline {chapter}{\numberline {6}This must be sorted in designated chapters}{37}{chapter.6}
+\contentsline {section}{\numberline {6.1}Radial distribution of normal force}{37}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Radial binning}{37}{subsection.6.1.1}
+\contentsline {chapter}{\numberline {7}Computing the normal force distribution}{41}{chapter.7}
+\contentsline {section}{\numberline {7.1}Creating a custom compute}{41}{section.7.1}
+\contentsline {subsection}{\numberline {7.1.1}Find a similar compute}{42}{subsection.7.1.1}
+\contentsline {subsection}{\numberline {7.1.2}Creating the class}{42}{subsection.7.1.2}
+\contentsline {section}{\numberline {7.2}Least squares regression}{48}{section.7.2}
+\contentsline {chapter}{\numberline {A}Source code}{51}{appendix.A}
+\contentsline {section}{\numberline {A.1}compute\_group\_group.h}{52}{section.A.1}
+\contentsline {section}{\numberline {A.2}compute\_group\_group\_atom.h}{53}{section.A.2}
+\contentsline {section}{\numberline {A.3}compute\_group\_group\_atom.cpp}{54}{section.A.3}
+\contentsline {chapter}{\numberline {B}Something}{59}{appendix.B}
+\contentsline {section}{\numberline {B.1}LAMMPS units}{59}{section.B.1}

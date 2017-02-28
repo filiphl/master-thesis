@@ -422,6 +422,9 @@ If this number is less than $\Delta t/\tau$, the atom is considered to be collid
 Here, $\tau$ is regarded as a collision time, and its value should be similar to $\tau$ in the Berendsen thermostat ($20\Delta t$). 
 The Andersen thermostat is useful when equilibrating systems, but because randomly chosen particles are assigned randomly distributed velocities, it disturbs the dynamics of e.g. lattice vibrations. 
 Also, this disturbance will decorrelate the system, rendering this thermostat ill-equipped when measuring e.g. diffusion coefficient.  
+As a final note, if this thermostat is to be used, the newly assigned velocities may cause the systems center of mass to drift.
+
+
 \subsection{Nosé-Hoover}
 
 
@@ -523,6 +526,69 @@ Also, we clearly see that the initial claim holds; this is not more efficient wh
 In fact this result suggest that using 1 processor is twice as energy efficient as using 64. 
 
 
+\chapter{Friction}
+\textit{The force that resists relative motion between two bodies in contact} \cite{frictionDefinition}. 
+Friction is a well known phenomena, though still not fully understood, and its still a field of research. 
+On the macroscopic level, friction has been observed since the dawn of man. 
+Early actions that show awareness of the effects of friction was to chip stone in order to make tools, or rubbing wood in order to create fire. 
+In the tomb of Tehuti-Hetep there was found the painting shown in figure \ref{fig:Colossus}, which show the moving of an Egyptian colossus. 
+The statue is depicted pulled on a sledge, with officers standing on the front end of the sledge poring water on the ground. 
+This is evidence that they perceived the effect of lubrication even then, 1900 B.C..   
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.99\linewidth]{figures/friction/Colossus.jpg}
+	\caption{Painting from the tomb of Tehuti-Hetep, showing the transportation of an Egytian colossus.}
+	\label{fig:Colossus}
+\end{figure}
+
+The first documented studies of friction was carried out during the renaissance by Leonardo da Vinci (1452-1519) \cite{LeonardoDaVinciStudies}.
+Among his experiments he attaching a block of wood to another object with a cord, and placed the block on a smooth surface.
+He was able to adjust the weight of the second object, which he let hang over a fixed cylinder, free to rotate. 
+This experiment was found in his notebooks, and is shown in figure \ref{fig:leonardoDaVinci}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{figures/friction/LeonardoDaVinciBW}
+	\caption{Drawing from Leonardo da Vinci's notebook. From Codex Arundel, British Library, London (Arundel folio 41r).}
+	\label{fig:leonardoDaVinci}
+\end{figure}
+\noindent 
+He exprerinmented with tilted planes and placed the block on different sides, changing the apparent area of contact.
+His results made him deduce the following statements, also found in his notes:
+\begin{itemize}
+	\item[] \textit{Friction produces double the amount of effort if the weight be doubled}. 
+	\item[] \textit{Friction made by the same weight will be of equal resistance at the beginning of the movement though the contact may be of different breadths or lengths}.
+\end{itemize}
+This is now essentially known as the two first laws of friction. Leonardo also introduced the coefficient of friction $\mu$, though the concept of \textit{force} was not introduced until 200 years later. Isaac Newton's publication of \textit{Principia} paved the way for studies of friction, there among the most comprehensive study carried out by Charles Augustin Coulomb (1736-1806). He investigated the influence of several factors on friction, namely \cite{SlidingFriction}:
+\begin{itemize}
+	\item The nature of the materials in contact and their surface coatings.
+	\item The extent of the surface area.
+	\item The normal force.
+	\item The amount of time that the surfaces remained in contact prior to the applied force.
+	\item Ambient conditions.
+\end{itemize}   
+%In order to understand the behavior on the macroscopic level, we study the dynamics at a microscopic level as well. 
+%As it turns out, there are several similarities and differences between these length scales.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \chapter{LAMMPS}
 
@@ -601,7 +667,7 @@ The scripts are executed on 8 CPU's in parallel as
 mpirun -n 8 lmp_mpi -in in.system
 \end{lstlisting} 
 Despite the widely common convention of letting the file type be determined by the letters following the punctuation mark, it's common in the LAMMPS manuals to name the input scripts with the name last. i.e. \texttt{in.name}. Luckily, both conventions are meretricious since the executable accepts any name/type for the input script.
-\subsection{System configurations}
+\subsection{System configurations} \label{sec:systemConfigurations}
 The first part of every input script contains information of the system properties. This includes: size, number of dimensions, boundary conditions, potentials, unit convention, information on the containing atoms, time step length, neighbor list update frequency and possibly a lot more.   
 Listing \ref{lammpsInput1} show the configurations that has been used for the entire duration of this project. 
 Below there is a description of each command and its purpose.
@@ -765,7 +831,7 @@ Common visualization software can read most of the predefined formats in LAMMPS:
 
 
 %, which contain snapshots of atoms and various per-atom values and are written at a specified frequency.
-\subsubsection{Fixes} 
+\subsubsection{Fix} 
 Certain fixes can also write specified quantities to files. For instance the commands 
 \begin{lstlisting}[language=LammpsInput]
 fix timeAvgID all ave/time 100 5 1000 c_comID file name.avg
@@ -850,11 +916,23 @@ For a more profound understanding of the structure and syntax of these files, th
 \lstinputlisting[caption={Typical Moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units.}, label=lst:beta-cristobalite.lt, language=LammpsData]{../SiO2/large/beta-cristobalite.lt}
 
 
-We use the unit cell as building blocks, placing them concurrently until we have a crystal of the desired size. For our purpose, we generate a large cube of $15\times15\times15$ unit cells. This is done as follows.
+We use the unit cell as building blocks, placing them concurrently until we have a crystal of the desired size. For example purposes, we generate a large cube of $15\times15\times15$ unit cells. This is done in line 17-21 of listing \ref{lst:cubeSiO2} below.
+\lstinputlisting[caption={Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite, and also specify system configurations (see section \ref{sec:systemConfigurations}). The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
+The \textit{write\_once} sections with "In" as the first word of its argument, creates the files \texttt{system.in.init} and \texttt{system.in.settings}, which contain exactly what is shown in the snippet. 
+They are not necessary, but help making the LAMMPS input script cleaner, since we can \texttt{import} these files instead of having all the configurations in the input script file.
+The last \textit{write\_once} section with "Data" in its argument, incorporates the specified size of the simulation box in the \texttt{system.data} file. 
+Line 19 creates a new unit cell at every point separated by 7.12\AA ~in all three dimensions. The positions, and other properties defined by the \textit{atomstyle}, of all the distributed atoms are stored in the file \texttt{system.data} as well. 
+
+The Moltemplate script can be run from the command line as
+ \begin{lstlisting}
+ moltemplate -atomstyle "atomic" system.lt
+ \end{lstlisting}
+Once complete, we can load the configurations and atomic data into our LAMMPS input script simply by including the file \texttt{system.in}.
 
 
 
-\begin{figure}
+
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{figures/CreatingSystem/hugeCube}
 	\caption{System built from $15\times15\times15$ unit cells of b-cristobalite.}
@@ -884,7 +962,7 @@ The $15\times15\times15$ system is sufficient for this test. The procedure is ra
 	\item compute the msd for $N$ time steps
 	\item increase the temperature by a given step size
 \end{itemize}
-\lstinputlisting[caption={Main blalbabla.}, label={lst:msd}, firstline=14, lastline=40]{../SiO2/msd/continue.in}
+\lstinputlisting[caption={Section of LAMMPS script illustration how to stepwise increase temperature and compute the mean square displacement of atoms.}, label={lst:msd}, firstline=14, lastline=40]{../SiO2/msd/continue.in}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msd}

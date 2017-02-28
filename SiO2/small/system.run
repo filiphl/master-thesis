@@ -1,12 +1,16 @@
-include "system.in"
-velocity	all create 1 277387 mom yes
+#include "system.in"
+#velocity	all create 1 277387 mom yes
 
 
-include "system.prepare"
+#include "system.prepare"
+
+include "system.in.init"
+read_restart restartFiles/SiO2_initial10000.restart
+include "system.in.settings"
 
 variable N equal 5000
 variable T equal 293
-variable compressionLength equal 40
+variable Fz equal 0.0
 
 
 neighbor	0.3 bin
@@ -15,24 +19,16 @@ neigh_modify	delay 10
 thermo		100
 timestep	0.002
 
-fix nvt all nvt temp ${T} ${T} 1.0
-restart ${N} restartFiles/squeeze*.restart
+fix nvtID initialFreezeG nvt temp ${T} ${T} 1.0
 
-#dump myDump all atom 500 dumpFiles/SiO2_*.dump
+restart ${N} restartFiles/SiO2_initial*.restart
+dump myDump all atom 200 dumpFiles/SiO2_initial*.dump
 
+balance 1.1 shift xyz 50 1.0
 
-region thirdRegion block 0.0 INF 0.0 INF 32.6 35.6
+#run ${N}
 
-group dynamicGroupID dynamic slabUpperGroup thirdRegion every 500
-dump myDump2 dynamicGroupID atom 500 dumpFiles/dynamic*.dump
-run ${N}
-unfix upperFreezeID
-unfix shellFreezeID
-run ${N}
+unfix nvtID
+fix nvtID excludeBT nvt temp ${T} ${T} 1.0
 
-fix deform all deform 1 z delta 0 -${compressionLength} remap x
-run ${N}
-
-unfix deform
-fix deform all deform 1 z delta 0 ${compressionLength} remap x
 run ${N}

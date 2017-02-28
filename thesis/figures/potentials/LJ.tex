@@ -1,0 +1,18 @@
+% arara: pdflatex
+\documentclass{standalone}
+\usepackage{pgfplots}
+\usepackage{tikz}
+% set the arrows as stealth fighters
+\tikzset{>=stealth}
+\begin{document}
+	\begin{tikzpicture}
+	\begin{axis}[
+	xmin=0,xmax=3.2,
+	ymin=-1,ymax=1.2,
+	axis lines=center,
+	axis line style=->]
+	\addplot[-] expression[domain=0.95:3, samples=100]{4*((1/x)^12 - (1/x)^6)};
+	\draw (1.1224, -0.5) node[anchor=east] {hei};
+	\end{axis}
+	\end{tikzpicture}
+\end{document}
