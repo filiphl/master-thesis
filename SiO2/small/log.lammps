@@ -38,13 +38,10 @@ timestep	0.002
 
 
 restart 2000 restartFiles/SiO2_shear_Fx01N15000_*.restart
-dump myDump sphereG atom 500 dumpFiles/SiO2_shear_sphere_Fx01N15000*.dump
-dump myDump2 all atom 500 dumpFiles/SiO2_shear_all_Fx01N15000*.dump
+#dump myDump sphereG atom 500 dumpFiles/SiO2_shear_sphere_Fx01N15000*.dump
+dump myDump2 all atom 100 dumpFiles/SiO2_shear_all*.dump
 
-fix nvtID excludeB nvt temp ${T} ${T} 1.0
-fix nvtID excludeB nvt temp 293 ${T} 1.0
-fix nvtID excludeB nvt temp 293 293 1.0
-Resetting global state of Fix nvtID Style nvt from restart file info
+
 
 region slab block INF INF INF INF 3.0 25.0
 group sphereIndentTmp region slab
@@ -59,7 +56,17 @@ compute comTop    sphereUpperG  com      #Center of mass
 compute comSphere sphereIndentG com
 compute tempID    excludeBT     temp     #Temperature
 
-thermo_style custom step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1]
+
+
+fix addforce sphereUpperG addforce 0 0 v_Fz
+fix pullID sphereUpperG smd cvel 10.0 0.001 tether 100 NULL NULL 0.0
+
+
+fix nvtID excludeB nvt temp ${T} ${T} 1.0
+fix nvtID excludeB nvt temp 293 ${T} 1.0
+fix nvtID excludeB nvt temp 293 293 1.0
+Resetting global state of Fix nvtID Style nvt from restart file info
+thermo_style custom step c_comSphere[1] f_pullID[1] f_pullID[6]
 balance 1.1 shift xyz 50 1.0
 WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
 Neighbor list info ...
@@ -69,1011 +76,207 @@ Neighbor list info ...
   master list distance cutoff = 5.8
   ghost atom cutoff = 5.8
   binsize = 2.9 -> bins = 25 25 25
-  rebalancing time: 0.012757 seconds
+  rebalancing time: 0.008684 seconds
   iteration count = 77
   initial/final max load/proc = 2451 1614
   initial/final imbalance factor = 1.53008 1.00757
   x cuts: 0 0.5 1
   y cuts: 0 0.499695 1
   z cuts: 0 0.251495 1
-
-variable currentFx equal ${Fx}
-variable currentFx equal 0
-label pushLoop
-variable i loop 10
-    print ${i}
-    print 1
-1
-    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((1-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((1-1)*1000)-30000)*0.0000005
-    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
-    run 1000
+run ${N}
+run 15000
 WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.94885 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   30000    293.50031        -0.01    41.774128            0    36.434901 
-   30100    289.66818        -0.01    41.801462        5e-05    36.502239 
-   30200    290.14957        -0.01     41.82293       0.0001    36.515425 
-   30300    289.41053        -0.01    41.842985      0.00015    36.511779 
-   30400    291.45338        -0.01    41.869147       0.0002    36.452908 
-   30500    285.94659        -0.01    41.904244      0.00025    36.336297 
-   30600    288.67241        -0.01    41.935897       0.0003    36.404394 
-   30700    287.50283        -0.01    41.957271      0.00035    36.433247 
-   30800    291.14937        -0.01    41.983485       0.0004    36.417574 
-   30900    292.06331        -0.01    42.007621      0.00045    36.444028 
-   31000    290.53089        -0.01    42.021132       0.0005    36.419037 
-Loop time of 15.8061 on 8 procs for 1000 steps with 12815 atoms
+Memory usage per processor = 8.92313 Mbytes
+Step c_comSphere[1] f_pullID[1] f_pullID[6] 
+   30000    36.434901 2.8421709e-13    84.559095 
+   30100    36.502265  0.039999413    84.576121 
+   30200    36.515262   0.12593225    84.593342 
+   30300    36.511643   0.17864277    84.607246 
+   30400    36.451644   0.22649282    84.623858 
+   30500    36.333409    0.2123188    84.640251 
+   30600    36.398952   0.36016254    84.667116 
+   30700    36.423388   0.56997527    84.693618 
+   30800    36.402037    0.9308676    84.734099 
+   30900    36.422939     1.195898    84.766269 
+   31000    36.389762    1.2629921    84.777901 
+   31100    36.432049    1.2828603    84.779588 
+   31200    36.402225    1.2997452    84.773072 
+   31300    36.371822    1.2332765    84.759637 
+   31400    36.368664    1.1175106    84.738822 
+   31500    36.372542   0.97421941    84.715341 
+   31600    36.432186   0.75003098     84.68342 
+   31700    36.382635   0.73003624    84.668125 
+   31800    36.405141   0.60177598    84.644825 
+   31900    36.445938   0.45742527     84.61835 
+   32000    36.449651   0.26912725    84.584466 
+   32100    36.445862  0.099145772     84.55453 
+   32200    36.479548  0.089580057    84.543311 
+   32300    36.481153   0.10819439    84.533764 
+   32400     36.47971  0.094644667    84.528369 
+   32500    36.479946   0.23910324    84.543056 
+   32600    36.427057   0.37738671    84.560565 
+   32700    36.390015   0.49831865    84.578856 
+   32800    36.375918   0.67640239    84.604145 
+   32900    36.452294   0.89106418     84.63025 
+   33000    36.383059    1.0815742    84.658277 
+   33100    36.411211    1.0509711    84.674687 
+   33200    36.412649    1.0030241    84.695359 
+   33300    36.375929   0.94671238    84.707757 
+   33400     36.33718    0.9114994    84.719445 
+   33500    36.397102   0.81087627    84.728556 
+   33600     36.42553   0.65040199    84.734929 
+   33700    36.393468   0.48618812    84.734983 
+   33800     36.42897   0.30990444    84.723989 
+   33900    36.419894   0.23939327    84.717973 
+   34000    36.440437   0.05747029    84.702352 
+   34100    36.429803  -0.18991898     84.67519 
+   34200    36.492303   -0.3368714    84.649976 
+   34300    36.420469   -0.3047135    84.642144 
+   34400     36.44913  -0.26484264    84.629608 
+   34500    36.463205  -0.21391326    84.613961 
+   34600    36.429488 -0.099236688    84.605355 
+   34700    36.454352   0.15040494    84.604085 
+   34800    36.425964   0.43732172    84.609215 
+   34900    36.402417   0.64504797    84.610792 
+   35000    36.393617   0.85989146    84.618447 
+   35100    36.397595    1.1379237    84.632591 
+   35200    36.359729    1.3971564    84.651088 
+   35300    36.348777    1.5273178    84.657209 
+   35400    36.341187    1.5823752    84.668971 
+   35500    36.314254    1.6326493    84.684842 
+   35600    36.326389    1.6166862     84.69129 
+   35700    36.382236    1.5723806    84.698644 
+   35800    36.402886    1.4491728    84.699105 
+   35900    36.412318     1.233883    84.695076 
+   36000    36.412227   0.89183841    84.685108 
+   36100    36.388604   0.52447664     84.67566 
+   36200    36.366861   0.35018825     84.67721 
+   36300    36.440104   0.22141188    84.678805 
+   36400    36.456105 -0.035779807    84.664154 
+   36500    36.421069  -0.18123815    84.661152 
+   36600    36.446912  -0.32210285    84.654914 
+   36700    36.434664  -0.37719221    84.649422 
+   36800    36.491961  -0.34325692    84.652184 
+   36900    36.467485   -0.1853023     84.66288 
+   37000      36.4478   0.05021568    84.678514 
+   37100    36.403416   0.25914782    84.685536 
+   37200    36.428263   0.41411946    84.689396 
+   37300    36.395485   0.71168111    84.702215 
+   37400    36.344083   0.94420809    84.708393 
+   37500    36.337814    1.2040033    84.712465 
+   37600     36.35648    1.4289708    84.715589 
+   37700    36.362974    1.6421433    84.722659 
+   37800    36.369348    1.7543957    84.726681 
+   37900    36.363471    1.7652811    84.723111 
+   38000    36.372246    1.7207894    84.714336 
+   38100    36.363262    1.5128798    84.693158 
+   38200    36.382642    1.3057348    84.674762 
+   38300    36.366762    1.1103373    84.657822 
+   38400    36.394274   0.91125989    84.648385 
+   38500    36.416191   0.60665153    84.633356 
+   38600     36.45052   0.34780882    84.621475 
+   38700    36.445328   0.15041148    84.613196 
+   38800    36.474202  0.042658187    84.614404 
+   38900    36.458045 -0.050467596    84.624195 
+   39000    36.406052  -0.12335516    84.628559 
+   39100    36.418829  -0.19484145    84.631406 
+   39200    36.442109 -0.036573783    84.645147 
+   39300     36.40645   0.20999498    84.667552 
+   39400    36.442653   0.40873213     84.68921 
+   39500    36.436777   0.53801238    84.703934 
+   39600    36.397273   0.82541328    84.731989 
+   39700    36.416793     1.043107    84.742692 
+   39800    36.374834    1.2223945    84.746665 
+   39900    36.363194    1.4115342    84.754186 
+   40000    36.363527    1.4613279    84.747478 
+   40100    36.389188    1.4733013    84.737813 
+   40200    36.381552    1.4864164    84.732086 
+   40300    36.365573     1.386959    84.714019 
+   40400     36.35184     1.196036    84.685189 
+   40500    36.376875   0.95049113    84.656739 
+   40600    36.378881   0.76783567    84.633263 
+   40700      36.4342    0.6214331    84.615352 
+   40800    36.447055   0.46373843    84.599813 
+   40900    36.450298   0.26840803    84.586761 
+   41000    36.472772    0.1266625    84.579327 
+   41100    36.444482  0.057072634    84.577081 
+   41200    36.419022 -0.082683049    84.570994 
+   41300    36.421987 -0.083856504    84.577276 
+   41400    36.452307 -0.018828235    84.593823 
+   41500    36.443741   0.23198425     84.62585 
+   41600     36.44442   0.46314673    84.655806 
+   41700    36.413745   0.63984233    84.683145 
+   41800    36.388832    0.7682658     84.70788 
+   41900    36.402744   0.99108859     84.73332 
+   42000    36.386975    1.2141065    84.750602 
+   42100    36.387735    1.3170914    84.760822 
+   42200    36.311922    1.2977264    84.763484 
+   42300    36.305577       1.2136     84.75662 
+   42400    36.346912    1.2908214    84.764609 
+   42500    36.393008    1.3623643    84.764127 
+   42600     36.42827    1.2904062    84.745235 
+   42700    36.424522    1.1007767    84.720601 
+   42800    36.424873   0.77582437    84.681794 
+   42900    36.410627   0.46202162    84.644692 
+   43000    36.383818   0.20445992    84.613046 
+   43100    36.447921  0.035896275     84.58915 
+   43200    36.451159  0.011201494    84.581685 
+   43300    36.475893 -0.062514034    84.561953 
+   43400    36.468261  -0.16253572    84.543102 
+   43500    36.436755  -0.10620728    84.552086 
+   43600    36.419365  0.018021882     84.56578 
+   43700    36.462876   0.16431508    84.574043 
+   43800    36.421947   0.33056184    84.590159 
+   43900    36.432305   0.56782331     84.61528 
+   44000    36.389899   0.81465924    84.643934 
+   44100    36.333846    1.0443407    84.674711 
+   44200    36.389809     1.172765    84.697024 
+   44300    36.395858    1.3215932    84.720598 
+   44400    36.354882      1.39312    84.738982 
+   44500    36.339816    1.4478265    84.751182 
+   44600    36.370498    1.4325042    84.758312 
+   44700    36.362917    1.3045892    84.756144 
+   44800    36.363142    1.0723716     84.73939 
+   44900     36.35044   0.87982169    84.728362 
+   45000    36.375216   0.60059466    84.706908 
+Loop time of 191.308 on 8 procs for 15000 steps with 12815 atoms
 
-Performance: 10.932 ns/day, 2.195 hours/ns, 63.267 timesteps/s
-42.8% CPU use with 8 MPI tasks x no OpenMP threads
+Performance: 13.549 ns/day, 1.771 hours/ns, 78.407 timesteps/s
+51.5% CPU use with 8 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 4.8043     | 5.8066     | 6.7476     |  36.0 | 36.74
-Neigh   | 0.57553    | 0.69588    | 0.82616    |  12.1 |  4.40
-Comm    | 7.84       | 8.8175     | 9.9186     |  31.9 | 55.79
-Output  | 0.025219   | 0.025755   | 0.026545   |   0.3 |  0.16
-Modify  | 0.39429    | 0.42504    | 0.44936    |   3.2 |  2.69
-Other   |            | 0.03529    |            |       |  0.22
+Pair    | 71.626     | 78.685     | 86.065     |  74.6 | 41.13
+Neigh   | 8.5766     | 9.4391     | 10.302     |  23.4 |  4.93
+Comm    | 86.372     | 94.238     | 101.93     |  73.2 | 49.26
+Output  | 2.0912     | 2.0945     | 2.0985     |   0.2 |  1.09
+Modify  | 6.014      | 6.4677     | 6.7734     |  10.0 |  3.38
+Other   |            | 0.3839     |            |       |  0.20
 
-Nlocal:    1601.88 ave 1616 max 1592 min
-Histogram: 1 1 2 0 1 1 1 0 0 1
-Nghost:    2618.62 ave 3084 max 2145 min
+Nlocal:    1601.88 ave 1623 max 1585 min
+Histogram: 1 0 2 2 0 0 1 1 0 1
+Nghost:    2597.38 ave 3073 max 2112 min
 Histogram: 4 0 0 0 0 0 0 0 0 4
 Neighs:    0 ave 0 max 0 min
 Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  84033.5 ave 88948 max 78754 min
+FullNghs:  83910.5 ave 88499 max 79115 min
 Histogram: 3 1 0 0 0 0 0 0 0 4
 
-Total # of neighbors = 672268
-Ave neighs/atom = 52.4595
-Neighbor list builds = 100
-Dangerous builds = 100
-    variable Fx equal ${Fx}
-    variable Fx equal 0.0005
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.94924 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   31000    290.53089        -0.01    42.021132       0.0005    36.419037 
-   31100    292.84789        -0.01    42.023937       0.0005    36.469624 
-   31200    291.42618        -0.01    42.011074       0.0005    36.440439 
-   31300    292.32302        -0.01    41.997876       0.0005    36.420893 
-   31400    290.64154        -0.01     41.97911       0.0005    36.414399 
-   31500      292.774        -0.01    41.960898       0.0005    36.424848 
-   31600     296.1161        -0.01    41.938112       0.0005    36.452121 
-   31700    296.58001        -0.01    41.918307       0.0005    36.464663 
-   31800    294.85899        -0.01    41.900685       0.0005     36.47505 
-   31900    296.39843        -0.01    41.874856       0.0005    36.514723 
-   32000    294.67018        -0.01    41.843416       0.0005    36.534467 
-Loop time of 15.962 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 10.826 ns/day, 2.217 hours/ns, 62.649 timesteps/s
-42.3% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7745     | 5.7352     | 6.8102     |  34.5 | 35.93
-Neigh   | 0.56086    | 0.68978    | 0.81048    |  13.5 |  4.32
-Comm    | 7.8587     | 9.0274     | 10.1       |  30.7 | 56.56
-Output  | 0.053088   | 0.053229   | 0.053414   |   0.0 |  0.33
-Modify  | 0.39382    | 0.42057    | 0.44275    |   2.7 |  2.63
-Other   |            | 0.03578    |            |       |  0.22
-
-Nlocal:    1601.88 ave 1619 max 1587 min
-Histogram: 1 0 1 2 0 2 1 0 0 1
-Nghost:    2613.25 ave 3088 max 2136 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  84121.8 ave 88924 max 78394 min
-Histogram: 2 2 0 0 0 0 0 0 0 4
-
-Total # of neighbors = 672974
-Ave neighs/atom = 52.5146
-Neighbor list builds = 100
-Dangerous builds = 99
-next i
-jump SELF pushLoop
-variable i loop 10
-    print ${i}
-    print 2
-2
-    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-(next i
-jump SELF pushLoop
-variable i loop 10
-    print ${i}
-    print 2
-2
-    variable Fx equal ${currentFx}+(${loadStep}-step)*0.0001/1000
-    variable Fx equal -0.004+(${loadStep}-step)*0.0001/1000
-    variable Fx equal -0.004+(54000-step)*0.0001/1000
-    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:274)
-Memory usage per processor = 13.1182 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   56000    291.51552        -0.01    41.680933      -0.0042    34.452695 
-   56100    291.47428        -0.01     41.66348     -0.00421    34.431927 
-   56200    293.91215        -0.01    41.659072     -0.00422    34.394631 
-   56300    292.55444        -0.01    41.657129     -0.00423    34.328086 
-   56400    292.75827        -0.01    41.649666     -0.00424     34.30445 
-Total wall time: 79:53:35
-812214       0.0008     36.49471 
-   32700    294.08207        -0.01    41.831777      0.00085    36.565216 
-   32800    293.35723        -0.01    41.844973       0.0009    36.547264 
-   32900    292.73855        -0.01    41.861308      0.00095     36.61092 
-   33000    291.09416        -0.01    41.885263        0.001    36.626384 
-Loop time of 15.4194 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 11.207 ns/day, 2.142 hours/ns, 64.853 timesteps/s
-44.0% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.865      | 5.8549     | 6.958      |  36.6 | 37.97
-Neigh   | 0.57343    | 0.72847    | 0.9195     |  15.0 |  4.72
-Comm    | 7.1111     | 8.3812     | 9.4986     |  34.3 | 54.36
-Output  | 0.025402   | 0.0257     | 0.026121   |   0.2 |  0.17
-Modify  | 0.36109    | 0.39295    | 0.41761    |   3.5 |  2.55
-Other   |            | 0.03612    |            |       |  0.23
-
-Nlocal:    1601.88 ave 1625 max 1591 min
-Histogram: 4 0 0 1 1 0 1 0 0 1
-Nghost:    2622.88 ave 3111 max 2136 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83994.5 ave 88422 max 78842 min
-Histogram: 2 2 0 0 0 0 0 0 0 4
-
-Total # of neighbors = 671956
-Ave neighs/atom = 52.4351
-Neighbor list builds = 100
-Dangerous builds = 100
-    variable Fx equal ${Fx}
-    variable Fx equal 0.001
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.94988 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   33000    291.09416        -0.01    41.885263        0.001    36.626384 
-   33100    291.81255        -0.01    41.915364        0.001    36.639058 
-   33200    290.45947        -0.01    41.950203        0.001    36.627631 
-   33300    290.94021        -0.01    41.981061        0.001    36.560661 
-   33400    290.73915        -0.01    42.002573        0.001    36.592468 
-   33500    285.72733        -0.01    42.026223        0.001    36.619953 
-   33600    286.86257        -0.01    42.044557        0.001    36.671411 
-   33700      291.094        -0.01    42.057253        0.001    36.662905 
-   33800    289.34424        -0.01     42.05585        0.001    36.664105 
-   33900    290.30846        -0.01    42.046178        0.001     36.66105 
-   34000    291.99071        -0.01     42.03238        0.001    36.720836 
-Loop time of 13.1337 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 13.157 ns/day, 1.824 hours/ns, 76.140 timesteps/s
-50.5% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7783     | 5.363      | 5.9393     |  22.9 | 40.83
-Neigh   | 0.57505    | 0.64649    | 0.72922    |   7.3 |  4.92
-Comm    | 6.1021     | 6.7195     | 7.3483     |  22.0 | 51.16
-Output  | 0.029004   | 0.02939    | 0.029979   |   0.2 |  0.22
-Modify  | 0.31585    | 0.34497    | 0.36976    |   3.3 |  2.63
-Other   |            | 0.03027    |            |       |  0.23
-
-Nlocal:    1601.88 ave 1645 max 1578 min
-Histogram: 2 2 1 0 0 1 1 0 0 1
-Nghost:    2608.12 ave 3096 max 2125 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83816.5 ave 87607 max 78599 min
-Histogram: 1 1 1 1 0 0 0 0 0 4
-
-Total # of neighbors = 670532
-Ave neighs/atom = 52.324
-Neighbor list builds = 100
-Dangerous builds = 99
-next i
-jump SELF pushLoop
-variable i loop 10
-    print ${i}
-    print 3
-3
-    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((3-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((3-1)*1000)-30000)*0.0000005
-    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95066 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   34000    291.99071        -0.01     42.03238        0.001    36.720836 
-   34100    288.38637        -0.01    42.021329      0.00105    36.675324 
-   34200     293.4588        -0.01    42.004566       0.0011    36.675528 
-   34300    292.31413        -0.01     41.97732      0.00115    36.644793 
-   34400    291.12296        -0.01    41.953612       0.0012    36.682654 
-   34500    292.60048        -0.01    41.937712      0.00125    36.710873 
-   34600    290.94756        -0.01    41.917748       0.0013    36.702464 
-   34700    294.91169        -0.01     41.88865      0.00135    36.686948 
-   34800     294.2865        -0.01    41.867074       0.0014    36.728407 
-   34900    297.23191        -0.01    41.852011      0.00145     36.73353 
-   35000    297.41287        -0.01    41.839474       0.0015    36.745724 
-Loop time of 13.6968 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 12.616 ns/day, 1.902 hours/ns, 73.010 timesteps/s
-48.9% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7454     | 5.3657     | 6.0348     |  23.3 | 39.17
-Neigh   | 0.56727    | 0.63828    | 0.71815    |   7.1 |  4.66
-Comm    | 6.5636     | 7.2804     | 7.9427     |  21.2 | 53.15
-Output  | 0.024098   | 0.02439    | 0.024587   |   0.1 |  0.18
-Modify  | 0.32402    | 0.35804    | 0.3829     |   4.0 |  2.61
-Other   |            | 0.03005    |            |       |  0.22
-
-Nlocal:    1601.88 ave 1634 max 1583 min
-Histogram: 2 2 1 0 1 0 0 0 1 1
-Nghost:    2604.88 ave 3091 max 2113 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83840.8 ave 87815 max 78960 min
-Histogram: 2 0 2 0 0 0 0 0 0 4
-
-Total # of neighbors = 670726
-Ave neighs/atom = 52.3391
-Neighbor list builds = 100
-Dangerous builds = 100
-    variable Fx equal ${Fx}
-    variable Fx equal 0.0015
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95073 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   35000    297.41287        -0.01    41.839474       0.0015    36.745724 
-   35100    293.39407        -0.01    41.832121       0.0015    36.716334 
-   35200    296.58953        -0.01    41.831759       0.0015    36.726993 
-   35300       294.16        -0.01    41.853453       0.0015    36.740039 
-   35400    295.10295        -0.01    41.870899       0.0015    36.733905 
-   35500    291.90834        -0.01    41.878434       0.0015    36.755623 
-   35600    295.72114        -0.01    41.895503       0.0015     36.74902 
-   35700     293.0443        -0.01     41.91829       0.0015    36.720817 
-   35800    294.12234        -0.01    41.941739       0.0015    36.784125 
-   35900    292.08898        -0.01    41.968732       0.0015    36.884783 
-   36000    293.15277        -0.01    41.993174       0.0015     36.83299 
-Loop time of 13.5393 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 12.763 ns/day, 1.880 hours/ns, 73.859 timesteps/s
-49.4% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7533     | 5.3641     | 6.0016     |  24.4 | 39.62
-Neigh   | 0.57068    | 0.64181    | 0.73494    |   8.3 |  4.74
-Comm    | 6.4133     | 7.1192     | 7.7806     |  23.0 | 52.58
-Output  | 0.028428   | 0.028838   | 0.029558   |   0.2 |  0.21
-Modify  | 0.32614    | 0.35455    | 0.37318    |   3.2 |  2.62
-Other   |            | 0.03084    |            |       |  0.23
-
-Nlocal:    1601.88 ave 1633 max 1585 min
-Histogram: 2 3 0 0 1 0 0 0 1 1
-Nghost:    2615 ave 3123 max 2127 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83825.5 ave 88195 max 78480 min
-Histogram: 1 1 2 0 0 0 0 0 1 3
-
-Total # of neighbors = 670604
-Ave neighs/atom = 52.3296
-Neighbor list builds = 100
-Dangerous builds = 99
-next i
-jump SELF pushLoop
-variable i loop 10
-    print ${i}
-    print 4
-4
-    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((4-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((4-1)*1000)-30000)*0.0000005
-    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.9508 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   36000    293.15277        -0.01    41.993174       0.0015     36.83299 
-   36100    292.95092        -0.01    42.013486      0.00155    36.832019 
-   36200    291.17481        -0.01    42.037582       0.0016    36.835918 
-   36300    292.18202        -0.01    42.058949      0.00165    36.801583 
-   36400    288.51265        -0.01    42.067464       0.0017    36.797329 
-   36500    291.96975        -0.01    42.060651      0.00175    36.779336 
-   36600    287.15214        -0.01    42.056405       0.0018    36.807017 
-   36700    287.76289        -0.01    42.047305      0.00185    36.870764 
-   36800    291.78263        -0.01    42.031351       0.0019    36.969039 
-   36900    286.80387        -0.01    42.019591      0.00195    36.900053 
-   37000    290.97415        -0.01    42.006912        0.002    36.834004 
-Loop time of 13.1015 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 13.189 ns/day, 1.820 hours/ns, 76.327 timesteps/s
-50.7% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7672     | 5.3604     | 6.1225     |  23.5 | 40.91
-Neigh   | 0.57298    | 0.64343    | 0.73694    |   7.5 |  4.91
-Comm    | 5.8732     | 6.6913     | 7.3124     |  22.5 | 51.07
-Output  | 0.023004   | 0.023432   | 0.023849   |   0.2 |  0.18
-Modify  | 0.31485    | 0.35373    | 0.38343    |   4.2 |  2.70
-Other   |            | 0.02922    |            |       |  0.22
-
-Nlocal:    1601.88 ave 1635 max 1578 min
-Histogram: 1 0 3 1 1 0 1 0 0 1
-Nghost:    2617.62 ave 3109 max 2139 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83915 ave 88614 max 77635 min
-Histogram: 1 1 1 1 0 0 0 0 1 3
-
-Total # of neighbors = 671320
-Ave neighs/atom = 52.3855
-Neighbor list builds = 100
-Dangerous builds = 100
-    variable Fx equal ${Fx}
-    variable Fx equal 0.002
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95101 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   37000    290.97415        -0.01    42.006912        0.002    36.834004 
-   37100    289.42352        -0.01    41.979884        0.002    36.898556 
-   37200    291.59896        -0.01    41.957536        0.002    36.896025 
-   37300    293.23047        -0.01    41.929818        0.002    36.883202 
-   37400    293.42287        -0.01     41.90146        0.002    36.879118 
-   37500    293.66704        -0.01    41.875952        0.002    36.929209 
-   37600    292.72315        -0.01    41.850018        0.002    36.985042 
-   37700    292.03138        -0.01    41.843283        0.002     36.99163 
-   37800    293.68752        -0.01    41.844275        0.002     37.02275 
-   37900    295.96733        -0.01    41.836694        0.002    37.000216 
-   38000    296.76596        -0.01    41.839597        0.002    37.056489 
-Loop time of 13.2902 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 13.002 ns/day, 1.846 hours/ns, 75.243 timesteps/s
-50.0% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7315     | 5.346      | 5.9141     |  23.1 | 40.22
-Neigh   | 0.57073    | 0.64424    | 0.72394    |   7.6 |  4.85
-Comm    | 6.2746     | 6.8948     | 7.5669     |  21.9 | 51.88
-Output  | 0.029489   | 0.029831   | 0.03014    |   0.1 |  0.22
-Modify  | 0.31698    | 0.34646    | 0.37014    |   3.6 |  2.61
-Other   |            | 0.02896    |            |       |  0.22
-
-Nlocal:    1601.88 ave 1629 max 1575 min
-Histogram: 1 0 1 1 2 0 1 0 1 1
-Nghost:    2621.25 ave 3109 max 2142 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  84135.8 ave 89000 max 77698 min
-Histogram: 2 0 1 1 0 0 0 0 0 4
-
-Total # of neighbors = 673086
-Ave neighs/atom = 52.5233
-Neighbor list builds = 100
-Dangerous builds = 99
-next i
-jump SELF pushLoop
-variable i loop 10
-    print ${i}
-    print 5
-5
-    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((5-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((5-1)*1000)-30000)*0.0000005
-    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.9511 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   38000    296.76596        -0.01    41.839597        0.002    37.056489 
-   38100    295.85856        -0.01    41.842728      0.00205    37.013347 
-   38200    290.34505        -0.01    41.855191       0.0021    36.994649 
-   38300    295.69054        -0.01    41.863507      0.00215    36.989195 
-   38400     290.7789        -0.01    41.884193       0.0022    37.002082 
-   38500    296.33908        -0.01    41.924558      0.00225    37.000587 
-   38600    293.21964        -0.01     41.94683       0.0023    37.049796 
-   38700    293.78889        -0.01    41.968343      0.00235     37.10154 
-   38800    291.13015        -0.01    41.993866       0.0024    37.140961 
-   38900    294.19219        -0.01    42.019337      0.00245    37.067626 
-   39000    290.32003        -0.01    42.039918       0.0025    37.008862 
-Loop time of 15.1963 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 11.371 ns/day, 2.111 hours/ns, 65.805 timesteps/s
-44.3% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.8325     | 5.8129     | 6.7221     |  35.0 | 38.25
-Neigh   | 0.57868    | 0.73261    | 0.96199    |  16.0 |  4.82
-Comm    | 7.0958     | 8.1954     | 9.312      |  33.4 | 53.93
-Output  | 0.02492    | 0.02519    | 0.025736   |   0.2 |  0.17
-Modify  | 0.36425    | 0.39686    | 0.41959    |   3.5 |  2.61
-Other   |            | 0.03338    |            |       |  0.22
-
-Nlocal:    1601.88 ave 1636 max 1574 min
-Histogram: 1 0 0 4 1 0 0 0 1 1
-Nghost:    2616.25 ave 3103 max 2147 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83981.8 ave 89139 max 77549 min
-Histogram: 1 1 1 1 0 0 0 0 2 2
-
-Total # of neighbors = 671854
-Ave neighs/atom = 52.4272
-Neighbor list builds = 100
-Dangerous builds = 100
-    variable Fx equal ${Fx}
-    variable Fx equal 0.0025
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95151 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   39000    290.32003        -0.01    42.039918       0.0025    37.008862 
-   39100    290.17926        -0.01       42.064       0.0025    37.002039 
-   39200    290.88822        -0.01    42.076647       0.0025    37.046164 
-   39300    290.92995        -0.01    42.080102       0.0025    37.108251 
-   39400    289.18377        -0.01    42.070627       0.0025     37.10541 
-   39500    288.25758        -0.01    42.057763       0.0025    37.049185 
-   39600    292.15256        -0.01    42.054416       0.0025    37.068808 
-   39700    291.65257        -0.01    42.033129       0.0025     37.09908 
-   39800     287.7167        -0.01    42.004446       0.0025    37.094375 
-   39900    289.93818        -0.01    41.973683       0.0025    37.123834 
-   40000    289.45524        -0.01     41.95346       0.0025    37.095501 
-Loop time of 14.9901 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 11.528 ns/day, 2.082 hours/ns, 66.711 timesteps/s
-44.6% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7648     | 5.8065     | 6.8079     |  33.8 | 38.74
-Neigh   | 0.56376    | 0.71424    | 0.85303    |  12.2 |  4.76
-Comm    | 6.9498     | 8.0327     | 9.2065     |  31.6 | 53.59
-Output  | 0.032264   | 0.032618   | 0.033062   |   0.1 |  0.22
-Modify  | 0.34071    | 0.37252    | 0.39945    |   3.8 |  2.49
-Other   |            | 0.03146    |            |       |  0.21
-
-Nlocal:    1601.88 ave 1640 max 1569 min
-Histogram: 1 0 0 4 1 0 0 1 0 1
-Nghost:    2608.62 ave 3084 max 2125 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  84036.5 ave 88856 max 77276 min
-Histogram: 1 1 0 2 0 0 0 0 0 4
-
-Total # of neighbors = 672292
-Ave neighs/atom = 52.4613
-Neighbor list builds = 100
-Dangerous builds = 99
-next i
-jump SELF pushLoop
-variable i loop 10
-    print ${i}
-    print 6
-6
-    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((6-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((6-1)*1000)-30000)*0.0000005
-    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95193 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   40000    289.45524        -0.01     41.95346       0.0025    37.095501 
-   40100    289.32535        -0.01    41.932516      0.00255    37.098974 
-   40200    292.17194        -0.01    41.898844       0.0026    37.068143 
-   40300    290.35647        -0.01    41.866872      0.00265    37.044961 
-   40400    293.87513        -0.01    41.851504       0.0027    37.077895 
-   40500    291.47306        -0.01      41.8321      0.00275     37.13639 
-   40600     294.7833        -0.01    41.821439       0.0028    37.144021 
-   40700    291.35229        -0.01    41.831996      0.00285    37.158664 
-   40800    292.99885        -0.01     41.83244       0.0029    37.118715 
-   40900    294.34026        -0.01    41.839942      0.00295    37.103876 
-   41000    291.72331        -0.01     41.85008        0.003    37.089176 
-Loop time of 14.8891 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 11.606 ns/day, 2.068 hours/ns, 67.163 timesteps/s
-44.9% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7325     | 5.6983     | 6.6265     |  33.1 | 38.27
-Neigh   | 0.57997    | 0.71607    | 0.88043    |  13.4 |  4.81
-Comm    | 6.9866     | 8.0475     | 9.1296     |  31.0 | 54.05
-Output  | 0.02327    | 0.023733   | 0.024148   |   0.2 |  0.16
-Modify  | 0.3406     | 0.37292    | 0.3971     |   3.8 |  2.50
-Other   |            | 0.03054    |            |       |  0.21
-
-Nlocal:    1601.88 ave 1636 max 1579 min
-Histogram: 1 2 0 3 0 0 0 0 1 1
-Nghost:    2605.88 ave 3097 max 2124 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83977.2 ave 89092 max 77834 min
-Histogram: 1 1 1 1 0 0 0 0 2 2
-
-Total # of neighbors = 671818
-Ave neighs/atom = 52.4243
-Neighbor list builds = 100
-Dangerous builds = 100
-    variable Fx equal ${Fx}
-    variable Fx equal 0.003
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95193 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   41000    291.72331        -0.01     41.85008        0.003    37.089176 
-   41100    294.70895        -0.01    41.859181        0.003    37.150736 
-   41200    294.69293        -0.01    41.872009        0.003    37.147971 
-   41300    295.70728        -0.01    41.906114        0.003     37.17813 
-   41400    292.33757        -0.01    41.935372        0.003    37.156475 
-   41500     294.3762        -0.01    41.964433        0.003    37.127872 
-   41600     293.2911        -0.01    41.994421        0.003    37.181027 
-   41700    292.81634        -0.01    42.017615        0.003    37.235836 
-   41800    288.19873        -0.01    42.035897        0.003    37.280304 
-   41900    290.73521        -0.01    42.055536        0.003    37.223721 
-   42000    292.29147        -0.01     42.06132        0.003     37.19722 
-Loop time of 13.9126 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 12.420 ns/day, 1.932 hours/ns, 71.877 timesteps/s
-47.6% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7166     | 5.5895     | 6.3539     |  27.6 | 40.18
-Neigh   | 0.55839    | 0.69436    | 0.8077     |  11.2 |  4.99
-Comm    | 6.3497     | 7.212      | 8.1966     |  27.0 | 51.84
-Output  | 0.02859    | 0.028855   | 0.029134   |   0.1 |  0.21
-Modify  | 0.33033    | 0.35941    | 0.38751    |   3.6 |  2.58
-Other   |            | 0.02849    |            |       |  0.20
-
-Nlocal:    1601.88 ave 1656 max 1573 min
-Histogram: 2 1 2 1 0 0 0 1 0 1
-Nghost:    2598.38 ave 3084 max 2117 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83736.2 ave 88353 max 77317 min
-Histogram: 1 1 0 1 1 0 0 1 0 3
-
-Total # of neighbors = 669890
-Ave neighs/atom = 52.2739
-Neighbor list builds = 100
-Dangerous builds = 99
-next i
-jump SELF pushLoop
-variable i loop 10
-    print ${i}
-    print 7
-7
-    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((7-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((7-1)*1000)-30000)*0.0000005
-    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95243 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   42000    292.29147        -0.01     42.06132        0.003     37.19722 
-   42100    287.93547        -0.01    42.060345      0.00305    37.254441 
-   42200    292.14245        -0.01    42.066615       0.0031    37.260907 
-   42300     289.8424        -0.01    42.062588      0.00315    37.282308 
-   42400    293.02481        -0.01    42.043517       0.0032    37.324123 
-   42500    293.69715        -0.01    42.041176      0.00325    37.332543 
-   42600    293.27247        -0.01    42.034754       0.0033    37.330006 
-   42700    287.43339        -0.01    42.006827      0.00335    37.312899 
-   42800    291.48993        -0.01    41.964631       0.0034    37.332786 
-   42900    289.74097        -0.01    41.934598      0.00345    37.331625 
-   43000     289.2948        -0.01    41.916567       0.0035    37.373265 
-Loop time of 12.4985 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 13.826 ns/day, 1.736 hours/ns, 80.009 timesteps/s
-52.1% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7381     | 5.3027     | 5.8703     |  20.2 | 42.43
-Neigh   | 0.58508    | 0.6475     | 0.70063    |   6.4 |  5.18
-Comm    | 5.554      | 6.157      | 6.7683     |  20.0 | 49.26
-Output  | 0.021122   | 0.021338   | 0.021593   |   0.1 |  0.17
-Modify  | 0.31203    | 0.34315    | 0.37078    |   3.7 |  2.75
-Other   |            | 0.02686    |            |       |  0.21
-
-Nlocal:    1601.88 ave 1659 max 1575 min
-Histogram: 3 1 2 0 0 0 0 1 0 1
-Nghost:    2603 ave 3106 max 2109 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83793.5 ave 88687 max 77608 min
-Histogram: 2 0 0 1 1 0 0 1 1 2
-
-Total # of neighbors = 670348
-Ave neighs/atom = 52.3096
-Neighbor list builds = 100
-Dangerous builds = 100
-    variable Fx equal ${Fx}
-    variable Fx equal 0.0035
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95281 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   43000     289.2948        -0.01    41.916567       0.0035    37.373265 
-   43100    291.93024        -0.01    41.900449       0.0035     37.34759 
-   43200    294.77408        -0.01    41.887604       0.0035    37.301446 
-   43300    292.37161        -0.01    41.878193       0.0035    37.329729 
-   43400    292.72385        -0.01    41.872401       0.0035    37.440817 
-   43500    291.98414        -0.01    41.864357       0.0035    37.425611 
-   43600    294.86692        -0.01    41.860338       0.0035     37.44667 
-   43700    293.55489        -0.01    41.864955       0.0035    37.423636 
-   43800     295.9594        -0.01    41.867777       0.0035    37.368009 
-   43900    292.20754        -0.01    41.875199       0.0035    37.347388 
-   44000    296.50931        -0.01    41.901525       0.0035     37.34777 
-Loop time of 12.94 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 13.354 ns/day, 1.797 hours/ns, 77.280 timesteps/s
-51.2% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.8894     | 5.493      | 6.0377     |  21.3 | 42.45
-Neigh   | 0.595      | 0.66605    | 0.74011    |   7.0 |  5.15
-Comm    | 5.7544     | 6.363      | 7.0125     |  21.5 | 49.17
-Output  | 0.029707   | 0.029964   | 0.030355   |   0.1 |  0.23
-Modify  | 0.33447    | 0.35796    | 0.37858    |   2.8 |  2.77
-Other   |            | 0.03004    |            |       |  0.23
-
-Nlocal:    1601.88 ave 1654 max 1573 min
-Histogram: 1 2 2 1 0 0 0 1 0 1
-Nghost:    2598.25 ave 3098 max 2107 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83889 ave 88971 max 77531 min
-Histogram: 2 0 0 1 1 0 0 1 1 2
-
-Total # of neighbors = 671112
-Ave neighs/atom = 52.3693
-Neighbor list builds = 100
-Dangerous builds = 99
-next i
-jump SELF pushLoop
-variable i loop 10
-    print ${i}
-    print 8
-8
-    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((8-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((8-1)*1000)-30000)*0.0000005
-    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95281 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   44000    296.50931        -0.01    41.901525       0.0035     37.34777 
-   44100    293.62616        -0.01    41.926485      0.00355    37.384038 
-   44200    297.82294        -0.01    41.947423       0.0036    37.349354 
-   44300    295.30588        -0.01     41.97293      0.00365    37.356892 
-   44400    295.56072        -0.01    41.997408       0.0037    37.392135 
-   44500    292.90903        -0.01    42.011104      0.00375    37.398773 
-   44600    290.88992        -0.01    42.018434       0.0038    37.340081 
-   44700    293.54504        -0.01       42.032      0.00385    37.385946 
-   44800    295.06032        -0.01    42.050236       0.0039    37.399583 
-   44900    293.59247        -0.01    42.063407      0.00395    37.370476 
-   45000    290.62752        -0.01     42.07218        0.004    37.360262 
-Loop time of 12.7449 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 13.558 ns/day, 1.770 hours/ns, 78.463 timesteps/s
-51.6% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7808     | 5.3613     | 5.8792     |  20.9 | 42.07
-Neigh   | 0.57904    | 0.6574     | 0.70728    |   5.9 |  5.16
-Comm    | 5.7672     | 6.3294     | 6.9697     |  20.4 | 49.66
-Output  | 0.020293   | 0.020712   | 0.021089   |   0.2 |  0.16
-Modify  | 0.32048    | 0.3482     | 0.36904    |   3.2 |  2.73
-Other   |            | 0.02777    |            |       |  0.22
-
-Nlocal:    1601.88 ave 1651 max 1573 min
-Histogram: 1 2 3 0 0 0 0 0 1 1
-Nghost:    2608.75 ave 3094 max 2122 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83859.5 ave 88828 max 77299 min
-Histogram: 2 0 0 1 1 0 0 0 2 2
-
-Total # of neighbors = 670876
-Ave neighs/atom = 52.3508
-Neighbor list builds = 100
-Dangerous builds = 100
-    variable Fx equal ${Fx}
-    variable Fx equal 0.004
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95288 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   45000    290.62752        -0.01     42.07218        0.004    37.360262 
-   45100    290.58433        -0.01    42.062555        0.004     37.41342 
-   45200    291.64946        -0.01    42.044332        0.004    37.422798 
-   45300     291.5653        -0.01    42.031852        0.004    37.437134 
-   45400    291.18702        -0.01    42.008975        0.004    37.420554 
-   45500    292.90195        -0.01    41.991449        0.004    37.500523 
-   45600    291.03484        -0.01    41.969723        0.004    37.527277 
-   45700    289.53873        -0.01    41.946778        0.004    37.499933 
-   45800    292.09867        -0.01    41.927024        0.004    37.482167 
-   45900    293.23835        -0.01    41.906668        0.004    37.504977 
-   46000    295.75465        -0.01    41.892643        0.004    37.516551 
-Loop time of 12.8299 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 13.469 ns/day, 1.782 hours/ns, 77.943 timesteps/s
-51.1% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7476     | 5.3451     | 5.9504     |  21.1 | 41.66
-Neigh   | 0.57999    | 0.6541     | 0.7439     |   7.3 |  5.10
-Comm    | 5.766      | 6.4306     | 7.0898     |  20.8 | 50.12
-Output  | 0.02984    | 0.030173   | 0.030769   |   0.1 |  0.24
-Modify  | 0.31057    | 0.34271    | 0.3697     |   3.7 |  2.67
-Other   |            | 0.0272     |            |       |  0.21
-
-Nlocal:    1601.88 ave 1647 max 1564 min
-Histogram: 1 1 1 0 3 0 0 0 1 1
-Nghost:    2614.88 ave 3111 max 2123 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  84038 ave 89486 max 76917 min
-Histogram: 2 0 0 1 1 0 0 0 2 2
-
-Total # of neighbors = 672304
-Ave neighs/atom = 52.4623
-Neighbor list builds = 100
-Dangerous builds = 99
-next i
-jump SELF pushLoop
-variable i loop 10
-    print ${i}
-    print 9
-9
-    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((9-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((9-1)*1000)-30000)*0.0000005
-    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.9533 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   46000    295.75465        -0.01    41.892643        0.004    37.516551 
-   46100    293.78565        -0.01    41.884969      0.00405    37.552239 
-   46200    291.45768        -0.01    41.875084       0.0041     37.51938 
-   46300    293.35277        -0.01    41.865114      0.00415    37.580984 
-   46400     291.4634        -0.01    41.863433       0.0042    37.619095 
-   46500    292.65752        -0.01    41.861591      0.00425    37.610808 
-   46600    293.49734        -0.01    41.868695       0.0043    37.525819 
-   46700    291.47069        -0.01    41.882038      0.00435    37.509344 
-   46800    294.90417        -0.01    41.896242       0.0044    37.536926 
-   46900    292.81389        -0.01    41.910907      0.00445    37.532265 
-   47000    291.13916        -0.01    41.926343       0.0045    37.605365 
-Loop time of 12.3477 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 13.995 ns/day, 1.715 hours/ns, 80.987 timesteps/s
-52.7% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.798      | 5.3127     | 5.8306     |  19.3 | 43.03
-Neigh   | 0.58872    | 0.65521    | 0.72545    |   6.4 |  5.31
-Comm    | 5.422      | 5.982      | 6.5509     |  19.6 | 48.45
-Output  | 0.023034   | 0.023136   | 0.023282   |   0.1 |  0.19
-Modify  | 0.31878    | 0.34773    | 0.3655     |   2.9 |  2.82
-Other   |            | 0.02693    |            |       |  0.22
-
-Nlocal:    1601.88 ave 1659 max 1557 min
-Histogram: 1 1 1 1 2 0 0 1 0 1
-Nghost:    2619.12 ave 3117 max 2121 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83977.2 ave 89738 max 76424 min
-Histogram: 2 0 0 1 1 0 0 1 1 2
-
-Total # of neighbors = 671818
-Ave neighs/atom = 52.4243
-Neighbor list builds = 100
-Dangerous builds = 100
-    variable Fx equal ${Fx}
-    variable Fx equal 0.0045
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.9535 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   47000    291.13916        -0.01    41.926343       0.0045    37.605365 
-   47100    292.05828        -0.01    41.939525       0.0045    37.613354 
-   47200    293.81908        -0.01    41.943781       0.0045     37.58589 
-   47300    293.33068        -0.01    41.945658       0.0045    37.587297 
-   47400    295.60104        -0.01    41.953021       0.0045    37.648837 
-   47500    294.30167        -0.01    41.966513       0.0045    37.645113 
-   47600    295.70397        -0.01    41.976285       0.0045    37.710457 
-   47700    296.12828        -0.01     41.97837       0.0045    37.678235 
-   47800     296.0886        -0.01    41.974355       0.0045    37.680469 
-   47900    293.77362        -0.01    41.967788       0.0045    37.649907 
-   48000    295.66038        -0.01    41.954959       0.0045    37.674354 
-Loop time of 12.36 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 13.981 ns/day, 1.717 hours/ns, 80.906 timesteps/s
-52.6% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.6054     | 5.2755     | 5.7644     |  20.4 | 42.68
-Neigh   | 0.55569    | 0.63858    | 0.70766    |   6.7 |  5.17
-Comm    | 5.5334     | 6.0536     | 6.7898     |  20.6 | 48.98
-Output  | 0.028591   | 0.028825   | 0.029002   |   0.1 |  0.23
-Modify  | 0.31019    | 0.33685    | 0.35506    |   3.1 |  2.73
-Other   |            | 0.0267     |            |       |  0.22
-
-Nlocal:    1601.88 ave 1665 max 1559 min
-Histogram: 1 1 1 3 0 0 0 0 1 1
-Nghost:    2615.12 ave 3116 max 2126 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83889.2 ave 89236 max 76294 min
-Histogram: 2 0 0 0 1 1 0 1 1 2
-
-Total # of neighbors = 671114
-Ave neighs/atom = 52.3694
-Neighbor list builds = 100
-Dangerous builds = 99
-next i
-jump SELF pushLoop
-variable i loop 10
-    print ${i}
-    print 10
-10
-    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((${i}-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((10-1)*1000)-${loadStep})*0.0000005
-    variable Fx equal 0+(step-((10-1)*1000)-30000)*0.0000005
-    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95403 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   48000    295.66038        -0.01    41.954959       0.0045    37.674354 
-   48100    294.46655        -0.01    41.943569      0.00455     37.68083 
-   48200    291.50809        -0.01     41.94569       0.0046    37.728924 
-   48300    286.27646        -0.01    41.943014      0.00465    37.777338 
-   48400    289.38734        -0.01     41.93283       0.0047     37.80647 
-   48500    292.99452        -0.01    41.924052      0.00475    37.777847 
-   48600    290.44176        -0.01    41.917278       0.0048    37.756245 
-   48700    292.20267        -0.01    41.916052      0.00485    37.777582 
-   48800    292.06294        -0.01    41.918932       0.0049    37.786109 
-   48900    291.54888        -0.01     41.91339      0.00495    37.773344 
-   49000    290.74322        -0.01    41.906969        0.005    37.834107 
-Loop time of 13.9237 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 12.410 ns/day, 1.934 hours/ns, 71.820 timesteps/s
-48.3% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.7012     | 5.5355     | 6.2247     |  27.8 | 39.76
-Neigh   | 0.55914    | 0.65925    | 0.75656    |   9.7 |  4.73
-Comm    | 6.5405     | 7.2983     | 8.2177     |  26.5 | 52.42
-Output  | 0.025028   | 0.025404   | 0.026052   |   0.2 |  0.18
-Modify  | 0.34362    | 0.37343    | 0.39661    |   3.1 |  2.68
-Other   |            | 0.03178    |            |       |  0.23
-
-Nlocal:    1601.88 ave 1662 max 1559 min
-Histogram: 1 1 2 2 0 0 0 0 0 2
-Nghost:    2604.25 ave 3108 max 2108 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83872.2 ave 88701 max 76330 min
-Histogram: 2 0 0 0 0 2 0 0 2 2
-
-Total # of neighbors = 670978
-Ave neighs/atom = 52.3588
-Neighbor list builds = 100
-Dangerous builds = 100
-    variable Fx equal ${Fx}
-    variable Fx equal 0.005
-    run 1000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:271)
-Memory usage per processor = 8.95434 Mbytes
-Step c_tempID v_Fz c_comTop[3] v_Fx c_comSphere[1] 
-   49000    290.74322        -0.01    41.906969        0.005    37.834107 
-   49100    292.84535        -0.01    41.895842        0.005    37.837058 
-   49200    290.69463        -0.01    41.886735        0.005    37.906434 
-   49300    288.51189        -0.01    41.889118        0.005    37.913003 
-   49400    291.86284        -0.01    41.892108        0.005     37.93606 
-   49500    293.36396        -0.01     41.89518        0.005    37.917397 
-   49600    292.48339        -0.01    41.902336        0.005    37.974906 
-   49700    292.22363        -0.01    41.898486        0.005    37.904696 
-   49800    292.69512        -0.01     41.89379        0.005    37.914195 
-   49900    292.62339        -0.01    41.904969        0.005    37.951897 
-   50000    295.13544        -0.01    41.923077        0.005    37.946326 
-Loop time of 15.4181 on 8 procs for 1000 steps with 12815 atoms
-
-Performance: 11.208 ns/day, 2.141 hours/ns, 64.859 timesteps/s
-45.4% CPU use with 8 MPI tasks x no OpenMP threads
-
-MPI task timing breakdown:
-Section |  min time  |  avg time  |  max time  |%varavg| %total
----------------------------------------------------------------
-Pair    | 4.6875     | 5.6364     | 6.4289     |  31.2 | 36.56
-Neigh   | 0.53677    | 0.65063    | 0.75531    |  10.7 |  4.22
-Comm    | 7.8075     | 8.6759     | 9.7153     |  27.2 | 56.27
-Output  | 0.033044   | 0.033392   | 0.033995   |   0.2 |  0.22
-Modify  | 0.34335    | 0.38294    | 0.41161    |   4.4 |  2.48
-Other   |            | 0.03882    |            |       |  0.25
-
-Nlocal:    1601.88 ave 1677 max 1555 min
-Histogram: 2 0 2 2 0 0 0 0 1 1
-Nghost:    2591.62 ave 3085 max 2106 min
-Histogram: 4 0 0 0 0 0 0 0 0 4
-Neighs:    0 ave 0 max 0 min
-Histogram: 8 0 0 0 0 0 0 0 0 0
-FullNghs:  83849.8 ave 88907 max 76129 min
-Histogram: 2 0 0 0 0 1 1 0 2 2
-
-Total # of neighbors = 670798
-Ave neighs/atom = 52.3448
-Neighbor list builds = 100
-Dangerous builds = 99
-next i
-jump SELF pushLoop
-Total wall time: 0:04:38
+Total # of neighbors = 671284
+Ave neighs/atom = 52.3827
+Neighbor list builds = 1500
+Dangerous builds = 1493
+
+#variable currentFx equal ${Fx}
+#label pushLoop
+#variable i loop 10
+#    print ${i}
+#    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000001
+#    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
+#    run 1000
+#    variable Fx equal ${Fx}
+#    run 1000
+#next i
+#jump SELF pushLoop
+Total wall time: 0:03:11
