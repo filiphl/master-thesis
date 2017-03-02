@@ -567,6 +567,26 @@ This is now essentially known as the two first laws of friction. Leonardo also i
 	\item The amount of time that the surfaces remained in contact prior to the applied force.
 	\item Ambient conditions.
 \end{itemize}   
+Among his results he found that the static friction force increased with the time the surfaces were in contact before applying the shear force. Today this relation is known as
+\begin{equation}
+	F_s = A+\ln(t).
+\end{equation}
+Coulomb explained this behavior by regarding the materials, well-worn oak in his case, as fibrous. Basically like a hairbrush, having asperities which get entangled into a mash when in contact. If the materials were in contact over a short period of time, fewer asperities would have gotten into their position in the mesh. When a shear force is applied, the fibers get tilted until they loosen from the mesh, at which point sliding occurs. This impression of the sliding mechanism is quite similar to the one we have now. 
+
+Today we know that most surfaces are rough, at least at a microscopic level, having some degree of asperities. It is usually the asperities that are in contact with the other body. 
+{\huge FIGURE MAYBE? } 
+When there is contact between two surfaces, the asperities are pushed into the other material, and tries to occupy the position with the lowest potential. Typically this is inside an indent of the other material. The asperities may move even though the macroscopic body is still. Thus, more time gives a higher rate of asperities that settle in positions with the lowest potential. When we add a shear force to the body
+
+
+http://lammps.sandia.gov/doc/fix_smd.html
+
+
+
+
+
+
+
+
 %In order to understand the behavior on the macroscopic level, we study the dynamics at a microscopic level as well. 
 %As it turns out, there are several similarities and differences between these length scales.
 
@@ -917,7 +937,8 @@ For a more profound understanding of the structure and syntax of these files, th
 
 
 We use the unit cell as building blocks, placing them concurrently until we have a crystal of the desired size. For example purposes, we generate a large cube of $15\times15\times15$ unit cells. This is done in line 17-21 of listing \ref{lst:cubeSiO2} below.
-\lstinputlisting[caption={Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite, and also specify system configurations (see section \ref{sec:systemConfigurations}). The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
+%\lstinputlisting[caption={Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite, and also specify system configurations (see section \ref{sec:systemConfigurations}). The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
+{\Huge Uncomment the above listing!}
 The \textit{write\_once} sections with "In" as the first word of its argument, creates the files \texttt{system.in.init} and \texttt{system.in.settings}, which contain exactly what is shown in the snippet. 
 They are not necessary, but help making the LAMMPS input script cleaner, since we can \texttt{import} these files instead of having all the configurations in the input script file.
 The last \textit{write\_once} section with "Data" in its argument, incorporates the specified size of the simulation box in the \texttt{system.data} file. 
@@ -928,7 +949,6 @@ The Moltemplate script can be run from the command line as
  moltemplate -atomstyle "atomic" system.lt
  \end{lstlisting}
 Once complete, we can load the configurations and atomic data into our LAMMPS input script simply by including the file \texttt{system.in}.
-
 
 
 
@@ -1022,7 +1042,7 @@ It ensures that we do not loose any atoms that elsewise would be lost when movin
 A side-effect of the remapping is that the atoms in the system will be somewhat compressed in the z-direction. 
 Though, if we do the compression slowly, this will not be of any concern. 
 
-\begin{lstlisting}[caption={LAMMPS commands for hard coding the forces and velocities of atoms within a specific group. Effectively freezing them.}, label={Deform}, language=c++]
+\begin{lstlisting}[caption={LAMMPS commands for hard coding the forces and velocities of atoms within a specific group. Effectively freezing them.}, label={FreezeStuff}, language=c++]
 fix freezeID groupID setforce 0 0 0
 velocity groupID set 0 0 0
 \end{lstlisting}
@@ -1126,7 +1146,7 @@ The figure clearly show that some cells have a larger area within the bin than o
 		\input{figures/tikz/stressTensor/stressTensor.tikz}
 	}
 	\caption{Stress}
-	\label{fig:neighbourcells}
+	\label{fig:stressTensor}
 \end{figure}
 
 
