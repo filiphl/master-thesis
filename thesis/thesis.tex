@@ -528,24 +528,25 @@ In fact this result suggest that using 1 processor is twice as energy efficient 
 
 \chapter{Friction}
 \textit{The force that resists relative motion between two bodies in contact} \cite{frictionDefinition}. 
-Friction is a well known phenomena, though still not fully understood, and its still a field of research. 
-On the macroscopic level, friction has been observed since the dawn of man. 
-Early actions that show awareness of the effects of friction was to chip stone in order to make tools, or rubbing wood in order to create fire. 
-In the tomb of Tehuti-Hetep there was found the painting shown in figure \ref{fig:Colossus}, which show the moving of an Egyptian colossus. 
-The statue is depicted pulled on a sledge, with officers standing on the front end of the sledge poring water on the ground. 
-This is evidence that they perceived the effect of lubrication even then, 1900 B.C..   
-
+Friction is a well known phenomena, though still not fully understood.
+Despite the fact that we learn about friction in introductory courses to physics, it is not at all easy to comprehend. 
+It is very complex and still a field of research.
+In this chapter we will look at fundamental concepts of friction, and distinguish macroscopic behavior from the microscopic.
+ 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.99\linewidth]{figures/friction/Colossus.jpg}
 	\caption{Painting from the tomb of Tehuti-Hetep, showing the transportation of an Egytian colossus.}
 	\label{fig:Colossus}
 \end{figure}
+\section{Historical note}
+On the macroscopic level, friction has been observed since the dawn of man. 
+Early actions that show awareness of the effects of friction was to chip stone in order to make tools, or rubbing wood in order to create fire. 
+In the tomb of Tehuti-Hetep there was found the painting shown in figure \ref{fig:Colossus}, which show the moving of an Egyptian colossus. 
+The statue is depicted pulled on a sledge, with officers standing on the front end of the sledge poring water on the ground. 
+This is evidence that they perceived the effect of lubrication even then, 1900 B.C..   
 
-The first documented studies of friction was carried out during the renaissance by Leonardo da Vinci (1452-1519) \cite{LeonardoDaVinciStudies}.
-Among his experiments he attaching a block of wood to another object with a cord, and placed the block on a smooth surface.
-He was able to adjust the weight of the second object, which he let hang over a fixed cylinder, free to rotate. 
-This experiment was found in his notebooks, and is shown in figure \ref{fig:leonardoDaVinci}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{figures/friction/LeonardoDaVinciBW}
@@ -553,13 +554,22 @@ This experiment was found in his notebooks, and is shown in figure \ref{fig:leon
 	\label{fig:leonardoDaVinci}
 \end{figure}
 \noindent 
-He exprerinmented with tilted planes and placed the block on different sides, changing the apparent area of contact.
+The first documented studies of friction was carried out during the renaissance by Leonardo da Vinci (1452-1519) \cite{LeonardoDaVinciStudies}.
+Among his experiments he attaching a block of wood to another object with a cord, and placed the block on a smooth surface.
+He was able to adjust the weight of the second object, which he let hang over a fixed cylinder, free to rotate. 
+This experiment was found in his notebooks, and is shown in figure \ref{fig:leonardoDaVinci}.
+He experimented with tilted planes and placed the block on different sides, changing the apparent area of contact.
 His results made him deduce the following statements, also found in his notes:
 \begin{itemize}
 	\item[] \textit{Friction produces double the amount of effort if the weight be doubled}. 
 	\item[] \textit{Friction made by the same weight will be of equal resistance at the beginning of the movement though the contact may be of different breadths or lengths}.
 \end{itemize}
-This is now essentially known as the two first laws of friction. Leonardo also introduced the coefficient of friction $\mu$, though the concept of \textit{force} was not introduced until 200 years later. Isaac Newton's publication of \textit{Principia} paved the way for studies of friction, there among the most comprehensive study carried out by Charles Augustin Coulomb (1736-1806). He investigated the influence of several factors on friction, namely \cite{SlidingFriction}:
+This is now essentially known as the two first laws of friction. 
+Leonardo also introduced the coefficient of friction 
+\begin{equation}
+	\mu = \frac{F}{L}, \label{eq:coefficientOfFriction}
+\end{equation}
+though he interpreted $L$ as the weight of the load and $F$ as the weight of the object pulling in a scenario as in figure \ref{fig:leonardoDaVinci}. The concept of \textit{force} was not commonly recognized until 200 years later. Isaac Newton's publication of \textit{Principia} paved the way for studies of friction, there among the most comprehensive study carried out by Charles Augustin Coulomb (1736-1806). He investigated the influence of several factors on friction, namely \cite{SlidingFriction}:
 \begin{itemize}
 	\item The nature of the materials in contact and their surface coatings.
 	\item The extent of the surface area.
@@ -567,19 +577,88 @@ This is now essentially known as the two first laws of friction. Leonardo also i
 	\item The amount of time that the surfaces remained in contact prior to the applied force.
 	\item Ambient conditions.
 \end{itemize}   
-Among his results he found that the static friction force increased with the time the surfaces were in contact before applying the shear force. Today this relation is known as
+Among his results he found that the static friction force increased with the time the surfaces were in contact before applying shear force. 
+Today this relation is known as
 \begin{equation}
-	F_s = A+\ln(t).
+	F_s(t) = A+B\ln(t).
 \end{equation}
-Coulomb explained this behavior by regarding the materials, well-worn oak in his case, as fibrous. Basically like a hairbrush, having asperities which get entangled into a mash when in contact. If the materials were in contact over a short period of time, fewer asperities would have gotten into their position in the mesh. When a shear force is applied, the fibers get tilted until they loosen from the mesh, at which point sliding occurs. This impression of the sliding mechanism is quite similar to the one we have now. 
+Coulomb explained this behavior by regarding the materials as fibrous. 
+Basically like a hairbrush, having fibers which get entangled into a mash when in contact. 
+If the materials were in contact over a short period of time, fewer fibers would have gotten into their position in the mesh. 
+When a shear force is applied, the fibers get tilted until they loosen from the mesh, at which point sliding occurs. 
+This impression of the sliding mechanism is quite similar to the one we have now. 
 
-Today we know that most surfaces are rough, at least at a microscopic level, having some degree of asperities. It is usually the asperities that are in contact with the other body. 
+Today we know that most surfaces are rough, at least at a microscopic level, having some degree of asperities. 
+It is actually the asperities that are in contact with the other body. 
 {\huge FIGURE MAYBE? } 
-When there is contact between two surfaces, the asperities are pushed into the other material, and tries to occupy the position with the lowest potential. Typically this is inside an indent of the other material. The asperities may move even though the macroscopic body is still. Thus, more time gives a higher rate of asperities that settle in positions with the lowest potential. When we add a shear force to the body
+When there is contact between two surfaces, the asperities are pushed into the other material, and tries to occupy the position with the lowest potential.  
+The asperities may move even though the macroscopic body is still. 
+Thus, more time gives a higher rate of asperities that settle in positions with the lowest potential. 
+ 
 
 
-http://lammps.sandia.gov/doc/fix_smd.html
+\section{Macroscopic level}
 
+\subsection{Coefficient of friction}
+The coefficient of friction, $\mu$, is a dimensionless scalar describing the ratio between the force of friction and the normal force, as given in equation \eqref{eq:coefficientOfFriction}.
+The value of $\mu$ is dependent on the material of the objects that are in contact. 
+For most materials this coefficient is higher if the objects are stationary, than if they are moving relative to each other (sliding).
+We may refer to them separately as the coefficient of static friction $\mu_s$, and the coefficient of kinetic friction $\mu_k$.
+Thus, $\mu_s>\mu_ k$ for most materials\footnote{Teflon-on-teflon seems to have the same value for static- and kinetic friction.}.
+If we attach a spring to a block and pull on the spring with a constant velocity, we may get the evolution of friction force as shown in figure \ref{fig:steadyslide}.
+We assume the block to have a constant normal force from the surface it rests upon. 
+The coefficient of static friction is found by using the maximum static friction force, $F_s$, in equation \eqref{eq:coefficientOfFriction}. 
+Similarly the coefficient of sliding friction is found by using the value of the friction force in the sliding domain, $F_k$.
+Keep in mind that the forces we refer to are considered to be working on the center of mass of the block. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/friction/steadySlide}
+	\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a steady sliding motion.}
+	\label{fig:steadyslide}
+\end{figure}
+
+
+\subsection{Stick-slip motion}
+If we pull on a body with a spring with constant and reasonably low velocity, it will be subject to a linearly increasing force (Hooke's law). 
+Because the object does not slide until we reach the maximum static friction, it will remain its position until it does.
+Once the force from the spring overcomes the maximum static friction, the body will begin to slide and the coefficient of friction changes to its kinetic state.
+It will accelerate the most in the beginning, and continue increasing its velocity until it passes an equilibrium position.
+Once it passes the equilibrium position, the friction force will overcome the spring force, and the velocity will decrease. 
+When the velocity is sufficiently low, the object will stop abruptly. 
+As the spring is still being moved, the spring force on the object will rise again, and we have a complete cycle.
+The time evolution of the force applied by the spring will be similar to the sketch shown in figure \ref{fig:stick-slip}.
+If the surface of the block or substrate is non-homogeneous, the stick-slip motion may be more chaotic, than illustrated by the sketch. In fact, it may be difficult to find any periodicity in the motion at all. We are not going to concern our self with chaotic stick-slip motion, since we will have perfectly smooth, dry and pure surfaces when doing molecular dynamics simulation.  
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/friction/stick-slip}
+	\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a stick-slip motion.}
+	\label{fig:stick-slip}
+\end{figure}
+
+Whether the motion is of the steady type or the stick-slip type, is found experimentally to be depending on the velocity and  stiffness of the spring.
+At sufficiently high speeds, we would always get a steady motion. 
+Similarly, with a stiff enough spring we would also get a steady motion. 
+While with a velocity, $v<v_s$, and stiffness $k<k_s$ we would expect a stick-slip motion.
+This can be illustrated by a phase diagram of velocity and spring stiffness $(v,k)$, as in figure \ref{fig:phase-stick-slip}.
+The change in behavior can be observed in our daily lives. 
+The creeking of a door is due to stick-slip motion at the hinges.
+However, if we open the door quickly, the door will not creek.  
+%The sound produced by bowed instruments such as the cello or violin are dependent of the speed at which the bow is drawn across the strings. 
+ 
+  
+
+\begin{figure}[H]
+	\centering{
+		\def\svgwidth{0.5\linewidth}
+		\input{figures/friction/phase.pdf_tex}
+		\caption{Phase diagram of velocity and spring stiffness ($v,k$). 
+			All combinations within the gray area will result in a stick-slip motion. 
+			All outside will result in a steady sliding motion.}
+		\label{fig:phase-stick-slip}
+	}
+\end{figure}
 
 
 
