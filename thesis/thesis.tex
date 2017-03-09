@@ -35,7 +35,7 @@
 	\setlength\unitlength{1cm}
 	\begin{picture}(0,0)
 	\put(0.5,-2){
-		\fbImageB{../SiO2/xOneEighty/pythonScripts/lol/compression}{pdf}{width=2cm}
+		\fbImageB{../SiO2/animation/sliding}{png}{width=2cm}
 	}
 	\end{picture}
 }
@@ -417,6 +417,15 @@ Methods for doing this are called \textit{thermostats}, and are described in sec
 
 
 \subsection{Pressure}
+There are many methods for computing the pressure of the system. 
+Normally for a N-body system of volume $V$ and particle density $\rho=N/V$ it is taken from the virial equation for pressure. 
+\begin{equation}
+	P = \rho k_B T + \frac{1}{dV}\Big< \sum_{i<j} \vec{F}_{ij} \cdot \vec{r}_{ij}\Big> 
+\end{equation}
+where $d$ is the number of dimensions, $\vec{F}_{ij}$ is the force contribution on atom $i$ from atom $j$ positioned at $\vec{r}_{ij}$ relative to atom $i$.
+In this expression for the pressure we assume constant $N$,$V$ and $T$, i.e. the canonical ensemble.
+The equation will not be the same for the micro-canonical ensemble.
+There are methods for converting averages from one ensemble to another \cite{Lebowitz}, but that is outside the scope of this thesis.
 \subsection{Something else?}
 
 \section{Thermostats}\label{sec:thermostats}
