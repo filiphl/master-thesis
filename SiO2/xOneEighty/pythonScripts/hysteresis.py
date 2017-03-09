@@ -2,7 +2,7 @@ from forceDistribution import *
 from os import listdir
 from matplotlib import rc
 import os
-
+import sys
 folderPath = '../forceFiles/m4/'
 
 directory = listdir(folderPath)
@@ -14,7 +14,8 @@ dists = {}
 
 for f in directory:
     t = int(f[6:-4])
-    print t
+    print "\r%d"%t,
+    sys.stdout.flush()
     N = 46
     surfN = 35
     cx=22.5
@@ -26,7 +27,7 @@ for f in directory:
     dists[t]=dist
     #dist.plotDistributions()
     #plt.savefig('timeStep%06d.pdf'%t)
-r = np.linspace(0,16,46)
+r = np.linspace(0,18,46)
 
 
 
@@ -34,7 +35,7 @@ r = np.linspace(0,16,46)
 
 N = 46
 M = 46
-R = 16
+R = 18
 
 FN  = []
 FN2 = []
@@ -59,6 +60,8 @@ lc = ["#5FA38E", "#3F5F7F"]
 
 d = 0
 c = 0
+ymin = 0
+ymax = 0
 for pair in pairs:
     print pair
     if d < 61:
@@ -81,10 +84,11 @@ for pair in pairs:
         ax.plot(radialDist, linewidth=2, label='Time step %d'%pair[i], color=lc[i])
         ax.set_xticks(np.linspace(0,N,9))
         ax.set_xticklabels(['%.0f'%i for i in np.linspace(0,R,9)])
-        plt.ylim([-0.01, 0.035])
-        plt.grid('on')
         plt.hold('on')
 
+
+    plt.grid('on')
+    plt.ylim([-0.005, 0.055])
     plt.legend()
     ax.set_ylabel(r"$eV/\AA$", fontsize=16)
     ax.set_xlabel(r"$r$", fontsize=18)

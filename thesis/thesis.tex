@@ -29,7 +29,20 @@
 \usepackage{xifthen}
 \usepackage{caption}
 
+
+\usepackage{flipbook} %/usr/local/texlive/2016/texmf-dist/tex/latex/flipbook/flipbook.sty
+\rfoot[]{
+	\setlength\unitlength{1cm}
+	\begin{picture}(0,0)
+	\put(0.5,-2){
+		\fbImageB{../SiO2/xOneEighty/pythonScripts/lol/compression}{pdf}{width=2cm}
+	}
+	\end{picture}
+}
 \usepackage{HASstyle}
+
+
+
 
 \setlength{\parskip}{0em}
 % ---------Custom commands-------------
@@ -58,7 +71,6 @@
 	citecolor = p5,
 	citebordercolor= white,
 }
-
 
 
 
@@ -106,7 +118,20 @@ How is the thesis laid out?
 
 \chapter{Molecular dynamics}
 Molecular dynamics is a method that uses Newton’s equations of motion to simulate the movement of interacting atoms. 
-Each atom is treated as a point particle with a mass, and the interaction between them is described by a force field. 
+Each atom is treated as a point particle with mass and charge, and the interaction between them is described by a force field. 
+Thus, the force acting acting on a particle is computed as
+\begin{equation}
+	\vec{F_i} = -\nabla U_i(\vec{r}^N), \label{MDForce}
+\end{equation} 
+where $\vec{r}^N=(\vec{r}_1, \vec{r}_2, \dots, \vec{r}_N)$ is the position of all atoms in the system. 
+Thus, all the detail of the simulation lay in the interaction potential $U$.
+In order to obtain realistic simulations, the potentials often doesn't only consist of a pair-interaction, but many-body interactions as well.
+Also, methods for controlling the thermodynamic properties and boundary conditions pose additional complications.
+Lastly, the computational efficiency aspect of the simulation has to be evaluated. 
+The computation time is predominantly spent in computing the forces. 
+Thus, our methods must be able to ignore negligible parts of the force contributions, but still maintain a satisfactory level of accuracy. 
+
+
 Molecular dynamics aid our understanding of macroscopic phenomena by giving us insight in microscopic effects and behavior. 
 It can be used if an experiment is to difficult, dangerous or expensive to do otherwise, for instance experiments at extreme temperatures or pressure. 
 The areas of application are wide, and it has become a very popular field in material science, biochemistry and biophysics.
@@ -221,7 +246,7 @@ One of the simplest and most known potentials is the Lennard-Jones potential. It
 %F(r) = -\frac{\partial V(r)}{\partial r} = \frac{24\epsilon}{r}\left[2\lr{\frac{\theta}{r}}^{12} - \lr{\frac{\theta}{r}}^{6}\right], \label{eq:Lennard-Jones}
 %\end{equation}
 where the first term represents Pauli repulsion due to overlapping electron orbitals, and the last represents the van der Waal force. 
-The constant $\theta$ express the distance at which the inter-atomic potential is zero, while $\epsilon$ is the depth of the well. 
+The constant $\theta$ express the distance at which the inter-atomic potential is zero, while $\epsilon$ is the depth of the well, also regarded as the strength of the potential.
 $r$ is of course the inter-atomic distance. 
 A plot of the potential is shown in figure \ref{fig:Lennard-Jones}.
 The inter-atomic distance at which the potential is at it's minimum can easily be shown to be $r=2^{1/6}\theta$. 
@@ -366,30 +391,35 @@ for (int k=0; k<numberOfDimension; k++){
 
 \section{Measuring physical quantities}
 \subsection{Energy}
+
+
+
 \subsection{Temperature}
+From thermodynamics we have that the kinetic energy, or total thermal energy is 
+\begin{equation}
+E_k = \frac{f}{2} Nk_bT, 
+\end{equation}
+for a system of $N$ atoms with $f$ kinetic degrees of freedom and temperature $T$.  
+$k_b$ is the Boltzmann constant. 
+Since we assume point particles, we take only the translational degrees of freedom into account and ignore the rotational degrees of freedom.
+If we assume Newtonian motion, the total kinetic energy in the system is found as
+\begin{equation}
+E_k = \frac{1}{2}\sum_{i=1}^{N} m_i {\vec{v}_i}^2.
+\end{equation}
+We can equate these to find the instantaneous temperature given as
+\begin{equation}\label{eq:MDtemperature}
+T = \frac{\langle m_i \vec{v_i}^2\rangle}{fk_b}.
+\end{equation}
+Thus, we can approximate the instantaneous temperature using the atoms velocities.
+This value will fluctuate about the real value, so time-averaging is often used when measuring.
+In many cases it is desirable to control the temperature of the system, e.g. when using the canonical ensemble (NVT).
+Methods for doing this are called \textit{thermostats}, and are described in section \ref{sec:thermostats}.
+
+
 \subsection{Pressure}
 \subsection{Something else?}
 
-\section{Thermostats}
-
-From thermodynamics
-we have that the kinetic energy, or total thermal energy is 
-\begin{equation}
-	E_k = \frac{f}{2} Nk_bT 
-\end{equation}
-, for a system of $N$ atoms with$f$ degrees of freedom and temperature $T$.  
-$k_b$ is the Boltzmann constant. 
-If we assume newtonian motion, the total kinetic energy in a system is statistically 
-\begin{equation}
-    E_k = \frac{1}{2}\langle m_i \vec{v_i}^2\rangle.
-\end{equation}
-We can equate these to find the statistical temperature given as
-\begin{equation}\label{eq:MDtemperature}
-	T = \frac{\langle m_i \vec{v_i}^2\rangle}{fNk_b}.
-\end{equation}
-Thus, we can approximate the instantaneous temperature using the atoms velocity.
-This value will fluctuate about the real value, so time-averaging is often used when measuring.
-
+\section{Thermostats}\label{sec:thermostats}
 Often, we want to control the temperature of our simulated system.
 This is done by fixing the temperature in equation \eqref{eq:MDtemperature} and manipulate the atoms velocities.
 There are several methods of manipulating the velocities, and these are called \textit{thermostats}. 
@@ -608,15 +638,16 @@ We may refer to them separately as the coefficient of static friction $\mu_s$, a
 Thus, $\mu_s>\mu_ k$ for most materials\footnote{Teflon-on-teflon seems to have the same value for static- and kinetic friction.}.
 If we attach a spring to a block and pull on the spring with a constant velocity, we may get the evolution of friction force as shown in figure \ref{fig:steadyslide}.
 We assume the block to have a constant normal force from the surface it rests upon. 
+We observe that the friction force increases linearly during the loading of the spring, as expected from Hooke's law. 
+Once the force from the spring overcomes the maximum static friction , $F_s$, the block begins to move (slide) and the force of friction is reduced due to the change in coefficient of friction. 
 The coefficient of static friction is found by using the maximum static friction force, $F_s$, in equation \eqref{eq:coefficientOfFriction}. 
 Similarly the coefficient of sliding friction is found by using the value of the friction force in the sliding domain, $F_k$.
 Keep in mind that the forces we refer to are considered to be working on the center of mass of the block. 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{figures/friction/steadySlide}
-	\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a steady sliding motion.}
-	\label{fig:steadyslide}
-\end{figure}
+In this case, the motion of the block resulted in a steady motion, though this is not always the case.
+
+This sort of motion can be observed for instance if a car driver pulls on the break at high speed, so that the wheels are unable to turn.
+The wheels will then slide along the road until the car comes to a stop. 
+At cites of traffic accidents it is common to measure the length of the skid marks, in order to approximate a lower limit of a cars velocity. 
 
 
 \subsection{Stick-slip motion}
@@ -626,33 +657,43 @@ Once the force from the spring overcomes the maximum static friction, the body w
 It will accelerate the most in the beginning, and continue increasing its velocity until it passes an equilibrium position.
 Once it passes the equilibrium position, the friction force will overcome the spring force, and the velocity will decrease. 
 When the velocity is sufficiently low, the object will stop abruptly. 
-As the spring is still being moved, the spring force on the object will rise again, and we have a complete cycle.
+As the spring is still being moved, the spring force on the object will rise again (load), and we have a complete cycle.
 The time evolution of the force applied by the spring will be similar to the sketch shown in figure \ref{fig:stick-slip}.
-If the surface of the block or substrate is non-homogeneous, the stick-slip motion may be more chaotic, than illustrated by the sketch. In fact, it may be difficult to find any periodicity in the motion at all. We are not going to concern our self with chaotic stick-slip motion, since we will have perfectly smooth, dry and pure surfaces when doing molecular dynamics simulation.  
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{figures/friction/stick-slip}
-	\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a stick-slip motion.}
-	\label{fig:stick-slip}
-\end{figure}
+If the surface of the block or substrate is non-homogeneous, the stick-slip motion may be more chaotic, than illustrated by the sketch. 
+In fact, it may be difficult to find any periodicity in the motion at all. 
+We are not going to concern our self with chaotic stick-slip motion, since we will have perfectly smooth, dry and pure surfaces when doing molecular dynamics simulation.  
+Stick-slip motion can be observed for instance when a bow slides over the strings of a violin, thus making them vibrate. 
+By changing the pressure and speed of the bow, the performer can modify the sound produced. 
+Earth quakes is another example, though this is of the chaotic sort.
 
 Whether the motion is of the steady type or the stick-slip type, is found experimentally to be depending on the velocity and  stiffness of the spring.
 At sufficiently high speeds, we would always get a steady motion. 
 Similarly, with a stiff enough spring we would also get a steady motion. 
 While with a velocity, $v<v_s$, and stiffness $k<k_s$ we would expect a stick-slip motion.
 This can be illustrated by a phase diagram of velocity and spring stiffness $(v,k)$, as in figure \ref{fig:phase-stick-slip}.
-The change in behavior can be observed in our daily lives. 
-The creeking of a door is due to stick-slip motion at the hinges.
-However, if we open the door quickly, the door will not creek.  
+The change in behavior from stick-slip to steady motion can be observed in our daily lives. 
+The creaking of a door is due to stick-slip motion at the hinges.
+However, if we open the door quickly, the door will not creak.
+  
 %The sound produced by bowed instruments such as the cello or violin are dependent of the speed at which the bow is drawn across the strings. 
  
-  
-
+\newpage
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/friction/steadySlide}
+	\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a steady sliding motion.}
+	\label{fig:steadyslide}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/friction/stick-slip}
+	\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a stick-slip motion.}
+	\label{fig:stick-slip}
+\end{figure}
 \begin{figure}[H]
 	\centering{
-		\def\svgwidth{0.5\linewidth}
+		\def\svgwidth{0.58\linewidth}
+		\hspace{-3mm}
 		\input{figures/friction/phase.pdf_tex}
 		\caption{Phase diagram of velocity and spring stiffness ($v,k$). 
 			All combinations within the gray area will result in a stick-slip motion. 

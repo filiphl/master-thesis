@@ -36,7 +36,7 @@
   }%
   \providecommand\rotatebox[2]{#2}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{94.03854523bp}%
+    \setlength{\unitlength}{167.53347609bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -48,11 +48,11 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,0.97073241)%
+  \begin{picture}(1,0.5320574)%
     \put(0,0){\includegraphics[width=\unitlength,page=1]{figures/friction/phase.pdf}}%
-    \put(0.24360766,0.41930685){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Stick-slip}}}%
-    \put(0.63246441,0.80171788){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Steady}}}%
-    \put(-0.008827,0.73511817){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$v_s$}}}%
-    \put(0.70336092,0.02507906){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$k_s$}}}%
+    \put(0.27240491,0.22089131){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Stick-slip}}}%
+    \put(0.63839903,0.42830759){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Steady}}}%
+    \put(-0.0049547,0.40599803){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$v_s$}}}%
+    \put(0.75476945,0.01407718){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$k_s$}}}%
   \end{picture}%
 \endgroup%

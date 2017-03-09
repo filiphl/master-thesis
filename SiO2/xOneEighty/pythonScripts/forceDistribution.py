@@ -18,12 +18,12 @@ class ForceDistribution:
         self.mapping = float(N)/surfN
 
         self.timeStep = timeStep    # Only analyse single frame
-        self.surf  = self.loadSurface('../dataFiles/m5/surface.pkl', N=self.surfN, s=self.nn)
-        self.force = self.loadForces('../dataFiles/m5/forces.pkl')
+        self.surf  = self.loadSurface('../dataFiles/m4/surface.pkl', N=self.surfN, s=self.nn)
+        self.force = self.loadForces('../dataFiles/m4/forces.pkl')
         #self.radialBinning = smooth(N, cx, cy, binWidth, nBins=int(16/binWidth))
         #self.surf.plotPlanes()
 
-    def loadSurface(self, filePath=False, N=46, s=5):
+    def loadSurface(self, filePath=False, N=46, s=5, verbose=False):
 
         if filePath:
             if self.timeStep:
@@ -34,15 +34,17 @@ class ForceDistribution:
             try:
                 with open(filePath, 'rb') as input:
                     pkl = pickle.load(input)
-                    print "Loaded surface file", filePath
+                    if verbose:
+                        print "Loaded surface file", filePath
                     return pkl
             except:
-                print "Couldn't load surface file."
+                if verbose:
+                    print "Couldn't load surface file."
 
         if self.timeStep:
-            s = SurfaceRegression('../surfaceFiles/m5/Surface%d_m5/'%self.timeStep, N, False, s)
+            s = SurfaceRegression('../surfaceFiles/m4/Surface%d_m4/'%self.timeStep, N, False, s)
         else:
-            s = SurfaceRegression('../surfaceFiles/m5/', N, False, s)
+            s = SurfaceRegression('../surfaceFiles/m4/', N, False, s)
 
         if filePath:
             with open(filePath, 'wb') as output:
@@ -50,22 +52,24 @@ class ForceDistribution:
 
         return s
 
-    def loadForces(self, filePath=False):
+    def loadForces(self, filePath=False, verbose=False):
         if filePath:
             if self.timeStep:
                 filePath = filePath.rstrip('.pkl') + '_t%d.pkl'%self.timeStep
             try:
                 with open(filePath, 'rb') as input:
                     pkl = pickle.load(input)
-                    print "Loaded force file  ", filePath
+                    if verbose:
+                        print "Loaded force file  ", filePath
                     return pkl
             except:
-                print "Couldn't load force file."
+                if verbose:
+                    print "Couldn't load force file."
 
         if self.timeStep:
-            F = Forces('../forceFiles/m5/forces%d.txt'%self.timeStep)
+            F = Forces('../forceFiles/m4/forces%d.txt'%self.timeStep)
         else:
-            F = Forces('../forceFiles/m5/forcesAll.txt')
+            F = Forces('../forceFiles/m4/forcesAll.txt')
 
         F.plotAverage = True
         F.name = 'Averaged normal force'
