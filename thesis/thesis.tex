@@ -867,7 +867,7 @@ The consequence of having a larger range for the neighbor lists is that there ar
 
 
 
-\subsection{Run-time commands} 
+\subsection{Run-time commands}  \label{sec:run-timeCommands}
 \subsubsection{Variables}
 LAMMPS offer the ability to store values in variables. These can be constants or dependent on other variables, like the time step for instance. Declaration of variables is done using the following syntax.
 \begin{lstlisting}[language=LammpsInput, caption={Declaration of variables.}, label={lammpsVariable}]
@@ -1067,8 +1067,8 @@ For a more profound understanding of the structure and syntax of these files, th
 
 
 We use the unit cell as building blocks, placing them concurrently until we have a crystal of the desired size. For example purposes, we generate a large cube of $15\times15\times15$ unit cells. This is done in line 17-21 of listing \ref{lst:cubeSiO2} below.
-%\lstinputlisting[caption={Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite, and also specify system configurations (see section \ref{sec:systemConfigurations}). The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
-{\Huge Uncomment the above listing!}
+\lstinputlisting[caption={Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite, and also specify system configurations (see section \ref{sec:systemConfigurations}). The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
+%{\Huge Uncomment the above listing!}
 The \textit{write\_once} sections with "In" as the first word of its argument, creates the files \texttt{system.in.init} and \texttt{system.in.settings}, which contain exactly what is shown in the snippet. 
 They are not necessary, but help making the LAMMPS input script cleaner, since we can \texttt{import} these files instead of having all the configurations in the input script file.
 The last \textit{write\_once} section with "Data" in its argument, incorporates the specified size of the simulation box in the \texttt{system.data} file. 
@@ -1093,12 +1093,13 @@ Once complete, we can load the configurations and atomic data into our LAMMPS in
 \section{Verifications}
 \subsection{Melting point}
 Finding the melting point is a very important verification of our system. 
-There are several factors that may affect the result. For instance, if the density of the system is too high, the melting point will be at a higher temperature than it normally would. 
+There are several factors that may affect the result. 
+For instance, if the density of the system is too high, the melting point will be at a higher temperature than it normally would. 
 Also, errors in the potential model may affect the temperature of the melting point. 
 When increasing the temperature of the system that is in a solid state, we will eventually reach the melting point.
-At the phase transition from a solid state to a liquid the atoms of the silica will have energy great enough to break the interatomic bonds. 
+At the phase transition from a solid state to a liquid, the atoms of the silica will have energy great enough to break the interatomic bonds. 
 They will break loose from their regular arrangement and move about much more freely. 
-An approach to computing the melting point is therefore to systematically increase the temperature stepwise and sample the mean square displacement of the atoms at each designated temperature.  
+An approach to computing the melting point is therefore to systematically increase the temperature stepwise and sample the mean square displacement of the atoms at each temperature level.  
 The mean square displacement is the average of the square of the displacement every atom has from its initial position. It can be expressed as:
 \begin{equation}
 \langle r^2(t)\rangle = \frac{1}{N}\sum_{i=1}^{N}\lr{\vec{r}_i(t)-\vec{r}_i(0)}^2. \label{eq: diffusion constant}
@@ -1128,7 +1129,7 @@ Unfortunately, this also show that there are some qualitative detail that is los
 
 
 
-\section{Shaping the silica}
+\section{Shaping the system}
 
 %\begin{figure}
 %	\centering
@@ -1160,24 +1161,39 @@ The appliance of the script in Listing \ref{lst:sculpting} on the system is show
 
 
 \section{Moving the sphere towards the slab}
-We wish to push the sphere down onto the slab in order to create a deformation on the slab. There are probably a lot of smart ways to do this. The author has settled on the following strategy:
-
+We wish to push the sphere down onto the slab in order to create a deformation on the slab. There are many approaches to accomplish this. 
+One could apply an external force, pushing the sphere with a controlled force. 
+Instead, I have chosen to move the sphere at a controlled, constant velocity.  
+We have settled on the following strategy:
 We apply periodic boundary conditions in all three dimensions. 
 %This will in practice imply that the sphere cap and the slab are connected through the z-boundaries. 
-Secondly, we freeze the atoms at the bottom of the slab so that their positions are fixed. 
+Secondly, we freeze the atoms at the bottom of the slab so that their positions are fixed. They still interact with other atoms, but we restrain them from moving. 
 This will, due to the periodic boundary conditions, allow us to consider the sphere cap and the slab as if they are not connected to each other, but to independent blocks of silica glass.  
-Then, for every $N$ time steps we decrease the hight of the system, while remapping the positions of the atoms. 
+For every $N$ time steps we decrease the hight of the system, while remapping the positions of the atoms. 
 The remapping is a very important procedure. 
-It ensures that we do not loose any atoms that elsewise would be lost when moving the z-boundary. 
+It ensures that we do not loose any atoms that else-wise would be lost when moving the z-boundary. 
 A side-effect of the remapping is that the atoms in the system will be somewhat compressed in the z-direction. 
 Though, if we do the compression slowly, this will not be of any concern. 
 
-\begin{lstlisting}[caption={LAMMPS commands for hard coding the forces and velocities of atoms within a specific group. Effectively freezing them.}, label={FreezeStuff}, language=c++]
-fix freezeID groupID setforce 0 0 0
-velocity groupID set 0 0 0
+A technique to fix atom positions is to explicitly set their velocity and force to zero at every single time step.
+A much smarter method is to simply omit the atoms of consideration from time-integration. 
+This way we do not bother computing the force acting on them, updating their velocity or position at all! 
+To do this, we simply create a group that contains all atoms except the once who should be fixed.
+Listing \ref{lst:FreezeStuff} show how to tell LAMMPS to only time-integrate the atoms in the group \texttt{excludingBT}, which excludes the bottom and tom regions of our system.
+The omitted atoms are still considered to be present, we just don't bother updating their movement.
+
+To deform/resize the system, we may use the command shown in listing \ref{lst:Deform}. 
+This command changes the position of the upper boundary of in the z-dimension, by the length \texttt{compressionLength} during a \texttt{run}.
+Thus if we choose the run to last $N$ time steps, the boundary will move with the velocity 
+\begin{equation}
+	\vec{v}_z = -\frac{\texttt{compressionLength}}{N\cdot0.002} ~~ [\text{\AA/ps}]
+\end{equation}
+since our time steps are $0.002$ ps.
+\begin{lstlisting}[caption={Time-integrating only atoms in a specified group, \texttt{excludeBT}, effectively fixing all others.}, label={lst:FreezeStuff}, language=LammpsInput]
+fix nvtID excludeBT nvt temp ${T} ${T} 1.0
 \end{lstlisting}
 
-\begin{lstlisting}[caption={LAMMPS command for changing the size of the simulation box.}, label={Deform}, language=c++]
+\begin{lstlisting}[caption={LAMMPS command for deforming the simulation box, and remaping atom positions.}, label={lst:Deform}, language=LammpsInput]
 fix ID all deform 1 z delta 0 -${compressionLength} remap x
 \end{lstlisting}
  
@@ -1286,42 +1302,54 @@ The normal force is defined as the force exerted on an object that is perpendicu
 In this chapter we will make an attempt to find the distribution of the normal forces. 
 This is not a trivial thing to compute in LAMMPS. 
 As a matter of fact, to achieve this we have expanded the LAMMPS library by creating a custom compute class. 
-The details of that procedure will be described. 
+For the sake of completeness, the details of that procedure will be described. 
 
 Our strategy is simple, but not necessarily easy. 
-First of, we divide the system into a grid. 
-Secondly,  we compute the average force exerted on one body from another within each cell. 
-We approximate the slope of the contact surface within the cells using a least squares regression method. 
-Finally, we project the average force of the atoms in a cell onto the normal vector of the cell.
+First of, we divide the system into a 2D-grid in the xy-plane. 
+Secondly,  we compute the average force exerted on one body from another within each cell of the grid. 
+We approximate the slope of the contact surface within the cells using a least squares regression method on the atoms positioned at the surface. 
+Finally, we project the average force of the atoms in a cell onto the normal vector of the approximated surface.
 
 
 \section{Creating a custom compute}
-A \textit{compute} is a LAMMPS command that defines a computation that will be performed on a group of atoms. The \textit{computes} produce instantaneous values, using information about the atoms on the current time step. 
-
+A \textit{compute} is a LAMMPS command that defines a computation that will be performed on a group of atoms. 
+The \textit{computes} produce instantaneous values, using information about the atoms on the current time step\footnote{\href{ http://lammps.sandia.gov/doc/compute.html}{ http://lammps.sandia.gov/doc/compute.html}}.
 In LAMMPS there are more than 100 computes and chances are, they already have what you're looking for. If not, one might treat the data from other computes in some way to get the desired information. However, if there are no compute command that does the desired task, it is possible to create an own custom class and thereby expanding the LAMMPS library.  
 
-In order to compute the normal forces acting on the sphere, we have written a custom compute class. The purpose of the class was to save the forces acting on atoms in one group from atoms of another group. In this section we will try do give brief instructions on how this was done.
+In order to compute the normal forces acting on the sphere, we have written a custom compute class. 
+The objective was for the class to save the force acting on each atom in one group from atoms of another group. 
+
+In this section we will try do give a brief summary on how this was done.
 
 {\color{editColor}[MAYBE AN ILLUSTRATIVE FIGURE HERE]}
 
-\subsection{Find a similar compute}
+\subsection{Look for similar computes}
 Obviously, before writing any code we should know what we want the compute to calculate and how this should be done. 
 Before starting off with a blank sheet in the editor, one should definitely search for similar computes in LAMMPS. This can potentially save hours of hard work!
-
-For instance there is a compute named \textit{group/group}\footnote{\href{http://lammps.sandia.gov/doc/compute_group_group.html}{http://lammps.sandia.gov/doc/compute\_group\_group.html}} which computes the total energy and force interaction between two groups of atoms. 
-This is almost what we want, but we need to know the total force acting on all atoms from atoms of other groups. {\color{editColor}It should also work with the Vashishta potential.}
-
+Our case serves as a good example.
+There is a compute named \textit{group/group}\footnote{\href{http://lammps.sandia.gov/doc/compute_group_group.html}{http://lammps.sandia.gov/doc/compute\_group\_group.html}} which computes the total energy and force interaction between two groups of atoms. 
+This is almost what we want, but we need to know the force acting on each atom from atoms of other groups. 
+Also, It should work with the Vashishta potential, which \textit{group/group} currently does not.
 Thus, there are minor modifications needed and because of the similarities we chose to make our compute a subclass of this one.
 
 
 \subsection{Creating the class}
-All computes in LAMMPS are subclasses of the class named  \textit{compute}. From this superclass they inherit a bunch of variables, functions and flags, which the user may decide to set. Functions are of course declared in the header file, while variables and flags are set in the source file. The source code of the \textit{group/group} compute is shown in Appendix \ref{groupgrouph}. Since we will be making a subclass of it, we change the \textit{private} property to \textit{protected} so that we have access to all the variables and functions.
+All computes in LAMMPS are subclasses of the class named  \textit{compute}. 
+From this superclass they inherit a bunch of variables, functions and flags, which the user may decide to set. 
+Functions are of course declared in the header file, while variables and flags are set in the source file. 
+The source code of the \textit{group/group} compute is shown in Appendix \ref{groupgrouph}. 
+Since we will be making a subclass of it, we change the \textit{private} property to \textit{protected} so that we have access to all the variables and functions, from out subclass.
 
-We start out by creating a header file and decide upon a name for our class. We have chosen the name \textit{group/group/atom} since it is basically a per-atom version of the already existing compute \textit{group/group}. A complete header-file is shown in Listing \ref{groupGroupAtomHeader} and explained in detail below.
+We start out by creating a header file and decide upon a name for our class. 
+We have chosen the name \textit{group/group/atom} since it is basically a per-atom version of the already existing compute \textit{group/group}. 
+A trailing {\it "/atom"} is the common naming of per-atom computes. 
+A complete header-file is shown in Listing \ref{groupGroupAtomHeader} and explained in detail below.
 
 \lstinputlisting[caption={Header file of our new compute: \texttt{compute\_group\_group\_atom.h}.}, label={groupGroupAtomHeader}, language=c++, firstline=14, lastline=40]{../../LAMMPS/src/compute_group_group_atom.h}
+As can be seen, there are not many additions to the variables and functions already existing in the superclass, as the main difference lies in the structure we store the computed values.
 
-\texttt{ComputeStyle} defines the command to be used in the LAMMPS input script to be \texttt{group/group/atom}, and the name to be \textit{ComputeGroupGroupAtom}. The name will be redundant to us. 
+\texttt{ComputeStyle} defines the command to be used in the input script to be \linebreak[1] \texttt{group/group/atom}, and the name to be \texttt{ComputeGroupGroupAtom}. 
+The name will be redundant to us. 
 
 \texttt{nmax} is the number of atoms which are subject to a non zero force from atoms of another group at the current time step; it may vary.
 
@@ -1333,14 +1361,24 @@ We start out by creating a header file and decide upon a name for our class. We 
 
 \lstinputlisting[caption={Source file of compute: \texttt{compute\_group\_group\_atom.cpp}.}, label={groupGroupAtomHeader}, language=c++, firstline=19, lastline=300]{../../LAMMPS/src/compute_group_group_atom.cpp}
 
+\subsubsection{Setting flags}
 In the constructor we set specific flags that LAMMPS uses to interpret what structure our data should have, and how to store them. 
-We set the \texttt{peratom\_flag} to be \texttt{True}, which indicates that we desire to store some date for each atom. 
+We set the \texttt{peratom\_flag} to be \texttt{True}, which indicates that we desire to store some data for each atom. 
 \texttt{size\_peratom\_cols} defines the number of data values to store for each atom. 
+The flag \texttt{extarray} is set to \texttt{False}, indicating that the per-atom value is an intensive value. 
 Also, we set the \texttt{scalar\_flag} and \texttt{vector\_flag} to \texttt{False}, since we do not wish to return a vector or scalar value.
 
+\subsubsection{Destructor}
 Following the constructor is the destructor on line 40. Its only task is to free the memory occupied by the array once it is no longer needed.  
 
-\texttt{compute\_peratom()} will resize the array to the number of atoms of concern, \texttt{nmax}. It does this using LAMMPS internal functions, which we will not care to describe here. Finally it calls upon functions{\huge  I ENDED HERE LAST TIME!}
+\subsubsection{compute\_peratom()}
+ If necessary, this function will resize the array to the number of atoms of concern, \texttt{nmax}. 
+ It does this using internal functions in the superclass \textit{compute}, which we will not care to describe here. 
+ Finally it calls upon the function \texttt{pair\_contribution()}, which fills the array with the pair-force from the potential. {\huge  We omit the many-body part!}
+
+\subsubsection{pair\_contribution()}
+
+
 
 {\color{editColor}Note that we should only compute the force for one of the groups. factor 2...}
 \newpage

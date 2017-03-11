@@ -42,14 +42,14 @@
 \BOOKMARK [1][-]{section.5.2}{Building a crystal}{chapter.5}% 42
 \BOOKMARK [1][-]{section.5.3}{Verifications}{chapter.5}% 43
 \BOOKMARK [2][-]{subsection.5.3.1}{Melting point}{section.5.3}% 44
-\BOOKMARK [1][-]{section.5.4}{Shaping the silica}{chapter.5}% 45
+\BOOKMARK [1][-]{section.5.4}{Shaping the system}{chapter.5}% 45
 \BOOKMARK [1][-]{section.5.5}{Moving the sphere towards the slab}{chapter.5}% 46
 \BOOKMARK [0][-]{chapter.6}{This must be sorted in designated chapters}{}% 47
 \BOOKMARK [1][-]{section.6.1}{Radial distribution of normal force}{chapter.6}% 48
 \BOOKMARK [2][-]{subsection.6.1.1}{Radial binning}{section.6.1}% 49
 \BOOKMARK [0][-]{chapter.7}{Computing the normal force distribution}{}% 50
 \BOOKMARK [1][-]{section.7.1}{Creating a custom compute}{chapter.7}% 51
-\BOOKMARK [2][-]{subsection.7.1.1}{Find a similar compute}{section.7.1}% 52
+\BOOKMARK [2][-]{subsection.7.1.1}{Look for similar computes}{section.7.1}% 52
 \BOOKMARK [2][-]{subsection.7.1.2}{Creating the class}{section.7.1}% 53
 \BOOKMARK [1][-]{section.7.2}{Least squares regression}{chapter.7}% 54
 \BOOKMARK [0][-]{appendix.A}{Source code}{}% 55
