@@ -637,12 +637,17 @@ Thus, more time gives a higher rate of asperities that settle in positions with 
  
 
 
-\section{Macroscopic level}
+\section{Behavior of friction}
 
-\subsection{Coefficient of friction}
+%There are two fundamental forces that cause the friction force: gravitational force and electromagnetic force. 
+
+
+
+\subsection{Coefficient of friction}\label{sec:coefficientOfFriction}
 The coefficient of friction, $\mu$, is a dimensionless scalar describing the ratio between the force of friction and the normal force, as given in equation \eqref{eq:coefficientOfFriction}.
-The value of $\mu$ is dependent on the material of the objects that are in contact. 
-For most materials this coefficient is higher if the objects are stationary, than if they are moving relative to each other (sliding).
+The value of $\mu$ is dependent on the material of the objects that are in contact, ambient conditions, presence of lubrication, etc.. 
+
+For most materials the coefficient is higher if the objects are stationary, than if they are moving relative to each other (sliding).
 We may refer to them separately as the coefficient of static friction $\mu_s$, and the coefficient of kinetic friction $\mu_k$.
 Thus, $\mu_s>\mu_ k$ for most materials\footnote{Teflon-on-teflon seems to have the same value for static- and kinetic friction.}.
 If we attach a spring to a block and pull on the spring with a constant velocity, we may get the evolution of friction force as shown in figure \ref{fig:steadyslide}.
@@ -651,12 +656,17 @@ We observe that the friction force increases linearly during the loading of the 
 Once the force from the spring overcomes the maximum static friction , $F_s$, the block begins to move (slide) and the force of friction is reduced due to the change in coefficient of friction. 
 The coefficient of static friction is found by using the maximum static friction force, $F_s$, in equation \eqref{eq:coefficientOfFriction}. 
 Similarly the coefficient of sliding friction is found by using the value of the friction force in the sliding domain, $F_k$.
-Keep in mind that the forces we refer to are considered to be working on the center of mass of the block. 
-In this case, the motion of the block resulted in a steady motion, though this is not always the case.
+In this scenario, the motion of the block resulted in a steady motion. 
+As we shall see, that is not always the case.
 
-This sort of motion can be observed for instance if a car driver pulls on the break at high speed, so that the wheels are unable to turn.
+Keep in mind that the forces we refer to are considered to be working on the center of mass of the block. 
+The coefficient of friction is a macroscopic observation.
+It wouldn't make any sense to discuss a coefficient of friction between lets say two "blocks" containing 10 atoms each.
+How would one even define a normal force? 
+
+Steady sliding motion can be observed for instance if a car driver pulls on the break at high speed, so that the wheels are unable to turn.
 The wheels will then slide along the road until the car comes to a stop. 
-At cites of traffic accidents it is common to measure the length of the skid marks, in order to approximate a lower limit of a cars velocity. 
+At cites of traffic accidents it is common to measure the length of skid marks, in order to approximate a lower limit of a vehicles velocity. 
 
 
 \subsection{Stick-slip motion}
@@ -1202,6 +1212,8 @@ fix ID all deform 1 z delta 0 -${compressionLength} remap x
 
 \chapter{This must be sorted in designated chapters}
 
+\begin{comment}
+
 \section{Radial distribution of normal force}
 In order to find a radial distribution of the normal force, $F_N$, we partition the system into a grid in  the xy-plane. We then use the command 
 
@@ -1222,67 +1234,8 @@ This is done every 10 time steps in order to reduce correlation effects.
 The data in stored from each time step can easily be averaged to produce a result as shown in figure X.
 
 We can then find the radial distribution simply by binning this matrix in radial bins, and average the normal forces of the chunks within the bins.
+\end{comment}
 
-\subsection{Radial binning}
-Our system is partitioned into a grid. 
-Each cell in the grid holds an averaged value of the normal force in that cell. 
-The radial distribution of normal force should express the averaged value of the normal force at a given radial distance from the {\color{editColor}center of the sphere}. 
-A coarse method of doing this is to average the weights of the cells who's center is within the bin. 
-This is illustrated in figure \ref{fig:radialBinningChoars}. 
-In many applications where the bin size can be large compared to the length of the cells, this method might suffice.
-However, the current radii of the contact area between the sphere and the slab is only about 10 unit cells, and therefor having a large bin width will result in very few data points. 
-
- \begin{figure}
- 	\center
- 	\resizebox{0.48\linewidth}{!}{
- 		\input{figures/tikz/radialBinning.tikz}
- 	}
- 	\caption{Coarse radial binning. The value appointed to the radial bin is the average of the weights of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.}
- 	\label{fig:radialBinningChoars}
- \end{figure}
-
-A different, slightly more sophisticated approach is to compute the fraction of the area of each cell that actually is withing the bin, and multiply this by the weight associated with the cell.
-We can sum all these contributions and average them by dividing by the area of the bin. 
-This means that even cells that do not have their center within the bin might contribute to the resulting bin value. 
-How much, however, will depend on the fraction of the cell that is within the bin.
-This may be regarded as a smoothing of our coarse force distribution, and will probably give a more correct result than the coarse binning method already described. An illustration of this binning method is shown in figure \ref{fig:radialBinningSmooth}.
-The figure clearly show that some cells have a larger area within the bin than others, and thus contribute more. 
-
-{\color{editColor}{\Huge Computing the area of the cell within the bin should be described here!}}
-
-
- 
- 
- 
-
-\begin{figure}
-%\begin{minipage}[t]{0.49\linewidth}
-%	\captionsetup{width=\textwidth}
-    \centering
-	\resizebox{0.5\linewidth}{!}{
-		\input{figures/tikz/radialSmoothing.tikz}
-	}
-	\caption{Radial binning based on weighted contributions of intersecting cells. The third radial bin is colored, and its value will be the average of the intersecting cells weight times the fraction of the cells area that intersects the bin.}% A close-up of the outlined cell, is shown in figure \ref{fig:radialBinningSmoothCloseUp}.}
-	\label{fig:radialBinningSmooth}
-%\end{minipage}
-%\quad
-%\begin{minipage}[t]{0.49\linewidth}
-%	\captionsetup{width=\textwidth}
-%	\resizebox{\linewidth}{!}{
-%		\input{figures/tikz/radialSmoothingCloseUp.tikz}
-%	}
-%	\caption{Close-up of outlined cell in figure \ref{fig:radialBinningSmooth}. The contribution from this cell will be it weight multiplied by the fraction of its total area that is colored. I might use this figure to explain the procedure. }
-%	\label{fig:radialBinningSmoothCloseUp}
-%\end{minipage}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\hspace{0.87cm}
-	\includegraphics[height=0.482\linewidth]{figures/forceDistribution/radialDistribution/weights.pdf}
-	\caption{Fraction of cell's area that are within the third radial bin. }
-	\label{fig:radialBinningWeights}
-\end{figure}
 
 
 
@@ -1458,6 +1411,156 @@ meaning that the normal force may be expressed as
 We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in Listing \ref{angleVecLine}.
 
 \lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=190, lastline=197]{../SiO2/large/pythonScripts/surface.py}
+
+
+\section{Radial distribution}
+Our system is partitioned into a grid. 
+Each cell in the grid holds an averaged value of the normal force in that cell. 
+We would like to know the radial distribution of the normal force, which should express the averaged value of the normal force at a given radial distance from the center of the spherical indentation.
+We achieve this by defining discrete radial bins with finite bin width, and average contributions within each bin.
+\begin{figure}
+	%\begin{minipage}[t]{0.49\linewidth}
+	%	\captionsetup{width=\textwidth}
+	\centering
+	\resizebox{0.5\linewidth}{!}{
+		\input{figures/tikz/radialSmoothing.tikz}
+	}
+	\caption{Radial binning. The third radial bin is colored, and its value will be the average value of the contribution within the bin.}% A close-up of the outlined cell, is shown in figure \ref{fig:radialBinningSmoothCloseUp}.}
+	\label{fig:radialBinningSmooth}
+	%\end{minipage}
+	%\quad
+	%\begin{minipage}[t]{0.49\linewidth}
+	%	\captionsetup{width=\textwidth}
+	%	\resizebox{\linewidth}{!}{
+	%		\input{figures/tikz/radialSmoothingCloseUp.tikz}
+	%	}
+	%	\caption{Close-up of outlined cell in figure \ref{fig:radialBinningSmooth}. The contribution from this cell will be it weight multiplied by the fraction of its total area that is colored. I might use this figure to explain the procedure. }
+	%	\label{fig:radialBinningSmoothCloseUp}
+	%\end{minipage}
+\end{figure}
+A coarse method of doing this is to average the weights of the cells who's center is within the bin. 
+This is illustrated in figure \ref{fig:radialBinningChoars}. 
+In many applications where the bin width can be large compared to the length of the cells, this method might suffice.
+However, the current radii of the contact area between the sphere and the slab is only about 15-20 unit cells, and therefor having a large bin width will result in very few data points. 
+
+
+A different, slightly more sophisticated approach is to compute the fraction of the area of each cell that actually is withing the bin, and multiply this by the value associated with the cell.
+We can sum all these contributions and average them by dividing by the area of the bin. 
+This means that even cells that do not have their center within the bin might contribute to the resulting bin value. 
+How much, however, will depend on the fraction of the cell's area that is within the bin.
+This may be regarded as a smoothing of our coarse force distribution, and will give a more correct result than the coarse binning method already described. 
+An illustration of this binning method is shown in figures \ref{fig:radialBinningWeights}.
+The figures clearly show that some cells have a larger area within the bin than others, and thus contribute more. 
+
+
+Due to symmetry, we are only required to compute the area of a part of the domain, and not all cells. 
+I have chosen to regard only the upper right corner of the system, meaning $x\geq x_c$ and $y\geq y_c$, where $(x_c, y_c)$ is the coordinates of the center of the indentation.
+As the actual computations are easy to follow from the source code, the reader is recommended to take a look at it if this is of interest. 
+{\Large Should I explain the computation of the weights or is that too intuitive?}
+
+
+\begin{figure}[H]
+	\center
+	\resizebox{0.48\linewidth}{!}{
+		\input{figures/tikz/radialBinning.tikz}
+	}
+	\caption{Coarse radial binning. The value appointed to the radial bin is the average of the weights of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.}
+	\label{fig:radialBinningChoars}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\hspace{0.87cm}
+	\includegraphics[height=0.482\linewidth]{figures/forceDistribution/radialDistribution/weights.pdf}
+	\caption{Radial binning based on weighted contributions of intersecting cells. The fraction of cell's area that are within the third radial bin is color coded; black being 1 and white being 0.}
+	\label{fig:radialBinningWeights}
+\end{figure}
+
+
+
+
+
+\section{Coefficient of friction}
+As described in section \ref{sec:coefficientOfFriction}, the coefficient of friction has a changing value depending on the relative motion of the objects in contact. 
+If they move (slide), the coefficient is usually significantly lower than if they are stationary. 
+In our simulations, we have done the same experiment as described in said chapter, only in a molecular dynamics simulation. 
+
+From the same simulation done when we pushed the sphere down onto the substrate, we systematically saved a restart file at every 10000 time step.
+These can then be loaded, separately in order to compute the static force at different values of normal force.
+Throughout the simulation, we must be certain to remain the force on the rigid top at the same value as when the restart file was written.
+When lowering the sphere, we linearly increased the load. 
+Because we go from a linear increase to a sudden constant value, we equilibrate a short while before measuring, in order to avert effects of pressure waves.
+
+In order to add the shear force, we fix a spring with stiffness $k$ to the rigid top layer of the sphere cap using the \texttt{Fix smd} command
+ \begin{lstlisting}[language=LammpsInput, caption={LAMMPS command \texttt{Fix smd}, used to add a spring force to a group of atoms. The spring is considered fixed to the center of mass of the group and to a teatherd point, which we may move either with contant velocity of constant force.} ]
+ fix ID sphereUpperG smd cvel ${k} ${v} tether 500 NULL NULL 0.0
+ \end{lstlisting}
+ which start out with the spring in its resting length, and begin pulling it with a constant velocity $v$ toward the position $x=500$. 
+We disregard other dimensions, meaning we omit them from the distance computation and force application of the spring.
+At this point there should be two external forces acting on the rigid top of the sphere cap: the normal force in the z-direction, and the spring force in the x-direction.
+Each atom $i$ will be assigned an external force 
+\begin{equation}
+	\vec{F}_i = -k(\vec{r}_i- \vec{r}_0)\frac{m_i}{M},
+\end{equation}
+where $k$ is the spring constant, $\vec{r}_i$ and $\vec{r}_0$ are the position of atom $i$ and the tethered point, respectively, $m_i$ is the mass of atom $i$, and $M$ is the total mass of the group of atoms. 
+As we only regard the x-dimension, the position vectors are evaluated as $\vec{r}_i=x_i$ and equivalently $\vec{r}_0 = x_0$.
+
+
+
+In the completed simulations we have used a time frame of 50000 time steps (0.1ns).
+The procedure was equivalent for all time steps, only the velocity at which we pull the spring was increased between simulations. 
+This should in principle only affect the resolution of the measurement, while the coefficient of static friction remain the same.
+We increase the velocity between simulations because we expect the static force $F_s$ to increase when the normal force increases.
+In turn, this means we have to extend the spring further in order to apply a high enough force. 
+By increasing the velocity at which we pull the spring, we reduce the number of time steps needed, saving time and computational expense.
+
+The \texttt{fix smd} has six return values: 1,2,3,4,5,6.
+
+We are interested in the first value, i.e. the total force component in the x-direction.
+By setting up a custom format for the \textit{thermo\_style}, we consistently save the value of the total force component in the x-direction every 100 time step. 
+This way, we can monitor the force applied by the spring. 
+As illustrated in figure \ref{fig:steadyslide}, we expect the shear force (spring force) to increase linearly until it has the same magnitude as the static friction force, $F_s$.
+At this point it should decrease.    
+
+
+
+
+\begin{table}[H]
+	\begin{center}
+		\caption{Measurement results for simulation with substrate of thickness $h=58$\AA. 
+			$Step$ is the time step at which the loaded restart file was saved. 
+			$k$ is the spring stiffness, 
+			$v$ the velocity by which we pull the spring, 
+			$N$ is the measured normal force, and 
+			$F_T$ the force applied to the rigid top of the sphere cap at the point slip occurs. 
+			The units are as described by the $metal$ convention, shown in table \ref{tab:unitsMetal}.}
+		\begin{tabularx}{0.8\textwidth}{  @{\hspace{2em}} @{}X @{\hspace{-0.5em}}Y@{\hspace{0em}}Y@{\hspace{2em}}XX@{} @{\hspace{0em}} }
+			%Measurement			 & unit	\\
+			\toprule
+			$~Step$ 		&	$k$		&	$v$		&	$~N$		&	$~F_T$ \\
+			\midrule
+			80000	  &	 10	 	 & -0.1	   &   541	  &   259 \\
+			90000	  &	 10	 	 & -0.2	   &   672	  &   391 \\
+			100000	 &	10		& -0.2	  &   805	 &   506 \\
+			110000	 &	10		& -0.2	  &   942	 &   552 \\
+			120000	 &	10		& -0.2	  &   1077	 &   608 \\
+			130000	 &	10		& -0.2	  &   1208	 &   731 \\
+			140000	 &	10		& -0.2	  &   1341	 &   853 \\
+			150000	 &	10		& -0.2	  &   1480	 &   888 \\
+			160000	 &	10		& -0.2	  &   1613	 &   936 \\
+			170000	 &	10		& -0.2	  &   1745	 &   1142 \\
+			180000	 &	10		& -0.2	  &   1881	 &   1400 \\
+			190000	 &	10		& -0.2	  &   -	 &   - \\
+			200000	 &	10		& -0.2	  &   2150	 &   1502 \\
+			
+			
+			\bottomrule
+		\end{tabularx}
+		\label{tab:measurements}
+	\end{center}
+\end{table}
+  
 
 
 
