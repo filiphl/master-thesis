@@ -30,15 +30,15 @@
 \usepackage{caption}
 
 
-\usepackage{flipbook} %/usr/local/texlive/2016/texmf-dist/tex/latex/flipbook/flipbook.sty
-\rfoot[]{
-	\setlength\unitlength{1cm}
-	\begin{picture}(0,0)
-	\put(0.5,-2){
-		\fbImageB{../SiO2/animation/sliding}{png}{width=2cm}
-	}
-	\end{picture}
-}
+%\usepackage{flipbook} %%/usr/local/texlive/2016/texmf-dist/tex/latex/flipbook/flipbook.sty
+%\rfoot[]{
+%	\setlength\unitlength{1cm}
+%	\begin{picture}(0,0)
+%	\put(0.5,-2){
+%		\fbImageB{../SiO2/animation/sliding}{png}{width=2cm}
+%	}
+%	\end{picture}
+%}
 \usepackage{HASstyle}
 
 
@@ -124,7 +124,7 @@ Thus, the force acting acting on a particle is computed as
 	\vec{F_i} = -\nabla U_i(\vec{r}^N), \label{MDForce}
 \end{equation} 
 where $\vec{r}^N=(\vec{r}_1, \vec{r}_2, \dots, \vec{r}_N)$ is the position of all atoms in the system. 
-Thus, all the detail of the simulation lay in the interaction potential $U$.
+All the detail of the simulation lay in the interaction potential $U$.
 In order to obtain realistic simulations, the potentials often doesn't only consist of a pair-interaction, but many-body interactions as well.
 Also, methods for controlling the thermodynamic properties and boundary conditions pose additional complications.
 Lastly, the computational efficiency aspect of the simulation has to be evaluated. 
@@ -780,10 +780,10 @@ make yes-molecule yes-manybody yes-python yes-rigid
 \end{lstlisting}
 The above example installs the packages \textit{molecule, manybody, python and rigid}.
 Next, the user can build LAMMPS using either of the lines below. 
-Assuming the user has MPI installed, line 2 makes the resulting executable compatible with parallelization in MPI.
+Assuming the user has MPI installed, line 2 utilizes 8 processors to make the resulting executable compatible with parallelization in MPI. The argument \texttt{-j8} is optional, but saves time.
 \begin{lstlisting}
 make serial
-make mpi
+make -j8 mpi
 \end{lstlisting}
 At this point there should be an executable in the \texttt{/path/to/lammps/src/} directory named \texttt{lmp\_serial} or \texttt{lmp\_mpi}, depending on the previous choice. These are now ready to run.
 To use it one has to point to this file from the command line at every run. It may be practical to set up a symlink as shown below.
@@ -1077,8 +1077,8 @@ For a more profound understanding of the structure and syntax of these files, th
 
 
 We use the unit cell as building blocks, placing them concurrently until we have a crystal of the desired size. For example purposes, we generate a large cube of $15\times15\times15$ unit cells. This is done in line 17-21 of listing \ref{lst:cubeSiO2} below.
-\lstinputlisting[caption={Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite, and also specify system configurations (see section \ref{sec:systemConfigurations}). The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
-%{\Huge Uncomment the above listing!}
+%\lstinputlisting[caption={Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite, and also specify system configurations (see section \ref{sec:systemConfigurations}). The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
+{\Huge Uncomment the above listing!}
 The \textit{write\_once} sections with "In" as the first word of its argument, creates the files \texttt{system.in.init} and \texttt{system.in.settings}, which contain exactly what is shown in the snippet. 
 They are not necessary, but help making the LAMMPS input script cleaner, since we can \texttt{import} these files instead of having all the configurations in the input script file.
 The last \textit{write\_once} section with "Data" in its argument, incorporates the specified size of the simulation box in the \texttt{system.data} file. 
@@ -1158,13 +1158,12 @@ The atoms within this region are assigned to a group, which we label \texttt{sla
 We combine these two regions using  the \texttt{union} command and label the region outside of these regions \texttt{outRegion}.
 Finally, we delete the atoms that are not in the sphere nor the slab; we delete the ones contained by \texttt{outRegion}.
 \lstinputlisting[caption={Defining regions to keep or delete from a system of dimensions $106.8\times106.8\times106.8$ Å.}, label={lst:sculpting}]{../SiO2/small/system.prepare.latex}
-For the purpose of deleting atoms, the creation of groups was superfluous. %redundant
+For the purpose of deleting atoms, the creation of groups was superfluous.
 However, at a later stage we will utilize them and this is an appropriate place for them to be assigned. 
 The appliance of the script in Listing \ref{lst:sculpting} on the system is shown in figure \ref{fig:hugeCube} is shown in figure \ref{fig:carvedxz}, where our perspective is along the y-axis.
-
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\linewidth]{figures/CreatingSystem/carved_xz.png}
+\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/carved_xz.png}
 \caption{xz-perspective on a system built from $15\times15\times15$ unit cells of b-cristobalite, with certain regions carves out. This is a result from applying Listing \ref{lst:sculpting} to the system shown in figure \ref{fig:hugeCube}. The top shape is a sphere cap, while the bottom is a slab.}
 \label{fig:carvedxz}
 \end{figure}
@@ -1208,11 +1207,8 @@ fix ID all deform 1 z delta 0 -${compressionLength} remap x
 \end{lstlisting}
  
 
-
-
-\chapter{This must be sorted in designated chapters}
-
 \begin{comment}
+\chapter{This must be sorted in designated chapters}
 
 \section{Radial distribution of normal force}
 In order to find a radial distribution of the normal force, $F_N$, we partition the system into a grid in  the xy-plane. We then use the command 
@@ -1234,19 +1230,21 @@ This is done every 10 time steps in order to reduce correlation effects.
 The data in stored from each time step can easily be averaged to produce a result as shown in figure X.
 
 We can then find the radial distribution simply by binning this matrix in radial bins, and average the normal forces of the chunks within the bins.
+
+\begin{figure}
+\center
+\resizebox{0.5\linewidth}{!}{
+\input{figures/tikz/stressTensor/stressTensor.tikz}
+}
+\caption{Stress}
+\label{fig:stressTensor}
+\end{figure}
 \end{comment}
 
 
 
 
-\begin{figure}
-	\center
-	\resizebox{0.5\linewidth}{!}{
-		\input{figures/tikz/stressTensor/stressTensor.tikz}
-	}
-	\caption{Stress}
-	\label{fig:stressTensor}
-\end{figure}
+
 
 
 \chapter{Computing the normal force distribution}
@@ -1481,18 +1479,22 @@ As the actual computations are easy to follow from the source code, the reader i
 
 
 
-\section{Coefficient of friction}
+\chapter{Computing the coefficient of friction}
 As described in section \ref{sec:coefficientOfFriction}, the coefficient of friction has a changing value depending on the relative motion of the objects in contact. 
 If they move (slide), the coefficient is usually significantly lower than if they are stationary. 
 In our simulations, we have done the same experiment as described in said chapter, only in a molecular dynamics simulation. 
+We will experience that the velocity dependence of the coefficient of friction impose on us a challenge in interpreting our results.
 
+\section{Maintaining a normal force}
 From the same simulation done when we pushed the sphere down onto the substrate, we systematically saved a restart file at every 10000 time step.
-These can then be loaded, separately in order to compute the static force at different values of normal force.
-Throughout the simulation, we must be certain to remain the force on the rigid top at the same value as when the restart file was written.
-When lowering the sphere, we linearly increased the load. 
-Because we go from a linear increase to a sudden constant value, we equilibrate a short while before measuring, in order to avert effects of pressure waves.
+These can then be reloaded separately in order to compute the static force at different values of normal force.
+Throughout the simulation, we must be certain to remain the normal force acting on the rigid top at the same value as when the restart file was written.
+In our simulations we have used \texttt{fix addforce} with a constant value in the z-direction.
+When lowering the sphere, the load was linearly increased. 
+Because we change the circumstance from a linear increase to a sudden constant value, we equilibrate a short while before measuring, in order to avert effects of pressure waves.
 
-In order to add the shear force, we fix a spring with stiffness $k$ to the rigid top layer of the sphere cap using the \texttt{Fix smd} command
+\section{Adding a shear force}
+In order to add a shear force, we fix a spring with stiffness $k$ to the rigid top layer of the sphere cap using the \texttt{Fix smd} command
  \begin{lstlisting}[language=LammpsInput, caption={LAMMPS command \texttt{Fix smd}, used to add a spring force to a group of atoms. The spring is considered fixed to the center of mass of the group and to a teatherd point, which we may move either with contant velocity of constant force.} ]
  fix ID sphereUpperG smd cvel ${k} ${v} tether 500 NULL NULL 0.0
  \end{lstlisting}
@@ -1507,21 +1509,87 @@ where $k$ is the spring constant, $\vec{r}_i$ and $\vec{r}_0$ are the position o
 As we only regard the x-dimension, the position vectors are evaluated as $\vec{r}_i=x_i$ and equivalently $\vec{r}_0 = x_0$.
 
 
-
-In the completed simulations we have used a time frame of 50000 time steps (0.1ns).
+\section{Procedure}
+In the completed simulations we have used a time frame long enough for the spring force to start decreasing (slip). Typically they were of the order of 50000 time steps (0.1ns).
 The procedure was equivalent for all time steps, only the velocity at which we pull the spring was increased between simulations. 
-This should in principle only affect the resolution of the measurement, while the coefficient of static friction remain the same.
 We increase the velocity between simulations because we expect the static force $F_s$ to increase when the normal force increases.
-In turn, this means we have to extend the spring further in order to apply a high enough force. 
-By increasing the velocity at which we pull the spring, we reduce the number of time steps needed, saving time and computational expense.
+In order for the spring to exert a force equal to $F_s$, we have to extend the spring farther. 
+By increasing the velocity at which we pull the spring we reduce the number of time steps needed, saving time and computational expense.
+This can be seen in figure \ref{fig:springUnScaledExtension}.
 
-The \texttt{fix smd} has six return values: 1,2,3,4,5,6.
+\texttt{fix smd} computes 7 quantities, that are stored as a vector. 
+As described in the documentation\footnote{\href{http://lammps.sandia.gov/doc/fix_smd.html}{\url{http://lammps.sandia.gov/doc/fix_smd.html}}}, 
+these quantities are:  the x-, y-, and z-component of the pulling force, the total force in direction of the pull, the equilibrium distance of the spring, the distance between the two reference points, and finally the accumulated PMF (the sum of pulling forces times displacement), this order.
+We are interested in the first value, i.e. the total pulling force component in the x-direction.
+By setting up a custom format for the \textit{thermo\_style}, we consistently store the value of the total force component in the x-direction every 100 time step. 
+This way, we can monitor the force applied by the spring as a function of time.
 
-We are interested in the first value, i.e. the total force component in the x-direction.
-By setting up a custom format for the \textit{thermo\_style}, we consistently save the value of the total force component in the x-direction every 100 time step. 
-This way, we can monitor the force applied by the spring. 
-As illustrated in figure \ref{fig:steadyslide}, we expect the shear force (spring force) to increase linearly until it has the same magnitude as the static friction force, $F_s$.
-At this point it should decrease.    
+\section{Interpreting the results}
+The result from a single simulation is shown in figure \ref{fig:springSingle_v3}.
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/friction/scalingCoeffisient/single_v3}
+	\caption{Spring force as a function of time, where we pull the spring by a constant velocity $v=3$~[\AA/ps].}
+	\label{fig:springSingle_v3}
+\end{figure}
+\noindent
+As we see, the spring force increases linearly as expected from Hooke's law. 
+We are really only interested in finding the maximum value of spring force, namely the static friction $F_s$.
+Since we know the value of the normal force, we may be enticed to compute the coefficient of static friction as $\mu=F_ s/N$ momentarily. 
+However, this would be erroneous. 
+It turns out that the static friction is dependent on the velocity at which we pull the spring. 
+$F_s$ increases with the velocity.
+Thus, the spring force will engage sliding at a lower value at slow pulling speeds, than at high.
+This can be deduced from our results as well. 
+Figure \ref{fig:springUnScaled} show the evolution of the spring force from 5 different simulations, all using a different velocity, and demonstrating that the maximum spring force is different in each case. 
+We may rescale the x-axis by multiplying with the velocity to obtain the spring force as a function of the extension of the spring.  
+So, how are we supposed to conclude a coefficient of friction from our simulations? 
+The solution is to find the relation between the coefficent and the velocity.
+By using the dataset shown in figure \ref{fig:springUnScaled} and \ref{fig:springUnScaledExtension} we may plot $\mu(v)$ by computing $\mu = F_s/N$ for every velocity.
+The result is shown in figure \ref{fig:springUvsV}. 
+The relation is obviously linear, at least for the considered range of velocities. By linear regression the approximated function for the velocity dependent coefficient of friction is 
+\begin{equation}\label{eq:UofV}
+	\mu(v) = 0.0702v + 0.3992.
+\end{equation}
+By rescaling the axis of figure \ref{fig:springUnScaledExtension} 
+by this function, we get data collapse as shown in figure \ref{fig:springDataCollapse}. Note that we normalize the y-axis by dividing with the normal force $N$.
+Collapse of the curves indicate that at all these velocities the system is subject to the same physical process. Had the curves been very distinguishable, we could conclude that there is some other effect taking place. These curves overlap quite nicely, so I do not see any cause of concern. 
+
+The collapse is not of use to us in the pursue of computing the coefficient of static friction. 
+The result that is of real interest is the relation posed in equation \eqref{eq:UofV}. 
+This implies that the minimum value of the static coefficient of friction for SiO$_2$ on SiO$_2$ is $\mu = 0.4$. In macroscopic experiments the spring is loaded very slowly, and thus the constant term of the linear regression is the coefficient of static friction we have been looking for.
+Thus for every value of the normal force, we need to take a series of simulations using different velocities, and do a linear regression on the resulting points. It is not intuitive how $\mu(v)$ will change as we perturb $N$. However, we may still expect a linear dependence. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{figures/friction/scalingCoeffisient/UnScaledSliding}
+\caption{Spring force as a function of time for several values of velocity.}
+\label{fig:springUnScaled}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{figures/friction/scalingCoeffisient/UnScaledExtention}
+\caption{Spring force as a function of the extension of the spring for several values of velocity.}
+\label{fig:springUnScaledExtension}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{figures/friction/scalingCoeffisient/u(v)}
+\caption{Coefficient of friction $\mu$ as a function of velocity $v$. Linear regression is suited to approximate the relation $\mu(v)$.}
+\label{fig:springUvsV}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{figures/friction/scalingCoeffisient/dataCollapse}
+\caption{Data collapse of series of simulations utilizing different velocities.}
+\label{fig:springDataCollapse}
+\end{figure}
+
+%As illustrated in figure \ref{fig:steadyslide}, we expect the shear force (spring force) to increase linearly until it has the same magnitude as the static friction force, $F_s$.
+%At this point it should decrease as sliding occurs.    
 
 
 
@@ -1532,9 +1600,10 @@ At this point it should decrease.
 			$Step$ is the time step at which the loaded restart file was saved. 
 			$k$ is the spring stiffness, 
 			$v$ the velocity by which we pull the spring, 
-			$N$ is the measured normal force, and 
+			$N$ the measured normal force, and 
 			$F_T$ the force applied to the rigid top of the sphere cap at the point slip occurs. 
-			The units are as described by the $metal$ convention, shown in table \ref{tab:unitsMetal}.}
+			The units are as described by the $metal$ convention listed 
+			in table \ref{tab:unitsMetal}.}
 		\begin{tabularx}{0.8\textwidth}{  @{\hspace{2em}} @{}X @{\hspace{-0.5em}}Y@{\hspace{0em}}Y@{\hspace{2em}}XX@{} @{\hspace{0em}} }
 			%Measurement			 & unit	\\
 			\toprule
@@ -1561,6 +1630,9 @@ At this point it should decrease.
 	\end{center}
 \end{table}
   
+
+
+
 
 
 
