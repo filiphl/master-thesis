@@ -1,0 +1,13 @@
+# file "system.lt"
+
+import "beta-cristobalite.lt"
+
+slab = new beta-cristobalite [6].move(7.12, 0.00, 0.00)
+                             [6].move(0.00, 7.12, 0.00)
+                             [6].move(0.00, 0.00, 7.12)
+
+write_once("Data Boundary") {
+  0.0  42.72  xlo  xhi
+  0.0  42.72  ylo  yhi
+  0.0  42.72  zlo  zhi
+}

@@ -1,0 +1,37 @@
+#include "system.in"
+
+#velocity	all create 1 277387 mom yes
+#include "system.prepare"
+
+include "system.in.init"
+read_restart restartFiles/SiO2_40000.restart
+include "system.in.settings"
+
+
+variable N   equal 20000
+variable T   equal 293
+variable tFz equal 0.1
+variable Fz  equal ${tFz}*(40000-step)/${N}
+
+
+restart 10000 restartFiles/SiO2_*.restart
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		10000
+timestep	0.002
+
+dump allDumpID all atom 10000 dumpFiles/SiO2_*.dump
+#dump surfaceDumpID  surfaceGroup  atom 10000 surfaceFiles/Surface*.dump
+
+#push down on the top slab
+fix addFz sphereUpperGroup addforce 0 0 v_Fz
+
+fix nvt all nvt temp ${T} ${T} 1.0
+
+compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+
+compute computeID slabGroup group/group/atom sphereGroup pair yes
+fix fixComputeID slabGroup ave/chunk 5 1000 10000 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forcesAll.txt #ave running
+
+run ${N}

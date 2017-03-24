@@ -1,0 +1,7 @@
+#!/bin/bash
+#BATCH --partition=normal
+#SBATCH --ntasks=64
+#SBATCH --time=1-01:00:00
+#SBATCH --job-name=Fn
+mpirun -n 64 ~/scratch/lammps/src/lmp_mpi -in lower.in
+python notify.py $SLURM_JOB_ID

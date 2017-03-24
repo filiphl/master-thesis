@@ -1,0 +1,77 @@
+
+#include "system.in"
+#velocity	all create 1 277387 mom yes
+
+
+#include "system.prepare"
+
+
+variable loadStep equal 130000
+
+include "system.in.init"
+read_restart restartFiles/lower/SiO2_lower_${loadStep}.restart
+#read_restart restartFiles/SiO2_shear_Fx008N50000_260000.restart
+include "system.in.settings"
+
+
+variable loadStep equal 130000
+
+variable   N     equal   50000
+variable   N1    equal   5000
+variable   N2    equal   10
+variable   T     equal   293
+variable   Fz    equal   0.0231*(40000-${loadStep})/160000
+variable   Fx    equal   0.0 #8*(step-${loadStep})/${N}
+variable   dFx   equal   0.0000002 #8
+variable   K     equal   10
+variable   vel   equal   -3
+
+
+print "k=${K}   vel=${vel}   Fz=${Fz} loadStep=${loadStep}"
+
+neighbor  0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+
+#restart 10000 restartFiles/lower/SiO2_shear_${loadStep}_*.restart
+#dump myDump all atom 1000 dumpFiles/lower/SiO2_shear_${loadStep}_*.dump
+
+
+fix nvtID excludeB nvt temp ${T} ${T} 1.0
+
+region slab block INF INF INF INF 3.0 56.0
+group sphereIndentTmp region slab
+group sphereIndentG subtract sphereIndentTmp slabG
+
+fix rigidTop sphereUpperG rigid single force 1 on off on torque 1 on on on
+fix addforce sphereUpperG addforce 0 0 ${Fz}
+fix smdID sphereUpperG smd cvel ${K} ${vel} tether 500 NULL NULL 0.0
+
+
+compute comTop    sphereUpperG  com      #Center of mass
+compute comSphere sphereIndentG com
+compute tempID    excludeBT     temp     #Temperature
+
+
+
+thermo_style custom step c_comSphere[1] c_comTop[1] f_smdID[1] f_smdID[6] f_addforce[3]
+
+balance 1.1 shift xyz 50 1.0
+run ${N}
+
+print "k=${K}   vel=${vel}   Fz=${Fz} loadStep=${loadStep}"
+# LOOP
+#variable currentFx equal ${Fx}
+#label pushLoop
+#variable i loop 10
+#    print ${i}
+#    variable Fx equal ${currentFx}+(step-((${i}-1)*${N1})-260000)*${dFx}
+#    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
+#    run ${N1}
+#    variable Fx equal ${Fx}
+#    run ${N1}
+#next i
+#jump SELF pushLoop

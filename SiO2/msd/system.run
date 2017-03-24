@@ -1,0 +1,22 @@
+include "system.in"
+
+
+variable N equal 10000
+variable T equal 1500
+variable P equal 1.01325	# 1 atm
+
+velocity all create 1 277387 mom yes
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+restart ${N} restartFiles/SiO2.*.restart
+dump myDump all atom 100 dumpFiles/msd_*.dump
+#fix nvtID all nvt temp ${T} ${T} 10.0 #iso ${P} ${P} 1.0
+fix nveID all nve
+fix pbID all press/berendsen iso ${P} ${P} 300.0
+
+run ${N}

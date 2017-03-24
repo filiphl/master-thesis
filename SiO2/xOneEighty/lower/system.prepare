@@ -1,0 +1,44 @@
+#region ID style args keyword arg ...
+
+
+
+#--------------------- Define the region of the sphere -------------------------
+region sphereR sphere 163.76 163.76 271.2 200
+region smallSphereR sphere 163.76 163.76 271.2 197 side out
+region shellR intersect 2 sphereR smallSphereR
+region topR block INF INF INF INF 153 INF
+
+group  sphereG1 region sphereR
+group  shellG region shellR
+group  topG region topR
+group  sphereG subtract sphereG1 topG
+
+#--------------------- Define the region of the slab ---------------------------
+region slabR block INF INF INF INF 3.1 53.4
+group  slabG region slabR
+
+region bottomR block INF INF INF INF 0.0 3.0
+group  bottomG region bottomR
+
+
+#------------ Delete all atoms exterior to the sphere and slab -----------------
+region cutOutR union 4 sphereR slabR bottomR topR side out
+delete_atoms region cutOutR
+
+
+#---------------------------- Define the surface -------------------------------
+region surfaceR  block  INF INF INF INF 53.0 53.4    #Top two layers of atoms
+group  surfaceG  region surfaceR
+
+
+#--------------------------- Freeze some volumes -------------------------------
+region slabUpperR block INF INF INF INF 50.4 53.4
+group slabUpperG region slabUpperR
+
+group excludeB  subtract all bottomG
+group excludeBT subtract all bottomG topG
+group initialFreezeG subtract all slabUpperG bottomG topG shellG
+
+
+# Make top slab rigid. Only allow force interaction in z-direction. No rotation.
+#fix rigidTop sphereUpperG rigid single force 1 off off on torque 1 on on on

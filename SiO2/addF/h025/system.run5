@@ -1,0 +1,75 @@
+
+#include "system.in"
+#velocity	all create 1 277387 mom yes
+
+
+#include "system.prepare"
+
+variable loadStep equal 200000
+
+include "system.in.init"
+read_restart restartFiles/SiO2_k10_vel-0.1_550000.restart
+include "system.in.settings"
+
+
+variable N   equal 10
+variable T   equal 293
+variable Fz  equal -0.0231  #*(40000-step)/160000
+variable vel equal -0.1
+variable K   equal 10
+
+
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		1
+timestep	0.002
+
+
+#restart 25000 restartFiles/SiO2_k${K}_vel${vel}_*.restart
+#dump myDump all atom 5000 dumpFiles/SiO2_k${K}_vel${vel}_*.dump
+
+
+fix nvtID excludeB nvt temp ${T} ${T} 1.0
+
+region slab block INF INF INF INF 3.0 56.0
+group sphereIndentTmp region slab
+group sphereIndentG subtract sphereIndentTmp slabG
+
+
+
+compute comTop    sphereUpperG  com      #Center of mass
+compute comSphere sphereIndentG com
+compute tempID    excludeBT     temp     #Temperature
+
+
+variable Fx equal 593.87622/93104.0
+fix rigidTop sphereUpperG rigid single force 1 on off on torque 1 on on on
+fix addforce sphereUpperG addforce ${Fx} 0 ${Fz}
+fix smd2ID sphereUpperG smd cvel ${K} ${vel} tether 500 NULL NULL 0.0
+
+
+
+thermo_style custom step c_comSphere[1] c_comTop[1] f_smd2ID[1] f_smd2ID[6] f_addforce[3]
+balance 1.1 shift xyz 50 1.0
+
+#info groups
+
+run ${N}
+
+
+
+
+## LOOP
+#variable currentFx equal ${Fx}
+#label pushLoop
+#variable i loop 10
+#    print ${i}
+#    variable Fx equal ${currentFx}+(step-((${i}-1)*${N1})-260000)*${dFx}
+#    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
+#    run ${N1}
+#    variable Fx equal ${Fx}
+#    run ${N1}
+#next i
+#jump SELF pushLoop

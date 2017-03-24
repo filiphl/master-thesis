@@ -115,7 +115,7 @@ What do we hope to accomplish?\\
 How will this be of any contribution to anything?\\
 How is the thesis laid out?
 
-
+\part{Theory and methods}
 \chapter{Molecular dynamics}
 Molecular dynamics is a method that uses Newton’s equations of motion to simulate the movement of interacting atoms. 
 Each atom is treated as a point particle with mass and charge, and the interaction between them is described by a force field. 
@@ -391,8 +391,14 @@ for (int k=0; k<numberOfDimension; k++){
 
 \section{Measuring physical quantities}
 \subsection{Energy}
-
-
+In molecular dynamics we sample kinetic energy classically as
+\begin{equation}
+	E_K = \frac{1}{2}mv^2.
+\end{equation}
+The potential energy is off course dependent on the potential force field in use $U$, and is computed as 
+\begin{equation}
+	E_P = \sum_{i=1}^{N}\sum_{j>i}^{N}U(\vec{r}_i, \vec{r}_j).
+\end{equation} 
 
 \subsection{Temperature}
 From thermodynamics we have that the kinetic energy, or total thermal energy is 
@@ -465,7 +471,13 @@ As a final note, if this thermostat is to be used, the newly assigned velocities
 
 
 \subsection{Nosé-Hoover}
-
+The most widely used thermostat is the Nosé-Hoover thermostat. 
+It produces  accurate dynamics and realistic constant temperature conditions. 
+This thermostat does not rescale the velocity of atoms. 
+Instead it alters the acceleration by adding a fictitious force of friction 
+\begin{equation}
+	\vec{F}_i = -\nabla U_i(\vec{r}^N) -\xi m\vec{v_i} 
+\end{equation}    
 
 
 \section{Efficiency improvements}
@@ -565,12 +577,13 @@ Also, we clearly see that the initial claim holds; this is not more efficient wh
 In fact this result suggest that using 1 processor is twice as energy efficient as using 64. 
 
 
-\chapter{Friction}
-\textit{The force that resists relative motion between two bodies in contact} \cite{frictionDefinition}. 
-Friction is a well known phenomena, though still not fully understood.
+\chapter{Friction, elasticity and contact mechanics}
+Friction can be defined as \textit{The force that resists relative motion between two bodies in contact} \cite{frictionDefinition}. 
+It is a well known phenomena, though still not completely understood.
 Despite the fact that we learn about friction in introductory courses to physics, it is not at all easy to comprehend. 
 It is very complex and still a field of research.
-In this chapter we will look at fundamental concepts of friction, and distinguish macroscopic behavior from the microscopic.
+The effects of friction is affected by surface roughness, material properties, ambient conditions, the geometry of contact area, and many other factors. 
+In this chapter we will study some elementary aspects of friction, including elasticity and contact mechanics.   
  
 \begin{figure}[H]
 	\centering
@@ -600,8 +613,8 @@ This experiment was found in his notebooks, and is shown in figure \ref{fig:leon
 He experimented with tilted planes and placed the block on different sides, changing the apparent area of contact.
 His results made him deduce the following statements, also found in his notes:
 \begin{itemize}
-	\item[] \textit{Friction produces double the amount of effort if the weight be doubled}. 
-	\item[] \textit{Friction made by the same weight will be of equal resistance at the beginning of the movement though the contact may be of different breadths or lengths}.
+	\item Friction produces double the amount of effort if the weight be doubled. 
+	\item Friction made by the same weight will be of equal resistance at the beginning of the movement though the contact may be of different breadths or lengths.
 \end{itemize}
 This is now essentially known as the two first laws of friction. 
 Leonardo also introduced the coefficient of friction 
@@ -1245,7 +1258,7 @@ We can then find the radial distribution simply by binning this matrix in radial
 
 
 
-
+\part{Simulations}
 
 \chapter{Computing the normal force distribution}
 The normal force is defined as the force exerted on an object that is perpendicular to the contact surface. 
@@ -1451,7 +1464,7 @@ An illustration of this binning method is shown in figures \ref{fig:radialBinnin
 The figures clearly show that some cells have a larger area within the bin than others, and thus contribute more. 
 
 
-Due to symmetry, we are only required to compute the area of a part of the domain, and not all cells. 
+By exploiting the symmetry we are only required to compute the weights for cells in a section of the domain, and not all cells. 
 I have chosen to regard only the upper right corner of the system, meaning $x\geq x_c$ and $y\geq y_c$, where $(x_c, y_c)$ is the coordinates of the center of the indentation.
 As the actual computations are easy to follow from the source code, the reader is recommended to take a look at it if this is of interest. 
 {\Large Should I explain the computation of the weights or is that too intuitive?}
@@ -1631,7 +1644,9 @@ Thus for every value of the normal force, we need to take a series of simulation
 \end{table}
   
 
+\part{Results}
 
+\part{Discussion}
 
 
 

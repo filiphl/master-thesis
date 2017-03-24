@@ -1,0 +1,59 @@
+# file "beta-cristobalite.lt"
+#
+#
+#    Make a figure of the molecule here. If you can...
+#
+#
+
+beta-cristobalite {
+
+  write_once("In Init") {
+    units		metal
+    boundary	p p p
+    atom_style   atomic
+    pair_style 	 vashishta
+    #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+  }
+
+  write_once("In Settings") {
+    pair_coeff  * *  SiO2.vashishta Si O
+    pair_modify table 16
+    pair_modify tabinner 0.1
+  }
+
+  #Unit cell of beta-cristobalite
+  write("Data Atoms") {
+    $atom:Si1    @atom:Si    0.00    0.00    0.00
+    $atom:Si2    @atom:Si    0.00    3.56    3.56
+    $atom:Si3    @atom:Si    1.78    1.78    1.78
+    $atom:Si4    @atom:Si    3.56    0.00    3.56
+    $atom:Si5    @atom:Si    1.78    5.34    5.34
+    $atom:Si6    @atom:Si    5.34    5.34    1.78
+    $atom:Si7    @atom:Si    3.56    3.56    0.00
+    $atom:Si8    @atom:Si    5.34    1.78    5.34
+    $atom:O1     @atom:O     0.89    0.89    0.89
+    $atom:O2     @atom:O     6.23    4.45    2.67
+    $atom:O3     @atom:O     2.67    2.67    0.89
+    $atom:O4     @atom:O     4.45    0.89    4.45
+    $atom:O5     @atom:O     0.89    4.45    4.45
+    $atom:O6     @atom:O     4.45    4.45    0.89
+    $atom:O7     @atom:O     2.67    6.23    4.45
+    $atom:O8     @atom:O     2.67    0.89    2.67
+    $atom:O9     @atom:O     4.45    2.67    6.23
+    $atom:O10    @atom:O     6.23    2.67    4.45
+    $atom:O11    @atom:O     2.67    4.45    6.23
+    $atom:O12    @atom:O     0.89    6.23    6.23
+    $atom:O13    @atom:O     0.89    2.67    2.67
+    $atom:O14    @atom:O     4.45    6.23    2.67
+    $atom:O15    @atom:O     6.23    6.23    0.89
+    $atom:O16    @atom:O     6.23    0.89    6.23
+  }
+
+  write_once("Data Masses") {
+    @atom:Si 28.0855
+    @atom:O  15.9994
+  }
+
+
+
+} # end of definition of beta-cristobalite molecule type

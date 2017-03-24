@@ -1,0 +1,7 @@
+#!/bin/bash
+#SBATCH --partition=normal
+#SBATCH --ntasks=32
+#SBATCH --time=5-01:00:00
+#SBATCH --job-name=140
+mpirun ~/scratch/lammps/src/lmp_mpi -in system.run3.140
+#python notify.py $SLURM_JOB_ID
