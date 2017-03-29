@@ -179,7 +179,7 @@ F = np.asarray(mu)*np.asarray(N)
 print '{0:<7}  {1:<7}  {2:<7}'.format('t', 'N(t)', 'mu(t)')
 for t in xrange(len(time)):
     print '{0:<7}  {1:<7.02f}  {2:<7.02f}'.format(t, N[t], mu[t])
-
+print len(N), len(F)
 pf = np.polyfit(N, F, 1)
 l = np.linspace(min(N), max(N), 100)
 p = np.polyval(pf, l)

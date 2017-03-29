@@ -15,18 +15,18 @@
 	%draw the front-right of the cube
 	\draw[cube] (4,0,0) -- (4,4,0) -- (4,4,4) -- (4,0,4) -- cycle;
 	\draw[axis, very thick, black] (4,2,2) -- (5,2,2) node[anchor=south, inner sep=6]{\normalsize$\sigma_x$};
-	\draw[axis, very thick, black] (4,2,2) -- (4,3,2) node[anchor=north, inner sep=5]{\normalsize$\tau_{xy}$};
-	\draw[axis, very thick, black] (4,2,2) -- (4,2,3) node[anchor=west]{\normalsize$\tau_{xz}$};
+	\draw[axis, very thick, black] (4,2,2) -- (4,3,2) node[anchor=north, inner sep=5]{\normalsize$\sigma_{xy}$};
+	\draw[axis, very thick, black] (4,2,2) -- (4,2,3) node[anchor=west]{\normalsize$\sigma_{xz}$};
 	%draw the front-left of the cube
 	\draw[cube] (0,4,0) -- (4,4,0) -- (4,4,4) -- (0,4,4) -- cycle;
 	\draw[axis, very thick, black] (2,4,2) -- (2,5,2) node[anchor=north, inner sep=5]{\normalsize$\sigma_y$};
-	\draw[axis, very thick, black] (2,4,2) -- (3,4,2) node[anchor=south, inner sep=5]{\normalsize$\tau_{yx}$};
-	\draw[axis, very thick, black] (2,4,2) -- (2,4,3) node[anchor=west]{\normalsize$\tau_{yz}$};
+	\draw[axis, very thick, black] (2,4,2) -- (3,4,2) node[anchor=south, inner sep=5]{\normalsize$\sigma_{yx}$};
+	\draw[axis, very thick, black] (2,4,2) -- (2,4,3) node[anchor=west]{\normalsize$\sigma_{yz}$};
 	%draw the top of the cube
 	\draw[cube] (0,0,4) -- (0,4,4) -- (4,4,4) -- (4,0,4) -- cycle;
 	\draw[axis, very thick, black] (2,2,4) -- (2,2,5) node[anchor=west]{\normalsize$\sigma_z$};
-	\draw[axis, very thick, black] (2,2,4) -- (3,2,4) node[anchor=south, inner sep=5]{\normalsize$\tau_{zx}$};
-	\draw[axis, very thick, black] (2,2,4) -- (2,3,4) node[anchor=north, inner sep=4, pos=0.75]{\normalsize$\tau_{zy}$};
+	\draw[axis, very thick, black] (2,2,4) -- (3,2,4) node[anchor=south, inner sep=7]{\normalsize$\sigma_{zx}$};
+	\draw[axis, very thick, black] (2,2,4) -- (2,3,4) node[anchor=north, inner sep=4, pos=0.75]{\normalsize$\sigma_{zy}$};
 	%draw dashed lines to represent hidden edges
 %	\draw[cube hidden] (0,0,0) -- (4,0,0);
 %	\draw[cube hidden] (0,0,0) -- (0,4,0);

@@ -581,9 +581,10 @@ In fact this result suggest that using 1 processor is twice as energy efficient 
 Friction can be defined as \textit{The force that resists relative motion between two bodies in contact} \cite{frictionDefinition}. 
 It is a well known phenomena, though still not completely understood.
 Despite the fact that we learn about friction in introductory courses to physics, it is not at all easy to comprehend. 
-It is very complex and still a field of research.
+It's very complex and still a field of research.
 The effects of friction is affected by surface roughness, material properties, ambient conditions, the geometry of contact area, and many other factors. 
-In this chapter we will study some elementary aspects of friction, including elasticity and contact mechanics.   
+In this chapter we will study some elementary aspects of friction, elasticity and contact mechanics. 
+   
  
 \begin{figure}[H]
 	\centering
@@ -617,11 +618,11 @@ His results made him deduce the following statements, also found in his notes:
 	\item Friction made by the same weight will be of equal resistance at the beginning of the movement though the contact may be of different breadths or lengths.
 \end{itemize}
 This is now essentially known as the two first laws of friction. 
-Leonardo also introduced the coefficient of friction 
+The linear relation described in the first postulate is commonly known as the coefficient of friction
 \begin{equation}
 	\mu = \frac{F}{L}, \label{eq:coefficientOfFriction}
 \end{equation}
-though he interpreted $L$ as the weight of the load and $F$ as the weight of the object pulling in a scenario as in figure \ref{fig:leonardoDaVinci}. The concept of \textit{force} was not commonly recognized until 200 years later. Isaac Newton's publication of \textit{Principia} paved the way for studies of friction, there among the most comprehensive study carried out by Charles Augustin Coulomb (1736-1806). He investigated the influence of several factors on friction, namely \cite{SlidingFriction}:
+though Leonardo interpreted $L$ as the weight of the load and $F$ as the weight of the object pulling in a scenario as in figure \ref{fig:leonardoDaVinci}. The concept of force was not commonly recognized until 200 years later. Isaac Newton's publication of \textit{Principia} paved the way for studies of friction, there among the most comprehensive study carried out by Charles Augustin Coulomb (1736-1806). He investigated the influence of several factors on friction, namely \cite{SlidingFriction}:
 \begin{itemize}
 	\item The nature of the materials in contact and their surface coatings.
 	\item The extent of the surface area.
@@ -635,22 +636,15 @@ Today this relation is known as
 	F_s(t) = A+B\ln(t).
 \end{equation}
 Coulomb explained this behavior by regarding the materials as fibrous. 
-Basically like a hairbrush, having fibers which get entangled into a mash when in contact. 
+Basically like a hairbrush, having fibers which get entangled into a mesh when in contact. 
 If the materials were in contact over a short period of time, fewer fibers would have gotten into their position in the mesh. 
 When a shear force is applied, the fibers get tilted until they loosen from the mesh, at which point sliding occurs. 
 This impression of the sliding mechanism is quite similar to the one we have now. 
 
-Today we know that most surfaces are rough, at least at a microscopic level, having some degree of asperities. 
-It is actually the asperities that are in contact with the other body. 
-{\huge FIGURE MAYBE? } 
-When there is contact between two surfaces, the asperities are pushed into the other material, and tries to occupy the position with the lowest potential.  
-The asperities may move even though the macroscopic body is still. 
-This is known as thermally activated creep.
-Thus, more time gives a higher rate of asperities that settle in positions with the lowest potential. 
- 
 
 
-\section{Behavior of friction}
+
+\section{Macroscopic sliding motion}
 
 %There are two fundamental forces that cause the friction force: gravitational force and electromagnetic force. 
 
@@ -659,10 +653,11 @@ Thus, more time gives a higher rate of asperities that settle in positions with 
 \subsection{Coefficient of friction}\label{sec:coefficientOfFriction}
 The coefficient of friction, $\mu$, is a dimensionless scalar describing the ratio between the force of friction and the normal force, as given in equation \eqref{eq:coefficientOfFriction}.
 The value of $\mu$ is dependent on the material of the objects that are in contact, ambient conditions, presence of lubrication, etc.. 
-
 For most materials the coefficient is higher if the objects are stationary, than if they are moving relative to each other (sliding).
 We may refer to them separately as the coefficient of static friction $\mu_s$, and the coefficient of kinetic friction $\mu_k$.
 Thus, $\mu_s>\mu_ k$ for most materials\footnote{Teflon-on-teflon seems to have the same value for static- and kinetic friction.}.
+
+\subsection{Steady sliding}
 If we attach a spring to a block and pull on the spring with a constant velocity, we may get the evolution of friction force as shown in figure \ref{fig:steadyslide}.
 We assume the block to have a constant normal force from the surface it rests upon. 
 We observe that the friction force increases linearly during the loading of the spring, as expected from Hooke's law. 
@@ -748,15 +743,182 @@ However, if we open the door quickly, the door will not creak.
 
 
 
+\section{Elasticity}
+
+
+We distinguish between elastic and plastic deformation.
+If the deformed body recovers its initial structure after the force causing the deformation is removed, it is referred to as an \textit{elastic} deformation. 
+If it does not, it is regarded a \textit{plastic} deformation. 
+Obviously, there is a limit to the applied stress that separates the two;  the so-called yield stress. 
+In this section we will only consider elastic deformations.
+
+
+
+
+
+\subsection{Strain and stress}
+%Imagine a solid cube of some material, e.g. steel.
+%At rest, the atoms of the steel is in an ordered structure, having equilibrium distance between each other.
+%If a force is applied on the faces of the cube along the  x-axis, toward the center, the cube will deform. 
+%It will be compressed in the x-direction. 
+%To maintain the cube at the same compression length, we have to retain the compression force constant. 
+%This is because the atoms of the cube will be closer than their equilibrium distance from each other in the x-direction, and thus they exert a force outward on the faces of the x-axis.
+%If we remove the compression forces, the 
+Strain $\epsilon$, is a measure of deformation. 
+It represents the displacement between particles in a body relative to a reference length, and can be expressed as
+\begin{equation}
+	\epsilon = \frac{\Delta l}{l_0}
+\end{equation}
+where $\Delta l$ and $l$ are the displacement and original length, respectively. 
+For \textit{normal} strain, $\Delta l$ represents an elongation of the distance between two facing end planes of an infinitesimal cubic element.
+For \textit{shear} strain, it represents a component of an in-plane displacement of the midpoints of said plains.
+%It is common to use an index notation in order to describe which component of strain we are referring to.
+It is common to discern the components of stress by using two indices, e.g. $\epsilon_{xy}$.
+The first index indicates that we consider the planes normal to the x-axis, while the second that we consider the shear stress in the y-direction of these planes. 
+Double indices, such as $\epsilon_{xx}$ refer to the normal strain in the x-direction, and is commonly abbreviated to   $\epsilon_{x}$.
+
+Stress $\sigma$, is a force density acting on a body due to internal forces, caused by strain.
+For stress on a plane, the \textit{normal} and \textit{shear} stress is defined as
+\begin{equation}
+	\sigma_\perp = \frac{F_\perp}{A} \qquad \text{and} \qquad \sigma_\parallel = \frac{F_\parallel}{A}
+\end{equation}
+respectively, where $F_\perp$ and $F_\parallel$ are the force components perpendicular and parallel to the plane.
+We use an equivalent notation for stress as for strain, with two indices distinguishing the components.
+This is illustrated in figure \ref{fig:stressTensor}.
+The collection of stress and strain components are often composed into the so-called Cauchy stress tensor and strain tensor
+\begin{equation}
+\sigma = 
+\begin{pmatrix}
+\sigma_{xx} & \sigma_{xy} & \sigma_{xz} \\
+\sigma_{yx} & \sigma_{yy} & \sigma_{yz} \\
+\sigma_{zx} & \sigma_{zy} & \sigma_{zz} \\
+\end{pmatrix}
+\qquad
+\epsilon = 
+\begin{pmatrix}
+\epsilon_{xx} & \epsilon_{xy} & \epsilon_{xz} \\
+\epsilon_{yx} & \epsilon_{yy} & \epsilon_{yz} \\
+\epsilon_{zx} & \epsilon_{zy} & \epsilon_{zz} \\
+\end{pmatrix}
+\end{equation}
+
+\begin{figure}
+	\center
+	\resizebox{0.5\linewidth}{!}{
+		\input{figures/tikz/stressTensor/stressTensor.tikz}
+	}
+	\caption{Graphical illustration of the components of the Cauchy stress tensor.}
+	\label{fig:stressTensor}
+\end{figure}
+
+
+\subsection{Hooke's law}
+As mentioned, stress is caused by strain. However, strain is also caused by stress. 
+The relation between the two is known as Hooke's law. 
+If we consider a infinitesimal cubical body subject to a tensile force in the x-direction, Hooke's law states that the relation between stress and strain is given as
+\begin{equation}
+	\epsilon_x = \frac{\sigma_x}{E},
+\end{equation}
+where $E$ is a material property known as Young's modulus, which express the stiffness of the material. 
+Here we assume that the deformation is elastic.
+%As the body is expanded in on direction, as in our example, it will experience a contraction in the other two dimensions. 
+%These contractions can be expressed as
+%\begin{equation}
+%	\epsilon_y = -\nu \frac{\sigma_x}{E}, \qquad \epsilon_z = -\nu \frac{\sigma_x}{E},
+%\end{equation}
+%where $\nu$ is Poisson's ratio.
+
+Often the faces of the infinitesimal cubic body are subject to forces in several direction. 
+The general form of Hooke's law is expressed as
+\begin{equation}
+	\sigma_{ij} = C_{ijkl}\epsilon_{kl}
+\end{equation}
+which relates the Cauchy stress tensor $\sigma_{ij}$ to the strain tensor $\epsilon_{kl}$, through the linear dependence of the stiffness tensor $c_{ijkl}$.
+Note that each component of the Cauchy stress tensor is dependent on all elements of the strain tensor. 
+The stress and strain tensors are both of rank 2 and have $3^2=9$ elements, while the stiffness tensor has rank 4 and contains $3^4=81$ elements.
+However, since both the Cauchy stress tensor and the strain tensor are symmetric, 
+\begin{align}
+\begin{split}
+	\sigma_{ij} = \sigma_{ji} &\Rightarrow C_{ijkl} = C_{jikl}\\
+	\epsilon_{kl} = \epsilon_{lk} &\Rightarrow C_{ijkl} = C_{ijlk}
+\end{split}
+\end{align}
+In total there will be only 6 independent components for the stress and strain tensors, and 36 in the stiffness tensor. 
+We may choose to express the stress and strain as vectors by using Voigts method for rank reduction \cite{Voigt}.
+
+\begin{equation}
+\vec{\sigma} = 
+\begin{pmatrix}
+\sigma_{xx} \\
+\sigma_{yy} \\
+\sigma_{zz} \\
+\sigma_{xy} \\ 
+\sigma_{xz} \\
+\sigma_{yz}
+\end{pmatrix}
+\equiv
+\begin{pmatrix}
+\sigma_{1} \\
+\sigma_{2} \\
+\sigma_{3} \\
+\sigma_{4} \\ 
+\sigma_{5} \\
+\sigma_{6}
+\end{pmatrix}
+\qquad
+\text{and}
+\qquad
+\vec{\epsilon} = 
+\begin{pmatrix}
+\epsilon_{xx} \\
+\epsilon_{yy} \\
+\epsilon_{zz} \\
+2\epsilon_{xy} \\ 
+2\epsilon_{xz} \\
+2\epsilon_{yz}
+\end{pmatrix}
+\equiv
+\begin{pmatrix}
+\epsilon_{1} \\
+\epsilon_{2} \\
+\epsilon_{3} \\
+\epsilon_{4} \\ 
+\epsilon_{5} \\
+\epsilon_{6}
+\end{pmatrix}
+\end{equation}
+
+Similarly the stiffness tensor reduces to a $6\times6$ matrix (rank 2)
+\begin{equation}
+	\vec{c} = \begin{pmatrix}
+	C_{11}& C_{12}& C_{13}& C_{14}& C_{15}& C_{16} \\
+	C_{21}& C_{22}& C_{23}& C_{24}& C_{25}& C_{26} \\
+	C_{31}& C_{32}& C_{33}& C_{34}& C_{35}& C_{36} \\
+	C_{41}& C_{42}& C_{43}& C_{44}& C_{45}& C_{46} \\
+	C_{51}& C_{52}& C_{53}& C_{54}& C_{55}& C_{56} \\
+	C_{61}& C_{62}& C_{63}& C_{64}& C_{65}& C_{66} \\
+	\end{pmatrix}.
+\end{equation} 
+Hooke's law can then be expressed as a matrix product
+\begin{equation}
+	\vec{\sigma} = \vec{C}\vec{\epsilon}
+\end{equation}
+
+
+\section{Hertz' theory}
 
 
 
 
 
 
-
-
-
+\section{Modern knowlage}
+Today we know that most surfaces are rough, at least at a microscopic level, having some degree of asperities. 
+It is actually the asperities that are in contact with the other body. 
+When there is contact between two surfaces, the asperities are pushed into the other material, and tries to occupy the position with the lowest potential.  
+The asperities may move even though the macroscopic body is still. 
+This is known as thermally activated creep.
+Thus, longer duration of resting contact gives a higher rate of asperities that settle in positions with the lowest potential, effectively making the coupling of the bodies stronger.
 
 
 
@@ -1244,14 +1406,6 @@ The data in stored from each time step can easily be averaged to produce a resul
 
 We can then find the radial distribution simply by binning this matrix in radial bins, and average the normal forces of the chunks within the bins.
 
-\begin{figure}
-\center
-\resizebox{0.5\linewidth}{!}{
-\input{figures/tikz/stressTensor/stressTensor.tikz}
-}
-\caption{Stress}
-\label{fig:stressTensor}
-\end{figure}
 \end{comment}
 
 
@@ -1346,7 +1500,7 @@ Following the constructor is the destructor on line 40. Its only task is to free
 
 {\color{editColor}Note that we should only compute the force for one of the groups. factor 2...}
 \newpage
-\section{Least squares regression}
+\section{Least squares plane regression}
 The method of least squares aims to find parameters which  minimize the sum of the squared residuals, where residuals are the difference between observed values and the approximated value. We will use this method to approximate the slope of the surface of the substrate. This will be done by partitioning the system in a grid and do a plane approximation on each cell of the grid. In other words, we seek the coefficients in the plane equation
 \begin{equation}
 	z = ax + by + c
@@ -1422,6 +1576,7 @@ meaning that the normal force may be expressed as
 We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in Listing \ref{angleVecLine}.
 
 \lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=190, lastline=197]{../SiO2/large/pythonScripts/surface.py}
+
 
 
 \section{Radial distribution}

@@ -6,13 +6,14 @@ import matplotlib.pyplot as plt
 import sys
 from os import listdir
 import copy
+import re
 
 class SurfaceRegression:
 
     def __init__(self, path, N=46, plot=False, nn=0):
 
         self.N = N
-        self.numberOfAtoms = 4232
+        self.numberOfAtoms = 3
         self.nearestNeighbors = nn
         self.loadSurfacePoints(path)
         self.approximatePlanes()
@@ -33,15 +34,19 @@ class SurfaceRegression:
             for j in xrange(self.N):
                 self.grid[i].append([])
                 self.zPosition[i].append([])
-
+        print np.shape(self.grid)
 
         directory = listdir(path)
         for files in directory:
             infile = open(path+files, 'r')
 
-            for i in xrange(9): # dump file
-                infile.readline()
-
+            for i in xrange(8): # dump file
+                line = infile.readline()
+                noa = re.findall(r'NUMBER OF ATOMS', line)
+                if len(noa)>0:
+                    noa = int(infile.readline())
+                    self.numberOfAtoms = noa
+                    print "NOA =", self.numberOfAtoms
 
             p = np.zeros([self.numberOfAtoms, 3]) #nAtoms*3
             i=0
@@ -65,6 +70,7 @@ class SurfaceRegression:
                                 self.zPosition[j][k].append(p[i][2])
                                 break
                         break
+            self.points = copy.deepcopy(self.grid)
 
         #self.zPos = np.zeros([self.N, self.N])
         #for i in xrange(self.N):
@@ -190,7 +196,7 @@ class SurfaceRegression:
         c = parameter[2]
         parameter[2] = 1
 
-        return self.Norm(parameter), c
+        return parameter, c
 
 
     def getAngle(self, v1, v2):
@@ -221,12 +227,21 @@ class SurfaceRegression:
                 Y = [0, 1]
                 X,Y = np.meshgrid(X,Y)
                 Z = X*self.grid[i][j][0] + Y*self.grid[i][j][1] + self.c[i][j]
-                Z/=self.grid[i][j][2]
+                #Z/=self.grid[i][j][2]
                 X = [i, i+1]
                 Y = [j, j+1]
                 X,Y = np.meshgrid(X,Y)
-                surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap="gray", vmin=0.0, vmax=0.8,  antialiased=False)
+                surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap="gray", vmin=0.0, vmax=0.8, alpha=0.5, antialiased=True)
+                print 'X: ', X
+                print 'Y: ', Y
+                print 'Z: ', Z
                 plt.hold("on")
+                self.points = self.points[0]
+                print self.points, np.shape(self.points)
+                for j in xrange(self.numberOfAtoms):
+                    print i,j
+                    print self.points[i][j][0], self.points[i][j][1], self.points[i][j][2]
+                    ax.scatter(self.points[i][j][0], self.points[i][j][1], self.points[i][j][2], zdir='z', s=500)
         #print Z.max(), Z.min()
         plt.xlabel('x')
         plt.ylabel('y')
@@ -242,8 +257,8 @@ if __name__ == '__main__':
         print 'Please provide a valid path as an argument.'
         exit()
 
-    surf = SurfaceRegression(path, N=30, plot="plot" in sys.argv, nn=8)
-    surf.plotPlanes()
+    surf = SurfaceRegression(path, N=1, plot="plot" in sys.argv, nn=0)
+
 # ---------------------------------------------------------------------------- #
 
 
