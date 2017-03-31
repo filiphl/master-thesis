@@ -24,50 +24,52 @@
 \BOOKMARK [2][-]{subsection.2.6.3}{Parallelization}{section.2.6}% 24
 \BOOKMARK [0][-]{chapter.3}{Friction, elasticity and contact mechanics}{part.1}% 25
 \BOOKMARK [1][-]{section.3.1}{Historical note}{chapter.3}% 26
-\BOOKMARK [1][-]{section.3.2}{Macroscopic sliding motion}{chapter.3}% 27
+\BOOKMARK [1][-]{section.3.2}{Macroscopic observations}{chapter.3}% 27
 \BOOKMARK [2][-]{subsection.3.2.1}{Coefficient of friction}{section.3.2}% 28
 \BOOKMARK [2][-]{subsection.3.2.2}{Steady sliding}{section.3.2}% 29
 \BOOKMARK [2][-]{subsection.3.2.3}{Stick-slip motion}{section.3.2}% 30
-\BOOKMARK [1][-]{section.3.3}{Elasticity}{chapter.3}% 31
-\BOOKMARK [2][-]{subsection.3.3.1}{Strain and stress}{section.3.3}% 32
-\BOOKMARK [2][-]{subsection.3.3.2}{Hooke's law}{section.3.3}% 33
-\BOOKMARK [1][-]{section.3.4}{Hertz' theory}{chapter.3}% 34
-\BOOKMARK [1][-]{section.3.5}{Modern knowlage}{chapter.3}% 35
-\BOOKMARK [0][-]{chapter.4}{LAMMPS}{part.1}% 36
-\BOOKMARK [1][-]{section.4.1}{Installation}{chapter.4}% 37
-\BOOKMARK [2][-]{subsection.4.1.1}{Linux}{section.4.1}% 38
-\BOOKMARK [2][-]{subsection.4.1.2}{Mac OS X with Homebrew}{section.4.1}% 39
-\BOOKMARK [1][-]{section.4.2}{Input scripts}{chapter.4}% 40
-\BOOKMARK [2][-]{subsection.4.2.1}{System configurations}{section.4.2}% 41
-\BOOKMARK [2][-]{subsection.4.2.2}{Run-time commands}{section.4.2}% 42
-\BOOKMARK [2][-]{subsection.4.2.3}{Output}{section.4.2}% 43
-\BOOKMARK [1][-]{section.4.3}{Visualization}{chapter.4}% 44
-\BOOKMARK [2][-]{subsection.4.3.1}{OVITO}{section.4.3}% 45
-\BOOKMARK [0][-]{chapter.5}{Preparing a molecular dynamics simulation}{part.1}% 46
-\BOOKMARK [1][-]{section.5.1}{Silica}{chapter.5}% 47
-\BOOKMARK [2][-]{subsection.5.1.1}{Unit cell of -cristobalite}{section.5.1}% 48
-\BOOKMARK [1][-]{section.5.2}{Building a crystal}{chapter.5}% 49
-\BOOKMARK [1][-]{section.5.3}{Verifications}{chapter.5}% 50
-\BOOKMARK [2][-]{subsection.5.3.1}{Melting point}{section.5.3}% 51
-\BOOKMARK [1][-]{section.5.4}{Shaping the system}{chapter.5}% 52
-\BOOKMARK [1][-]{section.5.5}{Moving the sphere towards the slab}{chapter.5}% 53
-\BOOKMARK [-1][-]{part.2}{II Simulations}{}% 54
-\BOOKMARK [0][-]{chapter.6}{Computing the normal force distribution}{part.2}% 55
-\BOOKMARK [1][-]{section.6.1}{Creating a custom compute}{chapter.6}% 56
-\BOOKMARK [2][-]{subsection.6.1.1}{Look for similar computes}{section.6.1}% 57
-\BOOKMARK [2][-]{subsection.6.1.2}{Creating the class}{section.6.1}% 58
-\BOOKMARK [1][-]{section.6.2}{Least squares plane regression}{chapter.6}% 59
-\BOOKMARK [1][-]{section.6.3}{Radial distribution}{chapter.6}% 60
-\BOOKMARK [0][-]{chapter.7}{Computing the coefficient of friction}{part.2}% 61
-\BOOKMARK [1][-]{section.7.1}{Maintaining a normal force}{chapter.7}% 62
-\BOOKMARK [1][-]{section.7.2}{Adding a shear force}{chapter.7}% 63
-\BOOKMARK [1][-]{section.7.3}{Procedure}{chapter.7}% 64
-\BOOKMARK [1][-]{section.7.4}{Interpreting the results}{chapter.7}% 65
-\BOOKMARK [-1][-]{part.3}{III Results}{}% 66
-\BOOKMARK [-1][-]{part.4}{IV Discussion}{}% 67
-\BOOKMARK [0][-]{appendix.A}{Source code}{part.4}% 68
-\BOOKMARK [1][-]{section.A.1}{compute\137group\137group.h}{appendix.A}% 69
-\BOOKMARK [1][-]{section.A.2}{compute\137group\137group\137atom.h}{appendix.A}% 70
-\BOOKMARK [1][-]{section.A.3}{compute\137group\137group\137atom.cpp}{appendix.A}% 71
-\BOOKMARK [0][-]{appendix.B}{Something}{part.4}% 72
-\BOOKMARK [1][-]{section.B.1}{LAMMPS units}{appendix.B}% 73
+\BOOKMARK [1][-]{section.3.3}{Microscopic aspects}{chapter.3}% 31
+\BOOKMARK [1][-]{section.3.4}{Elasticity}{chapter.3}% 32
+\BOOKMARK [2][-]{subsection.3.4.1}{Strain and stress}{section.3.4}% 33
+\BOOKMARK [2][-]{subsection.3.4.2}{Hooke's law}{section.3.4}% 34
+\BOOKMARK [1][-]{section.3.5}{Contact mechanics}{chapter.3}% 35
+\BOOKMARK [2][-]{subsection.3.5.1}{Real area of contact}{section.3.5}% 36
+\BOOKMARK [2][-]{subsection.3.5.2}{Hertz theory}{section.3.5}% 37
+\BOOKMARK [0][-]{chapter.4}{LAMMPS}{part.1}% 38
+\BOOKMARK [1][-]{section.4.1}{Installation}{chapter.4}% 39
+\BOOKMARK [2][-]{subsection.4.1.1}{Linux}{section.4.1}% 40
+\BOOKMARK [2][-]{subsection.4.1.2}{Mac OS X with Homebrew}{section.4.1}% 41
+\BOOKMARK [1][-]{section.4.2}{Input scripts}{chapter.4}% 42
+\BOOKMARK [2][-]{subsection.4.2.1}{System configurations}{section.4.2}% 43
+\BOOKMARK [2][-]{subsection.4.2.2}{Run-time commands}{section.4.2}% 44
+\BOOKMARK [2][-]{subsection.4.2.3}{Output}{section.4.2}% 45
+\BOOKMARK [1][-]{section.4.3}{Visualization}{chapter.4}% 46
+\BOOKMARK [2][-]{subsection.4.3.1}{OVITO}{section.4.3}% 47
+\BOOKMARK [0][-]{chapter.5}{Preparing a molecular dynamics simulation}{part.1}% 48
+\BOOKMARK [1][-]{section.5.1}{Silica}{chapter.5}% 49
+\BOOKMARK [2][-]{subsection.5.1.1}{Unit cell of -cristobalite}{section.5.1}% 50
+\BOOKMARK [1][-]{section.5.2}{Building a crystal}{chapter.5}% 51
+\BOOKMARK [1][-]{section.5.3}{Verifications}{chapter.5}% 52
+\BOOKMARK [2][-]{subsection.5.3.1}{Melting point}{section.5.3}% 53
+\BOOKMARK [1][-]{section.5.4}{Shaping the system}{chapter.5}% 54
+\BOOKMARK [1][-]{section.5.5}{Moving the sphere towards the slab}{chapter.5}% 55
+\BOOKMARK [-1][-]{part.2}{II Simulations}{}% 56
+\BOOKMARK [0][-]{chapter.6}{Computing the normal force distribution}{part.2}% 57
+\BOOKMARK [1][-]{section.6.1}{Creating a custom compute}{chapter.6}% 58
+\BOOKMARK [2][-]{subsection.6.1.1}{Look for similar computes}{section.6.1}% 59
+\BOOKMARK [2][-]{subsection.6.1.2}{Creating the class}{section.6.1}% 60
+\BOOKMARK [1][-]{section.6.2}{Least squares plane regression}{chapter.6}% 61
+\BOOKMARK [1][-]{section.6.3}{Radial distribution}{chapter.6}% 62
+\BOOKMARK [0][-]{chapter.7}{Computing the coefficient of friction}{part.2}% 63
+\BOOKMARK [1][-]{section.7.1}{Maintaining a normal force}{chapter.7}% 64
+\BOOKMARK [1][-]{section.7.2}{Adding a shear force}{chapter.7}% 65
+\BOOKMARK [1][-]{section.7.3}{Procedure}{chapter.7}% 66
+\BOOKMARK [1][-]{section.7.4}{Interpreting the results}{chapter.7}% 67
+\BOOKMARK [-1][-]{part.3}{III Results}{}% 68
+\BOOKMARK [-1][-]{part.4}{IV Discussion}{}% 69
+\BOOKMARK [0][-]{appendix.A}{Source code}{part.4}% 70
+\BOOKMARK [1][-]{section.A.1}{compute\137group\137group.h}{appendix.A}% 71
+\BOOKMARK [1][-]{section.A.2}{compute\137group\137group\137atom.h}{appendix.A}% 72
+\BOOKMARK [1][-]{section.A.3}{compute\137group\137group\137atom.cpp}{appendix.A}% 73
+\BOOKMARK [0][-]{appendix.B}{Something}{part.4}% 74
+\BOOKMARK [1][-]{section.B.1}{LAMMPS units}{appendix.B}% 75

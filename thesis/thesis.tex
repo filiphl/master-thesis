@@ -578,12 +578,12 @@ In fact this result suggest that using 1 processor is twice as energy efficient 
 
 
 \chapter{Friction, elasticity and contact mechanics}
-Friction can be defined as \textit{The force that resists relative motion between two bodies in contact} \cite{frictionDefinition}. 
-It is a well known phenomena, though still not completely understood.
+Friction can be defined as \textit{the force that resists relative motion between two bodies in contact} \cite{frictionDefinition}. 
+It's a well known phenomena, though still not completely understood.
 Despite the fact that we learn about friction in introductory courses to physics, it is not at all easy to comprehend. 
 It's very complex and still a field of research.
 The effects of friction is affected by surface roughness, material properties, ambient conditions, the geometry of contact area, and many other factors. 
-In this chapter we will study some elementary aspects of friction, elasticity and contact mechanics. 
+In this chapter we will study some elementary aspects of dry friction between two solid bodies, elasticity and contact mechanics. 
    
  
 \begin{figure}[H]
@@ -644,7 +644,7 @@ This impression of the sliding mechanism is quite similar to the one we have now
 
 
 
-\section{Macroscopic sliding motion}
+\section{Macroscopic observations}
 
 %There are two fundamental forces that cause the friction force: gravitational force and electromagnetic force. 
 
@@ -730,7 +730,14 @@ However, if we open the door quickly, the door will not creak.
 \end{figure}
 
 
-
+\section{Microscopic aspects}
+Friction is caused by electromagnetic interactions between atoms of the two bodies, at the area of contact. 
+The range of these interactions are typically quite short; at 10\AA ~separation they are negligible.
+As bonds are formed, they have associated energies required for the bonds to be broken. 
+The bonds can brake either by applying an external force or by thermal excitation\footnote{Creep}.
+Bonds will be formed and broken continuously (for temperatures $T>0K$).
+However, these bonds are the source of the opposing force we refer to as friction.
+Obviously, the structure of the surfaces and elastic properties also affect the   
 
 
 
@@ -746,11 +753,11 @@ However, if we open the door quickly, the door will not creak.
 \section{Elasticity}
 
 
-We distinguish between elastic and plastic deformation.
-If the deformed body recovers its initial structure after the force causing the deformation is removed, it is referred to as an \textit{elastic} deformation. 
+We distinguish between elastic and plastic deformations.
+If a body is deformed by an external force, but recovers its initial structure after the force causing the deformation is removed, it is referred to as an \textit{elastic} deformation. 
 If it does not, it is regarded a \textit{plastic} deformation. 
 Obviously, there is a limit to the applied stress that separates the two;  the so-called yield stress. 
-In this section we will only consider elastic deformations.
+In this section we will only consider elastic deformations, and review fundamental concepts of linear elasticity. 
 
 
 
@@ -789,17 +796,17 @@ The collection of stress and strain components are often composed into the so-ca
 \begin{equation}
 \sigma = 
 \begin{pmatrix}
-\sigma_{xx} & \sigma_{xy} & \sigma_{xz} \\
-\sigma_{yx} & \sigma_{yy} & \sigma_{yz} \\
-\sigma_{zx} & \sigma_{zy} & \sigma_{zz} \\
+\sigma_{x} & \sigma_{xy} & \sigma_{xz} \\
+\sigma_{yx} & \sigma_{y} & \sigma_{yz} \\
+\sigma_{zx} & \sigma_{zy} & \sigma_{z} \\
 \end{pmatrix}
 \qquad
 \epsilon = 
 \begin{pmatrix}
-\epsilon_{xx} & \epsilon_{xy} & \epsilon_{xz} \\
-\epsilon_{yx} & \epsilon_{yy} & \epsilon_{yz} \\
-\epsilon_{zx} & \epsilon_{zy} & \epsilon_{zz} \\
-\end{pmatrix}
+\epsilon_{x} & \epsilon_{xy} & \epsilon_{xz} \\
+\epsilon_{yx} & \epsilon_{y} & \epsilon_{yz} \\
+\epsilon_{zx} & \epsilon_{zy} & \epsilon_{z} \\
+\end{pmatrix}.
 \end{equation}
 
 \begin{figure}
@@ -819,7 +826,7 @@ If we consider a infinitesimal cubical body subject to a tensile force in the x-
 \begin{equation}
 	\epsilon_x = \frac{\sigma_x}{E},
 \end{equation}
-where $E$ is a material property known as Young's modulus, which express the stiffness of the material. 
+where $E$ is a material property known as Young's modulus\footnote{Young's modulus is also known as the elastic modulus.}, which express the stiffness of the material. 
 Here we assume that the deformation is elastic.
 %As the body is expanded in on direction, as in our example, it will experience a contraction in the other two dimensions. 
 %These contractions can be expressed as
@@ -887,38 +894,42 @@ We may choose to express the stress and strain as vectors by using Voigts method
 \epsilon_{6}
 \end{pmatrix}
 \end{equation}
-
-Similarly the stiffness tensor reduces to a $6\times6$ matrix (rank 2)
+Similarly the stiffness tensor reduces to a $6\times6$ matrix (rank 2).
 \begin{equation}
-	\vec{c} = \begin{pmatrix}
+	\vec{\hat{C}} = \begin{pmatrix}
 	C_{11}& C_{12}& C_{13}& C_{14}& C_{15}& C_{16} \\
 	C_{21}& C_{22}& C_{23}& C_{24}& C_{25}& C_{26} \\
 	C_{31}& C_{32}& C_{33}& C_{34}& C_{35}& C_{36} \\
 	C_{41}& C_{42}& C_{43}& C_{44}& C_{45}& C_{46} \\
 	C_{51}& C_{52}& C_{53}& C_{54}& C_{55}& C_{56} \\
 	C_{61}& C_{62}& C_{63}& C_{64}& C_{65}& C_{66} \\
-	\end{pmatrix}.
+	\end{pmatrix}
 \end{equation} 
-Hooke's law can then be expressed as a matrix product
+The structure of the elements in the stiffness tensor are dependent on the isotropy\footnote{Directionally dependent physical properties.} of the material of consideration.
+The general Hooke's law can now be expressed as a matrix product
 \begin{equation}
-	\vec{\sigma} = \vec{C}\vec{\epsilon}
+	\vec{\sigma} = \vec{\hat{C}}\vec{\epsilon}
 \end{equation}
 
 
-\section{Hertz' theory}
+\section{Contact mechanics}
 
 
-
-
-
-
-\section{Modern knowlage}
+\subsection{Real area of contact}
 Today we know that most surfaces are rough, at least at a microscopic level, having some degree of asperities. 
 It is actually the asperities that are in contact with the other body. 
 When there is contact between two surfaces, the asperities are pushed into the other material, and tries to occupy the position with the lowest potential.  
 The asperities may move even though the macroscopic body is still. 
 This is known as thermally activated creep.
 Thus, longer duration of resting contact gives a higher rate of asperities that settle in positions with the lowest potential, effectively making the coupling of the bodies stronger.
+
+ 
+\subsection{Hertz theory}
+The first satisfactory analysis of the stresses at the contact of two elastic solids is due to Heinrich Hertz.
+
+
+
+
 
 
 

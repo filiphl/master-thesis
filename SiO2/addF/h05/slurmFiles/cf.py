@@ -220,7 +220,7 @@ color=st.cc[6])
 
 
 #plt.ylabel('$F$~[ev/\\AA]', rotation=90, fontsize=24)#'Force [eV/\AA]', fontsize=16)
-plt.ylabel('$\\mu', rotation=0, fontsize=28)
+plt.ylabel('$\\mu$', rotation=0, fontsize=28)
 plt.xlabel('$N$~[ev/\\AA]', fontsize=24)
 plt.tick_params(axis='both', which='major', labelsize=16)
 ax = plt.gca()
