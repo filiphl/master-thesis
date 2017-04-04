@@ -80,9 +80,8 @@ class Forces:
         for i in xrange(np.shape(self.matrix)[0]):
             for j in xrange(np.shape(self.matrix)[1]):
                 self.absoluteForces[i,j] = np.sqrt(sum(self.matrix[i,j]**2))
+
         self.absoluteForces /= self.steps
-
-
         self.matrix /= self.steps
 
         if self.plotAverage:
@@ -176,6 +175,30 @@ class Forces:
             if self.plotAverage:
                 #plt.plot(21.5,22.5, 'g*', markersize=10)
                 plt.show
+
+        plt.figure()
+        im0 = plt.imshow(self.absoluteForces, interpolation='nearest', cmap="hot_r")
+        ax = plt.gca()
+        ax.set_yticks([0,22.5,45])
+        ax.set_xticks([0,22.5,45])
+        ax.set_yticklabels([r'$23$', r'$0$', r'$-23$'],  fontsize=14)
+        ax.set_xticklabels([r'$-23$', r'$0$', r'$23$'],  fontsize=14)
+        plt.colorbar()
+
+        plt.figure()
+        im1 = plt.pcolor(output)
+        plt.ylabel('$\\theta$', fontsize=26)
+        plt.xlabel('$r$',       fontsize=26)
+
+        plt.figure()
+        plt.plot(radialDist, linewidth=2, color="#478684")
+        plt.hold('on')
+        a = 100
+        p0 = max(radialDist)
+        pd = lambda p0, r, a: p0*np.sqrt(1-np.linspace(0,a,100)**2/a**2)
+        p  = pd(p0, r, a)
+
+        plt.plot(np.linspace(0,100,100), p)
 
 #------------------------------------------------------------------------------#
 
