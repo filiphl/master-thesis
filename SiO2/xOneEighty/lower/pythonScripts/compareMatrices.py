@@ -65,9 +65,9 @@ class Forces:
                 x = int(float(col[1])/self.binWidth)
                 y = int(float(col[2])/self.binWidth)
                 self.nCount[x,y] = float(col[3])
-                fx = float(col[4])*self.nCount[x,y]
-                fy = float(col[5])*self.nCount[x,y]
-                fz = float(col[6])*self.nCount[x,y]
+                fx = float(col[4])
+                fy = float(col[5])
+                fz = float(col[6])
                 self.absoluteForces[x,y] += np.sqrt(fx**2 + fy**2 + fz**2)
                 self.matrix[x,y] += [fx, fy, fz]
             else:
@@ -183,7 +183,7 @@ class Forces:
         myMap = sns.cubehelix_palette(80, start=.5, rot=-.75)
         cm = mpl.colors.ListedColormap(myMap)
         plt.figure()
-        im0 = plt.imshow(self.absoluteForces, interpolation='nearest', cmap=cm)
+        im0 = plt.imshow(self.absoluteForces, interpolation='nearest', cmap=cm, vmin=-0.008, vmax=0.064)
         plt.plot([self.cx], [self.cy], 'x')
         plt.axis([0, self.snChunks, 0, self.snChunks])
         ax = plt.gca()
@@ -192,8 +192,32 @@ class Forces:
         ax.set_yticklabels([r'$23$', r'$0$', r'$-23$'],  fontsize=16)
         ax.set_xticklabels([r'$-23$', r'$0$', r'$23$'],  fontsize=16)
         cbar = plt.colorbar()
-        cbar.set_label(r'$eV/\AA$',size=18, labelpad=20)
+        cbar.set_label(r'$eV/\AA$',size=18, labelpad=5)
         cbar.ax.tick_params(labelsize=16)
+        #plt.grid('off')
+
+
+        plt.figure()
+        im0 = plt.imshow(-self.matrix[:,:,2], interpolation='nearest', cmap=cm, vmin=-0.008, vmax=0.064)
+        plt.plot([self.cx], [self.cy], 'x')
+        plt.axis([0, self.snChunks, 0, self.snChunks])
+        ax = plt.gca()
+        ax.set_yticks([0,self.cy,self.snChunks])
+        ax.set_xticks([0,self.cx,self.snChunks])
+        ax.set_yticklabels([r'$23$', r'$0$', r'$-23$'],  fontsize=16)
+        ax.set_xticklabels([r'$-23$', r'$0$', r'$23$'],  fontsize=16)
+        cmin = np.min(-self.matrix[:,:,2])
+        cmax = np.max(-self.matrix[:,:,2])
+        cbar = plt.colorbar()#ticks=np.arange(-0.008, 0.065, 0.008), format=r'$%.3f$')
+        cbar.set_label(r'$eV/\AA$',size=18, labelpad=5)
+        cbar.ax.tick_params(labelsize=16)
+        #plt.grid('off')
+        #tick_locator = ticker.MaxNLocator(nbins=9)
+        #cbar.locator = tick_locator
+        #cbar.update_ticks()
+
+
+
         plt.figure()
         im1 = plt.pcolor(output)
         plt.ylabel('$\\theta$', fontsize=26)
@@ -216,6 +240,7 @@ class Forces:
 
 if __name__=='__main__':
     import seaborn as sns
+    from matplotlib import ticker
     cx = 22.5
     cy = 22.5
     singleObject = Forces('../forceFiles/m4/forces110000.txt', cx, cy)

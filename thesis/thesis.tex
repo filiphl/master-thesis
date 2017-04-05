@@ -1526,15 +1526,18 @@ We can then find the radial distribution simply by binning this matrix in radial
 The normal force is defined as the force exerted on an object that is perpendicular to the contact surface. 
 %The system we have created will have a non-zero normal force in the indentation of the substrate. 
 In this chapter we will make an attempt to find the distribution of the normal forces. 
-This is not a trivial thing to compute in LAMMPS. 
-As a matter of fact, to achieve this we have expanded the LAMMPS library by creating a custom compute class. 
+This is not a trivial thing to compute in molecular dynamics. 
+The reason is that we have to be able to define the contact surface, which is not always easy. 
+Though for solid state physics there are several algorithms which attempt at this by searching for areas with structural discrepancies and dislocations \cite{stukowski}. 
+Secondly, we must distinguish contact forces from non-contact forces. 
+As a matter of fact, to obtain the contact forces we have expanded the LAMMPS library by creating a custom compute class, since there currently is no such compute available. 
 For the sake of completeness, the details of that procedure will be described. 
 
 Our strategy is simple, but not necessarily easy. 
 First of, we divide the system into a 2D-grid in the xy-plane. 
-Secondly,  we compute the average force exerted on one body from another within each cell of the grid. 
+Secondly,  we compute the time-averaged force exerted on one body from another within each cell of the grid. 
 We approximate the slope of the contact surface within the cells using a least squares regression method on the atoms positioned at the surface. 
-Finally, we project the average force of the atoms in a cell onto the normal vector of the approximated surface.
+Finally, we project the average force of a cell onto the corresponding normal vector of the approximated surface.
 
 
 \section{Creating a custom compute}
@@ -1568,7 +1571,7 @@ Since we will be making a subclass of it, we change the \textit{private} propert
 
 We start out by creating a header file and decide upon a name for our class. 
 We have chosen the name \textit{group/group/atom} since it is basically a per-atom version of the already existing compute \textit{group/group}. 
-A trailing {\it "/atom"} is the common naming of per-atom computes. 
+A trailing {\it "/atom"} is the common naming convention of per-atom computes. 
 A complete header-file is shown in Listing \ref{groupGroupAtomHeader} and explained in detail below.
 
 \lstinputlisting[caption={Header file of our new compute: \texttt{compute\_group\_group\_atom.h}.}, label={groupGroupAtomHeader}, language=c++, firstline=14, lastline=40]{../../LAMMPS/src/compute_group_group_atom.h}
@@ -1585,7 +1588,7 @@ As can be seen, there are not many additions to the variables and functions alre
 \end{itemize}
 
 
-\lstinputlisting[caption={Source file of compute: \texttt{compute\_group\_group\_atom.cpp}.}, label={groupGroupAtomHeader}, language=c++, firstline=19, lastline=300]{../../LAMMPS/src/compute_group_group_atom.cpp}
+\lstinputlisting[caption={Source file of compute: \texttt{compute\_group\_group\_atom.cpp}.}, label={lst:groupGroupAtomSource}, language=c++, firstline=19, lastline=300]{../../LAMMPS/src/compute_group_group_atom.cpp}
 
 \subsubsection{Setting flags}
 In the constructor we set specific flags that LAMMPS uses to interpret what structure our data should have, and how to store them. 
@@ -1613,24 +1616,60 @@ Following the constructor is the destructor on line 40. Its only task is to free
 %The arrays returned are not ordered in any way. 
 %This is not a cause of concern to us, though.
 %We are simply interested in knowing the position, and value of the force components of each atom. 
-By using the \texttt{compute chunk} and \texttt{compute ave/time} to do spatial- and time averaging, 
-we obtain a matrix of the mean value for the force components within each grid element of the system.
-At this point, we can study for instance the force distribution of the magnitude of contact force, as in figure \ref{fig:absoluteDistribution} 
-We can also study the force in a specified direction.
+ \begin{lstlisting}[language=LammpsInput, caption={Syntax for using custom compute}, label={lst:customComputeSyntax} ]
+	compute ID group1-ID group/group/atom group2-ID keyword value
+\end{lstlisting}
+The compute class shown in listing \ref{lst:groupGroupAtomSource} calculates the energy and force interaction between each atom in group1 and all atoms in group2. The groups can be the same group. It is invoked by using the syntax in listing \ref{lst:customComputeSyntax},
+where \\*
+\begin{itemize}
+	\item ID is the reference to the invoked compute.
+	\item group1-ID and group2-ID are the specified groups we wish to compute the energy and interaction force between. The energy and interaction force is only stored for atoms in group1, and the force is the force acting on group1 from group2.
+	\item keyword is optional and can be either \textit{pair}, \textit{kspace}, \textit{boundary} or \textit{molecule}, with value \textit{yes} or \textit{no}. For a description of these, please look up the documentation for compute group/group\footnote{\href{http://lammps.sandia.gov/doc/compute_group_group.html}{\url{http://lammps.sandia.gov/doc/compute_group_group.html}}}. 
+\end{itemize}
+The compute successfully stores the contact force components of all atoms in an array when invoked. 
+We are interested in the spatial distribution of the forces. 
+To obtain it, we divide the system into a 2d-grid in the xy-plane, using  \texttt{compute chunk/atom} as shown in listing \ref{lst:usingCustomCompute}.
+On the next line we call upon our compute, stating that we wish the force acting on the sphere from the slab. 
+Thus, the force that should have a positive z-component in this case. 
+We could be content with using the result from a single time frame, but since the instantaneous values fluctuate, it's of interest to apply time averaging. 
+The \texttt{compute ave/chunk} is used for summation and time averaging.  
+It sums the  per-atom vectors of atoms in each chunk from specified time steps, and averages this over time. 
+We obtain a matrix of the time-averaged value of the sum of force components on atoms within each grid element of the system.
+This is stored to a text-file with specified name. 
 
+At this point, we can study for instance the distribution of the magnitude of contact force, or contact force in a specified direction as in figure \ref{fig:forceDistributions} .
+%Notice how some of the grid elements have a negative z-component in figure \ref{fig:zForceDistribution}.
+The speckles outside the contact area are atoms/molecules that have broken loose from their original bonds, and drifted until they attached to the other body. 
+In review, it is obvious that this could be avoided by redefining the groups after the equilibration procedure.
+Though, as it will not alter the quantitative results, this was ignored.
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\linewidth]{figures/forceDistribution/forces/absoluteForceDistribution.pdf}
-	\caption{Distribution of force. The color at a square represents the time averaged magnitude of the contact force of atoms within the square, hence not dependent on direction.}
-	\label{fig:absoluteDistribution}
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\linewidth]{figures/forceDistribution/forces/absoluteForceDistribution.pdf}
+		\vspace{-7mm}
+		\caption{Magnitude of force.}
+		\label{fig:absoluteDistribution}
+	\end{subfigure}
+	\begin{subfigure}{0.8\textwidth}
+		\includegraphics[width=\linewidth]{figures/forceDistribution/forces/zForceDistribution.pdf}
+		\vspace{-7mm}
+		\caption{Force in z-direction.}
+		\label{fig:zForceDistribution}
+	\end{subfigure}
+\vspace*{5mm}
+\caption{Distribution of force. The color at a square represents the time averaged magnitude (a) and z-component (b) of the contact force of atoms within the square, hence not dependent on direction.
+	This is the result from a simulation where we push a sphere with radius of curvature $R=200$\AA  ~XX\AA ~into a half-space of area $46\times46$ unit cells}
+\label{fig:forceDistributions}
 \end{figure}
 
-
-
-
+ \begin{lstlisting}[language=LammpsInput, caption={Example usage of compute group/group/atom with spatial binning and time averaging.}, label={lst:usingCustomCompute} ]
+compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+compute ggaID sphereG group/group/atom slabG pair yes
+fix fixComputeID sphereG ave/chunk ${Nevery} ${Nrepeat} ${Nfreq} chunkID c_ggaID[2] c_ggaID[3] c_ggaID[4] file forces.txt
+\end{lstlisting}
 
 \newpage
-\section{Least squares plane regression}
+\section{Least squares plane regression} \label{sec:leastSquareRegression}
 The method of least squares aims to find parameters which  minimize the sum of the squared residuals, where residuals are the difference between observed values and the approximated value. We will use this method to approximate the slope of the surface of the substrate. This will be done by partitioning the system in a grid and do a plane approximation on each cell of the grid. In other words, we seek the coefficients in the plane equation
 \begin{equation}
 	z = ax + by + c
@@ -1709,6 +1748,7 @@ We will assume that the normal vector $\vec{n}$ is always in the same general di
 
 
 
+
 \section{Radial distribution}
 Our system is partitioned into a grid. 
 Each cell in the grid holds an averaged value of the normal force in that cell. 
@@ -1718,7 +1758,7 @@ We achieve this by defining discrete radial bins with finite bin width, and aver
 	%\begin{minipage}[t]{0.49\linewidth}
 	%	\captionsetup{width=\textwidth}
 	\centering
-	\resizebox{0.5\linewidth}{!}{
+	\resizebox{0.4\linewidth}{!}{
 		\input{figures/tikz/radialSmoothing.tikz}
 	}
 	\caption{Radial binning. The third radial bin is colored, and its value will be the average value of the contribution within the bin.}% A close-up of the outlined cell, is shown in figure \ref{fig:radialBinningSmoothCloseUp}.}
@@ -1751,13 +1791,14 @@ The figures clearly show that some cells have a larger area within the bin than 
 
 By exploiting the symmetry we are only required to compute the weights for cells in a section of the domain, and not all cells. 
 I have chosen to regard only the upper right corner of the system, meaning $x\geq x_c$ and $y\geq y_c$, where $(x_c, y_c)$ is the coordinates of the center of the indentation.
-As the actual computations are easy to follow from the source code, the reader is recommended to take a look at it if this is of interest. 
-{\Large Should I explain the computation of the weights or is that too intuitive?}
+As the actual computations are easy to follow from the source code, the reader is encouraged to take a look at it if this is of interest. 
+In our computations we have regarded unit cell length (7.12\AA) as unit of length.
+The bin width was set to 1, though this is allowed to vary. 
 
 
 \begin{figure}[H]
 	\center
-	\resizebox{0.48\linewidth}{!}{
+	\resizebox{0.4\linewidth}{!}{
 		\input{figures/tikz/radialBinning.tikz}
 	}
 	\caption{Coarse radial binning. The value appointed to the radial bin is the average of the weights of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.}
@@ -1767,12 +1808,37 @@ As the actual computations are easy to follow from the source code, the reader i
 
 \begin{figure}[H]
 	\centering
-	\hspace{0.87cm}
-	\includegraphics[height=0.482\linewidth]{figures/forceDistribution/radialDistribution/weights.pdf}
+	\hspace{0.74cm}
+	\includegraphics[height=0.39\linewidth]{figures/forceDistribution/radialDistribution/weights.pdf}
 	\caption{Radial binning based on weighted contributions of intersecting cells. The fraction of cell's area that are within the third radial bin is color coded; black being 1 and white being 0.}
 	\label{fig:radialBinningWeights}
 \end{figure}
 
+
+\noindent
+On the same data set as used in figure \ref{fig:forceDistributions}, the computed radial distribution is as shown in figure \ref{fig:radialdistribution110000}.
+The figure show the spatial distribution in polar coordinates (top row) and the radial average (bottom row) of the magnitude of force, normal force and shear force.
+The normal force was found by treating the data as described in section \ref{sec:leastSquareRegression}.
+What is meant by shear force is in this situation dependent on how we define it. 
+Usually, the shear force is the component of contact force that is parallel to the contact surface (perpendicular to the normal force). 
+However, by strictly using that definition, the computed shear force would have only positive contributions, and no notion of direction.
+This would also not fit with the distributions derived by Hertz. 
+In stead, we define the shear force as the radial component of the shear force as defined above.
+Thus, if its general direction is away from the center of indentation, its value will  be positive, while if its towards the center it is negative. 
+This way the shear force has a defined direction, but we no longer have the usual relation $\vec{F}=\vec{F_N} + \vec{F_s}$.
+These results will be discussed further in chapter \ref{sec:resultsRadialDistribution}.
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{figures/forceDistribution/forces/normalForceDistribution110000}
+	\caption{Radial distribution of the magnitude of force, as well as normal and shear force. 
+		The figures on the top row are equivalent to the ones in figure \ref{fig:forceDistributions}, only in polar coordinates. 
+		The value of the radial bins at a given radius $r$ in the figures at the bottom row, are the average value of the column at that $r$ in the top row.
+		This figure show the result from a simulation where we push a sphere with radius of curvature $R=200$\AA  ~XX\AA ~into a half-space of area $46\times46$ unit cells}
+	\label{fig:radialdistribution110000}
+\end{figure}
 
 
 

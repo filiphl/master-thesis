@@ -35,8 +35,14 @@ restart ${N} restartFiles/SiO2_*.restart
 
 
 run{N}
-fix addForceID upperG addforce 0 0 0 
+
+
+fix addForceID lowerG addforce 0 0 0 
+#compute reduceID lowerG reduce ave f_addForceID[3]
+
+dump dumpID all custom 1000 dump.myforce.* step zlo addForceID[3]
 
 fix deform all deform 1 z delta 0 -${compressionLength} remap x
-
 run{N}
+
+
