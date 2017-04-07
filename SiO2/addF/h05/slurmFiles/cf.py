@@ -69,7 +69,7 @@ class Single:
 
 
 class SameTime:
-    def __init__(self, data):
+    def __init__(self, data, plot=False):
         self.data = data
         self.F      = [i[0] for i in data]
         self.T      = [i[1] for i in data]
@@ -82,7 +82,7 @@ class SameTime:
         self.c  = ['#D7DFC0','#AECFA2','#82BC92','#5FA38E','#49848B','#3F5F7F','#383D65','#2C1E3E']
         self.cc = ['#AF97A9','#E5B3BB','#FCB7AE','#F7B490','#E3AA75','#C49859','#937E47','#5B5728']
 
-        self.u = self.findUofV(0)
+        self.u = self.findUofV(plot)
         self.scale = lambda F, v: F/(self.u[0]*v + self.u[1])   # u(v)
 
 
@@ -92,7 +92,7 @@ class SameTime:
         p = np.polyval(pf, l)
         if plot:
             plt.figure()
-            print pf
+            #print pf
             plt.plot(l,p,
             '--',
             linewidth=3,
@@ -140,6 +140,119 @@ class SameTime:
         plt.title('$N=%.02f$'%self.N)
 
 
+
+class All:
+
+    def __init__(self, dirPath='.', plotEach=False):
+
+        self.majorFontSize = 28
+        self.minorFontSize = 25
+        self.tickFontSize  = 23
+
+        self.c  = ['#D7DFC0','#AECFA2','#82BC92','#5FA38E','#49848B','#3F5F7F','#383D65','#2C1E3E']
+        self.cc = ['#AF97A9','#E5B3BB','#FCB7AE','#F7B490','#E3AA75','#C49859','#937E47','#5B5728']
+
+        self.data = {}
+        self.time = []
+        self.mu   = []
+        self.N    = []
+        for path in sorted(os.listdir(dirPath)):
+            if path[-3:]=='out':
+                s = Single(path)
+                try:
+                    self.data[s.t[0]].append([s.F, s.t, s.N, s.Fmax, s.v])
+                except:
+                    self.data[s.t[0]] = [[s.F, s.t, s.N, s.Fmax, s.v]]
+                    self.time.append(s.t[0])
+
+        self.time = sorted(self.time)
+
+        self.findCoefficient(plotEach=plotEach)
+
+
+
+    def findCoefficient(self, plotFinal=False, plotEach=False, printTable=False):
+        for t in self.time:
+            st = SameTime(self.data[t], plot=plotEach)
+            #st.plotFNT()
+            #plt.show()
+            self.mu.append(st.u[-1])
+            self.N.append(st.N)
+
+        self.F = np.asarray(self.mu)*np.asarray(self.N)
+
+        if printTable:
+            print '{0:<2}    {1:<7}    {2:<7}'.format('t', 'N(t)', 'mu(t)')
+            for t in xrange(len(time)):
+                print '{0:<2}    {1:<7.02f}    {2:<7.03f}'.format(t, N[t], mu[t])
+
+        self.pf = np.polyfit(self.N, self.F, 1)
+        self.l = np.linspace(min(self.N), max(self.N), 100)
+        self.p = np.polyval(self.pf, self.l)
+
+        if plotFinal:
+            self.plotAll()
+
+
+
+    def plotAll(self):
+        plt.figure()
+
+        plt.plot(self.l, self.p,
+        '--',
+        linewidth=3,
+        color='#666666',
+        label="$F\'(N) = %.03fN + %.03f$"%(self.pf[0], self.pf[1]))
+
+        plt.hold('on')
+
+        plt.plot(self.N, self.F,
+        'o',
+        markersize=10,
+        color=self.cc[6])
+
+
+        lgnd = plt.legend(loc='upper left', fontsize=self.tickFontSize)
+        lgnd.legendHandles[0].set_linewidth(3)
+        #plt.ylabel('$F$~[ev/\\AA]', rotation=90, fontsize=24)#'Force [eV/\AA]', fontsize=16)
+        plt.ylabel('$F$~[ev/\\AA]', rotation=90, fontsize=self.majorFontSize)
+        plt.xlabel('$N$~[ev/\\AA]', fontsize=self.majorFontSize)
+        plt.xticks(np.arange(400 , 2201 , 400))
+        plt.yticks(np.arange(300 , 751 , 100))
+        plt.tick_params(axis='both', which='major', labelsize=self.tickFontSize)
+        #ax = plt.gca()
+        #ax.yaxis.set_label_coords(-0.12, 0.455)
+        plt.tight_layout()
+
+        """
+        plt.figure()
+        plt.plot(self.N, self.mu,
+        'o',
+        markersize=10,
+        color=self.cc[6])
+        #plt.ylabel('$F$~[ev/\\AA]', rotation=90, fontsize=24)#'Force [eV/\AA]', fontsize=16)
+        plt.ylabel('$\\mu', rotation=0, fontsize=28)
+        plt.xlabel('$N$~[ev/\\AA]', fontsize=24)
+        plt.tick_params(axis='both', which='major', labelsize=16)
+        ax = plt.gca()
+        ax.yaxis.set_label_coords(-0.12, 0.48)
+        plt.tight_layout()
+        """
+    def residualPlot(self):
+        self.residual = []
+
+        for i in xrange(len(self.F)):
+            self.residual.append(self.F[i]-np.polyval(self.pf, self.N[i]))
+            #print self.N[i], self.F[i], np.polyval(self.pf, self.N[i]), self.residual[i])
+
+        plt.figure()
+        plt.stem(self.N, self.residual)
+        plt.ylabel('Residual~[ev/\\AA]', rotation=90, fontsize=24)
+        plt.xlabel('$N$~[ev/\\AA]', fontsize=24)
+        plt.axis([min(self.N)*0.9, max(self.N)+min(self.N)*0.1, min(self.residual)*1.1, max(self.residual)*1.1 ])
+        plt.tick_params(axis='both', which='major', labelsize=16)
+
+
 ################################################################################
 if __name__ == '__main__':
     import os, re
@@ -151,83 +264,8 @@ if __name__ == '__main__':
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
 
-    data = {}
-    time = []
-    for path in sorted(os.listdir('.')):
-        if path[-3:]=='out':
-            s = Single(path)
-            try:
-                data[s.t[0]].append([s.F, s.t, s.N, s.Fmax, s.v])
-            except:
-                data[s.t[0]] = [[s.F, s.t, s.N, s.Fmax, s.v]]
-                time.append(s.t[0])
 
-    time = sorted(time)
-
-mu = []
-N = []
-
-for t in time:
-    st = SameTime(data[t])
-    #st.plotFNT()
-    #plt.show()
-    mu.append(st.u[-1])
-    N.append(st.N)
-
-F = np.asarray(mu)*np.asarray(N)
-
-print '{0:<7}  {1:<7}  {2:<7}'.format('t', 'N(t)', 'mu(t)')
-for t in xrange(len(time)):
-    print '{0:<7}  {1:<7.02f}  {2:<7.02f}'.format(t, N[t], mu[t])
-print len(N), len(F)
-pf = np.polyfit(N, F, 1)
-l = np.linspace(min(N), max(N), 100)
-p = np.polyval(pf, l)
-
-plt.figure()
-
-plt.plot(l,p,
-'--',
-linewidth=3,
-color='#666666',
-label="$F\'(N) = %.03fN + %.03f$"%(pf[0], pf[1]))
-
-plt.hold('on')
-
-plt.plot(N, F,
-'o',
-markersize=10,
-color=st.cc[6])
-
-l= plt.legend(loc='upper left', fontsize=16)
-l.legendHandles[0].set_linewidth(3)
-
-
-#plt.ylabel('$F$~[ev/\\AA]', rotation=90, fontsize=24)#'Force [eV/\AA]', fontsize=16)
-plt.ylabel('$F$~[ev/\\AA]', rotation=90, fontsize=24)
-plt.xlabel('$N$~[ev/\\AA]', fontsize=24)
-plt.tick_params(axis='both', which='major', labelsize=16)
-ax = plt.gca()
-#ax.yaxis.set_label_coords(-0.12, 0.455)
-plt.tight_layout()
-
-
-plt.figure()
-plt.plot(N, mu,
-'o',
-markersize=10,
-color=st.cc[6])
-
-
-#plt.ylabel('$F$~[ev/\\AA]', rotation=90, fontsize=24)#'Force [eV/\AA]', fontsize=16)
-plt.ylabel('$\\mu$', rotation=0, fontsize=28)
-plt.xlabel('$N$~[ev/\\AA]', fontsize=24)
-plt.tick_params(axis='both', which='major', labelsize=16)
-ax = plt.gca()
-#ax.yaxis.set_label_coords(-0.12, 0.455)
-plt.tight_layout()
-
-
-
-
-plt.show()
+    h1 = All(plotEach=0)
+    h1.plotAll()
+    #h1.residualPlot()
+    plt.show()
