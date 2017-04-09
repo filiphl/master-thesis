@@ -1,0 +1,40 @@
+#region ID style args keyword arg ...
+
+
+
+#Define the region of the sphere
+region sphereRegion sphere 163.76 163.76 278.32 200
+region smallSphereRegion sphere 163.76 163.76 278.32 197 side out
+region shellRegion intersect 2 sphereRegion smallSphereRegion
+group  sphereGroup region sphereRegion
+group  shellGroup region shellRegion
+
+#Define the region of the slab
+region slabRegion block 0 INF 0 INF 3.1 53.4
+group  slabGroup region slabRegion
+
+region slabBottomRegion block 0.0 INF 0.0 INF 0.0 3.0
+group  slabBottomGroup region slabBottomRegion
+
+#Define the region that is outside the sphere and slab
+region bothRegion union 3 sphereRegion slabRegion slabBottomRegion side out
+
+#Delete all atoms exterior to the sphere and slab
+delete_atoms region bothRegion
+
+#Define the surface
+region surfaceRegion block 0 INF 0 INF 53.0 53.4
+group  surfaceGroup  region surfaceRegion
+
+#Freeze some volumes
+
+region slabUpperRegion block 0.0 INF 0.0 INF 50.4 53.4
+group slabUpperGroup region slabUpperRegion
+
+
+fix upperFreezeID  slabUpperGroup  setforce 0 0 0
+fix shellFreezeID  shellGroup      setforce 0 0 0
+fix bottomFreezeID slabBottomGroup setforce 0 0 0
+velocity slabBottomGroup set 0 0 0
+velocity slabUpperGroup  set 0 0 0
+velocity shellGroup      set 0 0 0

@@ -1,0 +1,35 @@
+# file "system.lt"
+
+write_once("In Init") {
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+}
+
+write_once("In Settings") {
+  pair_coeff  * *  SiO2.vashishta Si O
+  pair_modify table 16
+  pair_modify tabinner 0.1
+}
+
+import "beta-cristobalite.lt"
+
+SiO2 = new beta-cristobalite [5].move(7.12, 0.00, 0.00)
+                             [5].move(0.00, 7.12, 0.00)
+                             [5].move(0.00, 0.00, 7.12)
+
+
+SiO22 = new beta-cristobalite.move(0.0, 0.0, 42.72) [8].move(7.12, 0.00, 0.00)
+                                                   [8].move(0.00, 7.12, 0.00)
+                                                   [5].move(0.00, 0.00, 7.12)
+SiO22[*][*][*].rot(45,  0, 0, 1, 28.48, 28.48, 60.52)
+SiO22[*][*][*].rot(180, 0, 1, 0, 28.48, 28.48, 60.52)
+SiO22[*][*][*].move(-10, -10, 0)
+
+write_once("Data Boundary") {
+  0  35.6  xlo  xhi
+  0  35.6  ylo  yhi
+  0  78.32  zlo  zhi
+}

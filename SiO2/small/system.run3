@@ -1,0 +1,64 @@
+
+#include "system.in"
+#velocity	all create 1 277387 mom yes
+
+
+#include "system.prepare"
+
+variable loadStep equal 30000
+
+include "system.in.init"
+read_restart restartFiles/SiO2_lower30000.restart
+include "system.in.settings"
+
+
+variable N equal 15000
+variable T equal 293
+variable Fz equal -0.01 #*(15000-step)/${N}
+variable Fx equal 0.0
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+
+restart 2000 restartFiles/SiO2_shear_Fx01N15000_*.restart
+#dump myDump sphereG atom 500 dumpFiles/SiO2_shear_sphere_Fx01N15000*.dump
+dump myDump2 all atom 100 dumpFiles/SiO2_shear_all*.dump
+
+
+
+region slab block INF INF INF INF 3.0 25.0
+group sphereIndentTmp region slab
+group sphereIndentG subtract sphereIndentTmp slabG
+
+fix rigidTop sphereUpperG rigid single force 1 on off on torque 1 on on on
+
+compute comTop    sphereUpperG  com      #Center of mass
+compute comSphere sphereIndentG com
+compute tempID    excludeBT     temp     #Temperature
+
+
+
+fix addforce sphereUpperG addforce 0 0 v_Fz
+fix pullID sphereUpperG smd cvel 30.0 10 tether 100 NULL NULL 0.0
+
+
+fix nvtID excludeB nvt temp ${T} ${T} 1.0
+thermo_style custom step c_comSphere[1] f_pullID[1] f_pullID[6]
+balance 1.1 shift xyz 50 1.0
+run ${N}
+
+#variable currentFx equal ${Fx}
+#label pushLoop
+#variable i loop 10
+#    print ${i}
+#    variable Fx equal ${currentFx}+(step-((${i}-1)*1000)-${loadStep})*0.0000001
+#    fix addforce sphereUpperG addforce v_Fx 0 v_Fz
+#    run 1000
+#    variable Fx equal ${Fx}
+#    run 1000
+#next i
+#jump SELF pushLoop

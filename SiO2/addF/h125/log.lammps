@@ -1,0 +1,97 @@
+LAMMPS (26 Jan 2017)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (../comm.cpp:90)
+  using 1 OpenMP thread(s) per MPI task
+fix atomify all atomify
+#include "system.in"
+#velocity	all create 1 277387 mom yes
+
+
+#include "system.prepare"
+
+include "system.in.init"
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+    units		metal
+    boundary	p p p
+    atom_style   atomic
+    pair_style 	 vashishta
+    #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+read_restart restartFiles/SiO2_initial40000.restart
+WARNING: Restart file used different # of processors (../read_restart.cpp:717)
+  orthogonal box = (0 0 0) to (329.36 329.36 193.32)
+  1 by 1 by 1 MPI processor grid
+  647601 atoms
+#read_restart restartFiles/lower/SiO2_lower_180000.restart
+include "system.in.settings"
+  pair_coeff  * *  SiO2.vashishta Si O
+Reading potential file SiO2.vashishta with DATE: 2015-10-14
+  pair_modify table 16
+  pair_modify tabinner 0.1
+
+
+variable N equal 160001
+variable T equal 293
+variable Fz equal 0.0231*(40000-step)/160000
+
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+timestep	0.002
+
+
+# Move sphere down in order to save computation time
+region upperHalfR block INF INF INF INF 60.0 INF
+group upperHalfG region upperHalfR
+351353 atoms in group upperHalfG
+group bottomHalfG subtract all upperHalfG
+296248 atoms in group bottomHalfG
+displace_atoms upperHalfG      move 0 0 -31.18
+
+
+restart 10000 restartFiles/lower/SiO2_lower_*.restart
+#dump dumpID all atom 20000 dumpFiles/lower/SiO2_lower_*.dump
+
+
+fix nvtID excludeB nvt temp ${T} ${T} 1.0
+fix nvtID excludeB nvt temp 293 ${T} 1.0
+fix nvtID excludeB nvt temp 293 293 1.0
+Resetting global fix info from restart file:
+  fix style: nvt, fix ID: nvtID
+
+
+fix rigidTop sphereUpperG rigid single force 1 off off on torque 1 on on on
+1 rigid bodies with 93104 atoms
+fix addforce sphereUpperG addforce 0 0 v_Fz
+
+compute comTop sphereUpperG com      #Center of mass
+compute tempID excludeBT    temp     #Temperature
+
+thermo 100
+thermo_style custom step c_tempID v_Fz c_comTop[3]
+
+
+#balance 1.1 shift xyz 50 1.0
+
+run ${N}
+run 160001
+All restart file global fix info was re-assigned
+WARNING: One or more atoms are time integrated more than once (../modify.cpp:274)
+Neighbor list info ...
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.8
+  ghost atom cutoff = 5.8
+  binsize = 2.9, bins = 114 114 67
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair vashishta, full, perpetual
+      pair build: full/bin
+      stencil: full/bin/3d
+      bin: standard
+Memory usage per processor = 322.628 Mbytes
+Step c_tempID v_Fz c_comTop[3] 
+   40000    292.63829            0      132.605 
+Total wall time: 0:02:22

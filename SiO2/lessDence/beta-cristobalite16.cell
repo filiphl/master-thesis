@@ -1,0 +1,70 @@
+CIF2CELL 1.2.10
+2016-12-12 21:15
+Output for Si O2 (Silicon oxide)
+CIF file exported from Crystallography Open Database.
+Database reference code: 1010921.
+
+ BIBLIOGRAPHIC INFORMATION
+Barth, T F W, American Journal of Science, Serie 5(1,1921-1938) 23, 
+350-356 (1932) 
+
+ INPUT CELL INFORMATION
+Symmetry information:
+Cubic crystal system.
+Space group number     : 198
+Hall symbol            : P 2ac 2ab 3
+Hermann-Mauguin symbol : P213
+
+Lattice parameters:
+          a           b           c 
+  7.1600000   7.1600000   7.1600000 
+      alpha        beta       gamma 
+ 90.0000000  90.0000000  90.0000000 
+Representative sites :
+Atom            x           y           z 
+Si      0.2550000   0.2550000   0.2550000
+Si     -0.0080000  -0.0080000  -0.0080000
+O       0.1250000   0.1250000   0.1250000
+O       0.6600000   0.6600000   0.0620000
+
+ OUTPUT CELL INFORMATION
+Symmetry information:
+Cubic crystal system.
+Space group number     : 198
+Hall symbol            : P 2ac 2ab 3
+Hermann-Mauguin symbol : P213
+
+Bravais lattice vectors :
+  7.1600000   0.0000000   0.0000000 
+  0.0000000   7.1600000   0.0000000 
+  0.0000000   0.0000000   7.1600000 
+All sites, (cartesian coordinates):
+Atom            x           y           z 
+Si      1.8258000   1.8258000   1.8258000
+Si      5.4058000   1.7542000   5.3342000
+Si      1.7542000   5.3342000   5.4058000
+Si      5.3342000   5.4058000   1.7542000
+Si      7.1027200   7.1027200   7.1027200
+Si      3.5227200   3.6372800   0.0572800
+Si      3.6372800   0.0572800   3.5227200
+Si      0.0572800   3.5227200   3.6372800
+O       0.8950000   0.8950000   0.8950000
+O       4.4750000   2.6850000   6.2650000
+O       2.6850000   6.2650000   4.4750000
+O       6.2650000   4.4750000   2.6850000
+O       4.7256000   4.7256000   0.4439200
+O       1.1456000   3.1360800   2.4344000
+O       6.0144000   2.4344000   4.0239200
+O       0.4439200   4.7256000   4.7256000
+O       6.7160800   1.1456000   6.0144000
+O       4.7256000   0.4439200   4.7256000
+O       6.0144000   6.7160800   1.1456000
+O       2.4344000   4.0239200   6.0144000
+O       3.1360800   2.4344000   1.1456000
+O       1.1456000   6.0144000   6.7160800
+O       4.0239200   6.0144000   2.4344000
+O       2.4344000   1.1456000   3.1360800
+
+Unit cell volume  : 367.0616960 A^3
+Unit cell density :   1.3094910 u/A^3 =  14.6739876 g/cm^3
+

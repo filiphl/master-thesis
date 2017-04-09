@@ -1,0 +1,85 @@
+LAMMPS (27 Aug 2016-ICMS)
+include "system.in.init"
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+
+variable N equal 1
+variable T equal 293
+variable compressionLength equal 5
+
+#velocity	all create ${T} 277387 mom yes
+#include "system.prepare"
+
+read_restart restartFiles/equilibrating40000.restart
+WARNING: Restart file used different # of processors (../read_restart.cpp:717)
+  orthogonal box = (0 0 0) to (327.52 327.52 163.76)
+  1 by 1 by 1 MPI processor grid
+  728418 atoms
+include "system.in.settings"
+  pair_coeff  * *  SiO2.vashishta Si O
+Reading potential file SiO2.vashishta with DATE: 2015-10-14
+  pair_modify table 16
+  pair_modify tabinner 0.1
+
+restart 1000 restartFiles/equilibrating*.restart
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		1000
+timestep	0.002
+
+dump myDump surfaceGroup atom 1 dumpFiles/surf*.dump
+
+#Move the top z-boundary downwards
+#fix deform all deform 1 z delta 0 -${compressionLength} remap x
+
+fix nvt all nvt temp ${T} ${T} 1.0
+fix nvt all nvt temp 293 ${T} 1.0
+fix nvt all nvt temp 293 293 1.0
+Resetting global state of Fix nvt Style nvt from restart file info
+
+run ${N}
+run 1
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.8
+  ghost atom cutoff = 5.8
+  binsize = 2.9 -> bins = 113 113 57
+Memory usage per processor = 141.323 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+   40000    293.99058     -2471343            0   -2443662.2    5855.6208 
+   40001    294.94283   -2471434.6            0   -2443664.1    5830.7098 
+Loop time of 6.65685 on 1 procs for 1 steps with 728418 atoms
+
+Performance: 0.026 ns/day, 924.562 hours/ns, 0.150 timesteps/s
+53.9% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 6.513      | 6.513      | 6.513      |   0.0 | 97.84
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.010462   | 0.010462   | 0.010462   |   0.0 |  0.16
+Output  | 0.01508    | 0.01508    | 0.01508    |   0.0 |  0.23
+Modify  | 0.11525    | 0.11525    | 0.11525    |   0.0 |  1.73
+Other   |            | 0.003067   |            |       |  0.05
+
+Nlocal:    728418 ave 728418 max 728418 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    112292 ave 112292 max 112292 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    0 ave 0 max 0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:  4.10357e+07 ave 4.10357e+07 max 4.10357e+07 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 41035706
+Ave neighs/atom = 56.3354
+Neighbor list builds = 0
+Dangerous builds = 0
+Total wall time: 0:00:15

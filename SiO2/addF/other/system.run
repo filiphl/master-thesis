@@ -1,0 +1,34 @@
+include "system.in"
+velocity	all create 1 277387 mom yes
+
+
+include "system.prepare"
+
+#include "system.in.init"
+#read_restart
+#include "system.in.settings"
+
+variable N equal 20000
+variable T equal 293
+variable Fz equal 0.0
+
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+fix nvtID initialFreezeG nvt temp ${T} ${T} 1.0
+
+restart ${N} restartFiles/SiO2_initial*.restart
+dump myDump all atom 1000 dumpFiles/SiO2_initial*.dump
+
+balance 1.1 shift xyz 50 1.0
+
+run ${N}
+
+unfix nvtID
+fix nvtID excludeBT nvt temp ${T} ${T} 1.0
+
+run ${N}

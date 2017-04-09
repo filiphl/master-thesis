@@ -1,0 +1,31 @@
+#include "system.in"
+
+#velocity	all create 1 277387 mom yes
+#include "system.prepare"
+
+include "system.in.init"
+read_restart restartFiles/lowering35000.restart
+include "system.in.settings"
+
+
+fix bottomFreezeID slabBottomGroup setforce 0 0 0
+velocity slabBottomGroup set 0 0 0
+
+variable N equal 20000
+variable T equal 293
+variable compressionLength equal 10
+
+restart 1000 restartFiles/lowering*.restart
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		1000
+timestep	0.002
+
+dump myDump all atom 1000 dumpFiles/lowering_*.dump
+
+#Move the top z-boundary downwards
+fix deform all deform 1 z delta 0 -${compressionLength} remap x
+
+fix nvt all nvt temp ${T} ${T} 1.0
+run ${N}

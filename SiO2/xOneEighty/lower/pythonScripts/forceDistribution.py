@@ -67,9 +67,9 @@ class ForceDistribution:
                     print "Couldn't load force file."
 
         if self.timeStep:
-            F = Forces('../forceFiles/m4/forces%d.txt'%self.timeStep)
+            F = Forces('../forceFiles/m4/forces%d.txt'%self.timeStep, self.cx, self.cy)
         else:
-            F = Forces('../forceFiles/m4/forcesAll.txt')
+            F = Forces('../forceFiles/m4/forcesAll.txt', self.cx, self.cy)
 
         F.plotAverage = True
         F.name = 'Averaged normal force'
@@ -207,14 +207,9 @@ if __name__ == '__main__':
         cx=22.5
         cy=22.5
         nn=8
-        for i in xrange(110000, 115000, 5000):
+        for i in xrange(55000, 115000, 5000):
             dist = ForceDistribution(N, surfN, nn, bw, cx, cy, timeStep=i, verbose=True)
             dist.computeDistributions()
             dist.plotDistributions()
 
     plt.show()
-
-
-
-
-          [16993586, 16993587, 16993588, 16993589, 16993590, 16993591, 16993592, 16993593, 16993594, 16993595, 16993596, 16993597, 16993598, 16993599, 16993600, 16993601, 16993602, 16993603, 16993604, 16993605, 16993606, 16993607, 16993608, 16993609, 16993610, 16993611, 16993612, 16993613, 16993614, 16993615, 16993616, 16993617, 16993618, 16993619, 16993620, 16993621, 16993622, 16993623, 16993624, 16993625, 16993626, 16993627, 16993628, 16993629, 16993630, 16993631, 16993632, 16993633, 16993636] 16993637, 16993638, 16993639, 16993640, 16993641, 16993642, 16993643, 16993644, 16993645, 16993646, 16993647, 16993648, 16993649, 16993650, 16993651, 16993652, 16993653, 16993654, 16993655, 16993656, 16993657, 16993658, 16993659, 16993660, 16993661, 16993662, 16993663, 16993664, 16993665,

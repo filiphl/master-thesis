@@ -1,0 +1,49 @@
+#include "system.in"
+#velocity	all create 1 277387 mom yes
+
+
+#include "system.prepare"
+
+include "system.in.init"
+read_restart restartFiles/SiO2_initial15000.restart
+include "system.in.settings"
+
+
+variable N equal 15000
+variable T equal 293
+variable Fz equal 0.01*(15000-step)/${N}
+
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+timestep	0.002
+
+
+# Move sphere down in order to save computation time
+region upperHalfR block INF INF INF INF 27.0 INF
+group upperHalfG region upperHalfR
+
+displace_atoms upperHalfG      move 0 0 -7.0
+
+
+restart ${N} restartFiles/SiO2_lower*.restart
+dump dumpID all atom 200 dumpFiles/SiO2_lower*.dump
+
+
+fix nvtID excludeB nvt temp ${T} ${T} 1.0
+
+
+fix rigidTop sphereUpperG rigid single force 1 off off on torque 1 on on on
+fix addforce sphereUpperG addforce 0 0 v_Fz
+
+compute comTop sphereUpperG com      #Center of mass
+compute tempID excludeBT    temp     #Temperature
+
+thermo 100
+thermo_style custom step c_tempID v_Fz c_comTop[3]
+
+
+balance 1.1 shift xyz 50 1.0
+
+run ${N}

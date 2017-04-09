@@ -1,0 +1,72 @@
+LAMMPS (26 Jan 2017)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (../comm.cpp:90)
+  using 1 OpenMP thread(s) per MPI task
+fix atomify all atomify
+#include "system.in"
+#velocity	all create 1 277387 mom yes
+
+
+#include "system.prepare"
+
+include "system.in.init"
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+read_restart restartFiles/SiO2_lower160000.restart
+WARNING: Restart file used different # of processors (../read_restart.cpp:717)
+  orthogonal box = (0 0 0) to (329.36 329.36 193.32)
+  1 by 1 by 1 MPI processor grid
+  757633 atoms
+include "system.in.settings"
+  pair_coeff  * *  SiO2.vashishta Si O
+Reading potential file SiO2.vashishta with DATE: 2015-10-14
+  pair_modify table 16
+  pair_modify tabinner 0.1
+
+
+variable N equal 20000
+variable T equal 293
+variable Fz equal 0.0 #-0.1*(40000-step)/200000
+
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+
+fix nvtID excludeB nvt temp ${T} ${T} 1.0
+fix nvtID excludeB nvt temp 293 ${T} 1.0
+fix nvtID excludeB nvt temp 293 293 1.0
+
+
+fix rigidTop sphereUpperG rigid single force 1 off off on torque 1 on on on
+1 rigid bodies with 93104 atoms
+fix addforce sphereUpperG addforce 0 0 v_Fz
+
+compute comTop sphereUpperG com      #Center of mass
+compute tempID excludeBT    temp         #Temperature
+
+thermo_style custom step c_tempID v_Fz c_comTop[3]
+
+run ${N}
+run 20000
+WARNING: One or more atoms are time integrated more than once (../modify.cpp:274)
+Neighbor list info ...
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.8
+  ghost atom cutoff = 5.8
+  binsize = 2.9, bins = 114 114 67
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair vashishta, full, perpetual
+      pair build: full/bin
+      stencil: full/bin/3d
+      bin: standard
+Memory usage per processor = 373.307 Mbytes
+Step c_tempID v_Fz c_comTop[3] 
+  160000    288.28503            0    147.77308 
+Total wall time: 0:00:25

@@ -34,7 +34,7 @@ class SurfaceRegression:
             for j in xrange(self.N):
                 self.grid[i].append([])
                 self.zPosition[i].append([])
-        print np.shape(self.grid)
+        #print np.shape(self.grid)
 
         directory = listdir(path)
         for files in directory:
@@ -46,7 +46,7 @@ class SurfaceRegression:
                 if len(noa)>0:
                     noa = int(infile.readline())
                     self.numberOfAtoms = noa
-                    print "NOA =", self.numberOfAtoms
+                    #print "NOA =", self.numberOfAtoms
 
             p = np.zeros([self.numberOfAtoms, 3]) #nAtoms*3
             i=0

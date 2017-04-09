@@ -1,0 +1,111 @@
+LAMMPS (26 Jan 2017)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (../comm.cpp:90)
+  using 1 OpenMP thread(s) per MPI task
+fix atomify all atomify
+#include "system.in"
+#velocity	all create 1 277387 mom yes
+
+
+#include "system.prepare"
+
+include "system.in.init"
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+    units		metal
+    boundary	p p p
+    atom_style   atomic
+    pair_style 	 vashishta
+    #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+read_restart restartFiles/SiO2_initial40000.restart
+WARNING: Restart file used different # of processors (../read_restart.cpp:717)
+  orthogonal box = (0 0 0) to (329.36 329.36 193.32)
+  1 by 1 by 1 MPI processor grid
+  647601 atoms
+#read_restart restartFiles/lower/SiO2_lower_180000.restart
+include "system.in.settings"
+  pair_coeff  * *  SiO2.vashishta Si O
+Reading potential file SiO2.vashishta with DATE: 2015-10-14
+  pair_modify table 16
+  pair_modify tabinner 0.1
+
+
+variable N equal 160001
+variable T equal 293
+variable Fz equal 0.0231*(40000-step)/160000
+
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+timestep	0.002
+
+
+# Move sphere down in order to save computation time
+region upperHalfR block INF INF INF INF 60.0 INF
+group upperHalfG region upperHalfR
+351353 atoms in group upperHalfG
+group lowerHalfG subtract all upperHalfG
+296248 atoms in group lowerHalfG
+
+
+compute minUpper upperHalfG reduce min z
+compute maxLower lowerHalfG reduce max z
+
+run 1
+Unused restart file global fix info:
+  fix style: nvt, fix ID: nvtID
+Neighbor list info ...
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.8
+  ghost atom cutoff = 5.8
+  binsize = 2.9, bins = 114 114 67
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair vashishta, full, perpetual
+      pair build: full/bin
+      stencil: full/bin/3d
+      bin: standard
+Memory usage per processor = 266.378 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+   40000    239.27503   -2181931.6            0   -2161902.1    13832.551 
+   40001    239.27503   -2181931.6            0   -2161902.1    13832.551 
+Loop time of 2.39465 on 1 procs for 1 steps with 647601 atoms
+
+Performance: 0.072 ns/day, 332.590 hours/ns, 0.418 timesteps/s
+106.3% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 2.1365     | 2.1365     | 2.1365     |   0.0 | 89.22
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.0011518  | 0.0011518  | 0.0011518  |   0.0 |  0.05
+Output  | 0.0026982  | 0.0026982  | 0.0026982  |   0.0 |  0.11
+Modify  | 0.25218    | 0.25218    | 0.25218    |   0.0 | 10.53
+Other   |            | 0.002166   |            |       |  0.09
+
+Nlocal:    647601 ave 647601 max 647601 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    74218 ave 74218 max 74218 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    0 ave 0 max 0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:  3.50945e+07 ave 3.50945e+07 max 3.50945e+07 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 35094546
+Ave neighs/atom = 54.1916
+Neighbor list builds = 0
+Dangerous builds = 0
+variable dispID equal c_maxLower-c_minUpper
+
+#fix 1 all ave/time 1 1 1 v_dispID file disp.out
+
+
+displace_atoms upperHalfG      move 0 0 ${dispID}
+ERROR: Compute used in variable between runs is not current (../variable.cpp:1305)
+Last command: displace_atoms upperHalfG      move 0 0 ${dispID}
+Total wall time: 19:17:18
