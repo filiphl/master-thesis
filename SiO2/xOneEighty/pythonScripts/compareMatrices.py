@@ -184,6 +184,7 @@ class Forces:
         ax.set_yticklabels([r'$23$', r'$0$', r'$-23$'],  fontsize=14)
         ax.set_xticklabels([r'$-23$', r'$0$', r'$23$'],  fontsize=14)
         plt.colorbar()
+        plt.tight_layout()
 
         plt.figure()
         im1 = plt.pcolor(output)
@@ -199,7 +200,7 @@ class Forces:
         p  = pd(p0, r, a)
 
         plt.plot(np.linspace(0,100,100), p)
-
+        plt.tight_layout()
 #------------------------------------------------------------------------------#
 
 

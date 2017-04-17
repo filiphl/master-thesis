@@ -133,45 +133,13 @@ class ForceDistribution:
 
 
 
-    def plotDistributions(self):
+    def plotDistributions(self, onlyBottom):
 
 
+        majorFontSize = 30
         minorFontSize = 26
-        majorFontSize = 22
-        ticksfontSize = 20
+        ticksfontSize = 26
 
-
-        fig, ax = plt.subplots(2,3, figsize=(15,10), sharey='row', sharex='col')
-        cmax = max(self.force.absoluteForces.max(), self.normal.max(), self.shear.max())
-        N = 46
-        M = 46
-        R = 20
-
-
-        myMap = sns.cubehelix_palette(80, start=.5, rot=-.75)
-        cm = mpl.colors.ListedColormap(myMap)
-        c=0
-        for f in [self.force.absoluteForces, self.normal, self.shear]:
-            output = self.transform(f,N,M,R)
-            im=ax[0,c].pcolor(output, vmin=-0.01, vmax=0.07, cmap=cm)
-
-            radialDist = np.mean(output,0)
-            ax[1,c].plot(radialDist, linewidth=3, color="#478684")
-            ax[0,c].set_xlim([0,46])
-            ax[1,c].set_xlabel(r"$r$", fontsize=majorFontSize+2)
-            ax[1,c].set_xticks(np.linspace(0,N,6))
-            ax[1,c].set_xticklabels(['$%.0f$'%i for i in np.linspace(0,R,6)], fontsize=ticksfontSize)
-            #ax[0,c].set_ylim([0,ymax*1.05])
-            ax[1,c].grid('on')
-            ax[1,c].set_ylim([-0.01,0.05])
-            c+=1
-
-
-        fig.subplots_adjust(right=0.85)
-        cbar_ax = fig.add_axes([0.89, 0.535, 0.02, 0.3648])
-        cbar = fig.colorbar(im, cax=cbar_ax, format='$%.02f$')#, format=ticker.FuncFormatter(self.force.fmt))
-        cbar.ax.tick_params(labelsize=ticksfontSize)
-        cbar.set_label(r'$eV/\AA$',size=majorFontSize, labelpad=10)
 
         rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
         rc('text', usetex=True)
@@ -179,24 +147,110 @@ class ForceDistribution:
         plt.rc('font', family='serif')
 
 
-        ax[0,0].set_ylim([0,46])
-        ax[0,0].set_ylabel(r"$\theta$", fontsize=majorFontSize+2)
-        ax[1,0].set_ylabel(r"$eV/\AA$", fontsize=majorFontSize)
-        ax[0,0].set_title(r"$ $Magnitude", fontsize=ticksfontSize)
-        ax[0,1].set_title(r"$ $Normal", fontsize=ticksfontSize)
-        ax[0,2].set_title(r"$ $Shear", fontsize=ticksfontSize)
+        if onlyBottom:
+            fig, ax = plt.subplots(1,3, figsize=(15,5), sharey='row')
+            cmax = max(self.force.absoluteForces.max(), self.normal.max(), self.shear.max())
+            N = 46
+            M = 46
+            R = 20
 
-        yax = [r'$%.02f$'%i for i in np.arange(-0.01, 0.06, 0.01)]
-        xax = [r'$%d$'%i for i in range(0,21,4)]
 
-        ax[0,0].set_yticks(np.linspace(0,M,5))
-        ax[0,0].set_yticklabels([r'$0$', r'$\pi/2$', r'$\pi$', r'$3\pi/2$', r'$2\pi$'],  fontsize=ticksfontSize)
-        ax[1,0].set_yticklabels(yax, fontsize=ticksfontSize)
+            myMap = sns.cubehelix_palette(80, start=.5, rot=-.75)
+            cm = mpl.colors.ListedColormap(myMap)
+            c=0
+            for f in [self.force.absoluteForces, self.normal, self.shear]:
+                output = self.transform(f,N,M,R)
+                radialDist = np.mean(output,0)
+                ax[c].plot(radialDist, linewidth=3, color="#478684")
+                ax[c].set_xlabel(r"$r$", fontsize=majorFontSize)
+                ax[c].set_xticks(np.linspace(0,N,6))
+                ax[c].set_xticklabels(['' for i in range(6)])
+                ax[c].set_xticklabels(['$%.0f$'%i for i in np.linspace(0,R,6)], fontsize=ticksfontSize)
+                ax[c].grid('on')
+                ax[c].set_ylim([-0.01,0.05])
+                c+=1
 
-        if self.timeStep:
-            #fig.suptitle(r"$ $Time step %d"%self.timeStep, fontsize=16)
-            plt.savefig('timeSteps/timestep%06d.pdf'%self.timeStep)
-#------------------------------------------------------------------------------#
+
+
+
+            ax[0].set_ylabel(r"$eV/\mathring{A}$", fontsize=majorFontSize)
+
+            yax = [r'$%.02f$'%i for i in np.arange(-0.01, 0.06, 0.01)]
+            xax = [r'$%d$'%i for i in range(0,21,4)]
+
+            ax[0].set_yticklabels(yax, fontsize=ticksfontSize)
+
+
+            plt.gcf().subplots_adjust(bottom=0.16)
+            #plt.tight_layout()
+            if self.timeStep:
+                #fig.suptitle(r"$ $Time step %d"%self.timeStep, fontsize=16)
+                plt.savefig('timeSteps/radialOnly/timestep%06d_bottom.pdf'%self.timeStep)
+
+
+
+
+
+
+
+
+        else:
+            fig, ax = plt.subplots(2,3, figsize=(15,10), sharey='row', sharex='col')
+            cmax = max(self.force.absoluteForces.max(), self.normal.max(), self.shear.max())
+            N = 46
+            M = 46
+            R = 20
+
+
+            myMap = sns.cubehelix_palette(80, start=.5, rot=-.75)
+            cm = mpl.colors.ListedColormap(myMap)
+            c=0
+            for f in [self.force.absoluteForces, self.normal, self.shear]:
+                output = self.transform(f,N,M,R)
+                im=ax[0,c].pcolor(output, vmin=-0.01, vmax=0.07, cmap=cm)
+
+                radialDist = np.mean(output,0)
+                ax[1,c].plot(radialDist, linewidth=3, color="#478684")
+                ax[0,c].set_xlim([0,46])
+                ax[1,c].set_xlabel(r"$r$", fontsize=majorFontSize+2)
+                ax[1,c].set_xticks(np.linspace(0,N,6))
+                ax[1,c].set_xticklabels(['$%.0f$'%i for i in np.linspace(0,R,6)], fontsize=ticksfontSize)
+                #ax[0,c].set_ylim([0,ymax*1.05])
+                ax[1,c].grid('on')
+                ax[1,c].set_ylim([-0.01,0.05])
+                c+=1
+
+
+            fig.subplots_adjust(right=0.85)
+            cbar_ax = fig.add_axes([0.89, 0.535, 0.02, 0.3648])
+            cbar = fig.colorbar(im, cax=cbar_ax, format='$%.02f$')#, format=ticker.FuncFormatter(self.force.fmt))
+            cbar.ax.tick_params(labelsize=ticksfontSize)
+            cbar.set_label(r'$eV/\mathring{A}$',size=majorFontSize, labelpad=10)
+
+            rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+            rc('text', usetex=True)
+            plt.rc('text', usetex=True)
+            plt.rc('font', family='serif')
+
+
+            ax[0,0].set_ylim([0,46])
+            ax[0,0].set_ylabel(r"$\theta$", fontsize=majorFontSize+2)
+            ax[1,0].set_ylabel(r"$eV/\mathring{A}$", fontsize=majorFontSize)
+            ax[0,0].set_title(r"$ $Magnitude", fontsize=ticksfontSize)
+            ax[0,1].set_title(r"$ $Normal", fontsize=ticksfontSize)
+            ax[0,2].set_title(r"$ $Shear", fontsize=ticksfontSize)
+
+            yax = [r'$%.02f$'%i for i in np.arange(-0.01, 0.06, 0.01)]
+            xax = [r'$%d$'%i for i in range(0,21,4)]
+
+            ax[0,0].set_yticks(np.linspace(0,M,5))
+            ax[0,0].set_yticklabels([r'$0$', r'$\pi/2$', r'$\pi$', r'$3\pi/2$', r'$2\pi$'],  fontsize=ticksfontSize)
+            ax[1,0].set_yticklabels(yax, fontsize=ticksfontSize)
+
+            if self.timeStep:
+                #fig.suptitle(r"$ $Time step %d"%self.timeStep, fontsize=16)
+                plt.savefig('timeSteps/timestep%06d.pdf'%self.timeStep)
+    #------------------------------------------------------------------------------#
 
 if __name__ == '__main__':
     import seaborn as sns
@@ -207,9 +261,11 @@ if __name__ == '__main__':
         cx=22.5
         cy=22.5
         nn=8
-        for i in xrange(55000, 115000, 5000):
-            dist = ForceDistribution(N, surfN, nn, bw, cx, cy, timeStep=i, verbose=True)
+        a = 55000; b = 125000; c=5000
+        for i in xrange(a, b, c):
+            print '\r %.0f%% complete'%((i-a)*100.0/(b-a)),
+            dist = ForceDistribution(N, surfN, nn, bw, cx, cy, timeStep=i, verbose=False)
             dist.computeDistributions()
-            dist.plotDistributions()
+            dist.plotDistributions(onlyBottom=True)
 
     plt.show()

@@ -35,22 +35,45 @@ ax.set_xscale('log', basex=2)
 ax.set_yscale('log', basey=2)
 ax.set_xticks([2**i for i in range(0,7)])
 ax.set_yticks([2**i for i in range(0,7)])
-ax.set_xticklabels([2**i for i in range(0,7)])
-ax.set_yticklabels([2**i for i in range(0,7)])
+ax.set_xticklabels([r'$%d$'%2**i for i in range(0,7)], fontsize=20)
+ax.set_yticklabels([r'$%d$'%2**i for i in range(0,7)], fontsize=20)
+
+plt.plot(p,p,
+ '--',
+ color="#DB7477",
+ linewidth=3,
+ )
+
+plt.hold('on')
+
 plt.plot(p,speedup,
  '-h',
  color="#478684",
- linewidth=2,
- markersize=7,
+ linewidth=4,
+ markersize=9,
  markerfacecolor='#3b617c',
  fillstyle='full')
+
+
+
+
+
+
 plt.axis([0, 64, 0, 64])
-plt.xlabel(r"$p$", fontsize=18)
-plt.ylabel(r"$T_s/T_p$", fontsize=18)
+plt.xlabel("Number of processors", fontsize=20)
+plt.ylabel(r"Speedup", fontsize=20)
 plt.grid('on')
+
+
+
+
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+plt.tight_layout()
+
 
 if len(argv)>1:
     filename = str(argv[1])
-    plt.savefig('../../thesis/figures/speedup/'+filename+'.pdf', format='pdf')
+    plt.savefig(filename+'.pdf', format='pdf')
 
 plt.show()

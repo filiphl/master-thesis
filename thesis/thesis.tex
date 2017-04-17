@@ -30,6 +30,8 @@
 \usepackage{caption}
 
 
+\usepackage{pgf}
+
 %\usepackage{flipbook} %%/usr/local/texlive/2016/texmf-dist/tex/latex/flipbook/flipbook.sty
 %\rfoot[]{
 %	\setlength\unitlength{1cm}
@@ -40,7 +42,6 @@
 %	\end{picture}
 %}
 \usepackage{HASstyle}
-
 
 
 
@@ -71,9 +72,6 @@
 	citecolor = p5,
 	citebordercolor= white,
 }
-
-
-
 
 
 
@@ -566,12 +564,16 @@ mpirun -n 8 lmp_mpi -in speedup.in -var filename speedup.restart
 \end{lstlisting}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\linewidth]{figures/speedup/15x15.pdf}
-	\caption{Speedup as a function of number of processors.}
+	\includegraphics[width=0.7\linewidth]{figures/speedup/15x15_bigFonts.pdf}
+	\caption{Strong scaling of parallel performance of LAMMPS using 81000 atoms, evenly distributed in a cubical simulation box. The marked points are measured speedup, while the dashed line represents ideal speedup ($S = T_s/T_p = p$). }
 	\label{fig:speedup15x15}
 \end{figure}
+
+
+
+
 The result indicate that the speedup is in fact not simply $S=p$. 
-Anyhow, we clearly see the advantage of using 64 processors in parallel as opposed to 1. 
+Nevertheless, we clearly see the advantage of using 64 processors in parallel as opposed to a single processor serially. 
 We can finish a job that would have taken an hour in two minutes!
 Also, we clearly see that the initial claim holds; this is not more efficient when regarding CPU time. 
 In fact this result suggest that using 1 processor is twice as energy efficient as using 64. 
@@ -606,6 +608,8 @@ This is evidence that they perceived the effect of lubrication even then, 1900 B
 	\caption{Drawing from Leonardo da Vinci's notebook. From Codex Arundel, British Library, London (Arundel folio 41r).}
 	\label{fig:leonardoDaVinci}
 \end{figure}
+
+
 \noindent 
 The first documented studies of friction was carried out during the renaissance by Leonardo da Vinci (1452-1519) \cite{LeonardoDaVinciStudies}.
 Among his experiments he attaching a block of wood to another object with a cord, and placed the block on a smooth surface.
@@ -1186,6 +1190,7 @@ The regions specified can take the shapes: block, cone, cylinder, plane, prism o
 An example of removing atoms within a combined region is shown in listing \ref{lst:sculpting}. 
 This example also show how to assign a group to atoms within a region. 
 Each atom can be part of up to 32 different groups at a time. 
+These are stored in a 32-bit integer. 
 The user can do tons of actions on groups. 
 Most computes and fixes act on specific groups. 
 There is only one standard group in LAMMPS; the group \texttt{all}.
@@ -1334,7 +1339,7 @@ In this project we will build the constituents of the system from a type of cris
 In order to construct the unit cell of a material, one should look up the coordinates of the atoms in a crystallography database. We have used the unit cell of $\beta$-cristobalite found at \textit{Crystallography Open Database}\footnote{\href{http://www.crystallography.net/cod/1010944.html}{http://www.crystallography.net/cod/1010944.html}}. 
 At this site one can download a \texttt{.cif}-file (Crystallographic Information Framework) containing information about the spatial positions of each atom, the length of the unit cell edges and angles between faces of the cell. 
 In the case of $\beta$-cristobalite the unit cell is cubical with edges of length 7.12Å. 
-It contain 8 silicon atoms and 16 oxygen atoms. 
+It contains 24 atoms: 8 silicon atoms and 16 oxygen atoms. 
 The density of the unit cell can easily be computed and is 2.2114 g/cm$^3$.
 The format of th \texttt{.cif}-file is not easily readable. To extract the information we have used a tool named \texttt{cif2file}\footnote{\href{http://www.cif2cell.com-about.com/}{http://www.cif2cell.com-about.com/}}, developed by Torbjörn Björkman. 
 
@@ -1357,8 +1362,8 @@ For a more profound understanding of the structure and syntax of these files, th
 
 
 \lstinputlisting[caption={Typical Moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units.}, label=lst:beta-cristobalite.lt, language=LammpsData]{../SiO2/large/beta-cristobalite.lt}
-We use the unit cells as building blocks, placing them concurrently until we have a crystal of the desired size. For example purposes, we generate a large cube of $15\times15\times15$ unit cells. This is done in line 17-21 of listing \ref{lst:cubeSiO2} below.
-\lstinputlisting[caption={Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite, and also specify system configurations (see section \ref{sec:systemConfigurations}). The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
+We use the unit cells as building blocks, placing them concurrently until we have a crystal of the desired size. For example purposes, we generate a large cube of $15\times15\times15$ unit cells, i.e. 81000 atoms. This is done in line 17-21 of listing \ref{lst:cubeSiO2} below.
+\lstinputlisting[caption={Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite (81000 atoms), and also specify system configurations (see section \ref{sec:systemConfigurations}). The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
 %{\Huge Uncomment the above listing!}
 The \textit{write\_once} sections with "In" as the first word of its argument, creates the files \texttt{system.in.init} and \texttt{system.in.settings}, which contain exactly what is shown in the snippet. 
 They are not necessary, but help making the LAMMPS input script cleaner, since we can \texttt{import} these files instead of having all the configurations in the input script file.
@@ -1381,12 +1386,9 @@ Once complete, we can load the configurations and atomic data into our LAMMPS in
 \end{figure}
 
 
-\section{Verifications}
-\subsection{Melting point}
-Finding the melting point is a very important verification of our system. 
-There are several factors that may affect the result. 
-For instance, if the density of the system is too high, the melting point will be at a higher temperature than it normally would. 
-Also, errors in the potential model may affect the temperature of the melting point. 
+\section{Melting point}
+A simple verification we can do is to estimate the melting point of the material we are using. 
+There are several factors that may affect the result, such as density, structure and of course parameters in the potential model. 
 When increasing the temperature of the system that is in a solid state, we will eventually reach the melting point.
 At the phase transition from a solid state to a liquid, the atoms of the silica will have energy great enough to break the interatomic bonds. 
 They will break loose from their regular arrangement and move about much more freely. 
@@ -1396,19 +1398,29 @@ The mean square displacement is the average of the square of the displacement ev
 \langle r^2(t)\rangle = \frac{1}{N}\sum_{i=1}^{N}\lr{\vec{r}_i(t)-\vec{r}_i(0)}^2. \label{eq: diffusion constant}
 \end{equation}
 where $\vec{r}_i(t)$ is the position of atom $i$ at time $t$ and $N$ is the total number of atoms. 
+
+The mean square displacement is expected to related to the diffusion of atoms though
+\begin{equation}
+	D = \frac{\langle r^2(t)\rangle}{2dt},
+\end{equation}
+where $D$ is the diffusion coefficient, and $d$ is the number of dimensions \cite{EinsteinBrowninanMotion}. 
+
 In practice the mean square displacement was computed using a standard \textit{compute} in LAMMPS, namely the \textit{msd compute}\footnote{\url{http://lammps.sandia.gov/doc/compute_msd.html}}. 
 At every time step it stores a vector of 4 elements; the first 3 are the squared $dx$, $dy$ and $dz$ displacements averaged over the atoms of the specific group, while the 4th is the total mean square displacement for the specific group, i.e. $(dx^2 + dy^2 + dz^2)$. 
 The $15\times15\times15$ system is sufficient for this test. The procedure is rather simple. For $\beta$-cristobalite we expect the melting point to be about 1986K\footnote{\url{https://en.wikipedia.org/wiki/Cristobalite}}, so we start out at 1500K. After equilibration the following steps are repeated until we reach a target temperature. 
 \begin{itemize}
 	\item equilibrate for the current temperature
-	\item compute the msd for $N$ time steps
+	\item compute msd for $N$ time steps
 	\item increase the temperature by a given step size
 \end{itemize}
 \lstinputlisting[caption={Section of LAMMPS script illustration how to stepwise increase temperature and compute the mean square displacement of atoms.}, label={lst:msd}, firstline=14, lastline=40]{../SiO2/msd/continue.in}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msd}
-\caption{Mean square displacement as a function of temperature. The face transition occurs where we see a rapid change in the behavior.}
+\caption{Measured diffusion coefficient as a function of increasing temperature. 
+	The face transition occurs where we see a rapid change in the behavior. 
+	Here we can estimate the measurement somewhere between 1850K and 1900K. 
+	These measurements were obtained from a cubical simulation box containing $15^3$ unit cells of $\beta$-cristobalite (81000 atoms) evenly distributed, and with periodic boundary conditions.}
 \label{fig:msd}
 \end{figure}
 This result infer a melting point somewhere in the range 1800K-1900K. 
@@ -1545,13 +1557,10 @@ The results will be posed graphically at the end of the chapter, as 3-dimensiona
 A \textit{compute} is a LAMMPS command that defines a computation that will be performed on a group of atoms. 
 The \textit{computes} produce instantaneous values, using information about the atoms on the current time step\footnote{\href{ http://lammps.sandia.gov/doc/compute.html}{ http://lammps.sandia.gov/doc/compute.html}}.
 In LAMMPS there are more than 100 computes and chances are, they already have what you're looking for. If not, one might treat the data from other computes in some way to get the desired information. However, if there are no compute command that does the desired task, it is possible to create an own custom class and thereby expanding the LAMMPS library.  
-
 In order to compute the normal forces acting on the sphere, we have written a custom compute class. 
 The objective was for the class to save the force acting on each atom in one group from atoms of another group. 
+In this section we will try to give a brief summary on how this was done.
 
-In this section we will try do give a brief summary on how this was done.
-
-{\color{editColor}[MAYBE AN ILLUSTRATIVE FIGURE HERE]}
 
 \subsection{Look for similar computes}
 Obviously, before writing any code we should know what we want the compute to calculate and how this should be done. 
@@ -1604,13 +1613,48 @@ Following the constructor is the destructor on line 40. Its only task is to free
 \subsubsection{compute\_peratom()}
  If necessary, this function will resize the array to the number of atoms of concern, \texttt{nmax}. 
  It does this using internal functions in the superclass \textit{compute}, which we will not care to describe here. 
- Finally it calls upon the function \texttt{pair\_contribution()}, which fills the array with the pair-force from the potential. {\huge  We omit the many-body part!}
+ Finally it calls upon the function \texttt{pair\_contribution()}, which fills the per-atom arrays with the energy and force. 
+ A very important detail is that we only use the pair-contribution to the force. 
+ We only sample the two-body part of the energy and force components. 
+The many-body corrections are ignored.
+Hence, our measurements will lack that detail.
+Nevertheless, the two-body term is by far the predominant portion of the potential, and our results should be quantitatively correct.  
 
 \subsubsection{pair\_contribution()}
+In this function we sample the two-body force acting on each atom of a group from all atoms of another group. 
+Before we dive into the code, some of the variables are described.
 
+\begin{itemize}
+\item[] \texttt{inum} is the number of atoms (assigned to the processor).
 
+\item[] \texttt{ilist} is a list of the atom indices of the atoms contained by the processor.
 
-{\color{editColor}Note that we should only compute the force for one of the groups. factor 2...}
+\item[] \texttt{numneigh} is a list of the number of neighbors each atom has.
+
+\item[] \texttt{firstneigh} is the actual neighbor list. Thus, a 2-dimensional list containing the index of each neighbor for each atom.
+
+\item[] \texttt{groupbit} is the 32-bit integer associated with a specific group. 
+
+\item[] \texttt{mask[i]} is a 32-bit integer containing information on which groups atom \texttt{i} is part of.  
+\end{itemize}
+
+On line 93 we loop over all atoms (assigned to the processor), and assign the atom index to the variable \texttt{i}, on the next line. 
+We then explicitly set their energy and force entries to zero. 
+%This is necessary because LAMMPS may rearrange the list holding atom indices, \texttt{ilist}, causing each individual computation to be correct, but in post processing?
+Line 102 - we loop through all atoms again, to fill these entries. 
+First, we check if atom \texttt{i} is in the compute group or the second group, by doing a bitwise comparison of the atoms group-int with the group-bits. If it's not, we end the iteration and continue to the next atom.
+Line 109 - We store the position and type of atom \texttt{i}.
+Line 118 - Loop through all neighbors \texttt{j} of atom \texttt{i}.
+Line 120 - 121 - Special stuff!
+Line 125 - Check if \texttt{j} is in either of the groups
+Line 128 - Sort out which group \texttt{i} and \texttt{j} are part of. 
+If they are in the same group, we end the current iteration and continue to the next.
+Line 137 - Compute the square distance between the two atoms.
+Line 145 - If the interdistance is shorter than the cutoff length, compute the potential energy and interaction force. 
+The force is normalized by the displacement,  so that $\texttt{fpair}=F_{ij}/r_{ij}$.
+Line 151 - We sample the energy and force components in the per-atom array. 
+If we do not use newtons third law, we sample the energy contribution twice inside \texttt{pair->single}. Hence, we must half the contributions in that case.
+
 
 \subsection{Usage}
 
@@ -1641,33 +1685,36 @@ This is stored to a text-file with specified name.
 At this point, we can study for instance the distribution of the magnitude of contact force, or contact force in a specified direction as in figure \ref{fig:forceDistributions} .
 %Notice how some of the grid elements have a negative z-component in figure \ref{fig:zForceDistribution}.
 The speckles outside the contact area are atoms/molecules that have broken loose from their original bonds, and drifted until they attached to the other body. 
-In review, it is obvious that this could be avoided by redefining the groups after the equilibration procedure.
+In retrospect, it is obvious that this could be avoided by redefining the groups after the equilibration procedure.
 Though, as it will not alter the quantitative results, this was ignored.
-\begin{figure}
-	\centering
-	\begin{subfigure}{0.8\textwidth}
-		\includegraphics[width=\linewidth]{figures/forceDistribution/forces/absoluteForceDistribution.pdf}
-		\vspace{-7mm}
-		\caption{Magnitude of force.}
-		\label{fig:absoluteDistribution}
-	\end{subfigure}
-	\begin{subfigure}{0.8\textwidth}
-		\includegraphics[width=\linewidth]{figures/forceDistribution/forces/zForceDistribution.pdf}
-		\vspace{-7mm}
-		\caption{Force in z-direction.}
-		\label{fig:zForceDistribution}
-	\end{subfigure}
-\vspace*{5mm}
-\caption{Distribution of force. The color at a square represents the time averaged magnitude (a) and z-component (b) of the contact force of atoms within the square, hence not dependent on direction.
-	This is the result from a simulation where we push a sphere with radius of curvature $R=200$\AA  ~XX\AA ~into a half-space of area $46\times46$ unit cells}
-\label{fig:forceDistributions}
-\end{figure}
+
 
  \begin{lstlisting}[language=LammpsInput, caption={Example usage of compute group/group/atom with spatial binning and time averaging.}, label={lst:usingCustomCompute} ]
 compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
 compute ggaID sphereG group/group/atom slabG pair yes
 fix fixComputeID sphereG ave/chunk ${Nevery} ${Nrepeat} ${Nfreq} chunkID c_ggaID[2] c_ggaID[3] c_ggaID[4] file forces.txt
 \end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{0.49\textwidth}
+		\centering
+		\includegraphics[width=\linewidth,  trim={15mm 2mm 7mm 2mm}, clip]{figures/forceDistribution/forces/absoluteForceDistribution.pdf}
+		\vspace{-7mm}
+		\caption{Magnitude of force.}
+		\label{fig:absoluteDistribution}
+	\end{subfigure}
+	\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=\linewidth, trim={13mm 2mm 9mm 2mm}, clip]{figures/forceDistribution/forces/zForceDistribution.pdf}
+		\vspace{-7mm}
+		\caption{Force in z-direction.}
+		\label{fig:zForceDistribution}
+	\end{subfigure}
+	\vspace*{5mm}
+	\caption{Distribution of force. The color at a square represents the time averaged magnitude (a) and z-component (b) of the contact force of atoms within the square, hence not dependent on direction.
+		This is the result from a simulation where we push a sphere with radius of curvature $R=200$\AA  ~XX\AA ~into a half-space of area $46\times46$ unit cells}
+	\label{fig:forceDistributions}
+\end{figure}
 
 \newpage
 \section{Least squares plane regression} \label{sec:leastSquareRegression}
@@ -1743,7 +1790,8 @@ meaning that the normal force may be expressed as
 %	\vec{F_N} = \frac{\lr{\vec{F}\cdot\vec{n}}}{|\vec{n}|} \frac{\vec{n}}{|\vec{n}|} .\\
 \vec{F_N} = \lr{\vec{F}\cdot\vec{n}} \frac{\vec{n}}{|\vec{n}|^2} .
 \end{equation}
-We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in Listing \ref{angleVecLine}.
+In general there are two valid normal vectors $\vec{n}$ that satisfy the plane equation. However, the way obtain it, we always get the one with a positive z-component.  
+{\color{editColor} We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in \ref{angleVecLine}.} 
 
 \lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=190, lastline=197]{../SiO2/large/pythonScripts/surface.py}
 
@@ -1830,14 +1878,15 @@ This way the shear force has a defined direction, but we no longer have the usua
 %These results will be discussed further in chapter \ref{sec:resultsRadialDistribution}.
 
 
-
+\vspace{5mm}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{figures/forceDistribution/forces/normalForceDistribution110000}
-	\caption{Radial distribution of the magnitude of force, as well as normal and shear force. 
-		The figures on the top row are equivalent to the ones in figure \ref{fig:forceDistributions}, only in polar coordinates. 
+	\includegraphics[width=\linewidth, trim={12mm 8mm 1mm 15mm}, clip]{figures/forceDistribution/forces/normalForceDistribution110000}
+	\vspace{0mm}
+	\caption{Spatial and radial distribution of the magnitude of force, as well as normal and shear force. 
+		The spatial distributions shown on the top row are equivalent to the ones in figure \ref{fig:forceDistributions}, only in polar coordinates. 
 		The value of the radial bins at a given radius $r$ in the figures at the bottom row, are the average value of the column at that $r$ in the top row.
-		This figure show the result from a simulation where we push a sphere with radius of curvature $R=200$\AA  ~XX\AA ~into a half-space of area $46\times46$ unit cells}
+		This figure show the result from a simulation where we push a sphere with radius of curvature $R=200\mathring{A}$,  40$\mathring{A}$ into a half-space of size $327.52\mathring{A} \times 327.52\mathring{A} \times 157.64 \mathring{A}$. This does not imply that the indentation is $40\mathring{A}$, but since contact was established, the top of the sphere has moved $40\mathring{A}$ towards the substrate. The real depth of indentation is less, due to deformations.}
 	\label{fig:radialdistribution110000}
 \end{figure}
 
@@ -1845,20 +1894,107 @@ This way the shear force has a defined direction, but we no longer have the usua
 
 \section{Results}
 
-... able to monitor the contact force distribution during the indentation. 
-The sphere was initially positioned 20\AA ~above the substrate, and after equilibration it was lowered at a rate of 0.5\AA/ps. 
-In stead of using momentary values for the distributions, we present the average distribution over a time-frame of 5000 time steps (10 ps). 
-Thus, from we begin sampling until we stop, the (top of the) sphere has moved 5\AA ~further down in/towards the substrate.  
+\subsection{Specific description of experiment}
+Using the methods described in this chapter we were able to monitor the contact force distribution, between the sphere and the substrate, during indentation. 
+The sphere was initially positioned 20$\mathring{A}$ above the substrate, leaving no interaction forces between the two bodies.  
+After equilibration the sphere was lowered at a constant rate of 0.5$\mathring{A}$/ps, by using the technique of deforming the simulation box. 
+At the most, the sphere was lowered 60$\mathring{A}$, giving a depth of indentation of $h=40\mathring{A}$. 
+The depth of indentation is here defined as if the sphere was perfectly rigid, unable to be deformed. 
+Thus, a depth of indentation $h=20 \mathring{A}$ is the depth the sphere would indent had it been perfectly rigid. 
+This is not the true depth, however. 
+Due to elasticity the sphere deforms, leaving the indentation to be less than the listed value. 
+A negative depth of indentation describe a separation between the sphere and substrate.   
+
+
+In stead of using momentary measured values for the force distributions, we present the average distribution over a time-frame of 5000 time steps (10 ps). 
+Thus, from we begin sampling until we stop, the (top of the) sphere has moved 5$\mathring{A}$ further down towards the substrate.  
 During the 5000 time steps, we sampled every 5th step. 
 Thus, a total of 1000 samples were used for every resulting mean distribution\footnote{This was achieved using  Nevery=5,  Nrepeat=1000 and Nfreq=5000 in line 3 of listing \ref{lst:usingCustomCompute}.}.
 
+\subsection{Description of results}
+The results from this simulation are shown in figure \ref{fig:resultsRadialForceDistributions}. 
+The figure display the radial distribution of magnitude of contact force and the normal- and shear components, for a sequence of increasing depth of indentation $h$. 
+The stated values of $h$ are the final values of the time-averages\footnote{For example $h=10\mathring{A}$ means the interval from $h=5\mathring{A}$ to $h=10\mathring{A}$.}.    
+The first two intervals are not shown, since no interacting forces can be observed until $h=0\mathring{A}$, and so they look identical to the interval at $h=-5\mathring{A}$.
+The x-axis represents radial distance $r$ from the center of indentation, in units of the unit cell length of $\beta$-cristobalite (7.12$\mathring{A}$). 
+The sign of the force components indicate their direction.
+A positive normal force indicates a repulsive normal component, and a negative normal force an attractive normal component. 
+The shear force is defined as the component of the traditionally defined shear force that is in the radial direction. 
+A positive sign indicates that the shear component is directed away from the center of indentation.
+Likewise, a negative sign imply that the direction is towards the center. 
+Numeric value of the forces are to be considered the average force acting on atoms of one of the bodies by atoms of the other body, at given radial distance. 
 
+
+\begin{table}[H] 
+	\begin{tabular}{cr} 
+		h $[\mathring{A}]$ & \hspace{26mm}Magnitude \hspace{18mm} Normal \hspace{23mm} Shear \hspace{10mm} \\
+		\toprule 
+	
+		-5 & \parbox[c]{0.83\linewidth}{
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep065000_bottom_without.pdf}
+		}\\
+	
+		0 & \parbox[c]{0.83\linewidth}{
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep070000_bottom_without.pdf}
+		}\\
+	
+		5 & \parbox[c]{0.83\linewidth}{
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep075000_bottom_without.pdf}
+		}\\
+	
+		10 & \parbox[c]{0.83\linewidth}{
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep080000_bottom_without.pdf}
+		}\\	
+	
+		15 & \parbox[c]{0.83\linewidth}{
+			\includegraphics[width=\linewidth, trim={8mm 0 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep085000_bottom.pdf}
+		}\\
+	\end{tabular}
+\end{table}
+
+\begin{table}[H] 
+	\begin{tabular}{cr} 
+		h $[\mathring{A}]$ & \hspace{26mm}Magnitude \hspace{18mm} Normal \hspace{23mm} Shear \hspace{10mm} \\
+		\toprule 
+		20 & \parbox[c]{0.83\linewidth}{
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep090000_bottom_without.pdf}
+		}\\
+		
+		25 & \parbox[c]{0.83\linewidth}{
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep095000_bottom_without.pdf}
+		}\\
+		
+		30 & \parbox[c]{0.83\linewidth}{
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep100000_bottom_without.pdf}
+		}\\
+		
+		35 & \parbox[c]{0.83\linewidth}{
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep105000_bottom_without.pdf}
+		}\\
+		
+		40 & \parbox[c]{0.83\linewidth}{
+			\includegraphics[width=\linewidth, trim={8mm 0 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep110000_bottom.pdf}
+		}\\
+		
+	\end{tabular}
+\end{table}
+\begin{figure}[H]
+	\caption{Radial distribution of contact forces between a sphere with radius of curvature $R=200\mathring{A}$ and a substrate of size $327.52\mathring{A} \times 327.52\mathring{A} \times 156.64\mathring{A}$ at different depths of indentation $h$. 
+		Both bodies are made of $\beta$-cristobalite.
+		The radial values are given in units of the unit cell length of $\beta$-cristobalite i.e. $r=1=7.12\mathring{A}$. 
+		The depth of indentation is defined as if the sphere was perfectly rigid. 
+		$h=0\mathring{A}$ being the initial point of contact, $h>0\mathring{A}$ being an indentation, and $h<0\mathring{A}$ distance between the surface of the substrate and the lowest point of the sphere. 
+		Since the sphere isn't perfectly rigid it deforms and the depths of indentation aren't really as large as the values suggest. 	 		
+		A positive normal force imply a repulsive force between the bodies, while a negative normal force imply an attractive force. 
+		A positive shear force imply the force to be directed away from the center of indentation, and a negative shear force imply it to be directed toward the center. 
+		This way of defining the shear force scales its true value to the component in the radial direction.
+		Hence, with the shear force $\vec{F}_S$ we have defined here, we have $\vec{F} \neq \vec{F}_N + \vec{F}_S$.
+}
+\label{fig:resultsRadialForceDistributions}
+\end{figure}
+
+ \subsection{Observations}
  
-
-
-
-
-
 
 
 

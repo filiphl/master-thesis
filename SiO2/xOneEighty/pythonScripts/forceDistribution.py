@@ -18,8 +18,8 @@ class ForceDistribution:
         self.mapping = float(N)/surfN
 
         self.timeStep = timeStep    # Only analyse single frame
-        self.surf  = self.loadSurface('../dataFiles/m2/surface.pkl', N=self.surfN, s=self.nn, verbose=verbose)
-        self.force = self.loadForces('../dataFiles/m2/forces.pkl', verbose=verbose)
+        self.surf  = self.loadSurface('../dataFiles/m1/surface.pkl', N=self.surfN, s=self.nn, verbose=verbose)
+        self.force = self.loadForces('../dataFiles/m1/forces.pkl', verbose=verbose)
 
         #self.radialBinning = smooth(N, cx, cy, binWidth, nBins=int(16/binWidth))
         #self.surf.plotPlanes()
@@ -42,9 +42,9 @@ class ForceDistribution:
                     print "Couldn't load surface file."
 
         if self.timeStep:
-            s = SurfaceRegression('../surfaceFiles/m2/Surface%d_m2/'%self.timeStep, N, False, s)
+            s = SurfaceRegression('../surfaceFiles/m1/Surface%d_m1/'%self.timeStep, N, False, s)
         else:
-            s = SurfaceRegression('../surfaceFiles/m2/', N, False, s)
+            s = SurfaceRegression('../surfaceFiles/m1/', N, False, s)
 
         if filePath:
             with open(filePath, 'wb') as output:
@@ -67,9 +67,9 @@ class ForceDistribution:
                     print "Couldn't load force file."
 
         if self.timeStep:
-            F = Forces('../forceFiles/m2/forces%d.txt'%self.timeStep, self.cx, self.cy)
+            F = Forces('../forceFiles/m1/forces%d.txt'%self.timeStep, self.cx, self.cy)
         else:
-            F = Forces('../forceFiles/m2/forcesAll.txt', self.cx, self.cy)
+            F = Forces('../forceFiles/m1/forcesAll.txt', self.cx, self.cy)
 
         F.plotAverage = True
         F.name = 'Averaged normal force'
@@ -195,7 +195,7 @@ class ForceDistribution:
 
         if self.timeStep:
             #fig.suptitle(r"$ $Time step %d"%self.timeStep, fontsize=16)
-            plt.savefig('timeSteps/m2/timestep%06d.pdf'%self.timeStep)
+            plt.savefig('timeSteps/m1/timestep%06d.pdf'%self.timeStep)
 #------------------------------------------------------------------------------#
 
 if __name__ == '__main__':
@@ -211,7 +211,7 @@ if __name__ == '__main__':
         a = 63000; b=111000; c=1000;
         for i in xrange(a, b, c):
             print '\r %.0f%% complete'%((i-a)*100.0/(b-a))
-            dist = ForceDistribution(N, surfN, nn, bw, cx, cy, timeStep=i, verbose=True)
+            dist = ForceDistribution(N, surfN, nn, bw, cx, cy, timeStep=i, verbose=False)
             dist.computeDistributions()
             dist.plotDistributions()
 

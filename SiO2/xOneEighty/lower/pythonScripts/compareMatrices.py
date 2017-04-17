@@ -119,7 +119,7 @@ class Forces:
         myevalmatrix = np.zeros((N, M, 2))
         for i in range(N):
             for j in range(M):
-                myevalmatrix[i, j,:] = np.asarray([22.5+r[i]*np.cos(theta[j]), 22.5+r[i]*np.sin(theta[j])])
+                myevalmatrix[i, j,:] = np.asarray([self.cx+r[i]*np.cos(theta[j]), self.cy+r[i]*np.sin(theta[j])])
         output = ndimage.map_coordinates(self.absoluteForces, np.transpose(myevalmatrix[:, :]), order=1)
         radialDist = np.mean(output, 0)
 
@@ -189,13 +189,13 @@ class Forces:
         ax = plt.gca()
         ax.set_yticks([0,self.cy,self.snChunks])
         ax.set_xticks([0,self.cx,self.snChunks])
-        ax.set_yticklabels([r'$23$', r'$0$', r'$-23$'],  fontsize=16)
-        ax.set_xticklabels([r'$-23$', r'$0$', r'$23$'],  fontsize=16)
+        ax.set_yticklabels([r'$23$', r'$0$', r'$-23$'],  fontsize=20)
+        ax.set_xticklabels([r'$-23$', r'$0$', r'$23$'],  fontsize=20)
         cbar = plt.colorbar()
-        cbar.set_label(r'$eV/\AA$',size=18, labelpad=5)
-        cbar.ax.tick_params(labelsize=16)
+        cbar.set_label(r'$eV/\mathring{A}$',size=26, labelpad=5)
+        cbar.ax.tick_params(labelsize=20)
         #plt.grid('off')
-
+        plt.tight_layout()
 
         plt.figure()
         im0 = plt.imshow(-self.matrix[:,:,2], interpolation='nearest', cmap=cm, vmin=-0.008, vmax=0.064)
@@ -204,24 +204,24 @@ class Forces:
         ax = plt.gca()
         ax.set_yticks([0,self.cy,self.snChunks])
         ax.set_xticks([0,self.cx,self.snChunks])
-        ax.set_yticklabels([r'$23$', r'$0$', r'$-23$'],  fontsize=16)
-        ax.set_xticklabels([r'$-23$', r'$0$', r'$23$'],  fontsize=16)
+        ax.set_yticklabels([r'$23$', r'$0$', r'$-23$'],  fontsize=20)
+        ax.set_xticklabels([r'$-23$', r'$0$', r'$23$'],  fontsize=20)
         cmin = np.min(-self.matrix[:,:,2])
         cmax = np.max(-self.matrix[:,:,2])
         cbar = plt.colorbar()#ticks=np.arange(-0.008, 0.065, 0.008), format=r'$%.3f$')
-        cbar.set_label(r'$eV/\AA$',size=18, labelpad=5)
-        cbar.ax.tick_params(labelsize=16)
+        cbar.set_label(r'$eV/\mathring{A}$',size=26, labelpad=5)
+        cbar.ax.tick_params(labelsize=20)
         #plt.grid('off')
         #tick_locator = ticker.MaxNLocator(nbins=9)
         #cbar.locator = tick_locator
         #cbar.update_ticks()
-
+        plt.tight_layout()
 
 
         plt.figure()
         im1 = plt.pcolor(output)
-        plt.ylabel('$\\theta$', fontsize=26)
-        plt.xlabel('$r$',       fontsize=26)
+        plt.ylabel('$\\theta$', fontsize=28)
+        plt.xlabel('$r$',       fontsize=28)
 
         plt.figure()
         plt.plot(radialDist, linewidth=2, color="#478684")

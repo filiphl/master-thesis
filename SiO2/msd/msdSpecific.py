@@ -1,9 +1,15 @@
+import matplotlib
 from matplotlib import pyplot as plt
+from matplotlib import rc
 from os import listdir, system
 import argparse
 import numpy as np
 import sys
 import re
+
+
+
+
 
 def D(filepath, PLOT=False, SAVE=False):
     temperature = int(re.findall(r'T(\d*)\.', filepath)[0])
@@ -61,7 +67,7 @@ temperature = []
 diffusionConstant = []
 msd = {}
 for f in directory:
-    t,d = D(folderPath+f, 0, 1)
+    t,d = D(folderPath+f, 0, 0)
     msd[t] = d
 
 
@@ -69,18 +75,35 @@ for T in sorted(msd.keys()):
     temperature.append(int(T))
     diffusionConstant.append(float(msd[T]))
 
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+rc('text', usetex=True)
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
 
-plt.plot(temperature, diffusionConstant,
+fig, ax = plt.subplots()
+
+ax.plot(temperature, diffusionConstant,
 '-h',
 color="#478684",
-linewidth=3,
-markersize=7,
+linewidth=4,
+markersize=9,
 markerfacecolor='#3b617c',
 fillstyle='full')
-plt.xlabel('Temperature [K]')
-plt.ylabel('Diffusion coefficient')
+
+plt.xlabel(r'Temperature [K]', fontsize=20)
+plt.ylabel(r'Diffusion coefficient', fontsize=20)
 plt.grid('on')
 plt.ylim([min(diffusionConstant)*1.1,max(diffusionConstant)*1.1])
+yticks = ax.get_yticks()
+ax.set_yticks(yticks[2:])
+plt.tick_params(axis='both', which='major', labelsize=20)
+
+
+ax.xaxis.set_label_coords(0.5, -0.1)
+ax.yaxis.set_label_coords(-0.1, 0.5)
+plt.tight_layout()
+
+
 if True:
     plt.savefig('msd.pdf')
 if True:
