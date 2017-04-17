@@ -1712,7 +1712,7 @@ fix fixComputeID sphereG ave/chunk ${Nevery} ${Nrepeat} ${Nfreq} chunkID c_ggaID
 	\end{subfigure}
 	\vspace*{5mm}
 	\caption{Distribution of force. The color at a square represents the time averaged magnitude (a) and z-component (b) of the contact force of atoms within the square, hence not dependent on direction.
-		This is the result from a simulation where we push a sphere with radius of curvature $R=200$\AA  ~XX\AA ~into a half-space of area $46\times46$ unit cells}
+		This is the result from a simulation where we push a sphere with radius of curvature $R=200\mathring{A}$, $40\mathring{A}$ into a half-space of area $46\times46$ unit cells}
 	\label{fig:forceDistributions}
 \end{figure}
 
@@ -1979,7 +1979,7 @@ Numeric value of the forces are to be considered the average force acting on ato
 	\end{tabular}
 \end{table}
 \begin{figure}[H]
-	\caption{Radial distribution of contact forces between a sphere with radius of curvature $R=200\mathring{A}$ and a substrate of size $327.52\mathring{A} \times 327.52\mathring{A} \times 156.64\mathring{A}$ at different depths of indentation $h$. 
+	\caption{Radial distribution of contact forces acting on a sphere with radius of curvature $R=200\mathring{A}$ by a substrate of size $327.52\mathring{A} \times 327.52\mathring{A} \times 156.64\mathring{A}$ at different depths of indentation $h$. 
 		Both bodies are made of $\beta$-cristobalite.
 		The radial values are given in units of the unit cell length of $\beta$-cristobalite i.e. $r=1=7.12\mathring{A}$. 
 		The depth of indentation is defined as if the sphere was perfectly rigid. 
@@ -1994,6 +1994,49 @@ Numeric value of the forces are to be considered the average force acting on ato
 \end{figure}
 
  \subsection{Observations}
+ We do not detect any interacting forces between the two bodies until we reach the interval $h=-5$ to $h=0$, shown in the second row of the figure. 
+ At this interval we see a small negative value in the normal force, indicating a weak attractive force. 
+ Also, the shear force is negative, meaning the shear force is directed towards the center. 
+ As the sphere is pushed farther towards/into the substrate the contact forces rise in magnitude, and both the normal- and shear force gain positive contributions. 
+ We notice the normal force to have its maximum value close to the center for all intervals after repulsive forces are predominant. 
+ Theoretically the maximum normal force should be right at the center. 
+ However, this is not what we observe. 
+ There seems to be a systematic dip in the normal force right at the center. 
+ Had the dip not been systematic we could probably blame the discrepancy on bad statistics, considering the number of contribution to the average is very small near the center, and increases as $\propto r$. 
+ Since it isn't we can not use that argument. 
+%Explenation - dip in normal force.
+ The exact cause of the behavior is difficult to point out. 
+ It may be caused by a wrong definition of the center of indentation in the post- processing; basically that we have placed the center incorrectly. 
+ It could be a 	consequence of atomic structure. 
+ Both the sphere and the substrate are made of the same material, with the same atomic structure. 
+ The sphere was simply carved out, without any consideration its structure and broken bonds. 
+ It seems reasonable to expect the sphere to move slightly in order to fit best possible with the structure of the substrate, hence shifting the center of indentation from the expected position. 
+ From figure \ref{fig:zForceDistribution} and figure \ref{fig:radialdistribution110000} it is not clear if the forces are larger on one side of the center, than another. 
+ The fact that the shear force near the center seems to be unreasonably low for most of the intervals may also point to an erroneous placing of the center during post-processing.
+ However, this shifts sign at the later stages. 
+ Again, at this position there are bad foundation for the statistics, so I wont read too much into this, as it is not completely systematic. 
+ %A possible improvement would be to compute the center of mass of the sphere cap, and use it to determine the center of indentation. 
+ 
+ There is another systematic dip in the radial normal distribution. 
+ The rightmost non-zero value imply a small attractive force between the bodies. 
+ This behavior was expected. 
+ The parts of the  bodies that we macroscopically would consider not in contact are attracted by each other. 
+ We can see from the figure how its radial position moves outwards as the indentation depth increases.
+ From this we could estimate the area of contact to be within the  outermost radii where the normal force is positive.  
+ This edge of the contact area is also possible to be seen in the radial distribution of shear force. 
+ We see a negative value at the dip, because we study the force acting on the sphere from the substrate, leaving the attractive shear force outside the edge to be towards the center. 
+  
+ We see that the distributions are not smooth, as in continuum mechanics.  
+ %WHY?
+ 
+ From Hertz' theory we would expect the radial normal force distribution to be parabolic. 
+ This is not possible to conclude from the obtained results. 
+ If anything, it seems linear.
+
+ The shear force conforms with Hertz' theory much better.
+ At least at the last intervals it is clear that the maximum value is at a radial distance half of the radii of contact, and is zero both at the center and outside the edge. 
+ The discrepancy due to the dip at the edge has already been addressed. 
+ 
  
 
 
