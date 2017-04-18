@@ -1532,13 +1532,15 @@ We can then find the radial distribution simply by binning this matrix in radial
 
 \part{Numerical simulations and results}
 
-\chapter{Computing the force distribution}
-The normal force is defined as the force exerted on an object that is perpendicular to the contact surface. 
+\chapter{Computing contact forces}
+Contact forces are forces acting between two bodies at the area of contact. 
+They can be decomposed into normal an shear forces 
+The normal force is defined as the force exerted on an object that is perpendicular to the contact surface, while shear force is the component lying tangential to the contact surface.
 %The system we have created will have a non-zero normal force in the indentation of the substrate. 
 In this chapter we will make an attempt to find the distribution of the normal and shear forces acting between a spherical cap indenting a substrate. 
 This is not a trivial thing to compute in molecular dynamics. 
 The reason is that we have to be able to define the contact surface, which is not always easy. 
-For solid state physics there are several algorithms which attempt at this by searching for areas with structural discrepancies and dislocations \cite{stukowski}. 
+For solid state physics there are several algorithms which attempt to do this by searching for areas with structural discrepancies or dislocations \cite{stukowski}. 
 As time was a limiting factor, a simpler approach has been used. 
 Secondly, we must distinguish contact forces from non-contact forces. 
 As a matter of fact, to obtain the contact forces we have expanded the LAMMPS library by creating a custom compute class, since there currently is no such compute available. 
@@ -1613,8 +1615,8 @@ Following the constructor is the destructor on line 40. Its only task is to free
 \subsubsection{compute\_peratom()}
  If necessary, this function will resize the array to the number of atoms of concern, \texttt{nmax}. 
  It does this using internal functions in the superclass \textit{compute}, which we will not care to describe here. 
- Finally it calls upon the function \texttt{pair\_contribution()}, which fills the per-atom arrays with the energy and force. 
- A very important detail is that we only use the pair-contribution to the force. 
+ Finally it calls upon the function \texttt{pair\_contribution()}, which fills the per-atom arrays with the energy and force components. 
+ A very important detail is that we only use the pair-contribution of the potential. 
  We only sample the two-body part of the energy and force components. 
 The many-body corrections are ignored.
 Hence, our measurements will lack that detail.
@@ -1633,7 +1635,7 @@ Before we dive into the code, some of the variables are described.
 
 \item[] \texttt{firstneigh} is the actual neighbor list. Thus, a 2-dimensional list containing the index of each neighbor for each atom.
 
-\item[] \texttt{groupbit} is the 32-bit integer associated with a specific group. 
+\item[] \texttt{groupbit} is a 32-bit integer associated with a specific group. 
 
 \item[] \texttt{mask[i]} is a 32-bit integer containing information on which groups atom \texttt{i} is part of.  
 \end{itemize}
@@ -1790,7 +1792,7 @@ meaning that the normal force may be expressed as
 %	\vec{F_N} = \frac{\lr{\vec{F}\cdot\vec{n}}}{|\vec{n}|} \frac{\vec{n}}{|\vec{n}|} .\\
 \vec{F_N} = \lr{\vec{F}\cdot\vec{n}} \frac{\vec{n}}{|\vec{n}|^2} .
 \end{equation}
-In general there are two valid normal vectors $\vec{n}$ that satisfy the plane equation. However, the way obtain it, we always get the one with a positive z-component.  
+In general there are two valid normal vectors $\vec{n}$ that satisfy the plane equation. However, this procedure assures that we always get the one with a positive z-component.  
 {\color{editColor} We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in \ref{angleVecLine}.} 
 
 \lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=190, lastline=197]{../SiO2/large/pythonScripts/surface.py}
@@ -1892,9 +1894,9 @@ This way the shear force has a defined direction, but we no longer have the usua
 
 
 
-\section{Results}
+\section{Results - Radial force distribution} \label{sec:resultsRadialForceDistribution}
 
-\subsection{Specific description of experiment}
+\subsection{Specific description of experiment} \label{sec:resultsRadialForceDistributionSpecificDescriptionOfExperiment}
 Using the methods described in this chapter we were able to monitor the contact force distribution, between the sphere and the substrate, during indentation. 
 The sphere was initially positioned 20$\mathring{A}$ above the substrate, leaving no interaction forces between the two bodies.  
 After equilibration the sphere was lowered at a constant rate of 0.5$\mathring{A}$/ps, by using the technique of deforming the simulation box. 
@@ -1931,23 +1933,23 @@ Numeric value of the forces are to be considered the average force acting on ato
 		\toprule 
 	
 		-5 & \parbox[c]{0.83\linewidth}{
-			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep065000_bottom_without.pdf}
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/5000/pythonScripts/timeSteps/radialOnly/timestep065000_bottom_without.pdf}
 		}\\
 	
 		0 & \parbox[c]{0.83\linewidth}{
-			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep070000_bottom_without.pdf}
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/5000/pythonScripts/timeSteps/radialOnly/timestep070000_bottom_without.pdf}
 		}\\
 	
 		5 & \parbox[c]{0.83\linewidth}{
-			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep075000_bottom_without.pdf}
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/5000/pythonScripts/timeSteps/radialOnly/timestep075000_bottom_without.pdf}
 		}\\
 	
 		10 & \parbox[c]{0.83\linewidth}{
-			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep080000_bottom_without.pdf}
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/5000/pythonScripts/timeSteps/radialOnly/timestep080000_bottom_without.pdf}
 		}\\	
 	
 		15 & \parbox[c]{0.83\linewidth}{
-			\includegraphics[width=\linewidth, trim={8mm 0 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep085000_bottom.pdf}
+			\includegraphics[width=\linewidth, trim={8mm 0 35mm 3mm}, clip]{../SiO2/xOneEighty/lower/5000/pythonScripts/timeSteps/radialOnly/timestep085000_bottom.pdf}
 		}\\
 	\end{tabular}
 \end{table}
@@ -1957,23 +1959,23 @@ Numeric value of the forces are to be considered the average force acting on ato
 		h $[\mathring{A}]$ & \hspace{26mm}Magnitude \hspace{18mm} Normal \hspace{23mm} Shear \hspace{10mm} \\
 		\toprule 
 		20 & \parbox[c]{0.83\linewidth}{
-			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep090000_bottom_without.pdf}
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/5000/pythonScripts/timeSteps/radialOnly/timestep090000_bottom_without.pdf}
 		}\\
 		
 		25 & \parbox[c]{0.83\linewidth}{
-			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep095000_bottom_without.pdf}
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/5000/pythonScripts/timeSteps/radialOnly/timestep095000_bottom_without.pdf}
 		}\\
 		
 		30 & \parbox[c]{0.83\linewidth}{
-			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep100000_bottom_without.pdf}
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/5000/pythonScripts/timeSteps/radialOnly/timestep100000_bottom_without.pdf}
 		}\\
 		
 		35 & \parbox[c]{0.83\linewidth}{
-			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep105000_bottom_without.pdf}
+			\includegraphics[width=\linewidth, trim={8mm 5mm 35mm 0}, clip]{../SiO2/xOneEighty/lower/5000/pythonScripts/timeSteps/radialOnly/timestep105000_bottom_without.pdf}
 		}\\
 		
 		40 & \parbox[c]{0.83\linewidth}{
-			\includegraphics[width=\linewidth, trim={8mm 0 35mm 0}, clip]{../SiO2/xOneEighty/lower/pythonScripts/timeSteps/radialOnly/timestep110000_bottom.pdf}
+			\includegraphics[width=\linewidth, trim={8mm 0 35mm 3mm}, clip]{../SiO2/xOneEighty/lower/5000/pythonScripts/timeSteps/radialOnly/timestep110000_bottom.pdf}
 		}\\
 		
 	\end{tabular}
@@ -1981,7 +1983,7 @@ Numeric value of the forces are to be considered the average force acting on ato
 \begin{figure}[H]
 	\caption{Radial distribution of contact forces acting on a sphere with radius of curvature $R=200\mathring{A}$ by a substrate of size $327.52\mathring{A} \times 327.52\mathring{A} \times 156.64\mathring{A}$ at different depths of indentation $h$. 
 		Both bodies are made of $\beta$-cristobalite.
-		The radial values are given in units of the unit cell length of $\beta$-cristobalite i.e. $r=1=7.12\mathring{A}$. 
+		The radial values are given in units of the unit cell length of $\beta$-cristobalite i.e. $7.12\mathring{A}$. 
 		The depth of indentation is defined as if the sphere was perfectly rigid. 
 		$h=0\mathring{A}$ being the initial point of contact, $h>0\mathring{A}$ being an indentation, and $h<0\mathring{A}$ distance between the surface of the substrate and the lowest point of the sphere. 
 		Since the sphere isn't perfectly rigid it deforms and the depths of indentation aren't really as large as the values suggest. 	 		
@@ -1998,23 +2000,24 @@ Numeric value of the forces are to be considered the average force acting on ato
  At this interval we see a small negative value in the normal force, indicating a weak attractive force. 
  Also, the shear force is negative, meaning the shear force is directed towards the center. 
  As the sphere is pushed farther towards/into the substrate the contact forces rise in magnitude, and both the normal- and shear force gain positive contributions. 
- We notice the normal force to have its maximum value close to the center for all intervals after repulsive forces are predominant. 
+ 
+ We notice the normal force to have its maximum value close to the center for all intervals after repulsive forces are established. 
  Theoretically the maximum normal force should be right at the center. 
  However, this is not what we observe. 
  There seems to be a systematic dip in the normal force right at the center. 
  Had the dip not been systematic we could probably blame the discrepancy on bad statistics, considering the number of contribution to the average is very small near the center, and increases as $\propto r$. 
  Since it isn't we can not use that argument. 
 %Explenation - dip in normal force.
- The exact cause of the behavior is difficult to point out. 
- It may be caused by a wrong definition of the center of indentation in the post- processing; basically that we have placed the center incorrectly. 
+ The exact cause of the behavior is difficult to pinpoint. 
+ It may be caused by a wrong definition of the center of indentation in the post-processing; basically that we have placed the center incorrectly. 
  It could be a 	consequence of atomic structure. 
- Both the sphere and the substrate are made of the same material, with the same atomic structure. 
- The sphere was simply carved out, without any consideration its structure and broken bonds. 
- It seems reasonable to expect the sphere to move slightly in order to fit best possible with the structure of the substrate, hence shifting the center of indentation from the expected position. 
+ Both the sphere and the substrate are made of the same material, with the same crystalline structure. 
+ The sphere was simply carved out, without any consideration to its structure or broken bonds. 
+ It seems reasonable to expect the sphere to move slightly in order to fit best possibly with the structure of the substrate, hence shifting the center of indentation from the expected position. 
  From figure \ref{fig:zForceDistribution} and figure \ref{fig:radialdistribution110000} it is not clear if the forces are larger on one side of the center, than another. 
  The fact that the shear force near the center seems to be unreasonably low for most of the intervals may also point to an erroneous placing of the center during post-processing.
  However, this shifts sign at the later stages. 
- Again, at this position there are bad foundation for the statistics, so I wont read too much into this, as it is not completely systematic. 
+ Again, at this radial position there's bad foundation in the statistics, so I wont read too much into this, as it is not completely systematic. 
  %A possible improvement would be to compute the center of mass of the sphere cap, and use it to determine the center of indentation. 
  
  There is another systematic dip in the radial normal distribution. 
@@ -2029,17 +2032,36 @@ Numeric value of the forces are to be considered the average force acting on ato
  We see that the distributions are not smooth, as in continuum mechanics.  
  %WHY?
  
- From Hertz' theory we would expect the radial normal force distribution to be parabolic. 
+ From Hertz' theory we would expect the radial normal force distribution to be circular. 
  This is not possible to conclude from the obtained results. 
  If anything, it seems linear.
 
- The shear force conforms with Hertz' theory much better.
+ The shear force conforms much better with Hertz' theory.
  At least at the last intervals it is clear that the maximum value is at a radial distance half of the radii of contact, and is zero both at the center and outside the edge. 
  The discrepancy due to the dip at the edge has already been addressed. 
  
  
 
 
+\section{Results - Hysteresis}
+As a continuation of the simulation giving the resulting distributions shown, we may rise the sphere as well and study the difference in force interaction between the two cases. 
+This is known as hysteresis.
+As the sphere has been lowered $60\mathring{A}$ we held it still for 2ps, before rising it at the same speed as it was lowered. 
+The reason for the equilibration is to counteract effects of pressure waves. 
+We time-average the momentary normal force distribution in the same way as when it was lowered (described in section \ref{sec:resultsRadialForceDistributionSpecificDescriptionOfExperiment}).
+We want to study the total normal force acting between the two bodies, but this term is somewhat vague. 
+Does \textit{total normal force} refer to the sum of the forces z-component at the contact area, or the sum of local normal force contributions in the contact area? 
+Macroscopically we would choose the sum of z-components, however here we choose the sum of local normal force contributions.
+As we move the sphere at a predefined rate, we compare the value of the total normal force between the descending and ascending cases at the same depth of indentation.  
+The result is shown in figure \ref{fig:hysteresis}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{figures/hysteresis/normal}
+\caption{}
+\label{fig:normal}
+\end{figure}
 
 
 
@@ -2302,22 +2324,6 @@ Since in the one case, the surface has a larger concentration of one type of ato
 % ---------------------------------------------------------------------------- %
 
 \appendix
-\chapter{Source code}
-
-\newpage
-\section{compute\_group\_group.h}
-\label{groupgrouph}
-\lstinputlisting[language=c++, firstline=14, lastline=53]{../../LAMMPS/src/compute_group_group.h}
-
-\newpage
-\section{compute\_group\_group\_atom.h}
-\lstinputlisting[language=c++, firstline=14, lastline=40]{../../LAMMPS/src/compute_group_group_atom.h}
-
-
-\newpage
-\section{compute\_group\_group\_atom.cpp}
-\lstinputlisting[language=c++, firstline=19]{../../LAMMPS/src/compute_group_group_atom.cpp}
-
 
 \chapter{Something}
 \section{LAMMPS units}
@@ -2361,7 +2367,9 @@ Since in the one case, the surface has a larger concentration of one type of ato
 	\end{center}
 \end{table}
 
-
+\section{Building LAMMPS with custom compute}
+Changes to other files. 
+terminal commands for building LAMMPS again?
 
 
 
