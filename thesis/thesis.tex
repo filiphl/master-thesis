@@ -85,32 +85,29 @@
 \maketitle
 
 \begin{abstract}
-This is an abstract text.
+Abstract
 \end{abstract}
 
 \begin{dedication}
-  To someone
-  \\\vspace{12pt}
-  This is a dedication to my cat.
+  Dedication
 \end{dedication}
 
 \begin{acknowledgements}
   Flora Joelle Larsen\\*
   Anders Malthe-Sørenssen \\*
   Anders Hafreager \\*
-  Henrik Sveinson \\*
-  Kjetil
+  Henrik Sveinsson \\*
+  Kjetil Thøgersen
 \end{acknowledgements}
 {
 \hypersetup{linkcolor = black}
 \tableofcontents
 }
 \chapter{Introduction}
-
-Why is the subject of this thesis of any interest?\\
-What is our take on the problem?\\
+What is the subject of the thesis?\\
+Why is this subject of interest?\\
+What are my contributions?\\
 What do we hope to accomplish?\\
-How will this be of any contribution to anything?\\
 How is the thesis laid out?
 
 \part{Theory and methods}
@@ -168,7 +165,7 @@ Molecular dynamics simulations are computational expensive, and practically all 
 The choice of integration scheme is therefore very important. 
 As it turns out, probably the best scheme for the task is also one of the simplest. 
 
-\subsection{Velocity Verlet}
+\subsection*{Velocity Verlet}
 In molecular dynamics the most common scheme for time-integration is the \textit{Velocity Verlet} algorithm, which is a specific type of Verlet integration.
 It is derived by taylor expanding the position both one time step forward and one backwards as follows: 
 \begin{align}
@@ -262,7 +259,7 @@ Since the potential only account for the Pauli repulsion and van der Waal forces
 
 
  
-\subsection{Stillinger-Weber}
+%\subsection{Stillinger-Weber}
 
 \subsection{Vashishta}
 The Vashishta potential consists of two terms that represent two- and three-body interactions respectively. These incorporate physical effects such as steric repulsion, coulomb interaction, dipole interaction, Van der Waal interaction and energy related to covalent bonds. It can be expressed as
@@ -476,7 +473,7 @@ Instead it alters the acceleration by adding a fictitious force of friction
 \begin{equation}
 	\vec{F}_i = -\nabla U_i(\vec{r}^N) -\xi m\vec{v_i} 
 \end{equation}    
-
+{\Huge NOT DONE}
 
 \section{Efficiency improvements}
 The major part of the CPU time is spent in the force loop. 
@@ -533,7 +530,7 @@ Thus, the number of computations is reduced to $\mathcal{O} (N)$, which is an im
 	\resizebox{0.45\linewidth}{!}{
 		\input{figures/tikz/cubes.tikz}
 	}
-	\caption{Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. }
+	\caption{Illustrative figure of cells of concern when building the neighbor lists. The lighter cubes are considered neighboring cells; the darker cube is the cell containing the reference atom. The 7 cells in front of the dark cell are removed from the figure, but are also included. }
 	\label{fig:neighbourcells}
 \end{figure}
 
@@ -622,6 +619,7 @@ His results made him deduce the following statements, also found in his notes:
 	\item Friction made by the same weight will be of equal resistance at the beginning of the movement though the contact may be of different breadths or lengths.
 \end{itemize}
 This is now essentially known as the two first laws of friction. 
+They were not recognized at the time, but were rediscovered later by Guillaume Amontons, and these laws of friction are most commonly known as \textit{Amontons' laws}.
 The linear relation described in the first postulate is commonly known as the coefficient of friction
 \begin{equation}
 	\mu = \frac{F}{L}, \label{eq:coefficientOfFriction}
@@ -1018,7 +1016,7 @@ Thus, there is a huge difference in the apparent and real area of contact, a fac
 	\caption{Multiple points of contacts.}
 	\label{fig:realAreaOfContact3}
 \end{subfigure}
-\caption{Illustrating the concept of real are of contact, as well as surface roughness. }
+\caption{Illustrating the concept of real area of contact, as well as surface roughness. }
 \label{fig:realAreaOfContact}
 \end{figure}
 
@@ -1793,11 +1791,13 @@ meaning that the normal force may be expressed as
 \vec{F_N} = \lr{\vec{F}\cdot\vec{n}} \frac{\vec{n}}{|\vec{n}|^2} .
 \end{equation}
 In general there are two valid normal vectors $\vec{n}$ that satisfy the plane equation. However, this procedure assures that we always get the one with a positive z-component.  
-{\color{editColor} We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in \ref{angleVecLine}.} 
+If we compute the contact forces acting on the sphere from the substrate, a positive normal force, will imply a repulsive force, while a negative value an attractive force.
 
-\lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=190, lastline=197]{../SiO2/large/pythonScripts/surface.py}
+%{\color{editColor} We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in \ref{angleVecLine}.} 
 
+%\lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=190, lastline=197]{../SiO2/large/pythonScripts/surface.py}
 
+\newpage
 
 
 \section{Radial distribution}
@@ -2305,10 +2305,9 @@ The real area of contact is small compared to the sizes of the objects and the s
 	\item The surfaces are frictionless.
 \end{itemize}
 
-We have no way of knowing if the deformations were elastic throughout the simulation.
-This may very well explain the discrepancy.
+We have not checked if the deformations were elastic throughout the simulation.
 We absolutely have friction present.
-The hysteresis plot illustrates precisely  the presence of adhesion! 
+The hysteresis plot illustrates the presence of adhesion.
 It would not be possible do a molecular dynamics simulation and disregard the effects of friction.
  
 
