@@ -255,8 +255,9 @@ The inter-atomic distance at which the potential is at it's minimum can easily b
 	}
 \end{figure}
 
-Since the potential only account for the Pauli repulsion and van der Waal forces, its applicability is limited to systems consisting of neutral atoms or molecules, where there are no bonds present. It would suffice for studying noble gases, for instance, but that quickly becomes quite dull. 
-
+Since the potential only account for the Pauli repulsion and van der Waal forces, its applicability is limited to systems consisting of neutral atoms or molecules, where there are no bonds present. 
+It would suffice for studying noble gases, for instance, but that quickly becomes quite dull. 
+In order to increase 
 
  
 %\subsection{Stillinger-Weber}
@@ -1463,11 +1464,13 @@ The appliance of the script in Listing \ref{lst:sculpting} on the system is show
 \section{Moving the sphere towards the slab}
 We wish to push the sphere down onto the slab in order to create a deformation on the slab. There are many approaches to accomplish this. 
 One could apply an external force, pushing the sphere with a controlled force. 
-Instead, I have chosen to move the sphere at a controlled, constant velocity.  
-We have settled on the following strategy:
+Another is to move the sphere at a controlled, constant velocity.  
+We will use both of these methods on separate parts of the project.
+For the first part, we have settled on the following strategy:
 We apply periodic boundary conditions in all three dimensions. 
 %This will in practice imply that the sphere cap and the slab are connected through the z-boundaries. 
-Secondly, we freeze the atoms at the bottom of the slab so that their positions are fixed. They still interact with other atoms, but we restrain them from moving. 
+Secondly, we freeze the atoms at the bottom of the slab so that their positions are fixed. 
+They still interact with other atoms, but we restrain them from moving. 
 This will, due to the periodic boundary conditions, allow us to consider the sphere cap and the slab as if they are not connected to each other, but to independent blocks of silica glass.  
 For every $N$ time steps we decrease the hight of the system, while remapping the positions of the atoms. 
 The remapping is a very important procedure. 
@@ -1475,8 +1478,8 @@ It ensures that we do not loose any atoms that else-wise would be lost when movi
 A side-effect of the remapping is that the atoms in the system will be somewhat compressed in the z-direction. 
 Though, if we do the compression slowly, this will not be of any concern. 
 
-A technique to fix atom positions is to explicitly set their velocity and force to zero at every single time step.
-A much smarter method is to simply omit the atoms of consideration from time-integration. 
+One technique to fix atom positions is to explicitly set their velocity and force to zero at every single time step.
+A more efficient method is to simply omit the atoms of consideration from time-integration. 
 This way we do not bother computing the force acting on them, updating their velocity or position at all! 
 To do this, we simply create a group that contains all atoms except the once who should be fixed.
 Listing \ref{lst:FreezeStuff} show how to tell LAMMPS to only time-integrate the atoms in the group \texttt{excludingBT}, which excludes the bottom and tom regions of our system.
@@ -1576,8 +1579,8 @@ Thus, there are minor modifications needed and because of the similarities we ch
 All computes in LAMMPS are subclasses of the class named  \textit{compute}. 
 From this superclass they inherit a bunch of variables, functions and flags, which the user may decide to set. 
 Functions are of course declared in the header file, while variables and flags are set in the source file. 
-The source code of the \textit{group/group} compute is shown in Appendix \ref{groupgrouph}. 
-Since we will be making a subclass of it, we change the \textit{private} property to \textit{protected} so that we have access to all the variables and functions, from out subclass.
+The source code of the \textit{group/group} compute is included in the LAMMPS distribution. 
+Since we will be making a subclass of it, we change the \textit{private} property to \textit{protected} so that we have access to all the variables and functions, from our subclass.
 
 We start out by creating a header file and decide upon a name for our class. 
 We have chosen the name \textit{group/group/atom} since it is basically a per-atom version of the already existing compute \textit{group/group}. 
@@ -2060,7 +2063,7 @@ The result is shown in figure \ref{fig:hysteresis}
 \centering
 \includegraphics[width=0.7\linewidth]{figures/hysteresis/normal}
 \caption{}
-\label{fig:normal}
+\label{fig:hysteresis}
 \end{figure}
 
 
