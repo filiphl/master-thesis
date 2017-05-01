@@ -114,7 +114,7 @@ How is the thesis laid out?
 \chapter{Molecular dynamics}
 Molecular dynamics is a method that uses Newton’s equations of motion to simulate the movement of interacting atoms. 
 Each atom is treated as a point particle with mass and charge, and the interaction between them is described by a force field. 
-Thus, the force acting acting on a particle is computed as
+Thus, the force acting on a particle is computed as
 \begin{equation}
 	\vec{F_i} = -\nabla U_i(\vec{r}^N), \label{MDForce}
 \end{equation} 
@@ -128,10 +128,10 @@ Thus, our methods must be able to ignore negligible parts of the force contribut
 
 
 Molecular dynamics aid our understanding of macroscopic phenomena by giving us insight in microscopic effects and behavior. 
-It can be used if an experiment is to difficult, dangerous or expensive to do otherwise, for instance experiments at extreme temperatures or pressure. 
+It can be used if an experiment is too difficult, dangerous or expensive to do otherwise, for instance experiments at extreme temperatures or pressure. 
 The areas of application are wide, and it has become a very popular field in material science, biochemistry and biophysics.
 
-In this chapter we will present the basic principals of molecular dynamics, including essential algorithms, common methods and efficiency improvements.
+In this chapter we will present the basic principles of molecular dynamics, including essential algorithms, common methods and efficiency improvements.
 
 %Molecular dynamics simulations are computationally expensive. And often scientists must balance statistical precision and CPU time. Technological improvements have provided us the ability to simulate larger systems and/or at longer time frames than ever before. 
 
@@ -160,7 +160,7 @@ There are numerous numerical integration methods, but not all these have propert
 The most fundamental features the scheme should have are high precision, computationally cheap, good energy conservation, reversibility and be deterministic.
 Conservation of energy is fundamental in physics, and in order to simulate the micro-canonical ensemble (NVE), the integration method cannot have an energy drift.
 The dynamics should be reversible, meaning one should be able to simulate the system in the opposite direction in time, and arrive at past states.
-It should be deterministic in the sense that by the information about a specific state $(r(t_0), v(t_0))$ one should be able to compute the the state at any other time $(r(t), v(t))$, be it future of past.
+It should be deterministic in the sense that by the information about a specific state $(r(t_0), v(t_0))$ one should be able to compute the state at any other time $(r(t), v(t))$, be it future of past.
 Molecular dynamics simulations are computational expensive, and practically all the work lies in the time-integration loop. More precisely computing the sum of forces on each atom. 
 The choice of integration scheme is therefore very important. 
 As it turns out, probably the best scheme for the task is also one of the simplest. 
@@ -241,10 +241,10 @@ One of the simplest and most known potentials is the Lennard-Jones potential. It
 %F(r) = -\frac{\partial V(r)}{\partial r} = \frac{24\epsilon}{r}\left[2\lr{\frac{\theta}{r}}^{12} - \lr{\frac{\theta}{r}}^{6}\right], \label{eq:Lennard-Jones}
 %\end{equation}
 where the first term represents Pauli repulsion due to overlapping electron orbitals, and the last represents the van der Waal force. 
-The constant $\theta$ express the distance at which the inter-atomic potential is zero, while $\epsilon$ is the depth of the well, also regarded as the strength of the potential.
+The constant $\theta$ expresses the distance at which the inter-atomic potential is zero, while $\epsilon$ is the depth of the well, also regarded as the strength of the potential.
 $r$ is of course the inter-atomic distance. 
 A plot of the potential is shown in figure \ref{fig:Lennard-Jones}.
-The inter-atomic distance at which the potential is at it's minimum can easily be shown to be $r=2^{1/6}\theta$. 
+The inter-atomic distance at which the potential is at its minimum can easily be shown to be $r=2^{1/6}\theta$. 
 
 \begin{figure}[H]
 	\centering{
@@ -310,7 +310,7 @@ Boundary conditions is a crucial detail to decide upon when setting up a molecul
 	\vspace{0pt}  {\it No boundary conditions}. Particles are not subject to any special rules at any boundry. The system size may be regarded as infinite. This  might be a reasonable choise when studying explosions for instance, or in experiments that is on a really short time scale.  
 	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/no.pdf} 
 	\\*
-	\vspace{0pt} {\it Reflecting boundary conditions}, which act as hard walls. In stead of passing through the boundary, the velocity component in the direction normal to the face of the boundary changes sign, thus causing the atoms to be confined within the simulation box. 
+	\vspace{0pt} {\it Reflecting boundary conditions}, which act as hard walls. Instead of passing through the boundary, the velocity component in the direction normal to the face of the boundary changes sign, thus causing the atoms to be confined within the simulation box. 
 	& \vspace{0pt} \hspace*{-1.3cm} \includegraphics[width=1.3\linewidth]{figures/BoundaryConditions/reflecting.pdf} 
 	\\*
 	 \vspace{0pt} {\it Periodic boundary conditions}, which allow atoms on separate sides of a boundary to interact through the boundary as if they were neighbors, and atoms crossing the boundary reappears on the other side of the simulation box. This is useful when studying bulk atoms of a material or materials that has a periodic structure.
@@ -320,7 +320,7 @@ Boundary conditions is a crucial detail to decide upon when setting up a molecul
 
 \noindent
 The boundary conditions may include more details than only how to handle the trajectory of atoms intersecting the boundaries. 
-For instance with periodic boundaries, atoms that are far apart are effectively close. 
+For instance, with periodic boundaries atoms that are far apart are effectively close. 
 These atoms should therefore interact, since their motion would seem artificial otherwise. 
 Thus, the interpretation of atoms positions must in some cases be included in the boundary conditions. 
 In order to interpret atoms positions in the case of periodic boundaries, one has to remember that an atom should not interact with multiple images of another atom. 
@@ -380,7 +380,7 @@ for (int k=0; k<numberOfDimension; k++){
 			The position of an atom, with respect to the reference atom (red), is the position of the original or any of the replicated images that has the shortest distance to the reference atom. 
 			The minimum image is found by decomposing the atoms position, and carry out the 
 			The shortest distance in this case is marked with an arrow. 
-			Thus, when computing positional dependent quantities it's the position of the north-west replica that will be considered as the position of the blue atom in this case.}
+			Thus, when computing positional dependent quantities, it's the position of the north-west replica that will be considered as the position of the blue atom in this case.}
 		\label{fig:minimumImageConvention2D}
 	}
 \end{figure}
@@ -428,7 +428,7 @@ where $d$ is the number of dimensions, $\vec{F}_{ij}$ is the force contribution 
 In this expression for the pressure we assume constant $N$,$V$ and $T$, i.e. the canonical ensemble.
 The equation will not be the same for the micro-canonical ensemble.
 There are methods for converting averages from one ensemble to another \cite{Lebowitz}, but that is outside the scope of this thesis.
-\subsection{Something else?}
+
 
 \section{Thermostats}\label{sec:thermostats}
 Often, we want to control the temperature of our simulated system.
@@ -449,8 +449,8 @@ where $\Delta t$ is the time step length, and $\tau$ is a relaxation time, which
 $T_{bath}$ and $T$ is the temperature of the heat bath and the current temperature of the system, respectfully.
 Typically the relaxation time is set to $\tau \approx 20\Delta t$. 
 Using $\tau = \Delta t$ would result in the velocities rescaling so the temperature would be exactly the target temperature, $T_{bath}$, every time step. 
-This thermostat suppress temperature fluctuations efficiently, rendering it well suitable for equilibration procedures.
-However, because it rescales the velocities, it produce dynamics that are inconsistent with the canonical ensemble.
+This thermostat suppresses temperature fluctuations efficiently, rendering it well suitable for equilibration procedures.
+However, because it rescales the velocities, it produces dynamics that are inconsistent with the canonical ensemble.
 
 
 
@@ -460,7 +460,7 @@ Atoms that collide are assigned a new normally distributed velocity with standar
 The procedure of the thermostat goes as follows:
 For each atom in the system, we generate a random uniformly distributed number in the interval $[0,1]$. 
 If this number is less than $\Delta t/\tau$, the atom is considered to be colliding, and is assigned a new velocity. 
-Here, $\tau$ is regarded as a collision time, and its value should be similar to $\tau$ in the Berendsen thermostat ($20\Delta t$). 
+Here $\tau$ is regarded as a collision time, and its value should be similar to $\tau$ in the Berendsen thermostat ($20\Delta t$). 
 The Andersen thermostat is useful when equilibrating systems, but because randomly chosen particles are assigned randomly distributed velocities, it disturbs the dynamics of e.g. lattice vibrations. 
 Also, this disturbance will decorrelate the system, rendering this thermostat ill-equipped when measuring e.g. diffusion coefficient.  
 As a final note, if this thermostat is to be used, the newly assigned velocities may cause the systems center of mass to drift.
@@ -469,18 +469,21 @@ As a final note, if this thermostat is to be used, the newly assigned velocities
 \subsection{Nosé-Hoover}
 The most widely used thermostat is the Nosé-Hoover thermostat. 
 It produces  accurate dynamics and realistic constant temperature conditions. 
-This thermostat does not rescale the velocity of atoms. 
-Instead it alters the acceleration by adding a fictitious force of friction 
+This thermostat differs from the Berendsen and Andersen thermostats in that it does not rescale the velocity of atoms. 
+Instead it alters the hamiltonian of the system by adding a fictitious force of friction.
+The equation of motion is changed to
 \begin{equation}
-	\vec{F}_i = -\nabla U_i(\vec{r}^N) -\xi m\vec{v_i} 
+	\vec{F}_i = -\nabla U_i(\vec{r}^N) -\zeta m\vec{v_i} ,
 \end{equation}    
-{\Huge NOT DONE}
+where $\zeta$ is a dynamic variable determining the strength of the thermostat. 
+Due to this change, the integration scheme also has to be altered. 
+As the details of this thermostat is somewhat extensive, I recommend reading \textit{Understanding Molecular Simulation} by Frenkel \& Smit \cite{understandingMolecularSimulationFrenkelSmit} for detailed derivation and explanation.
 
 \section{Efficiency improvements}
 The major part of the CPU time is spent in the force loop. 
 At every time step we must recompute the force acting on each individual atom. 
 When doing so, we should in theory include the contribution from all other atoms. 
-Having a system consisting of $N$ atoms would result in $N(N-1)/2 \propto N^2$ computations, if we apply Newtons third law.
+Having a system consisting of $N$ atoms would result in $N(N-1)/2 \propto N^2$ computations, if we apply Newton's third law.
 In this section we will look at the most fundamental efficiency improvements applied in molecular dynamics simulations.
 
 \subsection{Cut-off}
@@ -551,7 +554,7 @@ The time spent running a parallel implementation of a code using $p$ processors 
 In molecular dynamics simulations there is communication between processors when building the cell- and neighbor lists, and when computing thermodynamical properties such as energy, pressure, temperature, etc.. 
 
 During this project we have mainly been using the local supercomputer at the department of physics at the University of Oslo. It provides users with the possibility to run  up to 256 processes at once. Though, before doing so, it is considered as good practice to check the speedup obtained by using several numbers of cores.
-In order to compute the speedup we initialized a system containing $15\times15\times15$ unit cells of beta-cristobalite and saved it as a restart file. 
+In order to compute the speedup, we initialized a system containing $15\times15\times15$ unit cells of beta-cristobalite and saved it as a restart file. 
 We then remotely ran the input script shown in Listings \ref{lst:speedup} from the supercomputer using 1, 2, 4, 8, 16, 32 and 64 processors in the same fashion as shown in Listing \ref{speeduprun}.  
 The resulting speedup of using the respective number of processors is plotted in figure \ref{fig:speedup15x15}.
 
@@ -579,7 +582,7 @@ In fact this result suggest that using 1 processor is twice as energy efficient 
 
 \chapter{Friction, elasticity and contact mechanics}
 Friction can be defined as \textit{the force that resists relative motion between two bodies in contact} \cite{frictionDefinition}. 
-It's a well known phenomena, though still not completely understood.
+It's a well-known phenomenon, though still not completely understood.
 Despite the fact that we learn about friction in introductory courses to physics, it is not at all easy to comprehend. 
 It's very complex and still a field of research.
 The effects of friction is affected by surface roughness, material properties, ambient conditions, the geometry of contact area, and many other factors. 
@@ -596,7 +599,7 @@ In this chapter we will study some elementary aspects of dry friction between tw
 On the macroscopic level, friction has been observed since the dawn of man. 
 Early actions that show awareness of the effects of friction was to chip stone in order to make tools, or rubbing wood in order to create fire. 
 In the tomb of Tehuti-Hetep there was found the painting shown in figure \ref{fig:Colossus}, which show the moving of an Egyptian colossus. 
-The statue is depicted pulled on a sledge, with officers standing on the front end of the sledge poring water on the ground. 
+The statue is depicted pulled on a sledge, with officers standing on the front end of the sledge pouring water on the ground. 
 This is evidence that they perceived the effect of lubrication even then, 1900 B.C..   
 
 
@@ -609,7 +612,7 @@ This is evidence that they perceived the effect of lubrication even then, 1900 B
 
 
 \noindent 
-The first documented studies of friction was carried out during the renaissance by Leonardo da Vinci (1452-1519) \cite{LeonardoDaVinciStudies}.
+The first documented studies of friction were carried out during the renaissance by Leonardo da Vinci (1452-1519) \cite{LeonardoDaVinciStudies}.
 Among his experiments he attaching a block of wood to another object with a cord, and placed the block on a smooth surface.
 He was able to adjust the weight of the second object, which he let hang over a fixed cylinder, free to rotate. 
 This experiment was found in his notebooks, and is shown in figure \ref{fig:leonardoDaVinci}.
@@ -672,7 +675,7 @@ As we shall see, that is not always the case.
 
 Keep in mind that the forces we refer to are considered to be working on the center of mass of the block. 
 The coefficient of friction is a macroscopic observation.
-It wouldn't make any sense to discuss a coefficient of friction between lets say two "blocks" containing 10 atoms each.
+It wouldn't make any sense to discuss a coefficient of friction between let's say two "blocks" containing 10 atoms each.
 How would one even define a normal force? 
 
 Steady sliding motion can be observed for instance if a car driver pulls on the break at high speed, so that the wheels are unable to turn.
@@ -1472,9 +1475,9 @@ We apply periodic boundary conditions in all three dimensions.
 Secondly, we freeze the atoms at the bottom of the slab so that their positions are fixed. 
 They still interact with other atoms, but we restrain them from moving. 
 This will, due to the periodic boundary conditions, allow us to consider the sphere cap and the slab as if they are not connected to each other, but to independent blocks of silica glass.  
-For every $N$ time steps we decrease the hight of the system, while remapping the positions of the atoms. 
+For every $N$ time steps we decrease the height of the system, while remapping the positions of the atoms. 
 The remapping is a very important procedure. 
-It ensures that we do not loose any atoms that else-wise would be lost when moving the z-boundary. 
+It ensures that we do not lose any atoms that else-wise would be lost when moving the z-boundary. 
 A side-effect of the remapping is that the atoms in the system will be somewhat compressed in the z-direction. 
 Though, if we do the compression slowly, this will not be of any concern. 
 
@@ -1834,7 +1837,7 @@ In many applications where the bin width can be large compared to the length of 
 However, the current radii of the contact area between the sphere and the slab is only about 15-20 unit cells, and therefor having a large bin width will result in very few data points. 
 
 
-A different, slightly more sophisticated approach is to compute the fraction of the area of each cell that actually is withing the bin, and multiply this by the value associated with the cell.
+A different, slightly more sophisticated approach is to compute the fraction of the area of each cell that actually is within the bin, and multiply this by the value associated with the cell.
 We can sum all these contributions and average them by dividing by the area of the bin. 
 This means that even cells that do not have their center within the bin might contribute to the resulting bin value. 
 How much, however, will depend on the fraction of the cell's area that is within the bin.
@@ -1877,7 +1880,7 @@ What is meant by shear force is in this situation dependent on how we define it.
 Usually, the shear force is the component of contact force that is parallel to the contact surface (perpendicular to the normal force). 
 However, by strictly using that definition, the computed shear force would have only positive contributions, and no notion of direction.
 This would also not fit with the distributions derived by Hertz. 
-In stead, we define the shear force as the radial component of the shear force as defined above.
+Instead, we define the shear force as the radial component of the shear force as defined above.
 Thus, if its general direction is away from the center of indentation, its value will  be positive, while if its towards the center it is negative. 
 This way the shear force has a defined direction, but we no longer have the usual relation $\vec{F}=\vec{F_N} + \vec{F_s}$.
 %These results will be discussed further in chapter \ref{sec:resultsRadialDistribution}.
@@ -1911,7 +1914,7 @@ Due to elasticity the sphere deforms, leaving the indentation to be less than th
 A negative depth of indentation describe a separation between the sphere and substrate.   
 
 
-In stead of using momentary measured values for the force distributions, we present the average distribution over a time-frame of 5000 time steps (10 ps). 
+Instead of using momentary measured values for the force distributions, we present the average distribution over a time-frame of 5000 time steps (10 ps). 
 Thus, from we begin sampling until we stop, the (top of the) sphere has moved 5$\mathring{A}$ further down towards the substrate.  
 During the 5000 time steps, we sampled every 5th step. 
 Thus, a total of 1000 samples were used for every resulting mean distribution\footnote{This was achieved using  Nevery=5,  Nrepeat=1000 and Nfreq=5000 in line 3 of listing \ref{lst:usingCustomCompute}.}.
@@ -1998,7 +2001,7 @@ Numeric value of the forces are to be considered the average force acting on ato
 \label{fig:resultsRadialForceDistributions}
 \end{figure}
 
- \subsection{Observations}
+\noindent
  We do not detect any interacting forces between the two bodies until we reach the interval $h=-5$ to $h=0$, shown in the second row of the figure. 
  At this interval we see a small negative value in the normal force, indicating a weak attractive force. 
  Also, the shear force is negative, meaning the shear force is directed towards the center. 
@@ -2009,7 +2012,7 @@ Numeric value of the forces are to be considered the average force acting on ato
  However, this is not what we observe. 
  There seems to be a systematic dip in the normal force right at the center. 
  Had the dip not been systematic we could probably blame the discrepancy on bad statistics, considering the number of contribution to the average is very small near the center, and increases as $\propto r$. 
- Since it isn't we can not use that argument. 
+ Since it isn't we cannot use that argument. 
 %Explenation - dip in normal force.
  The exact cause of the behavior is difficult to pinpoint. 
  It may be caused by a wrong definition of the center of indentation in the post-processing; basically that we have placed the center incorrectly. 
@@ -2020,7 +2023,7 @@ Numeric value of the forces are to be considered the average force acting on ato
  From figure \ref{fig:zForceDistribution} and figure \ref{fig:radialdistribution110000} it is not clear if the forces are larger on one side of the center, than another. 
  The fact that the shear force near the center seems to be unreasonably low for most of the intervals may also point to an erroneous placing of the center during post-processing.
  However, this shifts sign at the later stages. 
- Again, at this radial position there's bad foundation in the statistics, so I wont read too much into this, as it is not completely systematic. 
+ Again, at this radial position there's bad foundation in the statistics, so I won't read too much into this, as it is not completely systematic. 
  %A possible improvement would be to compute the center of mass of the sphere cap, and use it to determine the center of indentation. 
  
  There is another systematic dip in the radial normal distribution. 
@@ -2047,28 +2050,52 @@ Numeric value of the forces are to be considered the average force acting on ato
 
 
 \section{Results - Hysteresis}
-As a continuation of the simulation giving the resulting distributions shown, we may rise the sphere as well and study the difference in force interaction between the two cases. 
+As a continuation of the simulation giving the resulting distributions shown in figure \ref{fig:resultsRadialForceDistributions}, we may rise the sphere as well and study the difference in force interaction between the two cases. 
 This is known as hysteresis.
 As the sphere has been lowered $60\mathring{A}$ we held it still for 2ps, before rising it at the same speed as it was lowered. 
 The reason for the equilibration is to counteract effects of pressure waves. 
 We time-average the momentary normal force distribution in the same way as when it was lowered (described in section \ref{sec:resultsRadialForceDistributionSpecificDescriptionOfExperiment}).
 We want to study the total normal force acting between the two bodies, but this term is somewhat vague. 
-Does \textit{total normal force} refer to the sum of the forces z-component at the contact area, or the sum of local normal force contributions in the contact area? 
+Does \textit{total normal force} refer to the sum of the forces' z-component at the contact area, or the sum of local normal force contributions in the contact area? 
 Macroscopically we would choose the sum of z-components, however here we choose the sum of local normal force contributions.
 As we move the sphere at a predefined rate, we compare the value of the total normal force between the descending and ascending cases at the same depth of indentation.  
-The result is shown in figure \ref{fig:hysteresis}
+The result is shown in figure \ref{fig:hysteresis}, where the measured normal force while descending and ascending the sphere is shown by the lighter and darker curve, respectively. 
 
 
-\begin{figure}
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.7\linewidth]{figures/hysteresis/normal}
-\caption{}
+\includegraphics[width=0.7\linewidth]{figures/hysteresis/normal2}
+\caption{
+	Hysteresis plot obtained by simulating a sphere ... pushed down upon/into a flat substrate with constant velocity. 
+	The total normal force is computed as the sum of all local normal components of contact force. The indentation is defined as zero where the tip of the sphere is at the same height as the surface of the substrate.
+	The measured normal force while descending and ascending the sphere is shown by the lighter and darker curve, respectively. 
+	After the sphere was lowered 60$\mathring{A}$, we equilibrated a short time before beginning the ascend.	
+	Forces measured are averages of 1000 consecutive time points.
+	Only every second measurement is shown, in order to not clatter the figure.  
+	 }
 \label{fig:hysteresis}
 \end{figure}
 
+\noindent
+For identical height of the sphere, the measured normal force was greater during the descend than the ascend. 
+This was an expected result and is due to friction. %adhesion.  
+Atoms from the sphere and the substrate form bonds that counteracting the repulsive forces. 
+Thus, resisting the sphere from rising. 
+When ascending the sphere, these bonds must be broken.
+%At the deepest indentation, the repulsive forces are much greater than those of adhesion, leaving them undetectable. 
+The area between the two curves constitutes an energy loss, due to braking of these bonds.
+The excess energy is dissipated as heat.
 
+The two curves does not coincide at the height of initial contact (indentation height = 0). 
+In fact, when ascending the two bodies seem to be in contact until the sphere has been elevated 10$\mathring{A}$ above the initial height of substrate surface. 
+This is due to adhesion between the two bodies, as shown in the figure XX. 
 
-
+For elevations above 10$\mathring{A}$, there is very little contact between the two bodies, and I suspect the measured normal force between them to not be due to these small contributions, but an effect of the method used. 
+As the sphere ascends from the substrate, some atoms from the substrate may have attached to surface of the sphere. 
+As we are rising the sphere at a constant velocity it makes sense that average force between atoms of the sphere and the attached substrate atoms are attractive. 
+Though the atoms that initially was part of the substrate has become part of the sphere, the groups registered in LAMMPS were defined before that happened. 
+As of now, the computes used do not accept dynamic groups, so this detail is not registered. 
+However, as we can see this issue only result in a minor discrepancy. 
 
 
 
@@ -2158,7 +2185,7 @@ This can be deduced from our results as well.
 Figure \ref{fig:springUnScaled} show the evolution of the spring force from 5 different simulations, all using a different velocity, and demonstrating that the maximum spring force is different in each case. 
 We may rescale the x-axis by multiplying with the velocity to obtain the spring force as a function of the extension of the spring.  
 So, how are we supposed to conclude a coefficient of friction from our simulations? 
-The solution is to find the relation between the coefficent and the velocity.
+The solution is to find the relation between the coefficient and the velocity.
 By using the dataset shown in figure \ref{fig:springUnScaled} and \ref{fig:springUnScaledExtension} we may plot $\mu(v)$ by computing $\mu = F_s/N$ for every velocity.
 The result is shown in figure \ref{fig:springUvsV}. 
 The relation is obviously linear, at least for the considered range of velocities. 
@@ -2171,7 +2198,7 @@ by this function, we get data collapse as shown in figure \ref{fig:springDataCol
 Note that we normalize the y-axis by dividing with the normal force $N$.
 Collapse of the curves indicate that at all these velocities the system is subject to the same physical process. 
 Had the curves been very distinguishable, we could conclude that there is some other effect taking place. 
-These curves overlap quite nicely, so I do not see any cause of concern\footnote{Though this is a subjective opinon.}.
+These curves overlap quite nicely, so I do not see any cause of concern\footnote{Though this is a subjective opinion.}.
 The collapse is not of use to us in the pursue of computing the coefficient of static friction. 
 The result that is of real interest is the relation posed in equation \eqref{eq:UofV}. 
 In macroscopic experiments the spring is loaded very slowly compared to the velocities we use when simulating. 
@@ -2239,7 +2266,7 @@ In this example case it was $\mu = 0.255$.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{figures/friction/scalingCoeffisient/UvsN}
-	\caption{Coeffisient of friction $\mu$ as a function of normal force/load $N$.}
+	\caption{Coefficient of friction $\mu$ as a function of normal force/load $N$.}
 	\label{fig:uvsn}
 \end{figure}
 
@@ -2250,6 +2277,38 @@ In this example case it was $\mu = 0.255$.
 	\caption{Shear force $F$ as a function of normal force/load $N$.}
 	\label{fig:fvsn}
 \end{figure}
+
+
+
+\section{Results}
+Our prime goal was to find a dependence in the coefficient of static friction on the thickness of the substrate. 
+We were therefore obliged to do the same simulation with the simple perturbation of changing the thickness of the substrate. 
+The substrate is formed by carving out atoms above a specified z-coordinate, beneath the sphere. 
+It is there fore critical to be aware of where we cut the substrate. 
+The way the crystalline structure of the substrate was oriented, a difference in 1$\mathring{A}$, would change the upper most layer of atoms of the substrate to be all oxygen or all silicon.
+If for one measurement they are all oxygen and another all silicon, we will get very different results. {\huge \color{editColor} Example?}. 
+To remove the risk of error, we vary the thickness of the substrate by steps with length of the unit cell (7.12$\mathring{A}$).
+For each thickness of the substrate, we estimated the coefficient of static friction using the method described in the previous section of this chapter.
+The result is shown in figure \ref{fig:coefficientVsIndentation}.
+
+\begin{figure}[H]
+	\centering
+	\hspace{-5mm}
+	\includegraphics[width=0.7\linewidth]{figures/friction/coefficientVsIndentation}
+	\caption{Measured coefficient of static friction for various thicknesses of the substrate. 
+		Each measurement is taken as the gradient of a linear approximation as done in illustrated in figure \ref{fig:fvsn}, as defined by Amontons' law. 
+		}
+	\label{fig:coefficientVsIndentation}
+\end{figure}
+
+\noindent
+The coefficient of static friction increases with the substrate thickness;
+most rapidly at small thicknesses, and less at large thicknesses. 
+As the thickness increases the coefficient seems to approach some finite limit. 
+From the functional form leading up to final step, we may estimate this limit, which represents the coefficient we would have measured at arbitrary large thickness. 
+
+ 
+
 
 
 \begin{comment}
@@ -2323,6 +2382,12 @@ Since in the one case, the surface has a larger concentration of one type of ato
 
 
 
+\section{coefficient}
+This illustrates a typical technique used in molecular dynamics. 
+As in macroscopic experiments we may use way thicker substrates, inadequate for simulations. 
+In stead we may look for a behavior and estimate the value from extrapolation of this behavior.
+
+
 % ---------------------------------------------------------------------------- %
 
 \appendix
@@ -2370,7 +2435,11 @@ Since in the one case, the surface has a larger concentration of one type of ato
 \end{table}
 
 \section{Building LAMMPS with custom compute}
-Changes to other files. 
+In order to use the custom compute \texttt{group/group/atom}, some files in the lammps distribution must be perturbed.  
+All files that have been altered during this thesis are available at my githuh-account in the directory named \textit{modifiedLammpsFiles}.  
+The compute uses only the two-body part of the potential. 
+As a consequence, we must set the \texttt{single\_enable}-flag to be true in \texttt{pair\_vashishta.cpp}. 
+Also
 terminal commands for building LAMMPS again?
 
 
