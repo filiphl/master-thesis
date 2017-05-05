@@ -1,0 +1,28 @@
+# file "system.lt"
+
+write_once("In Init") {
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+}
+
+write_once("In Settings") {
+  pair_coeff  * *  SiO2.vashishta Si O
+  pair_modify table 16
+  pair_modify tabinner 0.1
+}
+
+import "beta-cristobalite7168.lt"
+
+Slab = new beta-cristobalite [15].move(7.168, 0.00, 0.00)
+                                [15].move(0.00, 7.168, 0.00)
+                                [4].move(0.00, 0.00, 7.168)
+
+
+write_once("Data Boundary") {
+  0.0  107.52   xlo  xhi
+  0.0  107.52   ylo  yhi
+  0.0  42.96   zlo  zhi
+}

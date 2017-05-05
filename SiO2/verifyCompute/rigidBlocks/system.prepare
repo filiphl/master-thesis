@@ -1,0 +1,21 @@
+
+variable one    equal  7.168
+variable two    equal ${one}*2
+variable three  equal ${one}*3
+variable four   equal ${one}*4
+variable five   equal ${one}*5
+variable six    equal ${one}*6
+variable seven	equal ${one}*7
+
+
+region topR     block  INF   INF   INF   INF   ${three}  INF
+region middleR  block  INF   INF   INF   INF   ${one}	 ${three}
+region bottomR  block  INF   INF   INF   INF   INF       ${one}
+
+
+group topG      region topR
+group middleG   region middleR
+group bottomG   region bottomR
+
+group excludeBT subtract all topG bottomG
+group excludeB  subtract all bottomG

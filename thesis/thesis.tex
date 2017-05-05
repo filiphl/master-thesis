@@ -473,9 +473,9 @@ This thermostat differs from the Berendsen and Andersen thermostats in that it d
 Instead it alters the hamiltonian of the system by adding a fictitious force of friction.
 The equation of motion is changed to
 \begin{equation}
-	\vec{F}_i = -\nabla U_i(\vec{r}^N) -\zeta m\vec{v_i} ,
+	\vec{F}_i = -\nabla U_i(\vec{r}^N) -\xi m\vec{v_i} ,
 \end{equation}    
-where $\zeta$ is a dynamic variable determining the strength of the thermostat. 
+where $\xi$ is a dynamic variable determining the strength of the thermostat. 
 Due to this change, the integration scheme also has to be altered. 
 As the details of this thermostat is somewhat extensive, I recommend reading \textit{Understanding Molecular Simulation} by Frenkel \& Smit \cite{understandingMolecularSimulationFrenkelSmit} for detailed derivation and explanation.
 
@@ -873,7 +873,7 @@ As mentioned, stress is caused by strain. However, strain is also caused by stre
 The relation between the two is known as Hooke's law. 
 If we consider a infinitesimal cubical body subject to a tensile force in the x-direction, Hooke's law states that the relation between stress and strain is given as
 \begin{equation}
-	\epsilon_x = \frac{\sigma_x}{E},
+	\epsilon_x = \frac{\sigma_x}{E}, \label{eq:stressStrainHookesLawX}
 \end{equation}
 where $E$ is a material property known as Young's modulus\footnote{Young's modulus is also known as the elastic modulus.}, which express the stiffness of the material. 
 Here we assume that the deformation is elastic.
@@ -960,9 +960,26 @@ The general Hooke's law can now be expressed as a matrix product
 	\vec{\sigma} = \vec{\hat{C}}\vec{\epsilon}
 \end{equation}
 
+\subsection{Poisson's ratio}
+If strain a body in the x-direction, the stress in the x-direction will be as given in equation \eqref{eq:stressStrainHookesLawX}. However, as the body is strained in this direction, it will contact in the other two dimensions. 
+The relation between the applied strain in the x-direction and resulting strain in the other directions can be expressed as 
+\begin{equation}
+	\epsilon_y = -\nu\frac{\sigma_x}{E}, \hspace{1cm} \epsilon_z = -\nu\frac{\sigma_x}{E} , \label{eq:poissonsRatio}
+\end{equation}
+in which $\nu$ is a constant known as Poisson's ratio. 
+If an element is subject to uniformly distributed normal stress on all faces $\sigma_x,\sigma_y,\sigma_z$, we can use equation \eqref{eq:stressStrainHookesLawX} and \eqref{eq:poissonsRatio} in order to compute the resulting strains. 
+We superpose the strain components produced by each of the stresses to get
+\begin{align}
+	\epsilon_x &= \frac{1}{E}[\sigma_x - \nu(\sigma_y + \sigma_z)]\\[2mm]
+	\epsilon_y &= \frac{1}{E}[\sigma_y - \nu(\sigma_x + \sigma_z)]\\[2mm]
+	\epsilon_z &= \frac{1}{E}[\sigma_z - \nu(\sigma_x + \sigma_y)].
+\end{align}
+
+
+
+
 
 \section{Contact mechanics} \label{sec:contactMechanics}
-
 
 \subsection{Real area of contact}
 Today we know that most surfaces are rough, at least at a microscopic level, having some degree of asperities. 
@@ -1032,10 +1049,14 @@ The first satisfactory analysis of the stresses at the contact of two elastic so
 
 
 
-
-
-
-
+\section{Previously conducted studies}
+The field of friction is not new to science in any regard, however thanks the advances in technology and computational power, we are now able to simulate physical systems at an atomic level. 
+A study, very similar to our, has been conducted by Binquan Luan and Mark Robbins \cite{RobbinsSingleAsperity}. 
+They used LAMMPS to do molecular dynamics simulations of a single spherical asperity indenting a flat substrate. 
+They measured pressure distribution in the area of contact, and compared it to solution predicted by Hertz' theory. 
+They did this for differently constructed spheres: bent commensurate, bent uncommensurate, step... 
+They found the step to deviate the most from the theory, having a much more linear behavior than the theory and the rest of the simulations.
+They also noticed a dip in the pressure right at the center, obviously deviating from Hertz' theory. 
 
 
 

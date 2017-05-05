@@ -1,0 +1,58 @@
+#include "system.in"
+#velocity	all create 1 277387 mom yes
+#include "system.prepare"
+
+include "system.in.init"
+read_restart "restartFiles/SiO2_5000.restart"
+include "system.in.settings"
+
+variable N equal 2000
+variable T equal 293
+variable compressionLength equal 10
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		10
+timestep	0.002
+
+
+restart ${N} restartFiles/SiO2_*.restart
+
+dump dumpID all atom 100 dump.atom
+dump upperID upperG atom 100 dump.upper
+dump lowerID lowerG atom 100 dump.lower
+
+#run ${N}
+
+variable Nevery  equal 1
+variable Nrepeat equal ${N}/${Nevery}
+variable Nfreq   equal ${Nevery}*${Nrepeat}
+
+compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+compute ggaID bottomG group/group/atom midLowerG pair yes
+fix fixComputeID bottomG ave/chunk ${Nevery} ${Nrepeat} ${Nfreq} chunkID c_ggaID[2] c_ggaID[3] c_ggaID[4] file forces.txt
+
+compute ggID bottomG group/group midLowerG pair yes
+
+
+group excludeB subtract all bottomG
+#fix nvt excludeBT nvt temp ${T} ${T} 1.0
+fix nvt excludeB nvt temp ${T} ${T} 1
+
+fix addForceID2 topG    addforce 0 0 -0.1
+fix addForceID bottomG addforce 0 0 0
+compute customForce bottomG reduce sum c_ggaID[4]
+
+
+fix rTop topG rigid single 
+
+# fix deform all deform 1 z delta 0 -${compressionLength} remap x
+
+thermo_style custom step temp f_addForceID[3] c_customForce c_ggID[3] 
+
+run ${N}
+
+print "Nevery  = ${Nevery}"
+print "Nrepeat = ${Nrepeat}"
+print "Nfreq   = ${Nfreq}"

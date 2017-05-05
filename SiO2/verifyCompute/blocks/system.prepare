@@ -1,0 +1,21 @@
+
+variable one   equal  7.12
+variable three equal 21.36
+variable five  equal 35.60
+variable six   equal 42.72
+
+region topR      block  INF   INF   INF   INF   ${five}   ${six}
+region upperR    block  INF   INF   INF   INF   ${three}  ${six}
+region midUpperR block  INF   INF   INF   INF   ${three}  ${five}
+region midLowerR block  INF   INF   INF   INF   ${one}    ${three}
+region lowerR    block  INF   INF   INF   INF   INF       ${three}
+region bottomR   block  INF   INF   INF   INF   INF       ${one}
+
+group topG      region topR
+group upperG    region upperR
+group midUpperG region midUpperR
+group midLowerG region midLowerR
+group lowerG    region lowerR
+group bottomG   region bottomR
+
+group excludeBT subtract all topG bottomG

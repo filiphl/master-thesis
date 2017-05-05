@@ -1,0 +1,140 @@
+LAMMPS (27 Aug 2016-ICMS)
+include "system.in"
+
+
+# ----------------- Init Section -----------------
+
+include "system.in.init"
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+
+
+# ----------------- Atom Definition Section -----------------
+
+read_data "system.data"
+  orthogonal box = (0 0 0) to (7.12 7.12 7.12)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  2 atoms
+
+# ----------------- Settings Section -----------------
+
+include "system.in.settings"
+  pair_coeff  * *  SiO2.vashishta Si O
+Reading potential file SiO2.vashishta with DATE: 2015-10-14
+  pair_modify table 16
+  pair_modify tabinner 0.1
+
+
+# ----------------- Run Section -----------------
+
+# The lines above define the system you want to simulate.
+# What you do next is up to you.
+# Typically a user would minimize and equilibrate
+# the system using commands similar to the following:
+#  ----   examples   ----
+#
+#  -- minimize --
+# minimize 1.0e-5 1.0e-7 1000 10000
+# (Note: Some fixes, for example "shake", interfere with the minimize command,
+#        You can use the "unfix" command to disable them before minimization.)
+#  -- declare time step for normal MD --
+# timestep 1.0
+#  -- run at constant pressure (Nose-Hoover)--
+# fix   fxnpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 1000.0 drag 1.0
+#  -- ALTERNATELY, run at constant volume (Nose-Hoover) --
+# fix   fxnvt all nvt temp 300.0 300.0 500.0 tchain 1
+#  -- ALTERNATELY, run at constant volume using Langevin dynamics. --
+#  -- (This is good for sparse CG polymers in implicit solvent.)   --
+# fix fxlan all langevin 300.0 300.0 5000 48279
+#  -- Now, finally run the simulation --
+# run   50000
+#  ---- (end of examples) ----
+
+velocity	all create 1 277387 mom yes
+
+group g1 type 1
+1 atoms in group g1
+group g2 type 2
+1 atoms in group g2
+
+variable N equal 500
+variable T equal 293
+variable compressionLength equal 30
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+
+
+fix nvt all nvt temp ${T} ${T} 1.0
+fix nvt all nvt temp 293 ${T} 1.0
+fix nvt all nvt temp 293 293 1.0
+
+#restart ${N} restartFiles/SiO2_*.restart
+
+
+dump dumpID all atom 5 dump.atom
+#dump upperID upperG atom 100 dump.upper
+#dump lowerID lowerG atom 100 dump.lower
+
+#run ${N}
+
+
+compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+compute computeID g1 group/group/atom g2 pair yes
+fix fixComputeID g1 ave/chunk 1 10 10 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forcesAll.txt #ave running
+
+
+run ${N}
+run 500
+Neighbor list info ...
+  2 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.8
+  ghost atom cutoff = 5.8
+  binsize = 2.9 -> bins = 3 3 3
+Memory usage per processor = 7.61039 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0            1   -4.0946548            0   -4.0945256   -3988.1494 
+     100    325.17836   -4.1378888            0   -4.0958562   -327.97314 
+     200    9.8312179     -4.09383            0   -4.0925592    5081.5528 
+     300    301.38421   -4.1311051            0   -4.0921481   -1631.8796 
+     400    42.754568   -4.0928575            0   -4.0873311   -4042.7729 
+     500    347.34745   -4.1289915            0   -4.0840934    2327.6107 
+Loop time of 0.0034399 on 1 procs for 500 steps with 2 atoms
+
+Performance: 25116.985 ns/day, 0.001 hours/ns, 145352.925 timesteps/s
+77.1% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.0001092  | 0.0001092  | 0.0001092  |   0.0 |  3.17
+Neigh   | 5.0068e-06 | 5.0068e-06 | 5.0068e-06 |   0.0 |  0.15
+Comm    | 0.00030494 | 0.00030494 | 0.00030494 |   0.0 |  8.86
+Output  | 0.0014284  | 0.0014284  | 0.0014284  |   0.0 | 41.52
+Modify  | 0.0013657  | 0.0013657  | 0.0013657  |   0.0 | 39.70
+Other   |            | 0.0002267  |            |       |  6.59
+
+Nlocal:    2 ave 2 max 2 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    43 ave 43 max 43 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    1 ave 1 max 1 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:  2 ave 2 max 2 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 2
+Ave neighs/atom = 1
+Neighbor list builds = 1
+Dangerous builds = 0
+Total wall time: 0:00:00

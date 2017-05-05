@@ -29,46 +29,48 @@
 \BOOKMARK [1][-]{section.3.3}{Elasticity}{chapter.3}% 29
 \BOOKMARK [2][-]{subsection.3.3.1}{Strain and stress}{section.3.3}% 30
 \BOOKMARK [2][-]{subsection.3.3.2}{Hooke's law}{section.3.3}% 31
-\BOOKMARK [1][-]{section.3.4}{Contact mechanics}{chapter.3}% 32
-\BOOKMARK [2][-]{subsection.3.4.1}{Real area of contact}{section.3.4}% 33
-\BOOKMARK [2][-]{subsection.3.4.2}{Hertz theory}{section.3.4}% 34
-\BOOKMARK [0][-]{chapter.4}{LAMMPS}{part.1}% 35
-\BOOKMARK [1][-]{section.4.1}{Installation}{chapter.4}% 36
-\BOOKMARK [2][-]{subsection.4.1.1}{Linux}{section.4.1}% 37
-\BOOKMARK [2][-]{subsection.4.1.2}{Mac OS X with Homebrew}{section.4.1}% 38
-\BOOKMARK [1][-]{section.4.2}{Input scripts}{chapter.4}% 39
-\BOOKMARK [2][-]{subsection.4.2.1}{System configurations}{section.4.2}% 40
-\BOOKMARK [2][-]{subsection.4.2.2}{Run-time commands}{section.4.2}% 41
-\BOOKMARK [2][-]{subsection.4.2.3}{Output}{section.4.2}% 42
-\BOOKMARK [1][-]{section.4.3}{Visualization}{chapter.4}% 43
-\BOOKMARK [2][-]{subsection.4.3.1}{OVITO}{section.4.3}% 44
-\BOOKMARK [0][-]{chapter.5}{Preparing a molecular dynamics simulation}{part.1}% 45
-\BOOKMARK [1][-]{section.5.1}{Silica}{chapter.5}% 46
-\BOOKMARK [2][-]{subsection.5.1.1}{Unit cell of -cristobalite}{section.5.1}% 47
-\BOOKMARK [1][-]{section.5.2}{Building a crystal}{chapter.5}% 48
-\BOOKMARK [1][-]{section.5.3}{Melting point}{chapter.5}% 49
-\BOOKMARK [1][-]{section.5.4}{Shaping the system}{chapter.5}% 50
-\BOOKMARK [1][-]{section.5.5}{Moving the sphere towards the slab}{chapter.5}% 51
-\BOOKMARK [-1][-]{part.2}{II Numerical simulations and results}{}% 52
-\BOOKMARK [0][-]{chapter.6}{Computing contact forces}{part.2}% 53
-\BOOKMARK [1][-]{section.6.1}{Creating a custom compute}{chapter.6}% 54
-\BOOKMARK [2][-]{subsection.6.1.1}{Look for similar computes}{section.6.1}% 55
-\BOOKMARK [2][-]{subsection.6.1.2}{Creating the class}{section.6.1}% 56
-\BOOKMARK [2][-]{subsection.6.1.3}{Usage}{section.6.1}% 57
-\BOOKMARK [1][-]{section.6.2}{Least squares plane regression}{chapter.6}% 58
-\BOOKMARK [1][-]{section.6.3}{Radial distribution}{chapter.6}% 59
-\BOOKMARK [1][-]{section.6.4}{Results - Radial force distribution}{chapter.6}% 60
-\BOOKMARK [2][-]{subsection.6.4.1}{Specific description of experiment}{section.6.4}% 61
-\BOOKMARK [2][-]{subsection.6.4.2}{Description of results}{section.6.4}% 62
-\BOOKMARK [1][-]{section.6.5}{Results - Hysteresis}{chapter.6}% 63
-\BOOKMARK [0][-]{chapter.7}{Computing the coefficient of static friction}{part.2}% 64
-\BOOKMARK [1][-]{section.7.1}{Maintaining a normal force}{chapter.7}% 65
-\BOOKMARK [1][-]{section.7.2}{Adding a shear force}{chapter.7}% 66
-\BOOKMARK [1][-]{section.7.3}{Procedure}{chapter.7}% 67
-\BOOKMARK [1][-]{section.7.4}{Treating the results}{chapter.7}% 68
-\BOOKMARK [1][-]{section.7.5}{Results}{chapter.7}% 69
-\BOOKMARK [-1][-]{part.3}{III Discussion}{}% 70
-\BOOKMARK [0][-]{section.7.6}{coefficient}{part.3}% 71
-\BOOKMARK [0][-]{appendix.A}{Something}{part.3}% 72
-\BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 73
-\BOOKMARK [1][-]{section.A.2}{Building LAMMPS with custom compute}{appendix.A}% 74
+\BOOKMARK [2][-]{subsection.3.3.3}{Poisson's ratio}{section.3.3}% 32
+\BOOKMARK [1][-]{section.3.4}{Contact mechanics}{chapter.3}% 33
+\BOOKMARK [2][-]{subsection.3.4.1}{Real area of contact}{section.3.4}% 34
+\BOOKMARK [2][-]{subsection.3.4.2}{Hertz theory}{section.3.4}% 35
+\BOOKMARK [1][-]{section.3.5}{Previously conducted studies}{chapter.3}% 36
+\BOOKMARK [0][-]{chapter.4}{LAMMPS}{part.1}% 37
+\BOOKMARK [1][-]{section.4.1}{Installation}{chapter.4}% 38
+\BOOKMARK [2][-]{subsection.4.1.1}{Linux}{section.4.1}% 39
+\BOOKMARK [2][-]{subsection.4.1.2}{Mac OS X with Homebrew}{section.4.1}% 40
+\BOOKMARK [1][-]{section.4.2}{Input scripts}{chapter.4}% 41
+\BOOKMARK [2][-]{subsection.4.2.1}{System configurations}{section.4.2}% 42
+\BOOKMARK [2][-]{subsection.4.2.2}{Run-time commands}{section.4.2}% 43
+\BOOKMARK [2][-]{subsection.4.2.3}{Output}{section.4.2}% 44
+\BOOKMARK [1][-]{section.4.3}{Visualization}{chapter.4}% 45
+\BOOKMARK [2][-]{subsection.4.3.1}{OVITO}{section.4.3}% 46
+\BOOKMARK [0][-]{chapter.5}{Preparing a molecular dynamics simulation}{part.1}% 47
+\BOOKMARK [1][-]{section.5.1}{Silica}{chapter.5}% 48
+\BOOKMARK [2][-]{subsection.5.1.1}{Unit cell of -cristobalite}{section.5.1}% 49
+\BOOKMARK [1][-]{section.5.2}{Building a crystal}{chapter.5}% 50
+\BOOKMARK [1][-]{section.5.3}{Melting point}{chapter.5}% 51
+\BOOKMARK [1][-]{section.5.4}{Shaping the system}{chapter.5}% 52
+\BOOKMARK [1][-]{section.5.5}{Moving the sphere towards the slab}{chapter.5}% 53
+\BOOKMARK [-1][-]{part.2}{II Numerical simulations and results}{}% 54
+\BOOKMARK [0][-]{chapter.6}{Computing contact forces}{part.2}% 55
+\BOOKMARK [1][-]{section.6.1}{Creating a custom compute}{chapter.6}% 56
+\BOOKMARK [2][-]{subsection.6.1.1}{Look for similar computes}{section.6.1}% 57
+\BOOKMARK [2][-]{subsection.6.1.2}{Creating the class}{section.6.1}% 58
+\BOOKMARK [2][-]{subsection.6.1.3}{Usage}{section.6.1}% 59
+\BOOKMARK [1][-]{section.6.2}{Least squares plane regression}{chapter.6}% 60
+\BOOKMARK [1][-]{section.6.3}{Radial distribution}{chapter.6}% 61
+\BOOKMARK [1][-]{section.6.4}{Results - Radial force distribution}{chapter.6}% 62
+\BOOKMARK [2][-]{subsection.6.4.1}{Specific description of experiment}{section.6.4}% 63
+\BOOKMARK [2][-]{subsection.6.4.2}{Description of results}{section.6.4}% 64
+\BOOKMARK [1][-]{section.6.5}{Results - Hysteresis}{chapter.6}% 65
+\BOOKMARK [0][-]{chapter.7}{Computing the coefficient of static friction}{part.2}% 66
+\BOOKMARK [1][-]{section.7.1}{Maintaining a normal force}{chapter.7}% 67
+\BOOKMARK [1][-]{section.7.2}{Adding a shear force}{chapter.7}% 68
+\BOOKMARK [1][-]{section.7.3}{Procedure}{chapter.7}% 69
+\BOOKMARK [1][-]{section.7.4}{Treating the results}{chapter.7}% 70
+\BOOKMARK [1][-]{section.7.5}{Results}{chapter.7}% 71
+\BOOKMARK [-1][-]{part.3}{III Discussion}{}% 72
+\BOOKMARK [0][-]{section.7.6}{coefficient}{part.3}% 73
+\BOOKMARK [0][-]{appendix.A}{Something}{part.3}% 74
+\BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 75
+\BOOKMARK [1][-]{section.A.2}{Building LAMMPS with custom compute}{appendix.A}% 76

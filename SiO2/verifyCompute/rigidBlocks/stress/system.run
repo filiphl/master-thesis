@@ -1,0 +1,48 @@
+#File: system.run
+
+#include "system.in"
+#velocity	all create 1 277387 mom yes
+
+include "system.in.init"
+read_restart restartFiles/initialized.restart.60000
+include "system.in.settings"
+
+variable N equal 80000
+variable T equal 293
+variable compressionLength equal 10
+
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		1000
+timestep	0.002
+
+#restart ${N} restartFiles/initialized.restart
+
+#region R1 block 0 INF 0 INF 0 23.73
+#region R2 block 0 INF 0 INF 23.7301 47.46 
+#region R3 block 0 INF 0 INF 18.3 28.3   # Middle of R1 and R2.
+#group G1 region R1
+#group G2 region R2
+#group G3 region R3
+
+#fix nvt all nvt temp ${T} ${T} 1.0
+#run ${N}
+#fix deform all deform 1 z delta 0 -${compressionLength} remap x
+#run ${N}
+#unfix deform 
+#run ${N}
+
+compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+#compute stressID G3 stress/atom NULL
+#fix fixChunkID G3 ave/chunk 1 ${N} ${N} chunkID c_stressID[3] file stressGroup.txt
+
+
+
+#unfix deformID
+#fix fix1ID all ave/time 100 5 1000 c_stressID file stress.txt
+compute computeID G1 group/group/atom G2 pair yes
+fix fixComputeID G1 ave/chunk 2 1000 20000 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forces.txt #ave running
+
+run ${N}

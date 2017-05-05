@@ -1,0 +1,29 @@
+variable  nSteps equal 5000
+variable  rad equal 16*(step/v_nSteps)
+region    innerSphereRegion sphere 17.8 17.8 60.52 v_rad side out
+region    outerSphereRegion sphere 17.8 17.8 60.52 16
+region    shellRegion union 2 innerSphereRegion outerSphereRegion
+
+group     defrostGroupID dynamic all region shellRegion
+
+
+#run       ${nSteps}
+
+fix FreezeID defrostGroupID setforce 0 0 0
+velocity defrostGroupID set 0 0 0
+
+label defrost
+variable i loop 500
+    unfix FreezeID
+    variable  rad equal 16*(step/v_nSteps)
+    group     defrostGroupID dynamic all region shellRegion
+    fix FreezeID defrostGroupID setforce 0 0 0
+    velocity defrostGroupID set 0 0 0
+
+    run 10
+next i
+jump SELF defrost
+
+
+group     defrostGroupID static
+run      500

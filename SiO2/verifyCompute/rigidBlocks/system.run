@@ -1,0 +1,52 @@
+include "system.in"
+velocity	all create 1 277387 mom yes
+include "system.prepare"
+
+#include "system.in.init"
+#read_restart "restartFiles/SiO2_10000.restart"
+#include "system.in.settings"
+
+variable  N     equal  10000
+variable  T     equal  293
+variable  F     equal  -0.05*step/${N}
+variable  nTop  equal  count(topG)
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+
+restart ${N} restartFiles/SiO2_*.restart
+
+dump dumpID all atom 100 dump.atom
+
+variable Nevery  equal 1
+variable Nrepeat equal ${N}/${Nevery}
+variable Nfreq   equal ${Nevery}*${Nrepeat}
+
+compute ggaID middleG group/group/atom topG pair yes
+#compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+#fix fixComputeID middleG ave/chunk ${Nevery} ${Nrepeat} ${Nfreq} chunkID c_ggaID[2] c_ggaID[3] c_ggaID[4] file forces.txt
+
+compute customForce all reduce sum c_ggaID[4]
+compute ggID middleG group/group topG pair yes
+
+
+
+fix forceT  topG     addforce 0 0 v_F
+fix forceB  bottomG  addforce 0 0 0
+
+fix rUpper topG rigid single
+
+variable ftop equal v_F*${nTop}
+thermo_style custom step temp f_forceT[3] f_forceB[3] c_customForce c_ggID[3] v_ftop
+
+
+fix nvt excludeB nvt temp ${T} ${T} 1
+run ${N}
+
+print "Nevery  = ${Nevery}"
+print "Nrepeat = ${Nrepeat}"
+print "Nfreq   = ${Nfreq}"

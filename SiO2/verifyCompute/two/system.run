@@ -1,0 +1,36 @@
+include "system.in"
+velocity	all create 1 277387 mom yes
+
+group g1 type 1
+group g2 type 2
+
+variable N equal 500
+variable T equal 293
+variable compressionLength equal 30
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+
+
+fix nvt all nvt temp ${T} ${T} 1.0
+
+#restart ${N} restartFiles/SiO2_*.restart
+
+
+dump dumpID all atom 5 dump.atom
+#dump upperID upperG atom 100 dump.upper
+#dump lowerID lowerG atom 100 dump.lower
+
+#run ${N}
+
+
+compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+compute computeID g1 group/group/atom g2 pair yes
+fix fixComputeID g1 ave/chunk 1 10 10 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forcesAll.txt #ave running
+
+
+run ${N}

@@ -1,0 +1,47 @@
+#include "system.in"
+#velocity	all create 1 277387 mom yes
+#include "system.prepare"
+
+include "system.in.init"
+read_restart restartFiles/SiO2_initial_50000.restart
+include "system.in.settings"
+
+
+
+
+
+
+variable N  equal 60000
+variable N2 equal 1000
+variable T  equal 293
+variable compressionLength equal 60
+
+restart 10000 restartFiles/lower/SiO2_lower_*.restart
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+timestep	0.002
+
+info groups
+
+fix   nvtID excludeBT nvt temp ${T} ${T} 1.0
+
+
+#Move the top z-boundary downwards
+fix deform all deform 1 z delta 0 -${compressionLength} remap x
+
+compute chunkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+compute computeID slabG group/group/atom sphereG pair yes
+fix fixComputeID slabG ave/chunk 5 200 ${N2} chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forceFiles/forcesAll.txt #ave running
+
+
+dump allDumpID all atom ${N2} dumpFiles/lower/SiO2_lower_*.dump
+dump surfaceDumpID  surfaceG  atom ${N2} surfaceFiles/Surface*.dump
+
+thermo 100
+fix balanceID all balance 5000 1.1 shift xyz 50 1.0
+run ${N}
+
+unfix deform
+run 10000

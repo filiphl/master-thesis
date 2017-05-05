@@ -1,0 +1,136 @@
+LAMMPS (27 Aug 2016-ICMS)
+include "system.in"
+
+
+# ----------------- Init Section -----------------
+
+include "system.in.init"
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+    units		metal
+    boundary	p p p
+    atom_style   atomic
+    pair_style 	 vashishta
+    #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+
+
+# ----------------- Atom Definition Section -----------------
+
+read_data "system.data"
+  orthogonal box = (0 0 0) to (107.52 107.52 42.96)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  21600 atoms
+
+# ----------------- Settings Section -----------------
+
+include "system.in.settings"
+  pair_coeff  * *  SiO2.vashishta Si O
+Reading potential file SiO2.vashishta with DATE: 2015-10-14
+  pair_modify table 16
+  pair_modify tabinner 0.1
+    pair_coeff  * *  SiO2.vashishta Si O
+Reading potential file SiO2.vashishta with DATE: 2015-10-14
+    pair_modify table 16
+    pair_modify tabinner 0.1
+
+
+# ----------------- Run Section -----------------
+
+# The lines above define the system you want to simulate.
+# What you do next is up to you.
+# Typically a user would minimize and equilibrate
+# the system using commands similar to the following:
+#  ----   examples   ----
+#
+#  -- minimize --
+# minimize 1.0e-5 1.0e-7 1000 10000
+# (Note: Some fixes, for example "shake", interfere with the minimize command,
+#        You can use the "unfix" command to disable them before minimization.)
+#  -- declare time step for normal MD --
+# timestep 1.0
+#  -- run at constant pressure (Nose-Hoover)--
+# fix   fxnpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 1000.0 drag 1.0
+#  -- ALTERNATELY, run at constant volume (Nose-Hoover) --
+# fix   fxnvt all nvt temp 300.0 300.0 500.0 tchain 1
+#  -- ALTERNATELY, run at constant volume using Langevin dynamics. --
+#  -- (This is good for sparse CG polymers in implicit solvent.)   --
+# fix fxlan all langevin 300.0 300.0 5000 48279
+#  -- Now, finally run the simulation --
+# run   50000
+#  ---- (end of examples) ----
+
+velocity	all create 1 277387 mom yes
+include "system.prepare"
+
+variable one    equal  7.168
+variable two    equal ${one}*2
+variable two    equal 7.168*2
+variable three  equal ${one}*3
+variable three  equal 7.168*3
+variable four   equal ${one}*4
+variable four   equal 7.168*4
+variable five   equal ${one}*5
+variable five   equal 7.168*5
+variable six    equal ${one}*6
+variable six    equal 7.168*6
+variable seven	equal ${one}*7
+variable seven	equal 7.168*7
+
+
+region topR     block  INF   INF   INF   INF   ${three}  INF
+region topR     block  INF   INF   INF   INF   21.504  INF
+region middleR  block  INF   INF   INF   INF   ${one}	 ${three}
+region middleR  block  INF   INF   INF   INF   7.168	 ${three}
+region middleR  block  INF   INF   INF   INF   7.168	 21.504
+region bottomR  block  INF   INF   INF   INF   INF       ${one}
+region bottomR  block  INF   INF   INF   INF   INF       7.168
+
+
+group topG      region topR
+5400 atoms in group topG
+group middleG   region middleR
+11250 atoms in group middleG
+group bottomG   region bottomR
+5850 atoms in group bottomG
+
+group excludeBT subtract all topG bottomG
+10350 atoms in group excludeBT
+group excludeB  subtract all bottomG
+15750 atoms in group excludeB
+
+#include "system.in.init"
+#read_restart "restartFiles/SiO2_10000.restart"
+#include "system.in.settings"
+
+variable  N     equal  10000
+variable  T     equal  293
+variable  F     equal  -0.05*step/${N}
+variable  F     equal  -0.05*step/10000
+variable  nTop  equal  count(topG)
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		100
+timestep	0.002
+
+
+restart ${N} restartFiles/SiO2_*.restart
+restart 10000 restartFiles/SiO2_*.restart
+
+dump dumpID all atom 100 dump.atom
+
+variable Nevery  equal 1
+variable Nrepeat equal ${N}/${Nevery}
+variable Nrepeat equal 10000/${Nevery}
+variable Nrepeat equal 10000/1
+variable Nfreq   equal ${Nevery}*${Nrepeat}
+variable Nfreq   equal 1*${Nrepeat}
+variable Nfreq   equal 1*10000
+
+compute ggaID middleG group/group/atom topG pair yes
+#compute chunkID all chunk/atom bin/2d x 0 7.12 y 0

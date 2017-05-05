@@ -1,0 +1,340 @@
+LAMMPS (27 Aug 2016-ICMS)
+include "system.in"
+
+
+# ----------------- Init Section -----------------
+
+include "system.in.init"
+  units         metal
+  boundary      p p p
+  atom_style    atomic
+  pair_style    vashishta
+  #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
+
+
+# ----------------- Atom Definition Section -----------------
+
+read_data "system.data"
+  orthogonal box = (0 0 0) to (327.52 327.52 156.64)
+  4 by 8 by 2 MPI processor grid
+  reading atoms ...
+  1015680 atoms
+
+# ----------------- Settings Section -----------------
+
+include "system.in.settings"
+  pair_coeff  * *  SiO2.vashishta Si O
+Reading potential file SiO2.vashishta with DATE: 2015-10-14
+  pair_modify table 16
+  pair_modify tabinner 0.1
+
+
+# ----------------- Run Section -----------------
+
+# The lines above define the system you want to simulate.
+# What you do next is up to you.
+# Typically a user would minimize and equilibrate
+# the system using commands similar to the following:
+#  ----   examples   ----
+#
+#  -- minimize --
+# minimize 1.0e-5 1.0e-7 1000 10000
+# (Note: Some fixes, for example "shake", interfere with the minimize command,
+#        You can use the "unfix" command to disable them before minimization.)
+#  -- declare time step for normal MD --
+# timestep 1.0
+#  -- run at constant pressure (Nose-Hoover)--
+# fix   fxnpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 1000.0 drag 1.0
+#  -- ALTERNATELY, run at constant volume (Nose-Hoover) --
+# fix   fxnvt all nvt temp 300.0 300.0 500.0 tchain 1
+#  -- ALTERNATELY, run at constant volume using Langevin dynamics. --
+#  -- (This is good for sparse CG polymers in implicit solvent.)   --
+# fix fxLAN all langevin 300.0 300.0 5000 48279
+# fix fxNVE all nve  #(<--needed by fix langevin)
+#  -- Now, finally run the simulation --
+# run   50000
+#  ---- (end of examples) ----
+
+velocity	all create 1 277387 mom yes
+
+
+include "system.prepare"
+#region ID style args keyword arg ...
+
+
+
+#Define the region of the sphere
+region sphereRegion sphere 163.76 163.76 271.2 200
+region smallSphereRegion sphere 163.76 163.76 271.2 197 side out
+region shellRegion intersect 2 sphereRegion smallSphereRegion
+region sphereUpperRegion block 0 INF 0 INF 153 INF
+group  sphereGroup region sphereRegion
+259916 atoms in group sphereGroup
+group  shellGroup region shellRegion
+20895 atoms in group shellGroup
+group  sphereUpperGroup region sphereUpperRegion
+25392 atoms in group sphereUpperGroup
+
+#Define the region of the slab
+region slabRegion block 0 INF 0 INF 3.1 53.4
+group  slabGroup region slabRegion
+359720 atoms in group slabGroup
+
+region slabBottomRegion block 0.0 INF 0.0 INF 0.0 3.0
+group  slabBottomGroup region slabBottomRegion
+25392 atoms in group slabBottomGroup
+
+#Define the region that is outside the sphere and slab
+region bothRegion union 3 sphereRegion slabRegion slabBottomRegion side out
+
+#Delete all atoms exterior to the sphere and slab
+delete_atoms region bothRegion
+Deleted 370652 atoms, new total = 645028
+
+#Define the surface
+region surfaceRegion block 0 INF 0 INF 53.0 53.4
+group  surfaceGroup  region surfaceRegion
+4232 atoms in group surfaceGroup
+
+#Freeze some volumes
+
+region slabUpperRegion block 0.0 INF 0.0 INF 50.4 53.4
+group slabUpperGroup region slabUpperRegion
+25392 atoms in group slabUpperGroup
+
+
+fix upperFreezeID  slabUpperGroup   setforce 0 0 0
+fix shellFreezeID  shellGroup       setforce 0 0 0
+fix bottomFreezeID slabBottomGroup  setforce 0 0 0
+fix topFreezeID    sphereUpperGroup setforce 0 0 0
+velocity slabBottomGroup  set 0 0 0
+velocity slabUpperGroup   set 0 0 0
+velocity shellGroup       set 0 0 0
+velocity sphereUpperGroup set 0 0 0
+
+variable N equal 20000
+variable T equal 293
+variable compressionLength equal 50
+
+
+neighbor	0.3 bin
+neigh_modify	delay 10
+
+thermo		1000
+timestep	0.002
+
+fix nvt all nvt temp ${T} ${T} 1.0
+fix nvt all nvt temp 293 ${T} 1.0
+fix nvt all nvt temp 293 293 1.0
+
+restart 10000 restartFiles/SiO2_*.restart
+dump myDump all atom 10000 dumpFiles/SiO2_*.dump
+
+run ${N}
+run 20000
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.8
+  ghost atom cutoff = 5.8
+  binsize = 2.9 -> bins = 113 113 55
+Memory usage per processor = 10.808 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0    0.8600598   -2064175.6            0   -2064103.8    126196.69 
+    1000    645.36109   -2132647.2            0   -2078839.4    21810.177 
+    2000    562.20922   -2142234.7            0   -2095359.7    18819.331 
+    3000    486.20631   -2149945.2            0   -2109407.1    17046.215 
+    4000    422.75839   -2155873.8            0   -2120625.8    15826.414 
+    5000    373.49986   -2160457.3            0   -2129316.3    15029.898 
+    6000    335.80181   -2163858.8            0   -2135860.9    14424.964 
+    7000    308.59297   -2166270.5            0   -2140541.1    14001.571 
+    8000    292.26139   -2167769.8            0   -2143402.2    13698.915 
+    9000    289.30332   -2168046.4            0   -2143925.4    13723.318 
+   10000    296.16659   -2167489.1            0   -2142795.9    13673.023 
+   11000    293.71567   -2167728.3            0   -2143239.4    13648.498 
+   12000    289.88626   -2168021.4            0   -2143851.8    13642.447 
+   13000    294.52707   -2167674.2            0   -2143117.6    13637.135 
+   14000    294.18436   -2167710.4            0   -2143182.4     13571.92 
+   15000    290.79415   -2168053.6            0   -2143808.2    13525.319 
+   16000    293.59247   -2167803.8            0   -2143325.1    13504.924 
+   17000    294.61111   -2167729.1            0   -2143165.5    13534.926 
+   18000    291.09148   -2168026.7            0   -2143756.6    13397.124 
+   19000    292.99799   -2167914.1            0     -2143485    13460.596 
+   20000    294.49673   -2167730.5            0   -2143176.4    13484.108 
+Loop time of 2143.48 on 64 procs for 20000 steps with 645028 atoms
+
+Performance: 1.612 ns/day, 14.885 hours/ns, 9.331 timesteps/s
+87.4% CPU use with 64 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 7.864      | 907.07     | 1578       |1404.0 | 42.32
+Neigh   | 1.2274     | 93.418     | 162.43     | 441.8 |  4.36
+Comm    | 344.36     | 957.49     | 1768.1     |1372.5 | 44.67
+Output  | 3.0605     | 3.062      | 3.0635     |   0.0 |  0.14
+Modify  | 43.17      | 175.25     | 412.28     | 889.2 |  8.18
+Other   |            | 7.191      |            |       |  0.34
+
+Nlocal:    10078.6 ave 16956 max 119 min
+Histogram: 4 4 4 4 4 0 4 32 0 8
+Nghost:    6433.03 ave 10238 max 2222 min
+Histogram: 4 8 0 4 8 16 12 0 8 4
+Neighs:    0 ave 0 max 0 min
+Histogram: 64 0 0 0 0 0 0 0 0 0
+FullNghs:  549745 ave 941967 max 5590 min
+Histogram: 4 5 3 4 4 0 32 4 3 5
+
+Total # of neighbors = 35183694
+Ave neighs/atom = 54.546
+Neighbor list builds = 1999
+Dangerous builds = 1996
+
+unfix upperFreezeID
+unfix shellFreezeID
+
+run ${N}
+run 20000
+Memory usage per processor = 10.8091 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+   20000    294.49673   -2167730.5            0   -2143176.4    13484.108 
+   21000    340.65572   -2177600.8            0   -2149198.2    10958.218 
+   22000    309.29546   -2179980.4            0   -2154192.5    8565.8955 
+   23000    295.74242   -2181988.6            0   -2157330.7    9835.4709 
+   24000    286.71746   -2182626.5            0   -2158721.1    8646.9157 
+   25000    296.87089   -2182232.9            0   -2157480.9    9926.6633 
+   26000    292.50586   -2182315.9            0   -2157927.9     8500.237 
+   27000    294.37476   -2182639.1            0   -2158095.2    9731.3019 
+   28000    292.46994   -2182654.6            0   -2158269.5    9059.6377 
+   29000    294.62276   -2182415.4            0   -2157850.8    8973.2253 
+   30000    294.50385   -2182642.2            0   -2158087.5    9447.7865 
+   31000    292.00986   -2182859.5            0   -2158512.8    8892.8522 
+   32000    295.20259   -2182598.9            0   -2157986.1    9363.0352 
+   33000    293.60364   -2182615.8            0   -2158136.2    8912.9439 
+   34000    291.95958   -2182919.7            0   -2158577.2    9657.4727 
+   35000    291.83768   -2182648.1            0   -2158315.8    8363.4929 
+   36000    296.87409   -2182682.4            0   -2157930.2    10056.259 
+   37000    288.46093   -2182885.3            0   -2158834.5     8337.731 
+   38000    295.09675   -2182690.2            0   -2158086.1     9836.393 
+   39000    291.33389   -2182634.7            0   -2158344.3    8610.2503 
+   40000    292.08161   -2182937.9            0   -2158585.2    9634.0034 
+Loop time of 2099.17 on 64 procs for 20000 steps with 645028 atoms
+
+Performance: 1.646 ns/day, 14.578 hours/ns, 9.528 timesteps/s
+87.7% CPU use with 64 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 9.2582     | 914.76     | 1579.4     |1395.1 | 43.58
+Neigh   | 1.2224     | 94.579     | 164.5      | 444.1 |  4.51
+Comm    | 288.33     | 923.89     | 1749.8     |1411.7 | 44.01
+Output  | 3.0593     | 3.0655     | 3.0688     |   0.1 |  0.15
+Modify  | 40.048     | 155.9      | 377.17     | 868.4 |  7.43
+Other   |            | 6.973      |            |       |  0.33
+
+Nlocal:    10078.6 ave 17014 max 122 min
+Histogram: 4 4 4 4 4 0 4 32 0 8
+Nghost:    6473.55 ave 10199 max 2298 min
+Histogram: 4 6 2 4 8 16 12 0 8 4
+Neighs:    0 ave 0 max 0 min
+Histogram: 64 0 0 0 0 0 0 0 0 0
+FullNghs:  565716 ave 957442 max 5506 min
+Histogram: 4 6 2 4 4 0 5 31 4 4
+
+Total # of neighbors = 36205838
+Ave neighs/atom = 56.1306
+Neighbor list builds = 2000
+Dangerous builds = 1998
+
+fix deformID all deform 1 z delta 0 -${compressionLength} remap x
+fix deformID all deform 1 z delta 0 -50 remap x
+
+run 50000
+Memory usage per processor = 10.8172 Mbytes
+Step Temp E_pair E_mol TotEng Press Volume 
+   40000    292.08161   -2182937.9            0   -2158585.2    9634.0034     16802671 
+   41000    290.45838     -2182362            0   -2158144.7    8931.3458     16695402 
+   42000    296.67395   -2181756.3            0   -2157020.7     10608.54     16588132 
+   43000    289.94349   -2181384.8            0   -2157210.4    9760.2809     16480863 
+   44000    294.24543   -2180852.2            0   -2156319.1    11491.502     16373594 
+   45000    293.76856   -2180100.1            0   -2155606.8    11063.887     16266324 
+   46000     292.6072   -2179663.6            0   -2155267.1    11983.993     16159055 
+   47000     294.1103   -2178919.9            0   -2154398.1    12461.715     16051786 
+   48000     293.6879   -2178249.5            0   -2153762.9    12905.828     15944516 
+   49000    293.68943   -2177499.8            0   -2153013.1    13509.632     15837247 
+   50000    293.30308   -2176739.6            0     -2152285    14058.461     15729978 
+   51000    294.31815   -2175892.8            0   -2151353.6     14924.23     15622708 
+   52000    290.98606   -2175032.7            0   -2150771.4     14769.34     15515439 
+   53000    295.88782   -2174118.1            0     -2149448    16543.924     15408169 
+   54000    290.29435     -2173266            0   -2149062.4    15941.515     15300900 
+   55000    294.36247   -2172214.7            0   -2147671.8    17860.702     15193631 
+   56000    291.57867   -2171141.7            0     -2146831    17488.137     15086361 
+   57000    293.36551   -2170258.8            0     -2145799    19300.337     14979092 
+   58000    291.18988   -2169089.2            0   -2144810.8    18747.924     14871823 
+   59000    295.04647     -2167926            0   -2143326.2    20865.677     14764553 
+   60000    290.47191   -2166943.8            0   -2142725.3     20240.68     14657284 
+   61000    294.26283   -2165745.1            0   -2141210.5    22499.401     14550015 
+   62000    292.19031   -2164370.5            0   -2140008.7    22232.623     14442745 
+   63000    293.35031   -2163291.2            0   -2138832.8    24116.033     14335476 
+   64000    292.42944   -2161942.3            0   -2137560.7     24318.76     14228207 
+   65000     294.1703   -2160539.2            0   -2136012.4    26121.946     14120937 
+   66000    293.25392     -2159119            0   -2134668.6    26539.545     14013668 
+   67000    293.05237   -2157698.4            0   -2133264.8    28193.764     13906399 
+   68000     293.6879   -2155999.4            0   -2131512.7    29120.141     13799129 
+   69000    292.56571   -2154449.4            0   -2130056.4    30475.411     13691860 
+   70000    293.12196   -2152770.4            0     -2128331    31816.963     13584591 
+   71000     292.6609   -2151020.3            0   -2126619.3    33007.767     13477321 
+   72000     294.6837   -2149169.4            0   -2124599.7    34860.231     13370052 
+   73000    291.31092   -2147287.2            0   -2122998.8     35913.14     13262782 
+   74000    294.32522   -2145255.9            0   -2120716.2    38011.606     13155513 
+   75000      292.193   -2143127.8            0   -2118765.8    39058.573     13048244 
+   76000    293.85136   -2141083.9            0   -2116583.7    41137.484     12940974 
+   77000    291.93761   -2138787.5            0   -2114446.9    42462.257     12833705 
+   78000    293.92744   -2136352.5            0   -2111845.9    44964.279     12726436 
+   79000    292.14647   -2133942.6            0   -2109584.5    46214.816     12619166 
+   80000    292.97612   -2131423.2            0     -2106996     48820.18     12511897 
+   81000     293.2447   -2128736.5            0   -2104286.8     50507.65     12404628 
+   82000    293.42884   -2125933.3            0   -2101468.2    53102.427     12297358 
+   83000    291.97942   -2122980.8            0   -2098636.6     55161.69     12190089 
+   84000    293.28746   -2120007.7            0   -2095554.5    57779.398     12082820 
+   85000    293.23703   -2116821.5            0   -2092372.5    60177.472     11975550 
+   86000    292.55161   -2113537.9            0     -2089146    62906.489     11868281 
+   87000    293.54101   -2110054.5            0   -2085580.1    65624.656     11761012 
+   88000      293.196   -2106428.6            0   -2081983.1    68482.893     11653742 
+   89000    292.91263   -2102705.8            0   -2078283.9     71468.55     11546473 
+   90000     292.7915   -2098728.7            0   -2074316.8    74650.063     11439204 
+Loop time of 5397.56 on 64 procs for 50000 steps with 645028 atoms
+
+Performance: 1.601 ns/day, 14.993 hours/ns, 9.263 timesteps/s
+87.7% CPU use with 64 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 23.383     | 2349.7     | 3851.5     |2237.3 | 43.53
+Neigh   | 3.1223     | 241.86     | 388.01     | 700.9 |  4.48
+Comm    | 838.82     | 2284.4     | 4454.9     |2311.7 | 42.32
+Output  | 7.6622     | 7.6762     | 7.6977     |   0.4 |  0.14
+Modify  | 234.02     | 492.89     | 1000.8     |1129.1 |  9.13
+Other   |            | 21.04      |            |       |  0.39
+
+Nlocal:    10078.6 ave 14882 max 122 min
+Histogram: 4 4 4 0 4 4 0 4 24 16
+Nghost:    7795.45 ave 11725 max 3864 min
+Histogram: 4 6 6 8 12 8 4 0 8 8
+Neighs:    0 ave 0 max 0 min
+Histogram: 64 0 0 0 0 0 0 0 0 0
+FullNghs:  613286 ave 1.02755e+06 max 6212 min
+Histogram: 4 8 0 4 4 0 26 2 8 8
+
+Total # of neighbors = 39250304
+Ave neighs/atom = 60.8505
+Neighbor list builds = 5000
+Dangerous builds = 4995
+
+unfix deformID
+
+unkID all chunk/atom bin/2d x 0 7.12 y 0 7.12
+ERROR: Unknown command: unkID all chunk/atom bin/2d x 0 7.12 y 0 7.12 (../input.cpp:246)
