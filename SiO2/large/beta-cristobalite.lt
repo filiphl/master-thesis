@@ -1,4 +1,4 @@
-# file "beta-cristobalite.lt"
+# File "beta-cristobalite.lt"
 
 beta-cristobalite {
   write("Data Atoms") {

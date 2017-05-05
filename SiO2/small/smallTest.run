@@ -3,7 +3,7 @@
 #/bond 1 2 2.6
 include "smallTest.in"
 
-variable N equal 1
+variable N equal 10
 variable T equal 293
 
 velocity	all create ${T} 277387 mom yes

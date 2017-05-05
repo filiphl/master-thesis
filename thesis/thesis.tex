@@ -85,12 +85,18 @@
 \maketitle
 
 \begin{abstract}
-Abstract
+LAMMPS is used to perform molecular dynamics simulations of a single spherical asperity indenting a flat substrate.
+Both bodies are made up of $\beta$-cristobalite, and we use the Vashishta potential.
+The LAMMPS distribution is extended by a custom class, in order to compute contact forces.  
+Radial distribution of contact forces is computed and compared to Hertz' theory.
+The coefficient of static friction is estimated. It's shown that it increases and converges with increasing substrate thickness.
+The static friction force is measured to be proportional to the load, in accordance with Amontons' law.
+
+
+
+   
 \end{abstract}
 
-\begin{dedication}
-  Dedication
-\end{dedication}
 
 \begin{acknowledgements}
   Flora Joelle Larsen\\*
@@ -297,7 +303,17 @@ For the case of silica, these metrics have been computed already, and when using
 As for the Lennard-Jones potential, the two-body potential term is truncated and shifted to prevent unphysical jerks, and retain stability. 
 This is done the same way as in equation (\ref{eq:truncation}).
 
-
+Hvorfor Vashishta?
+\begin{itemize}
+	\item Finnes mange potensial for forskjellige systemer.
+	\item Vi ønsker å se på realistiske potensialer.
+	\item Vi trenger flere frihetsgrader i vekselvirkninngenne enn LJ. 
+	\item Hvorfor ikke ClayFF?
+	\item Vi kan bruke Vashishta fordi det ikke er bonded.
+	\item Fornyer kontaker.
+	\item Overflater har annen organisering.
+	\item Ikke bonded, men oppfører seg likevel som bonded.
+\end{itemize}
 
 
 
@@ -710,7 +726,7 @@ However, if we open the door quickly, the door will not creak.
   
 %The sound produced by bowed instruments such as the cello or violin are dependent of the speed at which the bow is drawn across the strings. 
  
- \subsection{Microscopic origin of friction}
+ \section{Microscopic origin of friction}
  Friction is caused by bond formations between atoms of the two bodies, at the area of contact. 
  This includes chemical bonds, hydrogen bonds, dipole-dipole interactions, and so on.  
  The range of these interactions are typically quite short; at 10\AA ~separation they are negligible.
@@ -1375,7 +1391,7 @@ The format of th \texttt{.cif}-file is not easily readable. To extract the infor
 
 
 
-\section{Building a crystal}
+\section{Constructing a crystal}
 The coordinates gotten from the \texttt{.cif}-file can now be implemented into \textit{moltemplate} together with whatever bond and angle data required by the potential. In our simulations we will use the Vashishta potential, which does not require these. 
 Moltemplate has its own structure and syntax. 
 The first step to build up a larger material is, as mentioned, to create the unit cell. 
@@ -1386,7 +1402,9 @@ For a more profound understanding of the structure and syntax of these files, th
 
 \lstinputlisting[caption={Typical Moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units.}, label=lst:beta-cristobalite.lt, language=LammpsData]{../SiO2/large/beta-cristobalite.lt}
 We use the unit cells as building blocks, placing them concurrently until we have a crystal of the desired size. For example purposes, we generate a large cube of $15\times15\times15$ unit cells, i.e. 81000 atoms. This is done in line 17-21 of listing \ref{lst:cubeSiO2} below.
-\lstinputlisting[caption={Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite (81000 atoms), and also specify system configurations (see section \ref{sec:systemConfigurations}). The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
+\lstinputlisting[caption={
+	Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite (81000 atoms), and also specify system configurations (see section \ref{sec:systemConfigurations}). 
+	The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
 %{\Huge Uncomment the above listing!}
 The \textit{write\_once} sections with "In" as the first word of its argument, creates the files \texttt{system.in.init} and \texttt{system.in.settings}, which contain exactly what is shown in the snippet. 
 They are not necessary, but help making the LAMMPS input script cleaner, since we can \texttt{import} these files instead of having all the configurations in the input script file.
@@ -2022,7 +2040,7 @@ Numeric value of the forces are to be considered the average force acting on ato
 \label{fig:resultsRadialForceDistributions}
 \end{figure}
 
-\noindent
+\subsection{Observations}
  We do not detect any interacting forces between the two bodies until we reach the interval $h=-5$ to $h=0$, shown in the second row of the figure. 
  At this interval we see a small negative value in the normal force, indicating a weak attractive force. 
  Also, the shear force is negative, meaning the shear force is directed towards the center. 
@@ -2305,14 +2323,14 @@ In this example case it was $\mu = 0.255$.
 Our prime goal was to find a dependence in the coefficient of static friction on the thickness of the substrate. 
 We were therefore obliged to do the same simulation with the simple perturbation of changing the thickness of the substrate. 
 The substrate is formed by carving out atoms above a specified z-coordinate, beneath the sphere. 
-It is there fore critical to be aware of where we cut the substrate. 
+It is therefore critical to be aware of where we cut the substrate. 
 The way the crystalline structure of the substrate was oriented, a difference in 1$\mathring{A}$, would change the upper most layer of atoms of the substrate to be all oxygen or all silicon.
 If for one measurement they are all oxygen and another all silicon, we will get very different results. {\huge \color{editColor} Example?}. 
 To remove the risk of error, we vary the thickness of the substrate by steps with length of the unit cell (7.12$\mathring{A}$).
 For each thickness of the substrate, we estimated the coefficient of static friction using the method described in the previous section of this chapter.
 The result is shown in figure \ref{fig:coefficientVsIndentation}.
 
-\begin{figure}[H]
+\begin{figure}
 	\centering
 	\hspace{-5mm}
 	\includegraphics[width=0.7\linewidth]{figures/friction/coefficientVsIndentation}
@@ -2466,7 +2484,7 @@ terminal commands for building LAMMPS again?
 
 
 \bibliographystyle{plain}
-\bibliography{resources/Library.bib}
+\bibliography{resources/Library}
 
 
 %Referances

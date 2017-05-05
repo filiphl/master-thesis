@@ -1,103 +1,135 @@
-LAMMPS (26 Jan 2017)
-OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (../comm.cpp:90)
-  using 1 OpenMP thread(s) per MPI task
-fix atomify all atomify
-
-#include "system.in"
-#velocity	all create 1 277387 mom yes
+LAMMPS (27 Aug 2016-ICMS)
+#/atom 1 silicon
+#/atom 2 oxygen
+#/bond 1 2 2.6
+include "smallTest.in"
 
 
-#include "system.prepare"
+# ----------------- Init Section -----------------
 
-variable loadStep equal 30000
-
-include "system.in.init"
+include "smallTest.in.init"
   units         metal
   boundary      p p p
   atom_style    atomic
   pair_style    vashishta
   #pair_modify  mix arithmetic  # LEAVE THIS UNSPECIFIED!
-read_restart restartFiles/SiO2_lower30000.restart
-WARNING: Restart file used different # of processors (../read_restart.cpp:717)
-  orthogonal box = (0 0 0) to (71.2 71.2 71.2)
+
+
+# ----------------- Atom Definition Section -----------------
+
+read_data "smallTest.data"
+  orthogonal box = (0 0 0) to (12 12 12)
   1 by 1 by 1 MPI processor grid
-  12815 atoms
-include "system.in.settings"
+  reading atoms ...
+  2 atoms
+
+# ----------------- Settings Section -----------------
+
+include "smallTest.in.settings"
   pair_coeff  * *  SiO2.vashishta Si O
 Reading potential file SiO2.vashishta with DATE: 2015-10-14
   pair_modify table 16
   pair_modify tabinner 0.1
 
 
-variable N equal 15000
+# ----------------- Run Section -----------------
+
+# The lines above define the system you want to simulate.
+# What you do next is up to you.
+# Typically a user would minimize and equilibrate
+# the system using commands similar to the following:
+#  ----   examples   ----
+#
+#  -- minimize --
+# minimize 1.0e-5 1.0e-7 1000 10000
+# (Note: Some fixes, for example "shake", interfere with the minimize command,
+#        You can use the "unfix" command to disable them before minimization.)
+#  -- declare time step for normal MD --
+# timestep 1.0
+#  -- run at constant pressure (Nose-Hoover)--
+# fix   fxnpt all npt temp 300.0 300.0 100.0 iso 1.0 1.0 1000.0 drag 1.0
+#  -- ALTERNATELY, run at constant volume (Nose-Hoover) --
+# fix   fxnvt all nvt temp 300.0 300.0 500.0 tchain 1
+#  -- ALTERNATELY, run at constant volume using Langevin dynamics. --
+#  -- (This is good for sparse CG polymers in implicit solvent.)   --
+# fix fxLAN all langevin 300.0 300.0 5000 48279
+# fix fxNVE all nve  #(<--needed by fix langevin)
+#  -- Now, finally run the simulation --
+# run   50000
+#  ---- (end of examples) ----
+
+
+variable N equal 10
 variable T equal 293
-variable Fz equal -0.01 #*(15000-step)/${N}
-variable Fx equal 0.0
+
+velocity	all create ${T} 277387 mom yes
+velocity	all create 293 277387 mom yes
 
 neighbor	0.3 bin
 neigh_modify	delay 10
 
-thermo		100
+thermo		0
 timestep	0.002
 
+dump myDump all atom 1 dumps/tiny*.dump
 
-restart 2000 restartFiles/SiO2_shear_Fx01N15000_*.restart
-#dump myDump sphereG atom 500 dumpFiles/SiO2_shear_sphere_Fx01N15000*.dump
-dump myDump2 all atom 100 dumpFiles/SiO2_shear_all*.dump
+group group1 type 1
+1 atoms in group group1
+group group2 type 2
+1 atoms in group group2
 
+fix nvt all nvt temp ${T} ${T} 1.0
+fix nvt all nvt temp 293 ${T} 1.0
+fix nvt all nvt temp 293 293 1.0
 
+compute chunkID all chunk/atom bin/2d x 0 12 y 0 12
+compute computeID group1 group/group/atom group2 pair yes
+fix fixComputeID group1 ave/chunk 1 1 1 chunkID c_computeID[2] c_computeID[3] c_computeID[4] file forces.txt #ave running
 
-region slab block INF INF INF INF 3.0 25.0
-group sphereIndentTmp region slab
-7518 atoms in group sphereIndentTmp
-group sphereIndentG subtract sphereIndentTmp slabG
-118 atoms in group sphereIndentG
-
-fix rigidTop sphereUpperG rigid single force 1 on off on torque 1 on on on
-1 rigid bodies with 2800 atoms
-
-compute comTop    sphereUpperG  com      #Center of mass
-compute comSphere sphereIndentG com
-compute tempID    excludeBT     temp     #Temperature
-
-
-
-fix addforce sphereUpperG addforce 0 0 v_Fz
-fix pullID sphereUpperG smd cvel 30.0 10 tether 100 NULL NULL 0.0
-
-
-fix nvtID excludeB nvt temp ${T} ${T} 1.0
-fix nvtID excludeB nvt temp 293 ${T} 1.0
-fix nvtID excludeB nvt temp 293 293 1.0
-Resetting global fix info from restart file:
-  fix style: nvt, fix ID: nvtID
-thermo_style custom step c_comSphere[1] f_pullID[1] f_pullID[6]
-balance 1.1 shift xyz 50 1.0
-All restart file global fix info was re-assigned
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:274)
+run ${N}
+run 10
 Neighbor list info ...
+  2 neighbor list requests
   update every 1 steps, delay 10 steps, check yes
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 5.8
   ghost atom cutoff = 5.8
-  binsize = 2.9, bins = 25 25 25
-  1 neighbor lists, perpetual/occasional/extra = 1 0 0
-  (1) pair vashishta, full, perpetual
-      pair build: full/bin
-      stencil: full/bin/3d
-      bin: standard
-run ${N}
-run 15000
-WARNING: One or more atoms are time integrated more than once (../modify.cpp:274)
-Memory usage per processor = 12.0696 Mbytes
-Step c_comSphere[1] f_pullID[1] f_pullID[6] 
-   30000    36.434901            0    84.559095 
-   30100    36.502261   -57.890143    84.626465 
-   30200    36.507695   -105.59452    84.949379 
-   30300    36.377813   -137.55649    85.676424 
-   30400    35.826995   -151.31578     86.88586 
-   30500    34.766627   -146.99849    88.586913 
-   30600    33.363532   -126.23746    90.740438 
-   30700    31.694891   -92.966378    93.252566 
-   30800    30.155481   -52.913377    95.995301 
-Total wall time: 99:23:59
+  binsize = 2.9 -> bins = 5 5 5
+Memory usage per processor = 7.48726 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0          293  -0.18435649            0  -0.14648327   -349.08794 
+      10     193.1455  -0.17145136            0  -0.14648534    -342.5792 
+Loop time of 0.00457406 on 1 procs for 10 steps with 2 atoms
+
+Performance: 377.783 ns/day, 0.064 hours/ns, 2186.241 timesteps/s
+87.4% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 8.1062e-06 | 8.1062e-06 | 8.1062e-06 |   0.0 |  0.18
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 7.8678e-06 | 7.8678e-06 | 7.8678e-06 |   0.0 |  0.17
+Output  | 0.0043993  | 0.0043993  | 0.0043993  |   0.0 | 96.18
+Modify  | 0.00014591 | 0.00014591 | 0.00014591 |   0.0 |  3.19
+Other   |            | 1.287e-05  |            |       |  0.28
+
+Nlocal:    2 ave 2 max 2 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    2 ave 2 max 2 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    1 ave 1 max 1 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:  2 ave 2 max 2 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 2
+Ave neighs/atom = 1
+Neighbor list builds = 0
+Dangerous builds = 0
+
+
+
+
+#----------------------------------------------------
+Total wall time: 0:00:00
