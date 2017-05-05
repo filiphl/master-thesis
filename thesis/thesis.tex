@@ -1063,12 +1063,38 @@ Thus, there is a huge difference in the apparent and real area of contact, a fac
 \subsection{Hertz theory}
 %The first satisfactory analysis of the stresses at the contact of two elastic solids is due to Heinrich Hertz.
 Hertz' theory describe non-adhesive contact, and assumes that solids interact with a purely repulsive "hard-wall" interaction.
-It is assumed that the contacting solids are described by continuum elasticity, and discrete atomic structure is ignored. 
+It is assumed that the contacting solids are described by continuum elasticity, and discrete atomic structure is ignored \cite{RobbinsSingleAsperity}. 
 Often it is also assumed that the two solids are isotropic, with Young's modulus $E_1$ and $E_2$ and Poissson's ratio $\nu_1$ and $\nu_2$. 
 One can then compute an \textit{effective modulus} $E^*$ defined as
 \begin{equation}
 \frac{1}{E^*} = \frac{1-{\nu_1}^2}{E_1} + \frac{1-{\nu_2}^2}{E_2}	
 \end{equation}
+Heinrich Hertz predicted that when a sphere with radius of curvature $R$ indents a flat surface, the area of contact is circular with a radii \cite{Johnson1985}
+\begin{equation}
+	a = \lr{\frac{3NR}{4E^*}}^{1/3}, \label{eq:HertzRadii}
+\end{equation}
+%which increases with the load $N$. 
+and the normal pressure $p$ is related to it as
+\begin{equation}
+	p(r) = \frac{2aE^*}{\pi R}\sqrt{1-\frac{r^2}{a^2}}, \label{eq:HertzPressure}
+\end{equation}
+where $r$ is the radial distance to the center of the indentation.
+Also, the normal displacement $\delta_H$ of the spheres tip is related to $a$ by
+\begin{equation}
+	\delta_H = a^2/R,
+\end{equation}
+where $\delta_H=0$ is the normal position of the spheres at first contact.
+The subscript $H$ indicates that this is Hertz prediction, as in \cite{Johnson1985}.
+
+The assumptions made in this theory are that:
+\begin{itemize}
+	\item 1
+	\item 2
+	\item 3
+	\item 4
+	\item 5
+\end{itemize}
+
 
 \section{Previously conducted studies}
 The field of friction is not new to science in any regard, however thanks the advances in technology and computational power, we are now able to simulate physical systems at an atomic level. 
