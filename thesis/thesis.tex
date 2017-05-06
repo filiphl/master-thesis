@@ -229,8 +229,7 @@ The final Velocity Verlet algorithm is thus:
 \end{align}
 The Velocity Verlet algorithms has the same truncation error as the original, but a lower round-off error. 
 This algorithm has good energy conservation, and is symplectic.
-
-SOME MORE
+%edit: more?
 
 
 
@@ -263,13 +262,13 @@ The inter-atomic distance at which the potential is at its minimum can easily be
 
 Since the potential only account for the Pauli repulsion and van der Waal forces, its applicability is limited to systems consisting of neutral atoms or molecules, where there are no bonds present. 
 It would suffice for studying noble gases, for instance, but that quickly becomes quite dull. 
-In order to increase 
+In order to obtain realistic results, we need more degrees of freedom, accounting for more of the present forces. 
 
  
 %\subsection{Stillinger-Weber}
 
 \subsection{Vashishta}
-The Vashishta potential consists of two terms that represent two- and three-body interactions respectively. These incorporate physical effects such as steric repulsion, coulomb interaction, dipole interaction, Van der Waal interaction and energy related to covalent bonds. It can be expressed as
+The Vashishta potential consists of two terms that represent two- and three-body interactions respectively. These incorporate physical effects such as steric repulsion, coulomb interaction, dipole interaction, Van der Waal interaction and energy related to covalent bonds \cite{Vashishta1990}. It can be expressed as
 
 \begin{equation}
 V = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k} V_{ijk}^{(3)}(\vec{r}_{ij}, \vec{r}_{ik}) , \label{vashistaTwoTerm}
@@ -642,9 +641,15 @@ This is now essentially known as the two first laws of friction.
 They were not recognized at the time, but were rediscovered later by Guillaume Amontons, and these laws of friction are most commonly known as \textit{Amontons' laws}.
 The linear relation described in the first postulate is commonly known as the coefficient of friction
 \begin{equation}
-	\mu = \frac{F}{L}, \label{eq:coefficientOfFriction}
+	\mu = \frac{F}{L}, \label{eq:coefficientOfFriction2}
 \end{equation}
-though Leonardo interpreted $L$ as the weight of the load and $F$ as the weight of the object pulling in a scenario as in figure \ref{fig:leonardoDaVinci}. The concept of force was not commonly recognized until 200 years later. Isaac Newton's publication of \textit{Principia} paved the way for studies of friction, there among the most comprehensive study carried out by Charles Augustin Coulomb (1736-1806). He investigated the influence of several factors on friction, namely \cite{SlidingFriction}:
+or 
+\begin{equation}
+	\mu' = \frac{dF}{dL}, \label{eq:coefficientOfFriction}
+\end{equation}
+It express how the static friction force $F$ increases with increasing load $L$.
+The difference between the two definitions is that for the first, $F=0$ at $L=0$, while in the second, $F$ can be non-zero at $L=0$. 
+Though Leonardo interpreted $L$ as the weight of the load and $F$ as the weight of the object pulling in a scenario as in figure \ref{fig:leonardoDaVinci}. The concept of force was not commonly recognized until 200 years later. Isaac Newton's publication of \textit{Principia} paved the way for studies of friction, there among the most comprehensive study carried out by Charles Augustin Coulomb (1736-1806). He investigated the influence of several factors on friction, namely \cite{SlidingFriction}:
 \begin{itemize}
 	\item The nature of the materials in contact and their surface coatings.
 	\item The extent of the surface area.
@@ -746,20 +751,21 @@ However, if we open the door quickly, the door will not creak.
  
 \begin{figure}[H]
 	\centering
-	\begin{minipage}{\textwidth}
+	\begin{minipage}{0.9\linewidth}
+	\begin{minipage}{\linewidth}
 		\centering
 		\includegraphics[width=0.7\linewidth]{figures/friction/steadySlide}
 		\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a steady sliding motion.}
 		\label{fig:steadyslide}
 	\end{minipage}
-	\begin{minipage}{\textwidth}
+	\begin{minipage}{\linewidth}
 		\vspace{0.5cm}
 		\centering
 		\includegraphics[width=0.7\linewidth]{figures/friction/stick-slip}
 		\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a stick-slip motion.}
 		\label{fig:stick-slip}
 	\end{minipage}
-	\begin{minipage}{\textwidth}
+	\begin{minipage}{\linewidth}
 		\vspace{1cm}
 		\centering{
 			\def\svgwidth{0.58\linewidth}
@@ -770,6 +776,7 @@ However, if we open the door quickly, the door will not creak.
 				All outside will result in a steady sliding motion.}
 			\label{fig:phase-stick-slip}
 		}
+	\end{minipage}
 	\end{minipage}
 \end{figure}
 
@@ -1084,26 +1091,44 @@ Also, the normal displacement $\delta_H$ of the spheres tip is related to $a$ by
 	\delta_H = a^2/R,
 \end{equation}
 where $\delta_H=0$ is the normal position of the spheres at first contact.
-The subscript $H$ indicates that this is Hertz prediction, as in \cite{Johnson1985}.
-
-The assumptions made in this theory are that:
+The subscript $H$ indicates that this is Hertz prediction, and follows the notation used in \cite{Johnson1985}.
+The assumptions made in this theory are that: 
 \begin{itemize}
-	\item 1
-	\item 2
-	\item 3
-	\item 4
-	\item 5
+	\item Strains are small and within the elastic limit.
+	\item Surfaces are continuous and non-conforming\footnote{
+		A non-conforming contact is when dissimilar surfaces (which fit badly together) are in contact. When under zero load, they would only touch at a single point. 
+		The real area of contact is small compared to the sizes of the objects and the stress is highly concentrated.}.
+	\item Each body can be considered an elastic half-space.
+	\item The surfaces are frictionless.
 \end{itemize}
+ 
 
 
 \section{Previously conducted studies}
-The field of friction is not new to science in any regard, however thanks the advances in technology and computational power, we are now able to simulate physical systems at an atomic level. 
-A study, very similar to our, has been conducted by Binquan Luan and Mark Robbins \cite{RobbinsSingleAsperity}. 
-They used LAMMPS to do molecular dynamics simulations of a single spherical asperity indenting a flat substrate. 
-They measured pressure distribution in the area of contact, and compared it to solution predicted by Hertz' theory. 
-They did this for differently constructed spheres: bent commensurate, bent uncommensurate, step... 
-They found the step to deviate the most from the theory, having a much more linear behavior than the theory and the rest of the simulations.
-They also noticed a dip in the pressure right at the center, obviously deviating from Hertz' theory. 
+The field of friction is not new to science in any regard. 
+However, thanks to advances in technology and computational power, we are now able to simulate physical systems at an atomic level. 
+
+
+
+
+Continuum mechanics does not consider the nature of the atomic structure and interaction within solids. 
+This may very well be an important detail at the discrete atomic level. 
+Mark O. Robbins, has written several articles on this matter \cite{Robbins2005,RobbinsSingleAsperity,RobbinsSimpleMicroscopicTheroyOfAmontonsLawsOfFriction, RobbinsDefiningContactAtTheAtomicScale},  
+one of which is very relevant to this thesis \cite{RobbinsSingleAsperity}. 
+In collaboration with Binquan Luan, they used LAMMPS to do molecular dynamics simulations of a single spherical asperity indenting a flat substrate. 
+They measured pressure distribution in the area of contact, without adhesion, and compared it to the solution predicted by Hertz' theory. 
+They did this for differently constructed crystalline spheres: bent, cut, and
+cut amorphous. 
+Also for the bent tips, they used three different densities. 
+They kept the sphere rigid throughout the simulation, fixing the atoms of the sphere relative to each other. 
+They found that atomic structure clearly changes the distribution of pressure.
+The stepped tip deviated the most from the theory, having a behavior similar to that of a "flat punch"!  
+They also noticed a dip in the pressure right at the center, both for the amorphous and bent incommensurate tips, obviously deviating from Hertz' theory.
+Thus, atomic structure is of importance at nano-scale.
+In this thesis, we will perform a similar simulation, but with fundamental differences. 
+We will allow both the sphere and the substrate to be elastic. 
+Both these bodies will be constructed by $\beta$-cristobalite, and we will apply the Vashishta potential\footnote{The computed forces will only reflect the two-body term of the potential.}.  
+We will compare our results to theirs in the chapter \ref{chap:discussion}, conscious about these differences.
 
 
 
@@ -2423,13 +2448,13 @@ From the functional form leading up to final step, we may estimate this limit, w
 
 
 
-\part{Discussion}
-
+\part{Discussion, Summary and future work}
+\chapter{Discussion}\label{chap:discussion}
 The normal force distribution does not seem to fit very well with Hertz theory.
 Our result is way more linear in $r$. 
 The assumptions used in Hertz' theory are (\href{https://en.wikipedia.org/wiki/Contact_mechanics}{wikipedia})
 \begin{itemize}
-	\item The strains are small and within the elastic limit.
+	\item Strains are small and within the elastic limit.
 	\item The surfaces are continuous and non-conforming\footnote{
 A non-conforming contact is when dissimilar surfaces (which fit badly together) are in contact. When under zero load, they would only touch at a single point. 
 The real area of contact is small compared to the sizes of the objects and the stress is highly concentrated.}.

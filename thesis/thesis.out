@@ -70,8 +70,9 @@
 \BOOKMARK [1][-]{section.7.3}{Procedure}{chapter.7}% 70
 \BOOKMARK [1][-]{section.7.4}{Treating the results}{chapter.7}% 71
 \BOOKMARK [1][-]{section.7.5}{Results}{chapter.7}% 72
-\BOOKMARK [-1][-]{part.3}{III Discussion}{}% 73
-\BOOKMARK [0][-]{section.7.6}{coefficient}{part.3}% 74
-\BOOKMARK [0][-]{appendix.A}{Something}{part.3}% 75
-\BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 76
-\BOOKMARK [1][-]{section.A.2}{Building LAMMPS with custom compute}{appendix.A}% 77
+\BOOKMARK [-1][-]{part.3}{III Discussion, Summary and future work}{}% 73
+\BOOKMARK [0][-]{chapter.8}{Discussion}{part.3}% 74
+\BOOKMARK [1][-]{section.8.1}{coefficient}{chapter.8}% 75
+\BOOKMARK [0][-]{appendix.A}{Something}{part.3}% 76
+\BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 77
+\BOOKMARK [1][-]{section.A.2}{Building LAMMPS with custom compute}{appendix.A}% 78
