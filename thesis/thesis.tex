@@ -592,14 +592,14 @@ Thus, there is a huge difference in the apparent and real area of contact, a fac
 
 
 
-\subsection{Hertz theory}
+\subsection{Hertz theory} \label{sec:hertzTheory}
 %The first satisfactory analysis of the stresses at the contact of two elastic solids is due to Heinrich Hertz.
 Hertz' theory describe non-adhesive contact, and assumes that solids interact with a purely repulsive "hard-wall" interaction.
 It is assumed that the contacting solids are described by continuum elasticity, and discrete atomic structure is ignored \cite{RobbinsSingleAsperity}. 
 Often it is also assumed that the two solids are isotropic, with Young's modulus $E_1$ and $E_2$ and Poissson's ratio $\nu_1$ and $\nu_2$. 
 One can then compute an \textit{effective modulus} $E^*$ defined as
 \begin{equation}
-\frac{1}{E^*} = \frac{1-{\nu_1}^2}{E_1} + \frac{1-{\nu_2}^2}{E_2}	
+\frac{1}{E^*} = \frac{1-{\nu_1}^2}{E_1} + \frac{1-{\nu_2}^2}{E_2} \label{eq:effectiveModulus}
 \end{equation}
 Heinrich Hertz predicted that when a sphere with radius of curvature $R$ indents a flat surface, the area of contact is circular with a radii \cite{Johnson1985}
 \begin{equation}
@@ -613,7 +613,7 @@ p(r) = p_0\sqrt{1-\frac{r^2}{a^2}}, \label{eq:HertzPressure}
 where $r$ is the radial distance to the center of the indentation, and
 $p_0$ is the maximum value of the normal pressure, at the center of the indentation. It is defined as
 \begin{equation}
-	p_0 = \frac{2aE^*}{\pi R}.
+	p_0 = \frac{2aE^*}{\pi R}. \label{eq:HertzMaxPressure}
 \end{equation}
 Also, the normal displacement $\delta_H$ of the spheres tip is related to $a$ by
 \begin{equation}
@@ -1639,7 +1639,7 @@ We can then find the radial distribution simply by binning this matrix in radial
 
 \part{Numerical simulations and results}
 
-\chapter{Computing contact forces}
+\chapter{Computing contact forces} \label{chp:contactForces}
 Contact forces are forces acting between two bodies at the area of contact. 
 They can be decomposed into normal an shear forces 
 The normal force is defined as the force exerted on an object that is perpendicular to the contact surface, while shear force is the component lying tangential to the contact surface.
@@ -1941,8 +1941,8 @@ However, the current radii of the contact area between the sphere and the slab i
 
 
 A different, slightly more sophisticated approach is to compute the fraction of the area of each cell that actually is within the bin, and multiply this by the value associated with the cell.
-We can sum all these contributions and average them by dividing by the area of the bin. 
-This means that even cells that do not have their center within the bin might contribute to the resulting bin value. 
+We can sum all these contributions and average them by dividing by the ratio of the bin area $A$ to the area of a cell $a$.  
+This means that even cells that do not have their center within the bin might contribute to the resulting bin average. 
 How much, however, will depend on the fraction of the cell's area that is within the bin.
 This may be regarded as a smoothing of our coarse force distribution, and will give a more correct result than the coarse binning method already described. 
 An illustration of this binning method is shown in figures \ref{fig:radialBinningWeights}.
@@ -2220,7 +2220,7 @@ However, as we can see this issue only result in a minor discrepancy.
 
 
 
-\chapter{Computing the coefficient of static friction}
+\chapter{Computing the coefficient of static friction} \label{chp:coefficientOfFriction}
 As described in section \ref{sec:coefficientOfFriction}, the coefficient of friction has a changing value depending on the relative motion of the bodies in contact. 
 If they move (slide), the coefficient is usually significantly lower than if they are stationary. 
 In our simulations, we have done the same experiment as described in said chapter, only in a molecular dynamics simulation. 
@@ -2456,9 +2456,51 @@ From the functional form leading up to final step, we may estimate this limit, w
 
 
 
+
+
+
 \part{Discussion, Summary and future work}
+
 \chapter{Discussion}\label{chap:discussion}
+In this chapter we will discuss the results posted in chapter \ref{chp:contactForces} and \ref{chp:coefficientOfFriction}. 
+
 \section{Force distribution}
+figure \ref{fig:resultsRadialForceDistributions} show the radial force distribution in the area of contact, between an elastic sphere and an elastic, flat substrate. 
+The distribution shows the average force acting on the sphere from the substrate within an area $a_c$.
+It is therefore equivalent to the pressure distribution, we need only divide by $a_c$.  
+The continuum prediction of this distribution \eqref{eq:HertzPressure} was developed by Hertz, as described in section \ref{sec:hertzTheory}. 
+In order to compare our distribution to that of Hertz' theory, we need to know the radii of contact \eqref{eq:HertzRadii}, and the maximum pressure \eqref{eq:HertzMaxPressure}.
+A challenge is that we do not know $E^*$, and can't compute it from equation \eqref{eq:effectiveModulus}, since $\beta$-cristobalite is not an isotropic crystal. 
+However, from the resulting distribution, we may assume the radii of contact $a$ to be the (first) radial distance where $F(r)=0$, and $p_0$ to be the maximum value.
+This approach result in the situation shown in figure XX.
+Not surprisingly, we see large deviations. 
+In the simulations, we break almost every assumption made by Hertz.
+We have friction present, we do not know if we are within the elastic limit, the bodies are finite in size, and the surfaces are discrete, not continuous. 
+The distribution resulting from the simulation has a much more linear form than what was predicted by Hertz. 
+Reasons for the differences may be plenty. 
+However, it is curious that the greatest deviation is where the shear force is the largest, as the shear force is due to friction.
+  
+Robbins et al. conducted a simulation \cite{RobbinsSingleAsperity} studying the effects of surface structure on the pressure distribution.
+They kept the sphere rigid and made both the sphere and substrate out of noble atoms.  
+They used the Lennard-Jones potential truncated at its minimum $r=2^{1/6}\sigma$ in order to only have repulsive forces between the bodies. 
+This way they did not have friction present.
+They used several differently constructed surfaces, the most relevant to us is the amorphous, and the stepped tips. 
+As we do not have a rigid sphere, the surface atoms will organize differently than the bulk atoms, due to surface tension.
+Thus, our surface is the most similar to the amorphous sphere they used, 
+whereas our bulk is similar to that of the stepped tip. 
+These two cases showed extremely different behaviors in the resulting pressure distributions. 
+The amorphous case was somewhat in agreement to Hertz near the center, but extended farther, and was more linear toward the edge. 
+The stepped tip resulted in a distribution resembling that of a "flat punch".
+Also, Robbins obtained a dip in the center of the radial pressure distribution, but did not address it. 
+  
+  
+
+Hertz - me: deviates the most, where the shear forces are the largest.
+
+In our simulation both the sphere and substrate were elastic bodies, unlike in the simulations of Robbins et al., who kept the sphere rigid. 
+We used the Vashishta potential and SiO$_2$ as material, while they used Lennard-Jones and noble atoms. 
+Obviously, the fact that we use materials of different properties should produce a difference in adhesion.
+
 
 The normal force distribution does not seem to fit very well with Hertz theory.
 Our result is way more linear in $r$. 
