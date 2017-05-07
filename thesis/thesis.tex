@@ -85,11 +85,12 @@
 \maketitle
 
 \begin{abstract}
-LAMMPS is used to perform molecular dynamics simulations of a single spherical asperity indenting a flat substrate.
+We perform molecular dynamics simulations of a single spherical asperity indenting a flat substrate.
 Both bodies are made up of $\beta$-cristobalite, and we use the Vashishta potential.
 The LAMMPS distribution is extended by a custom class, in order to compute contact forces.  
-Radial distribution of contact forces is computed and compared to Hertz' theory.
-The coefficient of static friction is estimated. It's shown that it increases and converges with increasing substrate thickness.
+Radial distribution of contact forces is computed and compared to Hertz' theory, and the results of Robbins et al. \cite{RobbinsSingleAsperity}.
+The coefficient of static friction is estimated. 
+It's shown that it increases and converges with increasing substrate thickness.
 The static friction force is measured to be proportional to the load, in accordance with Amontons' law.
 
 
@@ -117,6 +118,548 @@ What do we hope to accomplish?\\
 How is the thesis laid out?
 
 \part{Theory and methods}
+
+
+\chapter{Friction, elasticity and contact mechanics}
+Friction can be defined as \textit{the force that resists relative motion between two bodies in contact} \cite{frictionDefinition}. 
+It's a well-known phenomenon, though still not completely understood.
+Despite the fact that we learn about friction in introductory courses to physics, it is not at all easy to comprehend. 
+It's very complex and still a field of research.
+The effects of friction is affected by surface roughness, material properties, ambient conditions, the geometry of contact area, and many other factors. 
+In this chapter we will study some elementary aspects of dry friction between two solid bodies, elasticity and contact mechanics. 
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.99\linewidth]{figures/friction/Colossus.jpg}
+	\caption{Painting from the tomb of Tehuti-Hetep, showing the transportation of an Egytian colossus.}
+	\label{fig:Colossus}
+\end{figure}
+\section{Historical note}
+On the macroscopic level, friction has been observed since the dawn of man. 
+Early actions that show awareness of the effects of friction was to chip stone in order to make tools, or rubbing wood in order to create fire. 
+In the tomb of Tehuti-Hetep there was found the painting shown in figure \ref{fig:Colossus}, which show the moving of an Egyptian colossus. 
+The statue is depicted pulled on a sledge, with officers standing on the front end of the sledge pouring water on the ground. 
+This is evidence that they perceived the effect of lubrication even then, 1900 B.C..   
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{figures/friction/LeonardoDaVinciBW}
+	\caption{Drawing from Leonardo da Vinci's notebook. From Codex Arundel, British Library, London (Arundel folio 41r).}
+	\label{fig:leonardoDaVinci}
+\end{figure}
+
+
+\noindent 
+The first documented studies of friction were carried out during the renaissance by Leonardo da Vinci (1452-1519) \cite{LeonardoDaVinciStudies}.
+Among his experiments he attaching a block of wood to another object with a cord, and placed the block on a smooth surface.
+He was able to adjust the weight of the second object, which he let hang over a fixed cylinder, free to rotate. 
+This experiment was found in his notebooks, and is shown in figure \ref{fig:leonardoDaVinci}.
+He experimented with tilted planes and placed the block on different sides, changing the apparent area of contact.
+His results made him deduce the following statements, also found in his notes:
+\begin{itemize}
+	\item Friction produces double the amount of effort if the weight be doubled. 
+	\item Friction made by the same weight will be of equal resistance at the beginning of the movement though the contact may be of different breadths or lengths.
+\end{itemize}
+This is now essentially known as the two first laws of friction. 
+They were not recognized at the time, but were rediscovered later by Guillaume Amontons, and these laws of friction are most commonly known as \textit{Amontons' laws}.
+The linear relation described in the first postulate is commonly known as the coefficient of friction
+\begin{equation}
+\mu = \frac{F}{L}, \label{eq:coefficientOfFriction2}
+\end{equation}
+or 
+\begin{equation}
+\mu' = \frac{dF}{dL}, \label{eq:coefficientOfFriction}
+\end{equation}
+It express how the static friction force $F$ increases with increasing load $L$.
+The difference between the two definitions is that for the first, $F=0$ at $L=0$, while in the second, $F$ can be non-zero at $L=0$. 
+Though Leonardo interpreted $L$ as the weight of the load and $F$ as the weight of the object pulling in a scenario as in figure \ref{fig:leonardoDaVinci}. The concept of force was not commonly recognized until 200 years later. Isaac Newton's publication of \textit{Principia} paved the way for studies of friction, there among the most comprehensive study carried out by Charles Augustin Coulomb (1736-1806). He investigated the influence of several factors on friction, namely \cite{SlidingFriction}:
+\begin{itemize}
+	\item The nature of the materials in contact and their surface coatings.
+	\item The extent of the surface area.
+	\item The normal force.
+	\item The amount of time that the surfaces remained in contact prior to the applied force.
+	\item Ambient conditions.
+\end{itemize}   
+Among his results he found that the static friction force increased with the time the surfaces were in contact before applying shear force. 
+Today this relation is known as
+\begin{equation}
+F_s(t) = A+B\ln(t).
+\end{equation}
+Coulomb explained this behavior by regarding the materials as fibrous. 
+Basically like a hairbrush, having fibers which get entangled into a mesh when in contact. 
+If the materials were in contact over a short period of time, fewer fibers would have gotten into their position in the mesh. 
+When a shear force is applied, the fibers get tilted until they loosen from the mesh, at which point sliding occurs. 
+This impression of the sliding mechanism is quite similar to the one we have now. 
+
+
+
+
+\section{Macroscopic observations}
+
+%There are two fundamental forces that cause the friction force: gravitational force and electromagnetic force. 
+
+
+
+\subsection{Coefficient of friction}\label{sec:coefficientOfFriction}
+The coefficient of friction, $\mu$, is a dimensionless scalar describing the ratio between the force of friction and the normal force, as given in equation \eqref{eq:coefficientOfFriction}.
+The value of $\mu$ is dependent on the material of the objects that are in contact, ambient conditions, presence of lubrication, etc.. 
+For most materials the coefficient is higher if the objects are stationary, than if they are moving relative to each other (sliding).
+We may refer to them separately as the coefficient of static friction $\mu_s$, and the coefficient of kinetic friction $\mu_k$.
+Thus, $\mu_s>\mu_ k$ for most materials\footnote{Teflon-on-teflon seems to have the same value for static- and kinetic friction.}.
+
+\subsection{Steady sliding}
+If we attach a spring to a block and pull on the spring with a constant velocity, we may get the evolution of friction force as shown in figure \ref{fig:steadyslide}.
+We assume the block to have a constant normal force from the surface it rests upon. 
+We observe that the friction force increases linearly during the loading of the spring, as expected from Hooke's law. 
+Once the force from the spring overcomes the maximum static friction , $F_s$, the block begins to move (slide) and the force of friction is reduced due to the change in coefficient of friction. 
+The coefficient of static friction is found by using the maximum static friction force, $F_s$, in equation \eqref{eq:coefficientOfFriction}. 
+Similarly the coefficient of sliding friction is found by using the value of the friction force in the sliding domain, $F_k$.
+In this scenario, the motion of the block resulted in a steady motion. 
+As we shall see, that is not always the case.
+
+Keep in mind that the forces we refer to are considered to be working on the center of mass of the block. 
+The coefficient of friction is a macroscopic observation.
+It wouldn't make any sense to discuss a coefficient of friction between let's say two "blocks" containing 10 atoms each.
+How would one even define a normal force? 
+
+Steady sliding motion can be observed for instance if a car driver pulls on the break at high speed, so that the wheels are unable to turn.
+The wheels will then slide along the road until the car comes to a stop. 
+At cites of traffic accidents it is common to measure the length of skid marks, in order to approximate a lower limit of a vehicles velocity. 
+
+
+\subsection{Stick-slip motion}
+If we pull on a body with a spring with constant and reasonably low velocity, it will be subject to a linearly increasing force (Hooke's law). 
+Because the object does not slide until we reach the maximum static friction, it will remain its position until it does.
+Once the force from the spring overcomes the maximum static friction, the body will begin to slide and the coefficient of friction changes to its kinetic state.
+It will accelerate the most in the beginning, and continue increasing its velocity until it passes an equilibrium position.
+Once it passes the equilibrium position, the friction force will overcome the spring force, and the velocity will decrease. 
+When the velocity is sufficiently low, the object will stop abruptly. 
+As the spring is still being moved, the spring force on the object will rise again (load), and we have a complete cycle.
+The time evolution of the force applied by the spring will be similar to the sketch shown in figure \ref{fig:stick-slip}.
+If the surface of the block or substrate is non-homogeneous, the stick-slip motion may be more chaotic, than illustrated by the sketch. 
+In fact, it may be difficult to find any periodicity in the motion at all. 
+We are not going to concern our self with chaotic stick-slip motion, since we will have perfectly smooth, dry and pure surfaces when doing molecular dynamics simulation.  
+Stick-slip motion can be observed for instance when a bow slides over the strings of a violin, thus making them vibrate. 
+By changing the pressure and speed of the bow, the performer can modify the sound produced. 
+Earth quakes is another example, though this is of the chaotic sort.
+
+Whether the motion is of the steady type or the stick-slip type, is found experimentally to be depending on the velocity and  stiffness of the spring.
+At sufficiently high speeds, we would always get a steady motion. 
+Similarly, with a stiff enough spring we would also get a steady motion. 
+While with a velocity, $v<v_s$, and stiffness $k<k_s$ we would expect a stick-slip motion.
+This can be illustrated by a phase diagram of velocity and spring stiffness $(v,k)$, as in figure \ref{fig:phase-stick-slip}.
+The change in behavior from stick-slip to steady motion can be observed in our daily lives. 
+The creaking of a door is due to stick-slip motion at the hinges.
+However, if we open the door quickly, the door will not creak.
+
+%The sound produced by bowed instruments such as the cello or violin are dependent of the speed at which the bow is drawn across the strings. 
+
+\section{Microscopic origin of friction}
+Friction is caused by bond formations between atoms of the two bodies, at the area of contact. 
+This includes chemical bonds, hydrogen bonds, dipole-dipole interactions, and so on.  
+The range of these interactions are typically quite short; at 10\AA ~separation they are negligible.
+These bonds oppose relative motion, since the bonds must be broken for sliding to occur.
+As bonds are formed, they have associated energies required for the bonds to be broken. 
+Thus, there is an energy barrier that must be overcome in order for relative motion to initiate,
+which is precisely our observation on the macroscopic level. 
+The bonds can brake either by applying an external force or by thermal excitation\footnote{This is known as \textit{creep}.}.
+The energy released by the braking the bond can be converted into excitation of electrons, creation of phonons, mechanical energy in the form of elastic or plastic deformation, and heat \cite{Introduction2Friction}.
+
+Since the force of friction is due to an activation energy for breaking the bonds, it is intuitive that the force is proportional to the number of bonds
+\begin{equation}
+F \propto N_{\text{bonds}}.
+\end{equation} 
+As the formation of bonds only occur at the area of contact, one would expect $F\propto N_\text{bonds}\propto A$, which violates Amontons' second law. 
+As we shall see in section \ref{sec:contactMechanics}, there is a difference in the \textit{real} area of contact and the \textit{apparent} area of contact.
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.9\linewidth}
+		\begin{minipage}{\linewidth}
+			\centering
+			\includegraphics[width=0.7\linewidth]{figures/friction/steadySlide}
+			\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a steady sliding motion.}
+			\label{fig:steadyslide}
+		\end{minipage}
+		\begin{minipage}{\linewidth}
+			\vspace{0.5cm}
+			\centering
+			\includegraphics[width=0.7\linewidth]{figures/friction/stick-slip}
+			\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a stick-slip motion.}
+			\label{fig:stick-slip}
+		\end{minipage}
+		\begin{minipage}{\linewidth}
+			\vspace{1cm}
+			\centering{
+				\def\svgwidth{0.58\linewidth}
+				\hspace{-3mm}
+				\input{figures/friction/phase.pdf_tex}
+				\caption{Phase diagram of velocity and spring stiffness ($v,k$). 
+					All combinations within the gray area will result in a stick-slip motion. 
+					All outside will result in a steady sliding motion.}
+				\label{fig:phase-stick-slip}
+			}
+		\end{minipage}
+	\end{minipage}
+\end{figure}
+
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{figures/friction/steadySlide}
+%	\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a steady sliding motion.}
+%	\label{fig:steadyslide}
+%\end{figure}
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{figures/friction/stick-slip}
+%	\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a stick-slip motion.}
+%	\label{fig:stick-slip}
+%\end{figure}
+%\begin{figure}[H]
+%	\centering{
+%		\def\svgwidth{0.58\linewidth}
+%		\hspace{-3mm}
+%		\input{figures/friction/phase.pdf_tex}
+%		\caption{Phase diagram of velocity and spring stiffness ($v,k$). 
+%			All combinations within the gray area will result in a stick-slip motion. 
+%			All outside will result in a steady sliding motion.}
+%		\label{fig:phase-stick-slip}
+%	}
+%\end{figure}
+
+
+
+
+
+%Bonds will be formed and broken continuously (for temperatures $T>0K$).
+%Obviously, the structure of the surfaces and elastic properties also affect the   
+
+
+
+
+%In order to understand the behavior on the macroscopic level, we study the dynamics at a microscopic level as well. 
+%As it turns out, there are several similarities and differences between these length scales.
+
+
+
+
+
+
+\section{Elasticity}
+
+
+We distinguish between elastic and plastic deformations.
+If a body is deformed by an external force, but recovers its initial structure after the force causing the deformation is removed, it is referred to as an \textit{elastic} deformation. 
+If it does not, it is regarded a \textit{plastic} deformation. 
+Obviously, there is a limit to the applied stress that separates the two;  the so-called yield stress. 
+In this section we will only consider elastic deformations, and review fundamental concepts of linear elasticity. 
+
+
+
+
+
+\subsection{Strain and stress}
+%Imagine a solid cube of some material, e.g. steel.
+%At rest, the atoms of the steel is in an ordered structure, having equilibrium distance between each other.
+%If a force is applied on the faces of the cube along the  x-axis, toward the center, the cube will deform. 
+%It will be compressed in the x-direction. 
+%To maintain the cube at the same compression length, we have to retain the compression force constant. 
+%This is because the atoms of the cube will be closer than their equilibrium distance from each other in the x-direction, and thus they exert a force outward on the faces of the x-axis.
+%If we remove the compression forces, the 
+Strain $\epsilon$, is a measure of deformation. 
+It represents the displacement between particles in a body relative to a reference length, and can be expressed as
+\begin{equation}
+\epsilon = \frac{\Delta l}{l_0}
+\end{equation}
+where $\Delta l$ and $l$ are the displacement and original length, respectively. 
+For \textit{normal} strain, $\Delta l$ represents an elongation of the distance between two facing end planes of an infinitesimal cubic element.
+For \textit{shear} strain, it represents a component of an in-plane displacement of the midpoints of said plains.
+%It is common to use an index notation in order to describe which component of strain we are referring to.
+It is common to discern the components of stress by using two indices, e.g. $\epsilon_{xy}$.
+The first index indicates that we consider the planes normal to the x-axis, while the second that we consider the shear stress in the y-direction of these planes. 
+Double indices, such as $\epsilon_{xx}$ refer to the normal strain in the x-direction, and is commonly abbreviated to   $\epsilon_{x}$.
+
+Stress $\sigma$, is a force density acting on a body due to internal forces, caused by strain.
+For stress on a plane, the \textit{normal} and \textit{shear} stress is defined as
+\begin{equation}
+\sigma_\perp = \frac{F_\perp}{A} \qquad \text{and} \qquad \sigma_\parallel = \frac{F_\parallel}{A}
+\end{equation}
+respectively, where $F_\perp$ and $F_\parallel$ are the force components perpendicular and parallel to the plane.
+We use an equivalent notation for stress as for strain, with two indices distinguishing the components.
+This is illustrated in figure \ref{fig:stressTensor}.
+The collection of stress and strain components are often composed into the so-called Cauchy stress tensor and strain tensor.
+\begin{equation}
+\sigma = 
+\begin{pmatrix}
+\sigma_{x} & \sigma_{xy} & \sigma_{xz} \\
+\sigma_{yx} & \sigma_{y} & \sigma_{yz} \\
+\sigma_{zx} & \sigma_{zy} & \sigma_{z} \\
+\end{pmatrix}
+\qquad
+\epsilon = 
+\begin{pmatrix}
+\epsilon_{x} & \epsilon_{xy} & \epsilon_{xz} \\
+\epsilon_{yx} & \epsilon_{y} & \epsilon_{yz} \\
+\epsilon_{zx} & \epsilon_{zy} & \epsilon_{z} \\
+\end{pmatrix}
+\end{equation}
+
+\begin{figure}
+	\center
+	\resizebox{0.5\linewidth}{!}{
+		\input{figures/tikz/stressTensor/stressTensor.tikz}
+	}
+	\caption{Graphical illustration of the components of the Cauchy stress tensor.}
+	\label{fig:stressTensor}
+\end{figure}
+
+
+\subsection{Hooke's law}
+As mentioned, stress is caused by strain. However, strain is also caused by stress. 
+The relation between the two is known as Hooke's law. 
+If we consider a infinitesimal cubical body subject to a tensile force in the x-direction, Hooke's law states that the relation between stress and strain is given as
+\begin{equation}
+\epsilon_x = \frac{\sigma_x}{E}, \label{eq:stressStrainHookesLawX}
+\end{equation}
+where $E$ is a material property known as Young's modulus\footnote{Young's modulus is also known as the elastic modulus.}, which express the stiffness of the material. 
+Here we assume that the deformation is elastic.
+%As the body is expanded in on direction, as in our example, it will experience a contraction in the other two dimensions. 
+%These contractions can be expressed as
+%\begin{equation}
+%	\epsilon_y = -\nu \frac{\sigma_x}{E}, \qquad \epsilon_z = -\nu \frac{\sigma_x}{E},
+%\end{equation}
+%where $\nu$ is Poisson's ratio.
+
+Often the faces of the infinitesimal cubic body are subject to forces in several direction. 
+The general form of Hooke's law is expressed as
+\begin{equation}
+\sigma_{ij} = C_{ijkl}\epsilon_{kl}
+\end{equation}
+which relates the Cauchy stress tensor $\sigma_{ij}$ to the strain tensor $\epsilon_{kl}$, through the linear dependence of the stiffness tensor $c_{ijkl}$.
+Note that each component of the Cauchy stress tensor is dependent on all elements of the strain tensor. 
+The stress and strain tensors are both of rank 2 and have $3^2=9$ elements, while the stiffness tensor has rank 4 and contains $3^4=81$ elements.
+However, since both the Cauchy stress tensor and the strain tensor are symmetric, 
+\begin{align}
+\begin{split}
+\sigma_{ij} = \sigma_{ji} &\Rightarrow C_{ijkl} = C_{jikl}\\
+\epsilon_{kl} = \epsilon_{lk} &\Rightarrow C_{ijkl} = C_{ijlk}
+\end{split}
+\end{align}
+In total there will be only 6 independent components for the stress and strain tensors, and 36 in the stiffness tensor. 
+We may choose to express the stress and strain as vectors by using Voigts method for rank reduction \cite{Voigt}.
+
+\begin{equation}
+\vec{\sigma} = 
+\begin{pmatrix}
+\sigma_{xx} \\
+\sigma_{yy} \\
+\sigma_{zz} \\
+\sigma_{xy} \\ 
+\sigma_{xz} \\
+\sigma_{yz}
+\end{pmatrix}
+\equiv
+\begin{pmatrix}
+\sigma_{1} \\
+\sigma_{2} \\
+\sigma_{3} \\
+\sigma_{4} \\ 
+\sigma_{5} \\
+\sigma_{6}
+\end{pmatrix}
+\qquad
+\text{and}
+\qquad
+\vec{\epsilon} = 
+\begin{pmatrix}
+\epsilon_{xx} \\
+\epsilon_{yy} \\
+\epsilon_{zz} \\
+2\epsilon_{xy} \\ 
+2\epsilon_{xz} \\
+2\epsilon_{yz}
+\end{pmatrix}
+\equiv
+\begin{pmatrix}
+\epsilon_{1} \\
+\epsilon_{2} \\
+\epsilon_{3} \\
+\epsilon_{4} \\ 
+\epsilon_{5} \\
+\epsilon_{6}
+\end{pmatrix}
+\end{equation}
+Similarly the stiffness tensor reduces to a $6\times6$ matrix (rank 2).
+\begin{equation}
+\vec{\hat{C}} = \begin{pmatrix}
+C_{11}& C_{12}& C_{13}& C_{14}& C_{15}& C_{16} \\
+C_{21}& C_{22}& C_{23}& C_{24}& C_{25}& C_{26} \\
+C_{31}& C_{32}& C_{33}& C_{34}& C_{35}& C_{36} \\
+C_{41}& C_{42}& C_{43}& C_{44}& C_{45}& C_{46} \\
+C_{51}& C_{52}& C_{53}& C_{54}& C_{55}& C_{56} \\
+C_{61}& C_{62}& C_{63}& C_{64}& C_{65}& C_{66} \\
+\end{pmatrix}
+\end{equation} 
+The structure of the elements in the stiffness tensor are dependent on the isotropy\footnote{Directionally dependent physical properties.} of the material of consideration.
+The general Hooke's law can now be expressed as a matrix product
+\begin{equation}
+\vec{\sigma} = \vec{\hat{C}}\vec{\epsilon}
+\end{equation}
+
+\subsection{Poisson's ratio}
+If strain a body in the x-direction, the stress in the x-direction will be as given in equation \eqref{eq:stressStrainHookesLawX}. However, as the body is strained in this direction, it will contact in the other two dimensions. 
+The relation between the applied strain in the x-direction and resulting strain in the other directions can be expressed as 
+\begin{equation}
+\epsilon_y = -\nu\frac{\sigma_x}{E}, \hspace{1cm} \epsilon_z = -\nu\frac{\sigma_x}{E} , \label{eq:poissonsRatio}
+\end{equation}
+in which $\nu$ is a constant known as Poisson's ratio. 
+If an element is subject to uniformly distributed normal stress on all faces $\sigma_x,\sigma_y,\sigma_z$, we can use equation \eqref{eq:stressStrainHookesLawX} and \eqref{eq:poissonsRatio} in order to compute the resulting strains. 
+We superpose the strain components produced by each of the stresses to get
+\begin{align}
+\epsilon_x &= \frac{1}{E}[\sigma_x - \nu(\sigma_y + \sigma_z)]\\[2mm]
+\epsilon_y &= \frac{1}{E}[\sigma_y - \nu(\sigma_x + \sigma_z)]\\[2mm]
+\epsilon_z &= \frac{1}{E}[\sigma_z - \nu(\sigma_x + \sigma_y)].
+\end{align}
+
+
+
+
+
+\section{Contact mechanics} \label{sec:contactMechanics}
+
+\subsection{Real area of contact}
+Today we know that most surfaces are rough, at least at a microscopic level, having some degree of asperities. 
+A \textit{contact} is defined as a point where two surfaces meet and where bonds can be formed \cite{Introduction2Friction}.  
+It is actually the asperities that make up the contact areas between surfaces.
+The real area of contact is therefore the sum of individual contact area of the asperities. 
+We can approximate the real area macroscopically. 
+Imagine two surfaces initially apart, having no area of contact, as in figure \ref{fig:realAreaOfContact0}. 
+The top body has a load $L$ due to its mass. 
+It will move downwards, and at some point a single asperity will come in contact with the substrate.
+The pressure at the point of contact will be huge, since a single asperity carries the entire load with a very small contact area\footnote{Typical radius of the contact area on an asperities is $\sim10 \mu m$.} of $A_r$.
+\begin{equation}
+p = \frac{L}{A_r}
+\end{equation}
+The pressure will surely be much greater than the yield stress $\sigma_c$, and so the asperity will deform plastically. 
+As the surface continues to descend, other asperities will come in contact with the substrate, increasing the contact area and share the load. 
+They will all deform plastically until the area of contact is large enough so that the pressure at the points of contact is lower than the yield stress.
+At this point the top body is resting on the substrate.
+Thus, we should be able to relate the real area of contact to the yield stress as
+\begin{equation}
+A_r =  \frac{L}{\sigma_c}.
+\end{equation}
+At this point it is clear that Amontons' second law is preserved, since 
+\begin{equation}
+F\propto N_\text{bonds}\propto A_r \propto \frac{L}{\sigma_c}
+\end{equation}
+is not dependent on the apparent area of contact. 
+In fact we just found Amontons' first law!
+
+As an example\footnote{This example is also found in reference \cite{Introduction2Friction}. } of the difference between apparent and real area of contact, consider a steel plate of size $10cm\times10cm\times1cm$. The apparent area is then $A_a=100cm^2$. Assuming steel to have a density $\rho=10g/cm^3$ and yield stress at $\sigma_c=10^9N/m^2$, the real area of contact is $A_r = 10^{-8}m^2 = 10^{-4}cm^2$.
+Thus, there is a huge difference in the apparent and real area of contact, a factor of a million in this case, but only the real area contributes to the effects of friction. 
+%When there is contact between two surfaces, the asperities are pushed into the other material, and tries to occupy the position with the lowest potential.  
+%The asperities may move even though the macroscopic body is still, due to thermally activated creep.
+%Thus, longer duration of resting contact gives a higher rate of asperities that settle in positions with the lowest potential, effectively making the coupling of the bodies stronger.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{\textwidth}
+		\centering
+		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/apart.pdf}
+		\caption{No contact.}
+		\label{fig:realAreaOfContact0}
+	\end{subfigure}
+	\begin{subfigure}{\textwidth}
+		\vspace{5mm}
+		\centering
+		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/single.pdf}
+		\caption{Single point of contact.}
+		\label{fig:realAreaOfContact1}
+	\end{subfigure}
+	\begin{subfigure}{\textwidth}
+		\vspace{5mm}
+		\centering
+		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/three.pdf}
+		\caption{Multiple points of contacts.}
+		\label{fig:realAreaOfContact3}
+	\end{subfigure}
+	\caption{Illustrating the concept of real area of contact, as well as surface roughness. }
+	\label{fig:realAreaOfContact}
+\end{figure}
+
+
+
+
+\subsection{Hertz theory}
+%The first satisfactory analysis of the stresses at the contact of two elastic solids is due to Heinrich Hertz.
+Hertz' theory describe non-adhesive contact, and assumes that solids interact with a purely repulsive "hard-wall" interaction.
+It is assumed that the contacting solids are described by continuum elasticity, and discrete atomic structure is ignored \cite{RobbinsSingleAsperity}. 
+Often it is also assumed that the two solids are isotropic, with Young's modulus $E_1$ and $E_2$ and Poissson's ratio $\nu_1$ and $\nu_2$. 
+One can then compute an \textit{effective modulus} $E^*$ defined as
+\begin{equation}
+\frac{1}{E^*} = \frac{1-{\nu_1}^2}{E_1} + \frac{1-{\nu_2}^2}{E_2}	
+\end{equation}
+Heinrich Hertz predicted that when a sphere with radius of curvature $R$ indents a flat surface, the area of contact is circular with a radii \cite{Johnson1985}
+\begin{equation}
+a = \lr{\frac{3NR}{4E^*}}^{1/3}, \label{eq:HertzRadii}
+\end{equation}
+%which increases with the load $N$. 
+and the normal pressure $p$ is related to it as
+\begin{equation}
+p(r) = p_0\sqrt{1-\frac{r^2}{a^2}}, \label{eq:HertzPressure}
+\end{equation}
+where $r$ is the radial distance to the center of the indentation, and
+$p_0$ is the maximum value of the normal pressure, at the center of the indentation. It is defined as
+\begin{equation}
+	p_0 = \frac{2aE^*}{\pi R}.
+\end{equation}
+Also, the normal displacement $\delta_H$ of the spheres tip is related to $a$ by
+\begin{equation}
+\delta_H = a^2/R,
+\end{equation}
+where $\delta_H=0$ is the normal position of the spheres at first contact.
+The subscript $H$ indicates that this is Hertz prediction, and follows the notation used in \cite{Johnson1985}.
+The assumptions made in this theory are that: 
+\begin{itemize}
+	\item Strains are small and within the elastic limit.
+	\item Surfaces are continuous and non-conforming\footnote{
+		A non-conforming contact is when dissimilar surfaces (which fit badly together) are in contact. When under zero load, they would only touch at a single point. 
+		The real area of contact is small compared to the sizes of the objects and the stress is highly concentrated.}.
+	\item Each body can be considered an elastic half-space.
+	\item The surfaces are frictionless.
+\end{itemize}
+
+
+
+\section{Previously conducted studies}
+The field of friction is not new to science in any regard. 
+However, thanks to advances in technology and computational power, we are now able to simulate physical systems at an atomic level. 
+
+
+
+
+Continuum mechanics does not consider the nature of the atomic structure and interaction within solids. 
+This may very well be an important detail at the discrete atomic level. 
+Mark O. Robbins, has written several articles on this matter \cite{Robbins2005,RobbinsSingleAsperity,RobbinsSimpleMicroscopicTheroyOfAmontonsLawsOfFriction, RobbinsDefiningContactAtTheAtomicScale},  
+one of which is very relevant to this thesis \cite{RobbinsSingleAsperity}. 
+In collaboration with Binquan Luan, they used LAMMPS to do molecular dynamics simulations of a single spherical asperity indenting a flat substrate. 
+They measured pressure distribution in the area of contact, without adhesion, and compared it to the solution predicted by Hertz' theory. 
+They did this for differently constructed crystalline spheres: bent, cut, and
+cut amorphous. 
+Also for the bent tips, they used three different densities. 
+They kept the sphere rigid throughout the simulation, fixing the atoms of the sphere relative to each other. 
+They found that atomic structure clearly changes the distribution of pressure.
+The stepped tip deviated the most from the theory, having a behavior similar to that of a "flat punch"!  
+They also noticed a dip in the pressure right at the center, both for the amorphous and bent incommensurate tips, obviously deviating from Hertz' theory.
+Thus, atomic structure is of importance at nano-scale.
+In this thesis, we will perform a similar simulation, but with fundamental differences. 
+We will allow both the sphere and the substrate to be elastic. 
+Both these bodies will be constructed by $\beta$-cristobalite, and we will apply the Vashishta potential\footnote{The computed forces will only reflect the two-body term of the potential.}.  
+We will compare our results to theirs in the chapter \ref{chap:discussion}, conscious about these differences.
+
+
 \chapter{Molecular dynamics}
 Molecular dynamics is a method that uses Newton’s equations of motion to simulate the movement of interacting atoms. 
 Each atom is treated as a point particle with mass and charge, and the interaction between them is described by a force field. 
@@ -581,7 +1124,7 @@ mpirun -n 8 lmp_mpi -in speedup.in -var filename speedup.restart
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{figures/speedup/15x15_bigFonts.pdf}
-	\caption{Strong scaling of parallel performance of LAMMPS using 81000 atoms, evenly distributed in a cubical simulation box. The marked points are measured speedup, while the dashed line represents ideal speedup ($S = T_s/T_p = p$). }
+	\caption{Strong scaling of parallel performance of LAMMPS using 81000 atoms, evenly distributed in a cubical simulation box, running on the local super computer. The marked points are measured speedup, while the dashed line represents ideal speedup ($S = T_s/T_p = p$). }
 	\label{fig:speedup15x15}
 \end{figure}
 
@@ -594,541 +1137,6 @@ We can finish a job that would have taken an hour in two minutes!
 Also, we clearly see that the initial claim holds; this is not more efficient when regarding CPU time. 
 In fact this result suggest that using 1 processor is twice as energy efficient as using 64. 
 
-
-\chapter{Friction, elasticity and contact mechanics}
-Friction can be defined as \textit{the force that resists relative motion between two bodies in contact} \cite{frictionDefinition}. 
-It's a well-known phenomenon, though still not completely understood.
-Despite the fact that we learn about friction in introductory courses to physics, it is not at all easy to comprehend. 
-It's very complex and still a field of research.
-The effects of friction is affected by surface roughness, material properties, ambient conditions, the geometry of contact area, and many other factors. 
-In this chapter we will study some elementary aspects of dry friction between two solid bodies, elasticity and contact mechanics. 
-   
- 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.99\linewidth]{figures/friction/Colossus.jpg}
-	\caption{Painting from the tomb of Tehuti-Hetep, showing the transportation of an Egytian colossus.}
-	\label{fig:Colossus}
-\end{figure}
-\section{Historical note}
-On the macroscopic level, friction has been observed since the dawn of man. 
-Early actions that show awareness of the effects of friction was to chip stone in order to make tools, or rubbing wood in order to create fire. 
-In the tomb of Tehuti-Hetep there was found the painting shown in figure \ref{fig:Colossus}, which show the moving of an Egyptian colossus. 
-The statue is depicted pulled on a sledge, with officers standing on the front end of the sledge pouring water on the ground. 
-This is evidence that they perceived the effect of lubrication even then, 1900 B.C..   
-
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.5\linewidth]{figures/friction/LeonardoDaVinciBW}
-	\caption{Drawing from Leonardo da Vinci's notebook. From Codex Arundel, British Library, London (Arundel folio 41r).}
-	\label{fig:leonardoDaVinci}
-\end{figure}
-
-
-\noindent 
-The first documented studies of friction were carried out during the renaissance by Leonardo da Vinci (1452-1519) \cite{LeonardoDaVinciStudies}.
-Among his experiments he attaching a block of wood to another object with a cord, and placed the block on a smooth surface.
-He was able to adjust the weight of the second object, which he let hang over a fixed cylinder, free to rotate. 
-This experiment was found in his notebooks, and is shown in figure \ref{fig:leonardoDaVinci}.
-He experimented with tilted planes and placed the block on different sides, changing the apparent area of contact.
-His results made him deduce the following statements, also found in his notes:
-\begin{itemize}
-	\item Friction produces double the amount of effort if the weight be doubled. 
-	\item Friction made by the same weight will be of equal resistance at the beginning of the movement though the contact may be of different breadths or lengths.
-\end{itemize}
-This is now essentially known as the two first laws of friction. 
-They were not recognized at the time, but were rediscovered later by Guillaume Amontons, and these laws of friction are most commonly known as \textit{Amontons' laws}.
-The linear relation described in the first postulate is commonly known as the coefficient of friction
-\begin{equation}
-	\mu = \frac{F}{L}, \label{eq:coefficientOfFriction2}
-\end{equation}
-or 
-\begin{equation}
-	\mu' = \frac{dF}{dL}, \label{eq:coefficientOfFriction}
-\end{equation}
-It express how the static friction force $F$ increases with increasing load $L$.
-The difference between the two definitions is that for the first, $F=0$ at $L=0$, while in the second, $F$ can be non-zero at $L=0$. 
-Though Leonardo interpreted $L$ as the weight of the load and $F$ as the weight of the object pulling in a scenario as in figure \ref{fig:leonardoDaVinci}. The concept of force was not commonly recognized until 200 years later. Isaac Newton's publication of \textit{Principia} paved the way for studies of friction, there among the most comprehensive study carried out by Charles Augustin Coulomb (1736-1806). He investigated the influence of several factors on friction, namely \cite{SlidingFriction}:
-\begin{itemize}
-	\item The nature of the materials in contact and their surface coatings.
-	\item The extent of the surface area.
-	\item The normal force.
-	\item The amount of time that the surfaces remained in contact prior to the applied force.
-	\item Ambient conditions.
-\end{itemize}   
-Among his results he found that the static friction force increased with the time the surfaces were in contact before applying shear force. 
-Today this relation is known as
-\begin{equation}
-	F_s(t) = A+B\ln(t).
-\end{equation}
-Coulomb explained this behavior by regarding the materials as fibrous. 
-Basically like a hairbrush, having fibers which get entangled into a mesh when in contact. 
-If the materials were in contact over a short period of time, fewer fibers would have gotten into their position in the mesh. 
-When a shear force is applied, the fibers get tilted until they loosen from the mesh, at which point sliding occurs. 
-This impression of the sliding mechanism is quite similar to the one we have now. 
-
-
-
-
-\section{Macroscopic observations}
-
-%There are two fundamental forces that cause the friction force: gravitational force and electromagnetic force. 
-
-
-
-\subsection{Coefficient of friction}\label{sec:coefficientOfFriction}
-The coefficient of friction, $\mu$, is a dimensionless scalar describing the ratio between the force of friction and the normal force, as given in equation \eqref{eq:coefficientOfFriction}.
-The value of $\mu$ is dependent on the material of the objects that are in contact, ambient conditions, presence of lubrication, etc.. 
-For most materials the coefficient is higher if the objects are stationary, than if they are moving relative to each other (sliding).
-We may refer to them separately as the coefficient of static friction $\mu_s$, and the coefficient of kinetic friction $\mu_k$.
-Thus, $\mu_s>\mu_ k$ for most materials\footnote{Teflon-on-teflon seems to have the same value for static- and kinetic friction.}.
-
-\subsection{Steady sliding}
-If we attach a spring to a block and pull on the spring with a constant velocity, we may get the evolution of friction force as shown in figure \ref{fig:steadyslide}.
-We assume the block to have a constant normal force from the surface it rests upon. 
-We observe that the friction force increases linearly during the loading of the spring, as expected from Hooke's law. 
-Once the force from the spring overcomes the maximum static friction , $F_s$, the block begins to move (slide) and the force of friction is reduced due to the change in coefficient of friction. 
-The coefficient of static friction is found by using the maximum static friction force, $F_s$, in equation \eqref{eq:coefficientOfFriction}. 
-Similarly the coefficient of sliding friction is found by using the value of the friction force in the sliding domain, $F_k$.
-In this scenario, the motion of the block resulted in a steady motion. 
-As we shall see, that is not always the case.
-
-Keep in mind that the forces we refer to are considered to be working on the center of mass of the block. 
-The coefficient of friction is a macroscopic observation.
-It wouldn't make any sense to discuss a coefficient of friction between let's say two "blocks" containing 10 atoms each.
-How would one even define a normal force? 
-
-Steady sliding motion can be observed for instance if a car driver pulls on the break at high speed, so that the wheels are unable to turn.
-The wheels will then slide along the road until the car comes to a stop. 
-At cites of traffic accidents it is common to measure the length of skid marks, in order to approximate a lower limit of a vehicles velocity. 
-
-
-\subsection{Stick-slip motion}
-If we pull on a body with a spring with constant and reasonably low velocity, it will be subject to a linearly increasing force (Hooke's law). 
-Because the object does not slide until we reach the maximum static friction, it will remain its position until it does.
-Once the force from the spring overcomes the maximum static friction, the body will begin to slide and the coefficient of friction changes to its kinetic state.
-It will accelerate the most in the beginning, and continue increasing its velocity until it passes an equilibrium position.
-Once it passes the equilibrium position, the friction force will overcome the spring force, and the velocity will decrease. 
-When the velocity is sufficiently low, the object will stop abruptly. 
-As the spring is still being moved, the spring force on the object will rise again (load), and we have a complete cycle.
-The time evolution of the force applied by the spring will be similar to the sketch shown in figure \ref{fig:stick-slip}.
-If the surface of the block or substrate is non-homogeneous, the stick-slip motion may be more chaotic, than illustrated by the sketch. 
-In fact, it may be difficult to find any periodicity in the motion at all. 
-We are not going to concern our self with chaotic stick-slip motion, since we will have perfectly smooth, dry and pure surfaces when doing molecular dynamics simulation.  
-Stick-slip motion can be observed for instance when a bow slides over the strings of a violin, thus making them vibrate. 
-By changing the pressure and speed of the bow, the performer can modify the sound produced. 
-Earth quakes is another example, though this is of the chaotic sort.
-
-Whether the motion is of the steady type or the stick-slip type, is found experimentally to be depending on the velocity and  stiffness of the spring.
-At sufficiently high speeds, we would always get a steady motion. 
-Similarly, with a stiff enough spring we would also get a steady motion. 
-While with a velocity, $v<v_s$, and stiffness $k<k_s$ we would expect a stick-slip motion.
-This can be illustrated by a phase diagram of velocity and spring stiffness $(v,k)$, as in figure \ref{fig:phase-stick-slip}.
-The change in behavior from stick-slip to steady motion can be observed in our daily lives. 
-The creaking of a door is due to stick-slip motion at the hinges.
-However, if we open the door quickly, the door will not creak.
-  
-%The sound produced by bowed instruments such as the cello or violin are dependent of the speed at which the bow is drawn across the strings. 
- 
- \section{Microscopic origin of friction}
- Friction is caused by bond formations between atoms of the two bodies, at the area of contact. 
- This includes chemical bonds, hydrogen bonds, dipole-dipole interactions, and so on.  
- The range of these interactions are typically quite short; at 10\AA ~separation they are negligible.
- These bonds oppose relative motion, since the bonds must be broken for sliding to occur.
- As bonds are formed, they have associated energies required for the bonds to be broken. 
- Thus, there is an energy barrier that must be overcome in order for relative motion to initiate,
- which is precisely our observation on the macroscopic level. 
- The bonds can brake either by applying an external force or by thermal excitation\footnote{This is known as \textit{creep}.}.
- The energy released by the braking the bond can be converted into excitation of electrons, creation of phonons, mechanical energy in the form of elastic or plastic deformation, and heat \cite{Introduction2Friction}.
- 
- Since the force of friction is due to an activation energy for breaking the bonds, it is intuitive that the force is proportional to the number of bonds
- \begin{equation}
- F \propto N_{\text{bonds}}.
- \end{equation} 
- As the formation of bonds only occur at the area of contact, one would expect $F\propto N_\text{bonds}\propto A$, which violates Amontons' second law. 
- As we shall see in section \ref{sec:contactMechanics}, there is a difference in the \textit{real} area of contact and the \textit{apparent} area of contact.
- 
-\begin{figure}[H]
-	\centering
-	\begin{minipage}{0.9\linewidth}
-	\begin{minipage}{\linewidth}
-		\centering
-		\includegraphics[width=0.7\linewidth]{figures/friction/steadySlide}
-		\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a steady sliding motion.}
-		\label{fig:steadyslide}
-	\end{minipage}
-	\begin{minipage}{\linewidth}
-		\vspace{0.5cm}
-		\centering
-		\includegraphics[width=0.7\linewidth]{figures/friction/stick-slip}
-		\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a stick-slip motion.}
-		\label{fig:stick-slip}
-	\end{minipage}
-	\begin{minipage}{\linewidth}
-		\vspace{1cm}
-		\centering{
-			\def\svgwidth{0.58\linewidth}
-			\hspace{-3mm}
-			\input{figures/friction/phase.pdf_tex}
-			\caption{Phase diagram of velocity and spring stiffness ($v,k$). 
-				All combinations within the gray area will result in a stick-slip motion. 
-				All outside will result in a steady sliding motion.}
-			\label{fig:phase-stick-slip}
-		}
-	\end{minipage}
-	\end{minipage}
-\end{figure}
-
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=0.7\linewidth]{figures/friction/steadySlide}
-%	\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a steady sliding motion.}
-%	\label{fig:steadyslide}
-%\end{figure}
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=0.7\linewidth]{figures/friction/stick-slip}
-%	\caption{Behavior of friction force as function of time, for a block pulled at constant velocity and under constant load, resulting in a stick-slip motion.}
-%	\label{fig:stick-slip}
-%\end{figure}
-%\begin{figure}[H]
-%	\centering{
-%		\def\svgwidth{0.58\linewidth}
-%		\hspace{-3mm}
-%		\input{figures/friction/phase.pdf_tex}
-%		\caption{Phase diagram of velocity and spring stiffness ($v,k$). 
-%			All combinations within the gray area will result in a stick-slip motion. 
-%			All outside will result in a steady sliding motion.}
-%		\label{fig:phase-stick-slip}
-%	}
-%\end{figure}
-
-
-
-
-
-%Bonds will be formed and broken continuously (for temperatures $T>0K$).
-%Obviously, the structure of the surfaces and elastic properties also affect the   
-
-
-
-
-%In order to understand the behavior on the macroscopic level, we study the dynamics at a microscopic level as well. 
-%As it turns out, there are several similarities and differences between these length scales.
-
-
-
-
-
-
-\section{Elasticity}
-
-
-We distinguish between elastic and plastic deformations.
-If a body is deformed by an external force, but recovers its initial structure after the force causing the deformation is removed, it is referred to as an \textit{elastic} deformation. 
-If it does not, it is regarded a \textit{plastic} deformation. 
-Obviously, there is a limit to the applied stress that separates the two;  the so-called yield stress. 
-In this section we will only consider elastic deformations, and review fundamental concepts of linear elasticity. 
-
-
-
-
-
-\subsection{Strain and stress}
-%Imagine a solid cube of some material, e.g. steel.
-%At rest, the atoms of the steel is in an ordered structure, having equilibrium distance between each other.
-%If a force is applied on the faces of the cube along the  x-axis, toward the center, the cube will deform. 
-%It will be compressed in the x-direction. 
-%To maintain the cube at the same compression length, we have to retain the compression force constant. 
-%This is because the atoms of the cube will be closer than their equilibrium distance from each other in the x-direction, and thus they exert a force outward on the faces of the x-axis.
-%If we remove the compression forces, the 
-Strain $\epsilon$, is a measure of deformation. 
-It represents the displacement between particles in a body relative to a reference length, and can be expressed as
-\begin{equation}
-	\epsilon = \frac{\Delta l}{l_0}
-\end{equation}
-where $\Delta l$ and $l$ are the displacement and original length, respectively. 
-For \textit{normal} strain, $\Delta l$ represents an elongation of the distance between two facing end planes of an infinitesimal cubic element.
-For \textit{shear} strain, it represents a component of an in-plane displacement of the midpoints of said plains.
-%It is common to use an index notation in order to describe which component of strain we are referring to.
-It is common to discern the components of stress by using two indices, e.g. $\epsilon_{xy}$.
-The first index indicates that we consider the planes normal to the x-axis, while the second that we consider the shear stress in the y-direction of these planes. 
-Double indices, such as $\epsilon_{xx}$ refer to the normal strain in the x-direction, and is commonly abbreviated to   $\epsilon_{x}$.
-
-Stress $\sigma$, is a force density acting on a body due to internal forces, caused by strain.
-For stress on a plane, the \textit{normal} and \textit{shear} stress is defined as
-\begin{equation}
-	\sigma_\perp = \frac{F_\perp}{A} \qquad \text{and} \qquad \sigma_\parallel = \frac{F_\parallel}{A}
-\end{equation}
-respectively, where $F_\perp$ and $F_\parallel$ are the force components perpendicular and parallel to the plane.
-We use an equivalent notation for stress as for strain, with two indices distinguishing the components.
-This is illustrated in figure \ref{fig:stressTensor}.
-The collection of stress and strain components are often composed into the so-called Cauchy stress tensor and strain tensor.
-\begin{equation}
-\sigma = 
-\begin{pmatrix}
-\sigma_{x} & \sigma_{xy} & \sigma_{xz} \\
-\sigma_{yx} & \sigma_{y} & \sigma_{yz} \\
-\sigma_{zx} & \sigma_{zy} & \sigma_{z} \\
-\end{pmatrix}
-\qquad
-\epsilon = 
-\begin{pmatrix}
-\epsilon_{x} & \epsilon_{xy} & \epsilon_{xz} \\
-\epsilon_{yx} & \epsilon_{y} & \epsilon_{yz} \\
-\epsilon_{zx} & \epsilon_{zy} & \epsilon_{z} \\
-\end{pmatrix}
-\end{equation}
-
-\begin{figure}
-	\center
-	\resizebox{0.5\linewidth}{!}{
-		\input{figures/tikz/stressTensor/stressTensor.tikz}
-	}
-	\caption{Graphical illustration of the components of the Cauchy stress tensor.}
-	\label{fig:stressTensor}
-\end{figure}
-
-
-\subsection{Hooke's law}
-As mentioned, stress is caused by strain. However, strain is also caused by stress. 
-The relation between the two is known as Hooke's law. 
-If we consider a infinitesimal cubical body subject to a tensile force in the x-direction, Hooke's law states that the relation between stress and strain is given as
-\begin{equation}
-	\epsilon_x = \frac{\sigma_x}{E}, \label{eq:stressStrainHookesLawX}
-\end{equation}
-where $E$ is a material property known as Young's modulus\footnote{Young's modulus is also known as the elastic modulus.}, which express the stiffness of the material. 
-Here we assume that the deformation is elastic.
-%As the body is expanded in on direction, as in our example, it will experience a contraction in the other two dimensions. 
-%These contractions can be expressed as
-%\begin{equation}
-%	\epsilon_y = -\nu \frac{\sigma_x}{E}, \qquad \epsilon_z = -\nu \frac{\sigma_x}{E},
-%\end{equation}
-%where $\nu$ is Poisson's ratio.
-
-Often the faces of the infinitesimal cubic body are subject to forces in several direction. 
-The general form of Hooke's law is expressed as
-\begin{equation}
-	\sigma_{ij} = C_{ijkl}\epsilon_{kl}
-\end{equation}
-which relates the Cauchy stress tensor $\sigma_{ij}$ to the strain tensor $\epsilon_{kl}$, through the linear dependence of the stiffness tensor $c_{ijkl}$.
-Note that each component of the Cauchy stress tensor is dependent on all elements of the strain tensor. 
-The stress and strain tensors are both of rank 2 and have $3^2=9$ elements, while the stiffness tensor has rank 4 and contains $3^4=81$ elements.
-However, since both the Cauchy stress tensor and the strain tensor are symmetric, 
-\begin{align}
-\begin{split}
-	\sigma_{ij} = \sigma_{ji} &\Rightarrow C_{ijkl} = C_{jikl}\\
-	\epsilon_{kl} = \epsilon_{lk} &\Rightarrow C_{ijkl} = C_{ijlk}
-\end{split}
-\end{align}
-In total there will be only 6 independent components for the stress and strain tensors, and 36 in the stiffness tensor. 
-We may choose to express the stress and strain as vectors by using Voigts method for rank reduction \cite{Voigt}.
-
-\begin{equation}
-\vec{\sigma} = 
-\begin{pmatrix}
-\sigma_{xx} \\
-\sigma_{yy} \\
-\sigma_{zz} \\
-\sigma_{xy} \\ 
-\sigma_{xz} \\
-\sigma_{yz}
-\end{pmatrix}
-\equiv
-\begin{pmatrix}
-\sigma_{1} \\
-\sigma_{2} \\
-\sigma_{3} \\
-\sigma_{4} \\ 
-\sigma_{5} \\
-\sigma_{6}
-\end{pmatrix}
-\qquad
-\text{and}
-\qquad
-\vec{\epsilon} = 
-\begin{pmatrix}
-\epsilon_{xx} \\
-\epsilon_{yy} \\
-\epsilon_{zz} \\
-2\epsilon_{xy} \\ 
-2\epsilon_{xz} \\
-2\epsilon_{yz}
-\end{pmatrix}
-\equiv
-\begin{pmatrix}
-\epsilon_{1} \\
-\epsilon_{2} \\
-\epsilon_{3} \\
-\epsilon_{4} \\ 
-\epsilon_{5} \\
-\epsilon_{6}
-\end{pmatrix}
-\end{equation}
-Similarly the stiffness tensor reduces to a $6\times6$ matrix (rank 2).
-\begin{equation}
-	\vec{\hat{C}} = \begin{pmatrix}
-	C_{11}& C_{12}& C_{13}& C_{14}& C_{15}& C_{16} \\
-	C_{21}& C_{22}& C_{23}& C_{24}& C_{25}& C_{26} \\
-	C_{31}& C_{32}& C_{33}& C_{34}& C_{35}& C_{36} \\
-	C_{41}& C_{42}& C_{43}& C_{44}& C_{45}& C_{46} \\
-	C_{51}& C_{52}& C_{53}& C_{54}& C_{55}& C_{56} \\
-	C_{61}& C_{62}& C_{63}& C_{64}& C_{65}& C_{66} \\
-	\end{pmatrix}
-\end{equation} 
-The structure of the elements in the stiffness tensor are dependent on the isotropy\footnote{Directionally dependent physical properties.} of the material of consideration.
-The general Hooke's law can now be expressed as a matrix product
-\begin{equation}
-	\vec{\sigma} = \vec{\hat{C}}\vec{\epsilon}
-\end{equation}
-
-\subsection{Poisson's ratio}
-If strain a body in the x-direction, the stress in the x-direction will be as given in equation \eqref{eq:stressStrainHookesLawX}. However, as the body is strained in this direction, it will contact in the other two dimensions. 
-The relation between the applied strain in the x-direction and resulting strain in the other directions can be expressed as 
-\begin{equation}
-	\epsilon_y = -\nu\frac{\sigma_x}{E}, \hspace{1cm} \epsilon_z = -\nu\frac{\sigma_x}{E} , \label{eq:poissonsRatio}
-\end{equation}
-in which $\nu$ is a constant known as Poisson's ratio. 
-If an element is subject to uniformly distributed normal stress on all faces $\sigma_x,\sigma_y,\sigma_z$, we can use equation \eqref{eq:stressStrainHookesLawX} and \eqref{eq:poissonsRatio} in order to compute the resulting strains. 
-We superpose the strain components produced by each of the stresses to get
-\begin{align}
-	\epsilon_x &= \frac{1}{E}[\sigma_x - \nu(\sigma_y + \sigma_z)]\\[2mm]
-	\epsilon_y &= \frac{1}{E}[\sigma_y - \nu(\sigma_x + \sigma_z)]\\[2mm]
-	\epsilon_z &= \frac{1}{E}[\sigma_z - \nu(\sigma_x + \sigma_y)].
-\end{align}
-
-
-
-
-
-\section{Contact mechanics} \label{sec:contactMechanics}
-
-\subsection{Real area of contact}
-Today we know that most surfaces are rough, at least at a microscopic level, having some degree of asperities. 
-A \textit{contact} is defined as a point where two surfaces meet and where bonds can be formed \cite{Introduction2Friction}.  
-It is actually the asperities that make up the contact areas between surfaces.
-The real area of contact is therefore the sum of individual contact area of the asperities. 
-We can approximate the real area macroscopically. 
-Imagine two surfaces initially apart, having no area of contact, as in figure \ref{fig:realAreaOfContact0}. 
-The top body has a load $L$ due to its mass. 
-It will move downwards, and at some point a single asperity will come in contact with the substrate.
-The pressure at the point of contact will be huge, since a single asperity carries the entire load with a very small contact area\footnote{Typical radius of the contact area on an asperities is $\sim10 \mu m$.} of $A_r$.
-\begin{equation}
-	p = \frac{L}{A_r}
-\end{equation}
-The pressure will surely be much greater than the yield stress $\sigma_c$, and so the asperity will deform plastically. 
-As the surface continues to descend, other asperities will come in contact with the substrate, increasing the contact area and share the load. 
-They will all deform plastically until the area of contact is large enough so that the pressure at the points of contact is lower than the yield stress.
-At this point the top body is resting on the substrate.
-Thus, we should be able to relate the real area of contact to the yield stress as
-\begin{equation}
-	A_r =  \frac{L}{\sigma_c}.
-\end{equation}
-At this point it is clear that Amontons' second law is preserved, since 
-\begin{equation}
-	F\propto N_\text{bonds}\propto A_r \propto \frac{L}{\sigma_c}
-\end{equation}
-is not dependent on the apparent area of contact. 
-In fact we just found Amontons' first law!
-
-As an example\footnote{This example is also found in reference \cite{Introduction2Friction}. } of the difference between apparent and real area of contact, consider a steel plate of size $10cm\times10cm\times1cm$. The apparent area is then $A_a=100cm^2$. Assuming steel to have a density $\rho=10g/cm^3$ and yield stress at $\sigma_c=10^9N/m^2$, the real area of contact is $A_r = 10^{-8}m^2 = 10^{-4}cm^2$.
-Thus, there is a huge difference in the apparent and real area of contact, a factor of a million in this case, but only the real area contributes to the effects of friction. 
-%When there is contact between two surfaces, the asperities are pushed into the other material, and tries to occupy the position with the lowest potential.  
-%The asperities may move even though the macroscopic body is still, due to thermally activated creep.
-%Thus, longer duration of resting contact gives a higher rate of asperities that settle in positions with the lowest potential, effectively making the coupling of the bodies stronger.
-
-\begin{figure}
-	\centering
-	\begin{subfigure}{\textwidth}
-		\centering
-		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/apart.pdf}
-		\caption{No contact.}
-		\label{fig:realAreaOfContact0}
-	\end{subfigure}
-	\begin{subfigure}{\textwidth}
-		\vspace{5mm}
-		\centering
-		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/single.pdf}
-		\caption{Single point of contact.}
-		\label{fig:realAreaOfContact1}
-	\end{subfigure}
-	\begin{subfigure}{\textwidth}
-	\vspace{5mm}
-	\centering
-	\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/three.pdf}
-	\caption{Multiple points of contacts.}
-	\label{fig:realAreaOfContact3}
-\end{subfigure}
-\caption{Illustrating the concept of real area of contact, as well as surface roughness. }
-\label{fig:realAreaOfContact}
-\end{figure}
-
-
-
- 
-\subsection{Hertz theory}
-%The first satisfactory analysis of the stresses at the contact of two elastic solids is due to Heinrich Hertz.
-Hertz' theory describe non-adhesive contact, and assumes that solids interact with a purely repulsive "hard-wall" interaction.
-It is assumed that the contacting solids are described by continuum elasticity, and discrete atomic structure is ignored \cite{RobbinsSingleAsperity}. 
-Often it is also assumed that the two solids are isotropic, with Young's modulus $E_1$ and $E_2$ and Poissson's ratio $\nu_1$ and $\nu_2$. 
-One can then compute an \textit{effective modulus} $E^*$ defined as
-\begin{equation}
-\frac{1}{E^*} = \frac{1-{\nu_1}^2}{E_1} + \frac{1-{\nu_2}^2}{E_2}	
-\end{equation}
-Heinrich Hertz predicted that when a sphere with radius of curvature $R$ indents a flat surface, the area of contact is circular with a radii \cite{Johnson1985}
-\begin{equation}
-	a = \lr{\frac{3NR}{4E^*}}^{1/3}, \label{eq:HertzRadii}
-\end{equation}
-%which increases with the load $N$. 
-and the normal pressure $p$ is related to it as
-\begin{equation}
-	p(r) = \frac{2aE^*}{\pi R}\sqrt{1-\frac{r^2}{a^2}}, \label{eq:HertzPressure}
-\end{equation}
-where $r$ is the radial distance to the center of the indentation.
-Also, the normal displacement $\delta_H$ of the spheres tip is related to $a$ by
-\begin{equation}
-	\delta_H = a^2/R,
-\end{equation}
-where $\delta_H=0$ is the normal position of the spheres at first contact.
-The subscript $H$ indicates that this is Hertz prediction, and follows the notation used in \cite{Johnson1985}.
-The assumptions made in this theory are that: 
-\begin{itemize}
-	\item Strains are small and within the elastic limit.
-	\item Surfaces are continuous and non-conforming\footnote{
-		A non-conforming contact is when dissimilar surfaces (which fit badly together) are in contact. When under zero load, they would only touch at a single point. 
-		The real area of contact is small compared to the sizes of the objects and the stress is highly concentrated.}.
-	\item Each body can be considered an elastic half-space.
-	\item The surfaces are frictionless.
-\end{itemize}
- 
-
-
-\section{Previously conducted studies}
-The field of friction is not new to science in any regard. 
-However, thanks to advances in technology and computational power, we are now able to simulate physical systems at an atomic level. 
-
-
-
-
-Continuum mechanics does not consider the nature of the atomic structure and interaction within solids. 
-This may very well be an important detail at the discrete atomic level. 
-Mark O. Robbins, has written several articles on this matter \cite{Robbins2005,RobbinsSingleAsperity,RobbinsSimpleMicroscopicTheroyOfAmontonsLawsOfFriction, RobbinsDefiningContactAtTheAtomicScale},  
-one of which is very relevant to this thesis \cite{RobbinsSingleAsperity}. 
-In collaboration with Binquan Luan, they used LAMMPS to do molecular dynamics simulations of a single spherical asperity indenting a flat substrate. 
-They measured pressure distribution in the area of contact, without adhesion, and compared it to the solution predicted by Hertz' theory. 
-They did this for differently constructed crystalline spheres: bent, cut, and
-cut amorphous. 
-Also for the bent tips, they used three different densities. 
-They kept the sphere rigid throughout the simulation, fixing the atoms of the sphere relative to each other. 
-They found that atomic structure clearly changes the distribution of pressure.
-The stepped tip deviated the most from the theory, having a behavior similar to that of a "flat punch"!  
-They also noticed a dip in the pressure right at the center, both for the amorphous and bent incommensurate tips, obviously deviating from Hertz' theory.
-Thus, atomic structure is of importance at nano-scale.
-In this thesis, we will perform a similar simulation, but with fundamental differences. 
-We will allow both the sphere and the substrate to be elastic. 
-Both these bodies will be constructed by $\beta$-cristobalite, and we will apply the Vashishta potential\footnote{The computed forces will only reflect the two-body term of the potential.}.  
-We will compare our results to theirs in the chapter \ref{chap:discussion}, conscious about these differences.
 
 
 
@@ -2297,7 +2305,7 @@ These curves overlap quite nicely, so I do not see any cause of concern\footnote
 The collapse is not of use to us in the pursue of computing the coefficient of static friction. 
 The result that is of real interest is the relation posed in equation \eqref{eq:UofV}. 
 In macroscopic experiments the spring is loaded very slowly compared to the velocities we use when simulating. 
-We really seek the value of $F_s/N$ when the velocity approaches zero.
+We really seek the value of $dF_s/dN$ when the velocity approaches zero.
 This is the minimum ratio of shear force to normal force. 
 In the case discussed it amounted to $F_s/N = 0.4$.
 
@@ -2450,6 +2458,8 @@ From the functional form leading up to final step, we may estimate this limit, w
 
 \part{Discussion, Summary and future work}
 \chapter{Discussion}\label{chap:discussion}
+\section{Force distribution}
+
 The normal force distribution does not seem to fit very well with Hertz theory.
 Our result is way more linear in $r$. 
 The assumptions used in Hertz' theory are (\href{https://en.wikipedia.org/wiki/Contact_mechanics}{wikipedia})
@@ -2465,7 +2475,7 @@ The real area of contact is small compared to the sizes of the objects and the s
 We have not checked if the deformations were elastic throughout the simulation.
 We absolutely have friction present.
 The hysteresis plot illustrates the presence of adhesion.
-It would not be possible do a molecular dynamics simulation and disregard the effects of friction.
+%It would not be possible do a molecular dynamics simulation and disregard the effects of friction.
  
 
 

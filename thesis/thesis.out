@@ -1,39 +1,39 @@
 \BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
 \BOOKMARK [-1][-]{part.1}{I Theory and methods}{}% 2
-\BOOKMARK [0][-]{chapter.2}{Molecular dynamics}{part.1}% 3
-\BOOKMARK [1][-]{section.2.1}{Time-integration}{chapter.2}% 4
-\BOOKMARK [1][-]{section.2.2}{Potentials}{chapter.2}% 5
-\BOOKMARK [2][-]{subsection.2.2.1}{Lennard-Jones}{section.2.2}% 6
-\BOOKMARK [2][-]{subsection.2.2.2}{Vashishta}{section.2.2}% 7
-\BOOKMARK [1][-]{section.2.3}{Boundary conditions}{chapter.2}% 8
-\BOOKMARK [2][-]{subsection.2.3.1}{Minimum image convention}{section.2.3}% 9
-\BOOKMARK [1][-]{section.2.4}{Measuring physical quantities}{chapter.2}% 10
-\BOOKMARK [2][-]{subsection.2.4.1}{Energy}{section.2.4}% 11
-\BOOKMARK [2][-]{subsection.2.4.2}{Temperature}{section.2.4}% 12
-\BOOKMARK [2][-]{subsection.2.4.3}{Pressure}{section.2.4}% 13
-\BOOKMARK [1][-]{section.2.5}{Thermostats}{chapter.2}% 14
-\BOOKMARK [2][-]{subsection.2.5.1}{Berendsen}{section.2.5}% 15
-\BOOKMARK [2][-]{subsection.2.5.2}{Andersen}{section.2.5}% 16
-\BOOKMARK [2][-]{subsection.2.5.3}{Nos\351-Hoover}{section.2.5}% 17
-\BOOKMARK [1][-]{section.2.6}{Efficiency improvements}{chapter.2}% 18
-\BOOKMARK [2][-]{subsection.2.6.1}{Cut-off}{section.2.6}% 19
-\BOOKMARK [2][-]{subsection.2.6.2}{Cell lists and neighbor lists}{section.2.6}% 20
-\BOOKMARK [2][-]{subsection.2.6.3}{Parallelization}{section.2.6}% 21
-\BOOKMARK [0][-]{chapter.3}{Friction, elasticity and contact mechanics}{part.1}% 22
-\BOOKMARK [1][-]{section.3.1}{Historical note}{chapter.3}% 23
-\BOOKMARK [1][-]{section.3.2}{Macroscopic observations}{chapter.3}% 24
-\BOOKMARK [2][-]{subsection.3.2.1}{Coefficient of friction}{section.3.2}% 25
-\BOOKMARK [2][-]{subsection.3.2.2}{Steady sliding}{section.3.2}% 26
-\BOOKMARK [2][-]{subsection.3.2.3}{Stick-slip motion}{section.3.2}% 27
-\BOOKMARK [1][-]{section.3.3}{Microscopic origin of friction}{chapter.3}% 28
-\BOOKMARK [1][-]{section.3.4}{Elasticity}{chapter.3}% 29
-\BOOKMARK [2][-]{subsection.3.4.1}{Strain and stress}{section.3.4}% 30
-\BOOKMARK [2][-]{subsection.3.4.2}{Hooke's law}{section.3.4}% 31
-\BOOKMARK [2][-]{subsection.3.4.3}{Poisson's ratio}{section.3.4}% 32
-\BOOKMARK [1][-]{section.3.5}{Contact mechanics}{chapter.3}% 33
-\BOOKMARK [2][-]{subsection.3.5.1}{Real area of contact}{section.3.5}% 34
-\BOOKMARK [2][-]{subsection.3.5.2}{Hertz theory}{section.3.5}% 35
-\BOOKMARK [1][-]{section.3.6}{Previously conducted studies}{chapter.3}% 36
+\BOOKMARK [0][-]{chapter.2}{Friction, elasticity and contact mechanics}{part.1}% 3
+\BOOKMARK [1][-]{section.2.1}{Historical note}{chapter.2}% 4
+\BOOKMARK [1][-]{section.2.2}{Macroscopic observations}{chapter.2}% 5
+\BOOKMARK [2][-]{subsection.2.2.1}{Coefficient of friction}{section.2.2}% 6
+\BOOKMARK [2][-]{subsection.2.2.2}{Steady sliding}{section.2.2}% 7
+\BOOKMARK [2][-]{subsection.2.2.3}{Stick-slip motion}{section.2.2}% 8
+\BOOKMARK [1][-]{section.2.3}{Microscopic origin of friction}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.4}{Elasticity}{chapter.2}% 10
+\BOOKMARK [2][-]{subsection.2.4.1}{Strain and stress}{section.2.4}% 11
+\BOOKMARK [2][-]{subsection.2.4.2}{Hooke's law}{section.2.4}% 12
+\BOOKMARK [2][-]{subsection.2.4.3}{Poisson's ratio}{section.2.4}% 13
+\BOOKMARK [1][-]{section.2.5}{Contact mechanics}{chapter.2}% 14
+\BOOKMARK [2][-]{subsection.2.5.1}{Real area of contact}{section.2.5}% 15
+\BOOKMARK [2][-]{subsection.2.5.2}{Hertz theory}{section.2.5}% 16
+\BOOKMARK [1][-]{section.2.6}{Previously conducted studies}{chapter.2}% 17
+\BOOKMARK [0][-]{chapter.3}{Molecular dynamics}{part.1}% 18
+\BOOKMARK [1][-]{section.3.1}{Time-integration}{chapter.3}% 19
+\BOOKMARK [1][-]{section.3.2}{Potentials}{chapter.3}% 20
+\BOOKMARK [2][-]{subsection.3.2.1}{Lennard-Jones}{section.3.2}% 21
+\BOOKMARK [2][-]{subsection.3.2.2}{Vashishta}{section.3.2}% 22
+\BOOKMARK [1][-]{section.3.3}{Boundary conditions}{chapter.3}% 23
+\BOOKMARK [2][-]{subsection.3.3.1}{Minimum image convention}{section.3.3}% 24
+\BOOKMARK [1][-]{section.3.4}{Measuring physical quantities}{chapter.3}% 25
+\BOOKMARK [2][-]{subsection.3.4.1}{Energy}{section.3.4}% 26
+\BOOKMARK [2][-]{subsection.3.4.2}{Temperature}{section.3.4}% 27
+\BOOKMARK [2][-]{subsection.3.4.3}{Pressure}{section.3.4}% 28
+\BOOKMARK [1][-]{section.3.5}{Thermostats}{chapter.3}% 29
+\BOOKMARK [2][-]{subsection.3.5.1}{Berendsen}{section.3.5}% 30
+\BOOKMARK [2][-]{subsection.3.5.2}{Andersen}{section.3.5}% 31
+\BOOKMARK [2][-]{subsection.3.5.3}{Nos\351-Hoover}{section.3.5}% 32
+\BOOKMARK [1][-]{section.3.6}{Efficiency improvements}{chapter.3}% 33
+\BOOKMARK [2][-]{subsection.3.6.1}{Cut-off}{section.3.6}% 34
+\BOOKMARK [2][-]{subsection.3.6.2}{Cell lists and neighbor lists}{section.3.6}% 35
+\BOOKMARK [2][-]{subsection.3.6.3}{Parallelization}{section.3.6}% 36
 \BOOKMARK [0][-]{chapter.4}{LAMMPS}{part.1}% 37
 \BOOKMARK [1][-]{section.4.1}{Installation}{chapter.4}% 38
 \BOOKMARK [2][-]{subsection.4.1.1}{Linux}{section.4.1}% 39
@@ -72,7 +72,8 @@
 \BOOKMARK [1][-]{section.7.5}{Results}{chapter.7}% 72
 \BOOKMARK [-1][-]{part.3}{III Discussion, Summary and future work}{}% 73
 \BOOKMARK [0][-]{chapter.8}{Discussion}{part.3}% 74
-\BOOKMARK [1][-]{section.8.1}{coefficient}{chapter.8}% 75
-\BOOKMARK [0][-]{appendix.A}{Something}{part.3}% 76
-\BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 77
-\BOOKMARK [1][-]{section.A.2}{Building LAMMPS with custom compute}{appendix.A}% 78
+\BOOKMARK [1][-]{section.8.1}{Force distribution}{chapter.8}% 75
+\BOOKMARK [1][-]{section.8.2}{coefficient}{chapter.8}% 76
+\BOOKMARK [0][-]{appendix.A}{Something}{part.3}% 77
+\BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 78
+\BOOKMARK [1][-]{section.A.2}{Building LAMMPS with custom compute}{appendix.A}% 79
