@@ -89,9 +89,10 @@ We perform molecular dynamics simulations of a single spherical asperity indenti
 Both bodies are made up of $\beta$-cristobalite, and we use the Vashishta potential.
 The LAMMPS distribution is extended by a custom class, in order to compute contact forces.  
 Radial distribution of contact forces is computed and compared to Hertz' theory, and the results of Robbins et al. \cite{RobbinsSingleAsperity}.
-The coefficient of static friction is estimated. 
-It's shown that it increases and converges with increasing substrate thickness.
 The static friction force is measured to be proportional to the load, in accordance with Amontons' law.
+The coefficient of static friction is estimated. 
+It's shown that for thin substrates it increases linearly with the substrate thickness, in agreement with recent experiments conducted by Julien Scheibert at XXX.
+
 
 
 
@@ -164,16 +165,28 @@ His results made him deduce the following statements, also found in his notes:
 \end{itemize}
 This is now essentially known as the two first laws of friction. 
 They were not recognized at the time, but were rediscovered later by Guillaume Amontons, and these laws of friction are most commonly known as \textit{Amontons' laws}.
-The linear relation described in the first postulate is commonly known as the coefficient of friction
+The linear relation described in the first postulate is commonly known as the coefficient of friction $\mu$, defined as
 \begin{equation}
-\mu = \frac{F}{L}, \label{eq:coefficientOfFriction2}
+F = \mu L \label{eq:coefficientOfFriction2}.
 \end{equation}
-or 
+To account for this relation, Amontons argued that the asperities in contact need to be pushed up a typical slope $\tan\theta$, in order to overcome the energy barrier.
+Soon after Leslie agrued that the energy expended on pushing an asperity over another, is recovered when it descends on the other side. 
+Thus there is no energy loss, and the surfaces should continually move without the presence of a driving force. 
+He argued that friction had to be due some other mechanism than the pure geometrical.
+Bowden and Tabor concluded that the \textit{real area of contact} is proportional to the load ($A \propto L$), as the electrical conductivity at a metals interface is proportional to the load \cite{bowden2001friction}.
+Derjaguin proposed a modification to Amontons' law for adhering surfaces
 \begin{equation}
-\mu' = \frac{dF}{dL}, \label{eq:coefficientOfFriction}
+	F = F_0 + \mu L \label{eq:coefficientF0}
 \end{equation}
-It express how the static friction force $F$ increases with increasing load $L$.
-The difference between the two definitions is that for the first, $F=0$ at $L=0$, while in the second, $F$ can be non-zero at $L=0$. 
+where $F_0$ is the force present at zero load, due to attractive forces between the surfaces (adhesive force).
+Ultimately it changes the definition of $\mu$ to 
+\begin{equation}
+\mu = \frac{dF}{dL}, \label{eq:coefficientOfFriction}
+\end{equation}
+which express how the static friction force $F$ increases with increasing load $L$.
+The difference between \eqref{eq:coefficientOfFriction2} and \eqref{eq:coefficientOfFriction} is that for the first, $\mu=0$ at $F=0$ and $\mu=\infty$ at $L=0$, while in the later, $\mu$ can be non-zero at $F=0$ and $mu$ is finite at $L=0$.
+\eqref{eq:coefficientOfFriction} is the common convention today.
+ 
 Though Leonardo interpreted $L$ as the weight of the load and $F$ as the weight of the object pulling in a scenario as in figure \ref{fig:leonardoDaVinci}. The concept of force was not commonly recognized until 200 years later. Isaac Newton's publication of \textit{Principia} paved the way for studies of friction, there among the most comprehensive study carried out by Charles Augustin Coulomb (1736-1806). He investigated the influence of several factors on friction, namely \cite{SlidingFriction}:
 \begin{itemize}
 	\item The nature of the materials in contact and their surface coatings.
@@ -191,7 +204,7 @@ Coulomb explained this behavior by regarding the materials as fibrous.
 Basically like a hairbrush, having fibers which get entangled into a mesh when in contact. 
 If the materials were in contact over a short period of time, fewer fibers would have gotten into their position in the mesh. 
 When a shear force is applied, the fibers get tilted until they loosen from the mesh, at which point sliding occurs. 
-This impression of the sliding mechanism is quite similar to the one we have now. 
+This impression of the sliding mechanism is quite similar to the one we have today. 
 
 
 
@@ -2289,7 +2302,7 @@ Figure \ref{fig:springUnScaled} show the evolution of the spring force from 5 di
 We may rescale the x-axis by multiplying with the velocity to obtain the spring force as a function of the extension of the spring.  
 So, how are we supposed to conclude a coefficient of friction from our simulations? 
 The solution is to find the relation between the coefficient and the velocity.
-By using the dataset shown in figure \ref{fig:springUnScaled} and \ref{fig:springUnScaledExtension} we may plot $\mu(v)$ by computing $\mu = F_s/N$ for every velocity.
+By using the dataset shown in figure \ref{fig:springUnScaled} and \ref{fig:springUnScaledExtension} we may plot $\mu(v)$ by computing $\mu = dF_s/dN$ for every velocity.
 The result is shown in figure \ref{fig:springUvsV}. 
 The relation is obviously linear, at least for the considered range of velocities. 
 By linear regression the approximated function for the velocity dependent coefficient of friction is 
@@ -2306,12 +2319,13 @@ The collapse is not of use to us in the pursue of computing the coefficient of s
 The result that is of real interest is the relation posed in equation \eqref{eq:UofV}. 
 In macroscopic experiments the spring is loaded very slowly compared to the velocities we use when simulating. 
 We really seek the value of $dF_s/dN$ when the velocity approaches zero.
-This is the minimum ratio of shear force to normal force. 
-In the case discussed it amounted to $F_s/N = 0.4$.
+This is the minimum value of the coefficient. 
+In the case discussed it amounted to $F_s/N \approx 0.4$.
 
-So now, for every value of the normal force, we need to take a series of simulations using different velocities.
+So now, for every value of the normal force we study, we need to take a series of simulations using different velocities.
 It is not intuitive how $\mu(v)$ will change as we perturb $N$. 
-However, we may still expect a linear dependence.
+However, we're only interested in the value of $\mu(v=0)$. 
+Hence, as long as $\mu(v)$ remains linear, its dependence on $N$ doesn't matter to us. %Why though?
 Figure \ref{fig:uvsn} show the result of one such series of simulations. 
 For every point $(N,\mu(N))$ there was done 5 simulations using different velocities. 
 The one shown in figure \ref{fig:springUvsV} is one at which the substrate had a depth XX and the normal force was XX.
@@ -2337,14 +2351,14 @@ In this example case it was $\mu = 0.255$.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{figures/friction/scalingCoeffisient/UnScaledSliding}
-\caption{Spring force as a function of time for several values of velocity.}
+\caption{Spring force in the lateral direction as a function of time for several values of velocity [$\mathring{A}/$ps], at which we pull the spring.}
 \label{fig:springUnScaled}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{figures/friction/scalingCoeffisient/UnScaledExtention}
-\caption{Spring force as a function of the extension of the spring for several values of velocity.}
+\caption{Spring force in the lateral direction as a function of the extension of the spring for several values of velocity [$\mathring{A}/$ps], at which we pull the spring.}
 \label{fig:springUnScaledExtension}
 \end{figure}
 
@@ -2386,29 +2400,43 @@ In this example case it was $\mu = 0.255$.
 \section{Results}
 Our prime goal was to find a dependence in the coefficient of static friction on the thickness of the substrate. 
 We were therefore obliged to do the same simulation with the simple perturbation of changing the thickness of the substrate. 
-The substrate is formed by carving out atoms above a specified z-coordinate, beneath the sphere. 
+The substrate is formed by carving out all atoms positioned above a specified z-coordinate, and beneath the sphere. 
 It is therefore critical to be aware of where we cut the substrate. 
-The way the crystalline structure of the substrate was oriented, a difference in 1$\mathring{A}$, would change the upper most layer of atoms of the substrate to be all oxygen or all silicon.
-If for one measurement they are all oxygen and another all silicon, we will get very different results. {\huge \color{editColor} Example?}. 
+The way the crystalline structure of the substrate was oriented in our simulation, a difference in 1$\mathring{A}$ in the upper bound of the substrate (where we make the cut), would change the upper most layer of atoms of the substrate to be all oxygen or all silicon.
+If for one measurement they are all oxygen and another all silicon\footnote{Of course the surface would contain both types of atoms soon after starting time integration, but the concentration of each type would be different.}, we will get very different results. 
 To remove the risk of error, we vary the thickness of the substrate by steps with length of the unit cell (7.12$\mathring{A}$).
 For each thickness of the substrate, we estimated the coefficient of static friction using the method described in the previous section of this chapter.
-The result is shown in figure \ref{fig:coefficientVsIndentation}.
+The result is shown in figure \ref{fig:coefficientVsIndentation2}.
+
+%\begin{figure}
+%	\centering
+%	\hspace{-5mm}
+%	\includegraphics[width=0.7\linewidth]{figures/friction/coefficientVsIndentation}
+%	\caption{Measured coefficient of static friction for various thicknesses of the substrate. 
+%		Each measurement is taken as the gradient of a linear approximation as done in illustrated in figure \ref{fig:fvsn}, as defined by Amontons' law. 
+%		}
+%	\label{fig:coefficientVsIndentation}
+%\end{figure}
+
+%\noindent
+%The coefficient of static friction increases with the substrate thickness;
+%most rapidly at small thicknesses, and less at large thicknesses. 
+%As the thickness increases the coefficient seems to approach some finite limit. 
+%From the functional form leading up to final step, we may estimate this limit, which represents the coefficient we would have measured at arbitrary large thickness. 
+
+
 
 \begin{figure}
-	\centering
-	\hspace{-5mm}
-	\includegraphics[width=0.7\linewidth]{figures/friction/coefficientVsIndentation}
-	\caption{Measured coefficient of static friction for various thicknesses of the substrate. 
-		Each measurement is taken as the gradient of a linear approximation as done in illustrated in figure \ref{fig:fvsn}, as defined by Amontons' law. 
-		}
-	\label{fig:coefficientVsIndentation}
+\centering
+\hspace{-5mm}
+\includegraphics[width=0.7\linewidth]{figures/friction/coefficientVsIndentation2}
+\caption{Measured coefficient of static friction for various thicknesses of the substrate. 
+	Each measurement is taken as the slope of a linear approximation as done in illustrated in figure \ref{fig:fvsn}, as defined by Amontons' law. }
+\label{fig:coefficientVsIndentation2}
 \end{figure}
+The coefficient of static friction seems to increase with the substrate thickness.
+From the looks of the result, I am tempted to claim a linear relation, at least for this range of substrate thickness. 
 
-\noindent
-The coefficient of static friction increases with the substrate thickness;
-most rapidly at small thicknesses, and less at large thicknesses. 
-As the thickness increases the coefficient seems to approach some finite limit. 
-From the functional form leading up to final step, we may estimate this limit, which represents the coefficient we would have measured at arbitrary large thickness. 
 
  
 
@@ -2529,10 +2557,28 @@ Since in the one case, the surface has a larger concentration of one type of ato
 
 
 
-\section{coefficient}
-This illustrates a typical technique used in molecular dynamics. 
-As in macroscopic experiments we may use way thicker substrates, inadequate for simulations. 
-In stead we may look for a behavior and estimate the value from extrapolation of this behavior.
+\section{Coefficient}
+The coefficient of friction was found to be dependent on the substrate thickness, having a lower value for thinner substrates. 
+This dependence is to be in agreement with the experimental results of Julien Scheibert [REF]. 
+His experiment included a tip made out of polymer indenting a substrate of the same polymer, laying on top of glass.
+He concluded that for thin substrates, the coefficient of friction between the two bodies increases linearly. 
+Though we do not use an isotropic polymer, but a crystalline silica, we do see the same tendency. 
+Though it is encouraging to see a simulation reproduce the results of a physical experiment, we need to be critical to the methods used in the measurements. 
+For instance, Julien takes into account the changing area of contact in his measurements\footnote{The area of contact increases with substrate thickness.}, whereas we do not.
+We pull the spring at ridiculously high velocities, $1\mathring{A}/\text{ps} = 100\text{m/s}$, while in a laboratory, the shear force can be increased for hours before initiating slip. 
+Since the resulting measurements for each velocity fit very well on a line, I do not suspect this to be a source of error.
+
+
+
+
+
+
+ 
+
+
+%This illustrates a typical technique used in molecular dynamics. 
+%As in macroscopic experiments we may use way thicker substrates, inadequate for simulations. 
+%Instead, we may look for a behavior and estimate the value from extrapolating of this behavior.
 
 
 % ---------------------------------------------------------------------------- %
