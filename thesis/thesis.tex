@@ -29,7 +29,7 @@
 \usepackage{xifthen}
 \usepackage{caption}
 
-
+\usepackage{enumitem}
 \usepackage{pgf}
 
 %\usepackage{flipbook} %%/usr/local/texlive/2016/texmf-dist/tex/latex/flipbook/flipbook.sty
@@ -91,7 +91,7 @@ The LAMMPS distribution is extended by a custom class, in order to compute conta
 Radial distribution of contact forces is computed and compared to Hertz' theory, and the results of Robbins et al. \cite{RobbinsSingleAsperity}.
 The static friction force is measured to be proportional to the load, in accordance with Amontons' law.
 The coefficient of static friction is estimated. 
-It's shown that for thin substrates it increases linearly with the substrate thickness, in agreement with recent experiments conducted by Julien Scheibert at XXX.
+It's shown that for thin substrates it increases linearly with the substrate thickness, in agreement with recent experiments conducted by Julien Scheibert \cite{Scheibert2017}.
 
 
 
@@ -112,10 +112,68 @@ It's shown that for thin substrates it increases linearly with the substrate thi
 \tableofcontents
 }
 \chapter{Introduction}
-What is the subject of the thesis?\\
-Why is this subject of interest?\\
+
+The past decade, there has been an increasing interest in the behavior of materials at nano-scale \cite{nanoOnReflection}.
+Scientists have been able to alter material structures at nanometer scales, improving their properties, even macroscopically.
+This enables us to construct materials, machines and medicine with new capabilities.   
+In order to advance in this field of research, we need to be able to characterize material properties at nano-scale.
+
+Today, experimental and computational technology has progressed to the point where we can probe and model surfaces at atomic level.
+A common experimental approach for measuring local surface properties is to use an AFM\footnote{Atomic force microscope},
+which presses a tip with radii 10 to 1000nm into a surface and "feels" the force acting on the probe. 
+Mechanical properties are then extracted from these results using continuum mechanics.
+
+It has recently been demonstrated that for contact mechanics, the nano-scale
+structure of a contact affects the interaction. 
+Using atomic-scale models, Mark Robbins and coworkers \cite{Robbins2005} demonstrated that for a small asperity - a bump on a surface - the details of the atomic ordering on the surface had a first order impact on the force distribution at the contact. 
+Thus, the continuum approach breaks down for very small contacts.
+In another paper, Robbins \cite{RobbinsSingleAsperity} uses a Molecular Dynamics model to the analyze pressure distribution in a single asperity contact, which he compares to well known continuum theory. He keeps the asperity rigid - rendering its atoms unable to move relative to each other - in order to see how different surface structures affects the distribution. His results show drastic change in the distribution for the differently constructed asperities.   
+
+
+Very recently, Julien Scheibert \cite{Scheibert2017} has experimentally studied the coefficient of static friction  acting between a polymer probe and a flat polymer substrate, laying on top of glass. 
+His results indicate that for very thin substrates on the nanometer scale, the coefficient of static friction is linearly dependent on the substrate thickness. 
+This is in contrast to current theory, where the thickness of the substrate is unimportant. 
+
+In this project we will develop a Molecular Dynamics model for dry single asperity contact of silicate and address the force distribution and coefficient of static friction present.
+
+\section{Goals}
+
+Our model will be similar to that of Robbins, but with the perturbation of having an elastic asperity as well as substrate.
+%The main goals of this thesis is to create a Molecular Dynamics model similar to that of Robbins, but keep all bodies elastic. 
+We want all bodies to remain elastic because this is its state in reality. 
+A rigid asperity implies an infinitely large stiffness, which is physically impossible. 
+Thus, we will simulate a more realistic situation than Robbins did.
+With this model we will compute the force distribution and the coefficient of friction, before we can compare our results to those of Robbins and Scheibert. 
+To accomplish this, we have posted X requirements that needs to be met:
+%
+
+\begin{description}
+	\item[a) Develop a Molecular Dynamics model] \hfill \\
+	The model should consist of a spherical cap - representing the asperity - and a flat substrate. 
+	We must decide upon a material to use, and choose a potential model suitable to this type of simulation. 
+	\item[b) Compute contact force distribution]\hfill \\
+	We wish to compute the spacial force distribution in the area of contact acting between the two bodies, preferably component wise. 
+	In order to achieve this, we will need to be able to recognize the contact forces. 
+	Due to the simple geometry of the system, we may define contact forces as any force acting on atoms of one body from the atoms of the other.
+	Secondly, we need to know the gradient of the surface, in order to define its normal and shear components.
+	We must be careful to recognize that we operate at the discrete atomic level.
+	Therefore, we should partition the system into a grid and for each cell in the grid, compute the sum of contact forces\footnote{Acting on one body from the other.}
+	\begin{description}
+		\vspace{-5pt}\item[1) Develop a method for computing per-atom forces]\hfill\\ 
+		As of now, LAMMPS does not contain the functionality to retrieve the net force acting on an every individual atom of one group from all atoms of another group. A goal is therefor to develop such a method and integrate it in the LAMMPS distribution.
+		\item[2) Develop method to approximate the contact surface]\hfill\\ 
+		To distingush the components of the contact forces, we must approximate the surface, in order to determine a gradient.
+	\end{description}
+	
+	\item[c) Compute the coefficient of static friction] \hfill \\
+	Description of goal c).
+	\item[d) Compare results to those of Robbins and Scheibert] \hfill \\
+	Description of goal d).
+\end{description}
+
+
+\newpage
 What are my contributions?\\
-What do we hope to accomplish?\\
 How is the thesis laid out?
 
 \part{Theory and methods}
@@ -1504,7 +1562,7 @@ Once complete, we can load the configurations and atomic data into our LAMMPS in
 \end{figure}
 
 
-\section{Melting point}
+\section{Melting point}\label{sec:meltingPoint}
 A simple verification we can do is to estimate the melting point of the material we are using. 
 There are several factors that may affect the result, such as density, structure and of course parameters in the potential model. 
 When increasing the temperature of the system that is in a solid state, we will eventually reach the melting point.
@@ -1794,8 +1852,10 @@ where \\*
 	\item keyword is optional and can be either \textit{pair}, \textit{kspace}, \textit{boundary} or \textit{molecule}, with value \textit{yes} or \textit{no}. For a description of these, please look up the documentation for compute group/group\footnote{\href{http://lammps.sandia.gov/doc/compute_group_group.html}{\url{http://lammps.sandia.gov/doc/compute_group_group.html}}}. 
 \end{itemize}
 The compute successfully stores the contact force components of all atoms in an array when invoked. 
-We are interested in the spatial distribution of the forces. 
-To obtain it, we divide the system into a 2d-grid in the xy-plane, using  \texttt{compute chunk/atom} as shown in listing \ref{lst:usingCustomCompute}.
+We are interested in the spatial distribution of the forces, which describes the force at a given position. 
+It is important to recognize that we operate at the discrete atomic level, and that "force at a given position" is a very vague description. 
+As a solution, we partition the system into a grid, and for each chunk in the grid we store the sum of contact forces. Letting the sum be the collective force within the cell.
+We divide the system into a 2d-grid in the xy-plane using  \texttt{compute chunk/atom} as shown in listing \ref{lst:usingCustomCompute}.
 On the next line we call upon our compute, stating that we wish the force acting on the sphere from the slab. 
 Thus, the force that should have a positive z-component in this case. 
 We could be content with using the result from a single time frame, but since the instantaneous values fluctuate, it's of interest to apply time averaging. 
@@ -1924,9 +1984,9 @@ If we compute the contact forces acting on the sphere from the substrate, a posi
 
 \section{Radial distribution}
 Our system is partitioned into a grid. 
-Each cell in the grid holds an averaged value of the normal force in that cell. 
-We would like to know the radial distribution of the normal force, which should express the averaged value of the normal force at a given radial distance from the center of the spherical indentation.
-We achieve this by defining discrete radial bins with finite bin width, and average contributions within each bin.
+Each cell in the grid holds the sum of all contact forces on atoms within the cell. 
+We would like to know the radial distribution of the normal force, which should express the averaged value of the force at a given radial distance from the center of the spherical indentation.
+We achieve this by defining discrete radial bins with fixed bin width, and average contributions within each bin.
 \begin{figure}
 	%\begin{minipage}[t]{0.49\linewidth}
 	%	\captionsetup{width=\textwidth}
@@ -1947,13 +2007,13 @@ We achieve this by defining discrete radial bins with finite bin width, and aver
 	%	\label{fig:radialBinningSmoothCloseUp}
 	%\end{minipage}
 \end{figure}
-A coarse method of doing this is to average the weights of the cells who's center is within the bin. 
+A coarse method of doing this is to average the values of the cells who's center is within the bin. 
 This is illustrated in figure \ref{fig:radialBinningChoars}. 
 In many applications where the bin width can be large compared to the length of the cells, this method might suffice.
 However, the current radii of the contact area between the sphere and the slab is only about 15-20 unit cells, and therefor having a large bin width will result in very few data points. 
 
 
-A different, slightly more sophisticated approach is to compute the fraction of the area of each cell that actually is within the bin, and multiply this by the value associated with the cell.
+A different, slightly more sophisticated approach is to compute the fraction of the area of each cell that actually is within the bin, and multiply this by the value associated with the cell. This product will be the cells contribution.
 We can sum all these contributions and average them by dividing by the ratio of the bin area $A$ to the area of a cell $a$.  
 This means that even cells that do not have their center within the bin might contribute to the resulting bin average. 
 How much, however, will depend on the fraction of the cell's area that is within the bin.
@@ -2010,7 +2070,9 @@ This way the shear force has a defined direction, but we no longer have the usua
 	\caption{Spatial and radial distribution of the magnitude of force, as well as normal and shear force. 
 		The spatial distributions shown on the top row are equivalent to the ones in figure \ref{fig:forceDistributions}, only in polar coordinates. 
 		The value of the radial bins at a given radius $r$ in the figures at the bottom row, are the average value of the column at that $r$ in the top row.
-		This figure show the result from a simulation where we push a sphere with radius of curvature $R=200\mathring{A}$,  40$\mathring{A}$ into a half-space of size $327.52\mathring{A} \times 327.52\mathring{A} \times 157.64 \mathring{A}$. This does not imply that the indentation is $40\mathring{A}$, but since contact was established, the top of the sphere has moved $40\mathring{A}$ towards the substrate. The real depth of indentation is less, due to deformations.}
+		The units of $r$ is unit cell length (7.12$\mathring{A}$).
+		This figure show the result from a simulation where we push a sphere with radius of curvature $R=200\mathring{A}$,  40$\mathring{A}$ into a half-space of size $327.52\mathring{A} \times 327.52\mathring{A} \times 157.64 \mathring{A}$. 
+		This does not imply that the indentation is $40\mathring{A}$ deep, but since contact was established, the top of the sphere has moved $40\mathring{A}$ towards the substrate. The real depth of indentation is less, due to deformations.}
 	\label{fig:radialdistribution110000}
 \end{figure}
 
@@ -2149,18 +2211,11 @@ Numeric value of the forces are to be considered the average force acting on ato
  We can see from the figure how its radial position moves outwards as the indentation depth increases.
  From this we could estimate the area of contact to be within the  outermost radii where the normal force is positive.  
  This edge of the contact area is also possible to be seen in the radial distribution of shear force. 
- We see a negative value at the dip, because we study the force acting on the sphere from the substrate, leaving the attractive shear force outside the edge to be towards the center. 
+ We see a negative value at the dip, because we study the force acting on the sphere from the substrate, leaving the attractive shear force outside the edge to be directed towards the center. 
   
- We see that the distributions are not smooth, as in continuum mechanics.  
- %WHY?
- 
- From Hertz' theory we would expect the radial normal force distribution to be circular. 
- This is not possible to conclude from the obtained results. 
- If anything, it seems linear.
-
- The shear force conforms much better with Hertz' theory.
- At least at the last intervals it is clear that the maximum value is at a radial distance half of the radii of contact, and is zero both at the center and outside the edge. 
- The discrepancy due to the dip at the edge has already been addressed. 
+ The shear force conforms much better with our expectations.
+ At least at the last intervals it's clear that the maximum value is at a radial distance half of the radii of contact, and is zero both at the center and outside the edge. 
+ The discrepancy due to the dip at the center has already been addressed. 
  
  
 
@@ -2317,10 +2372,14 @@ Had the curves been very distinguishable, we could conclude that there is some o
 These curves overlap quite nicely, so I do not see any cause of concern\footnote{Though this is a subjective opinion.}.
 The collapse is not of use to us in the pursue of computing the coefficient of static friction. 
 The result that is of real interest is the relation posed in equation \eqref{eq:UofV}. 
-In macroscopic experiments the spring is loaded very slowly compared to the velocities we use when simulating. 
+In macroscopic experiments the spring is loaded very slowly compared to the velocities we simulate. 
 We really seek the value of $dF_s/dN$ when the velocity approaches zero.
 This is the minimum value of the coefficient. 
 In the case discussed it amounted to $F_s/N \approx 0.4$.
+This illustrates a common method used in molecular dynamics. 
+For situations we are not able to simulate, like a very low velocity, we try to find a behavior and extrapolate to estimate the value of interest. 
+In this case the behavior was very clearly a linear function, justifying this kind of extrapolation. 
+
 
 So now, for every value of the normal force we study, we need to take a series of simulations using different velocities.
 It is not intuitive how $\mu(v)$ will change as we perturb $N$. 
@@ -2365,7 +2424,8 @@ In this example case it was $\mu = 0.255$.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{figures/friction/scalingCoeffisient/u(v)}
-\caption{Coefficient of friction $\mu$ as a function of velocity $v$. Linear regression is suited to approximate the relation $\mu(v)$.}
+\caption{Coefficient of friction $\mu$ as a function of velocity $v$. 
+	Linear regression is suited to approximate the relation $\mu(v)$.}
 \label{fig:springUvsV}
 \end{figure}
 
@@ -2398,7 +2458,7 @@ In this example case it was $\mu = 0.255$.
 
 
 \section{Results}
-Our prime goal was to find a dependence in the coefficient of static friction on the thickness of the substrate. 
+Our prime goal was to identify a dependence in the coefficient of static friction on the thickness of the substrate. 
 We were therefore obliged to do the same simulation with the simple perturbation of changing the thickness of the substrate. 
 The substrate is formed by carving out all atoms positioned above a specified z-coordinate, and beneath the sphere. 
 It is therefore critical to be aware of where we cut the substrate. 
@@ -2434,8 +2494,8 @@ The result is shown in figure \ref{fig:coefficientVsIndentation2}.
 	Each measurement is taken as the slope of a linear approximation as done in illustrated in figure \ref{fig:fvsn}, as defined by Amontons' law. }
 \label{fig:coefficientVsIndentation2}
 \end{figure}
-The coefficient of static friction seems to increase with the substrate thickness.
-From the looks of the result, I am tempted to claim a linear relation, at least for this range of substrate thickness. 
+The coefficient of static friction increases with the substrate thickness.
+From the looks of the result, it is tempting to claim a linear relation, at least for this range of substrate thickness. 
 
 
  
@@ -2519,7 +2579,7 @@ whereas our bulk is similar to that of the stepped tip.
 These two cases showed extremely different behaviors in the resulting pressure distributions. 
 The amorphous case was somewhat in agreement to Hertz near the center, but extended farther, and was more linear toward the edge. 
 The stepped tip resulted in a distribution resembling that of a "flat punch".
-Also, Robbins obtained a dip in the center of the radial pressure distribution, but did not address it. 
+As we did, Robbins obtained a dip in the center of the radial pressure distribution, but did not address it. 
   
   
 
@@ -2527,7 +2587,7 @@ Hertz - me: deviates the most, where the shear forces are the largest.
 
 In our simulation both the sphere and substrate were elastic bodies, unlike in the simulations of Robbins et al., who kept the sphere rigid. 
 We used the Vashishta potential and SiO$_2$ as material, while they used Lennard-Jones and noble atoms. 
-Obviously, the fact that we use materials of different properties should produce a difference in adhesion.
+Obviously, the fact that we use materials with different properties should produce a difference in adhesion.
 
 
 The normal force distribution does not seem to fit very well with Hertz theory.
@@ -2559,15 +2619,38 @@ Since in the one case, the surface has a larger concentration of one type of ato
 
 \section{Coefficient}
 The coefficient of friction was found to be dependent on the substrate thickness, having a lower value for thinner substrates. 
-This dependence is to be in agreement with the experimental results of Julien Scheibert [REF]. 
+This dependence proved to be in agreement with the experimental results of Julien Scheibert \cite{Scheibert2017}. 
 His experiment included a tip made out of polymer indenting a substrate of the same polymer, laying on top of glass.
 He concluded that for thin substrates, the coefficient of friction between the two bodies increases linearly. 
-Though we do not use an isotropic polymer, but a crystalline silica, we do see the same tendency. 
-Though it is encouraging to see a simulation reproduce the results of a physical experiment, we need to be critical to the methods used in the measurements. 
-For instance, Julien takes into account the changing area of contact in his measurements\footnote{The area of contact increases with substrate thickness.}, whereas we do not.
-We pull the spring at ridiculously high velocities, $1\mathring{A}/\text{ps} = 100\text{m/s}$, while in a laboratory, the shear force can be increased for hours before initiating slip. 
-Since the resulting measurements for each velocity fit very well on a line, I do not suspect this to be a source of error.
+Even though we do not use an isotropic polymer, but a crystalline silica, we see the same tendency; 
+the coefficient increased linearly. 
+This coefficient was only measured for thin substrates ($\sim$1nm-5nm), and we do not expect this linear behavior to remain for thick substrates. 
+Ultimately, it should converge towards a finite value as the substrate thickness increases.
+What we really have found is the 
 
+
+
+As satisfying as it is to see simulations reproduce the results of a physical experiment, we need to be critical regarding the methods used in the measurements.
+For instance, J. Scheibert accounts for the changing area of contact in his measurements\footnote{The area of contact increases with substrate thickness.}, whereas we do not.
+We pull the spring at ridiculously high velocities, $1\mathring{A}/\text{ps} = 100\text{m/s}$, while in a laboratory, the shear force can be increased for hours before initiating slip. 
+Since the resulting measurements for each velocity fit very well on a line, this should not be of concern. 
+Numerical values of the coefficient should not be interpreted as the real value. 
+The test of finding the silicas melting point (section \ref{sec:meltingPoint}) proved that we missed the real value with $\sim 7.5\%$.
+However, quantitative behaviors should still be accurate and reliable.
+This is why we do not bother measuring the slope of the linear dependence, but merely state that there is a linear dependence.   
+Also, we have only completed 8 measurements. 
+If we conducted an additional measurement with a thickness of 9 unit cells, and got a result deviating from this linear form, it could potentially change our conclusion completely. 
+Since we cannot simulate indefinitely, we have to cease when we are confident in the conclusion.  
+In this case 8 simulations was found to be sufficient. 
+Also, each single measurement requires alot of computational power. 
+To measure the coefficient for a specific thickness, we first had to measure the shear force for 5 different velocities at each value of the load. 
+This was used to find $\mu(v)$ and extrapolate back to $\mu(v=0)$, for the given load. 
+Having 13 different values of $N$ this amounts to 
+\section{Summary}
+
+
+%Coefficient of friction
+It was proven that the coefficient of static friction was linearly dependent on the substrate thickness, in the range of thicknesses accounted for. 
 
 
 
