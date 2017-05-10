@@ -262,7 +262,7 @@ if __name__ == '__main__':
         cx=22.5
         cy=22.5
         nn=8
-        a = 55000; b = 125000; c=5000
+        a = 120000; b = 125000; c=5000
         for i in xrange(a, b, c):
             print '\r %.0f%% complete'%((i-a)*100.0/(b-a)),
             sys.stdout.flush()

@@ -108,21 +108,21 @@ label='Sliding')
 
 
 
-plt.text(0.1, 0.97, r'$F_s$', fontsize=21)
+plt.text(0.1, 0.96, r'$F_s$', fontsize=27)
 
-plt.text(0.1, 0.67, r'$F_k$', fontsize=21)
-
-
+plt.text(0.1, 0.67, r'$F_k$', fontsize=27)
 
 
 
 
 
 
-ax.legend(loc=1)
+
+
+ax.legend(loc=1, fontsize=25)
 ax.grid()
-ax.set_ylabel(r"Friction force", fontsize=20)
-ax.set_xlabel(r"Time"  , fontsize=20)
+ax.set_ylabel(r"Friction force", fontsize=30)
+ax.set_xlabel(r"Time"  , fontsize=30)
 ax.xaxis.set_label_coords(0.5, -0.05)
 ax.yaxis.set_label_coords(-0.025, 0.5)
 
@@ -183,6 +183,5 @@ ax.arrow(0, ymin, 0., ymax-ymin, fc='#333333', ec='#333333', lw = lw,
 
 
 
-
-#plt.show()
 plt.savefig('steadySlide.pdf')
+plt.show()

@@ -31,6 +31,7 @@
 
 \usepackage{enumitem}
 \usepackage{pgf}
+\bibliographystyle{ieeetr}
 
 %\usepackage{flipbook} %%/usr/local/texlive/2016/texmf-dist/tex/latex/flipbook/flipbook.sty
 %\rfoot[]{
@@ -77,7 +78,7 @@
 
 
 \author{Filip Henrik Larsen}
-\title{Title of the master thesis}
+\title{Molecular Dynamics modeling of single asperity contact}
 \date{May 2017}
 
 \begin{document}
@@ -85,13 +86,14 @@
 \maketitle
 
 \begin{abstract}
-We perform molecular dynamics simulations of a single spherical asperity indenting a flat substrate.
-Both bodies are made up of $\beta$-cristobalite, and we use the Vashishta potential.
-The LAMMPS distribution is extended by a custom class, in order to compute contact forces.  
-Radial distribution of contact forces is computed and compared to Hertz' theory, and the results of Robbins et al. \cite{RobbinsSingleAsperity}.
+We perform Molecular Dynamics simulations using LAMMPS, and model a single spherical asperity indenting a flat substrate.
+Both bodies are made by $\beta$-cristobalite, and we apply the Vashishta potential.
+The LAMMPS distribution is extended by a custom class, in order to compute contact forces acting on individual atoms.  
+Radial distribution of the contact forces is computed and compared to Hertz' theory \cite{Johnson1985}, and the results of Robbins et al. \cite{RobbinsSingleAsperity}. 
+Since we allow both bodies to be elastic and include frictional forces, we experience a very different distribution than both of them. 
 The static friction force is measured to be proportional to the load, in accordance with Amontons' law.
-The coefficient of static friction is estimated. 
-It's shown that for thin substrates it increases linearly with the substrate thickness, in agreement with recent experiments conducted by Julien Scheibert \cite{Scheibert2017}.
+The coefficient of static friction is estimated for several substrate thicknesses. 
+It's shown that for thin substrates the coefficient increases linearly with the substrate thickness, in agreement with recent experiments conducted by Julien Scheibert \cite{Scheibert2017}.
 
 
 
@@ -134,18 +136,18 @@ Very recently, Julien Scheibert \cite{Scheibert2017} has experimentally studied 
 His results indicate that for very thin substrates on the nanometer scale, the coefficient of static friction is linearly dependent on the substrate thickness. 
 This is in contrast to current theory, where the thickness of the substrate is unimportant. 
 
-In this project we will develop a Molecular Dynamics model for dry single asperity contact of silicate and address the force distribution and coefficient of static friction present.
-
-\section{Goals}
-
+In this project we will develop a Molecular Dynamics model for dry single asperity contact of silicate, and address the force distribution and coefficient of static friction present.
 Our model will be similar to that of Robbins, but with the perturbation of having an elastic asperity as well as substrate.
-%The main goals of this thesis is to create a Molecular Dynamics model similar to that of Robbins, but keep all bodies elastic. 
 We want all bodies to remain elastic because this is its state in reality. 
 A rigid asperity implies an infinitely large stiffness, which is physically impossible. 
 Thus, we will simulate a more realistic situation than Robbins did.
-With this model we will compute the force distribution and the coefficient of friction, before we can compare our results to those of Robbins and Scheibert. 
-To accomplish this, we have posted X requirements that needs to be met:
-%
+%We will compute the force distribution, and the coefficient of friction with varying substrate thickness. 
+%How will the force distribution compare to Hertzian theory and the results of Robbins when we have the presence of friction, and an elastic asperity?
+
+ 
+\newpage
+\section{Goals}
+
 
 \begin{description}
 	\item[a) Develop a Molecular Dynamics model] \hfill \\
@@ -157,24 +159,62 @@ To accomplish this, we have posted X requirements that needs to be met:
 	Due to the simple geometry of the system, we may define contact forces as any force acting on atoms of one body from the atoms of the other.
 	Secondly, we need to know the gradient of the surface, in order to define its normal and shear components.
 	We must be careful to recognize that we operate at the discrete atomic level.
-	Therefore, we should partition the system into a grid and for each cell in the grid, compute the sum of contact forces\footnote{Acting on one body from the other.}
+	Therefore, we should partition the system into a grid and for each cell in the grid, compute the sum of contact forces\footnote{Acting on one body from the other.}.
+	
 	\begin{description}
 		\vspace{-5pt}\item[1) Develop a method for computing per-atom forces]\hfill\\ 
 		As of now, LAMMPS does not contain the functionality to retrieve the net force acting on an every individual atom of one group from all atoms of another group. A goal is therefor to develop such a method and integrate it in the LAMMPS distribution.
 		\item[2) Develop method to approximate the contact surface]\hfill\\ 
-		To distingush the components of the contact forces, we must approximate the surface, in order to determine a gradient.
+		To distinguish the components of the contact forces, we must approximate the surface, in order to determine its gradient.
 	\end{description}
 	
 	\item[c) Compute the coefficient of static friction] \hfill \\
-	Description of goal c).
-	\item[d) Compare results to those of Robbins and Scheibert] \hfill \\
-	Description of goal d).
+	The coefficient of static friction is defined as $\mu=dF_S/dN$, where $F_S$ is the maximum static friction force, and $N$ is the normal force. 
+	Thus, we need to implement a method for computing $dF_S/dN$, and apply it in several simulations using different substrate thicknesses. 
+
+	\item[d) Compare results to theory and to results of Robbins and Scheibert] \hfill %\\
+	At last, we wish to compare the resulting force distribution to Robbins' results and to Hertzian theory. 
+	We also wish to study the behavior of the coefficient of static friction as a function of substrate thickness. 
+	Based on this study our goal is to support or object to Scheibert's claim. 
+		
 \end{description}
+	
+\section{My contributions}
+During this thesis we have been using LAMMPS - a library of Molecular dynamics code - to perform simulations. 
+It is therefore important to state that the predominant majority of the code we have been using was not self-written.
+The author has experience with writing Molecular Dynamics code, and decided that there's no reason to reinvent the wheel in this case. 
+Of course, writing the code from scratch provides great insight in the numerical and physical aspects of the simulations, but it's very time consuming and will not be as efficient as using a code that has be improved, refined and expanded for many years.
+Nevertheless, during this thesis we have:	
+\begin{itemize}
+\item Expanded the LAMMPS library with a custom class (section \ref{sec:customCompute}), in order to compute per-atom forces. 
+This class is fully functional and will be submitted to Steve Plimpton at the Sandia National Laboratories, for revision. 
+If approved, it can be included in future distributions and be available for all users. 
+
+\item We also developed a method that partitions a domain in a two-dimensional grid, and applies plane regression on points within each cell of the grid (section \ref{sec:leastSquareRegression}).  
+This method was used to approximate the gradient of the substrate's surface.
+
+\item Modeled all simulations, and written all algorithms in the post-processing scripts. We do utilize open source python packages in these, like: NumPy, Matplotlib, SciPy and Pickle.
+
+\end{itemize}
+
+\section{Structure of the thesis}
+This thesis consists of three parts. 
+In the first part, we present the fundamental theory and methods relevant to the problem. 
+This includes an introduction to friction, elasticity and contact mechanics.
+We will introduce theory, concepts and methods used in Molecular dynamics. 
+The software LAMMPS, which we have used extensively, will be presented, and is meant as a quick introduction for readers not yet familiar with it. 
+
+The second part describes or methods and results.
+Here we will show how we modeled the system, what processes we induce with LAMMPS, and how we measured and analyzed the results. 
+The results will also be posted in this part.
+
+In the third part, we discuss the results, make conclusions and briefly summarize what we have done, what we have achieved and whether our initial goals has been met.
+    
+	
 
 
-\newpage
-What are my contributions?\\
-How is the thesis laid out?
+
+
 
 \part{Theory and methods}
 
@@ -274,7 +314,7 @@ This impression of the sliding mechanism is quite similar to the one we have tod
 
 
 \subsection{Coefficient of friction}\label{sec:coefficientOfFriction}
-The coefficient of friction, $\mu$, is a dimensionless scalar describing the ratio between the force of friction and the normal force, as given in equation \eqref{eq:coefficientOfFriction}.
+The coefficient of friction, $\mu$, is a dimensionless scalar describing the how the force of friction increases with the normal force, as given in equation \eqref{eq:coefficientOfFriction}.
 The value of $\mu$ is dependent on the material of the objects that are in contact, ambient conditions, presence of lubrication, etc.. 
 For most materials the coefficient is higher if the objects are stationary, than if they are moving relative to each other (sliding).
 We may refer to them separately as the coefficient of static friction $\mu_s$, and the coefficient of kinetic friction $\mu_k$.
@@ -298,7 +338,7 @@ How would one even define a normal force?
 Steady sliding motion can be observed for instance if a car driver pulls on the break at high speed, so that the wheels are unable to turn.
 The wheels will then slide along the road until the car comes to a stop. 
 At cites of traffic accidents it is common to measure the length of skid marks, in order to approximate a lower limit of a vehicles velocity. 
-
+\raggedbottom
 
 \subsection{Stick-slip motion}
 If we pull on a body with a spring with constant and reasonably low velocity, it will be subject to a linearly increasing force (Hooke's law). 
@@ -327,23 +367,6 @@ However, if we open the door quickly, the door will not creak.
 
 %The sound produced by bowed instruments such as the cello or violin are dependent of the speed at which the bow is drawn across the strings. 
 
-\section{Microscopic origin of friction}
-Friction is caused by bond formations between atoms of the two bodies, at the area of contact. 
-This includes chemical bonds, hydrogen bonds, dipole-dipole interactions, and so on.  
-The range of these interactions are typically quite short; at 10\AA ~separation they are negligible.
-These bonds oppose relative motion, since the bonds must be broken for sliding to occur.
-As bonds are formed, they have associated energies required for the bonds to be broken. 
-Thus, there is an energy barrier that must be overcome in order for relative motion to initiate,
-which is precisely our observation on the macroscopic level. 
-The bonds can brake either by applying an external force or by thermal excitation\footnote{This is known as \textit{creep}.}.
-The energy released by the braking the bond can be converted into excitation of electrons, creation of phonons, mechanical energy in the form of elastic or plastic deformation, and heat \cite{Introduction2Friction}.
-
-Since the force of friction is due to an activation energy for breaking the bonds, it is intuitive that the force is proportional to the number of bonds
-\begin{equation}
-F \propto N_{\text{bonds}}.
-\end{equation} 
-As the formation of bonds only occur at the area of contact, one would expect $F\propto N_\text{bonds}\propto A$, which violates Amontons' second law. 
-As we shall see in section \ref{sec:contactMechanics}, there is a difference in the \textit{real} area of contact and the \textit{apparent} area of contact.
 
 \begin{figure}[H]
 	\centering
@@ -375,6 +398,27 @@ As we shall see in section \ref{sec:contactMechanics}, there is a difference in 
 		\end{minipage}
 	\end{minipage}
 \end{figure}
+
+
+
+
+\section{Microscopic origin of friction}
+Friction is caused by bond formations between atoms of the two bodies, at the area of contact. 
+This includes chemical bonds, hydrogen bonds, dipole-dipole interactions, and so on.  
+The range of these interactions are typically quite short; at 10\AA ~separation they are negligible.
+These bonds oppose relative motion, since the bonds must be broken for sliding to occur.
+As bonds are formed, they have associated energies required for the bonds to be broken. 
+Thus, there is an energy barrier that must be overcome in order for relative motion to initiate,
+which is precisely our observation on the macroscopic level. 
+The bonds can brake either by applying an external force or by thermal excitation\footnote{This is known as \textit{creep}.}.
+The energy released by the braking the bond can be converted into excitation of electrons, creation of phonons, mechanical energy in the form of elastic or plastic deformation, and heat \cite{Introduction2Friction}.
+
+Since the force of friction is due to an activation energy for breaking the bonds, it is intuitive that the force is proportional to the number of bonds
+\begin{equation}
+F \propto N_{\text{bonds}}.
+\end{equation} 
+As the formation of bonds only occur at the area of contact, one would expect $F\propto N_\text{bonds}\propto A$, which violates Amontons' second law. 
+As we shall see in section \ref{sec:contactMechanics}, there is a difference in the \textit{real} area of contact and the \textit{apparent} area of contact.
 
 %\begin{figure}[H]
 %	\centering
@@ -448,7 +492,7 @@ where $\Delta l$ and $l$ are the displacement and original length, respectively.
 For \textit{normal} strain, $\Delta l$ represents an elongation of the distance between two facing end planes of an infinitesimal cubic element.
 For \textit{shear} strain, it represents a component of an in-plane displacement of the midpoints of said plains.
 %It is common to use an index notation in order to describe which component of strain we are referring to.
-It is common to discern the components of stress by using two indices, e.g. $\epsilon_{xy}$.
+It is common \cite{theoryOfElasticity,introductionToElasticity} to discern the components of stress by using two indices, e.g. $\epsilon_{xy}$.
 The first index indicates that we consider the planes normal to the x-axis, while the second that we consider the shear stress in the y-direction of these planes. 
 Double indices, such as $\epsilon_{xx}$ refer to the normal strain in the x-direction, and is commonly abbreviated to   $\epsilon_{x}$.
 
@@ -508,7 +552,7 @@ The general form of Hooke's law is expressed as
 \begin{equation}
 \sigma_{ij} = C_{ijkl}\epsilon_{kl}
 \end{equation}
-which relates the Cauchy stress tensor $\sigma_{ij}$ to the strain tensor $\epsilon_{kl}$, through the linear dependence of the stiffness tensor $c_{ijkl}$.
+which relates the Cauchy stress tensor $\sigma_{ij}$ to the strain tensor $\epsilon_{kl}$, through the linear dependence of the fourth-order stiffness tensor $c_{ijkl}$.
 Note that each component of the Cauchy stress tensor is dependent on all elements of the strain tensor. 
 The stress and strain tensors are both of rank 2 and have $3^2=9$ elements, while the stiffness tensor has rank 4 and contains $3^4=81$ elements.
 However, since both the Cauchy stress tensor and the strain tensor are symmetric, 
@@ -519,8 +563,8 @@ However, since both the Cauchy stress tensor and the strain tensor are symmetric
 \end{split}
 \end{align}
 In total there will be only 6 independent components for the stress and strain tensors, and 36 in the stiffness tensor. 
-We may choose to express the stress and strain as vectors by using Voigts method for rank reduction \cite{Voigt}.
-
+We may choose to express the stress and strain as vectors by using Voigts method for rank reduction \cite{Voigt}. 
+This takes advantage of symmetry of the stress and strain tensors to express them as six-dimensional vectors \cite{introductionToElasticity}. 
 \begin{equation}
 \vec{\sigma} = 
 \begin{pmatrix}
@@ -635,32 +679,39 @@ Thus, there is a huge difference in the apparent and real area of contact, a fac
 %Thus, longer duration of resting contact gives a higher rate of asperities that settle in positions with the lowest potential, effectively making the coupling of the bodies stronger.
 
 \begin{figure}
-	\centering
-	\begin{subfigure}{\textwidth}
 		\centering
 		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/apart.pdf}
-		\caption{No contact.}
+		\caption{Sketch of two surfaces with different roughness. As they are forced towards each other, the entire load will rest on small sections of the surface.}
 		\label{fig:realAreaOfContact0}
-	\end{subfigure}
-	\begin{subfigure}{\textwidth}
-		\vspace{5mm}
-		\centering
-		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/single.pdf}
-		\caption{Single point of contact.}
-		\label{fig:realAreaOfContact1}
-	\end{subfigure}
-	\begin{subfigure}{\textwidth}
-		\vspace{5mm}
-		\centering
-		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/three.pdf}
-		\caption{Multiple points of contacts.}
-		\label{fig:realAreaOfContact3}
-	\end{subfigure}
-	\caption{Illustrating the concept of real area of contact, as well as surface roughness. }
-	\label{fig:realAreaOfContact}
 \end{figure}
 
 
+
+%\begin{figure}
+%	\centering
+%	\begin{subfigure}{\textwidth}
+%		\centering
+%		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/apart.pdf}
+%		\caption{No contact.}
+%		\label{fig:realAreaOfContact0}
+%	\end{subfigure}
+%	\begin{subfigure}{\textwidth}
+%		\vspace{5mm}
+%		\centering
+%		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/single.pdf}
+%		\caption{Single point of contact.}
+%		\label{fig:realAreaOfContact1}
+%	\end{subfigure}
+%	\begin{subfigure}{\textwidth}
+%		\vspace{5mm}
+%		\centering
+%		\includegraphics[width=0.5\linewidth]{figures/friction/areaOfContact/three.pdf}
+%		\caption{Multiple points of contacts.}
+%		\label{fig:realAreaOfContact3}
+%	\end{subfigure}
+%	\caption{Illustrating the concept of real area of contact, as well as surface roughness. }
+%	\label{fig:realAreaOfContact}
+%\end{figure}
 
 
 \subsection{Hertz theory} \label{sec:hertzTheory}
@@ -715,7 +766,7 @@ Continuum mechanics does not consider the nature of the atomic structure and int
 This may very well be an important detail at the discrete atomic level. 
 Mark O. Robbins, has written several articles on this matter \cite{Robbins2005,RobbinsSingleAsperity,RobbinsSimpleMicroscopicTheroyOfAmontonsLawsOfFriction, RobbinsDefiningContactAtTheAtomicScale},  
 one of which is very relevant to this thesis \cite{RobbinsSingleAsperity}. 
-In collaboration with Binquan Luan, they used LAMMPS to do molecular dynamics simulations of a single spherical asperity indenting a flat substrate. 
+In collaboration with Binquan Luan, he used LAMMPS to do molecular dynamics simulations of a single spherical asperity indenting a flat substrate. 
 They measured pressure distribution in the area of contact, without adhesion, and compared it to the solution predicted by Hertz' theory. 
 They did this for differently constructed crystalline spheres: bent, cut, and
 cut amorphous. 
@@ -1084,7 +1135,7 @@ However, because it rescales the velocities, it produces dynamics that are incon
 
 
 \subsection{Andersen}
-The Andersen thermostat simulates the coupling between the system and an imaginary heat bath as collisions between their atoms. 
+The Andersen thermostat simulates the coupling between the system and an imaginary heat bath as collisions between their atoms \cite{thermostat}. 
 Atoms that collide are assigned a new normally distributed velocity with standard deviation  $\sqrt{3k_BT_{bath}/m}$ about the target temperature, $T_{bath}$.
 The procedure of the thermostat goes as follows:
 For each atom in the system, we generate a random uniformly distributed number in the interval $[0,1]$. 
@@ -1733,7 +1784,7 @@ Finally, we project the average force of a cell onto the corresponding normal ve
 The results will be posed graphically at the end of the chapter, as 3-dimensional plots in polar coordinates, with the corresponding radial distribution. 
 
 
-\section{Creating a custom compute}
+\section{Creating a custom compute} \label{sec:customCompute}
 A \textit{compute} is a LAMMPS command that defines a computation that will be performed on a group of atoms. 
 The \textit{computes} produce instantaneous values, using information about the atoms on the current time step\footnote{\href{ http://lammps.sandia.gov/doc/compute.html}{ http://lammps.sandia.gov/doc/compute.html}}.
 In LAMMPS there are more than 100 computes and chances are, they already have what you're looking for. If not, one might treat the data from other computes in some way to get the desired information. However, if there are no compute command that does the desired task, it is possible to create an own custom class and thereby expanding the LAMMPS library.  
@@ -2553,14 +2604,31 @@ From the looks of the result, it is tempting to claim a linear relation, at leas
 In this chapter we will discuss the results posted in chapter \ref{chp:contactForces} and \ref{chp:coefficientOfFriction}. 
 
 \section{Force distribution}
-figure \ref{fig:resultsRadialForceDistributions} show the radial force distribution in the area of contact, between an elastic sphere and an elastic, flat substrate. 
-The distribution shows the average force acting on the sphere from the substrate within an area $a_c$.
-It is therefore equivalent to the pressure distribution, we need only divide by $a_c$.  
-The continuum prediction of this distribution \eqref{eq:HertzPressure} was developed by Hertz, as described in section \ref{sec:hertzTheory}. 
+Figure \ref{fig:resultsRadialForceDistributions} shows the radial force distribution in the area of contact, between an elastic sphere and an elastic, flat substrate. 
+The distribution shows the average force acting on the sphere from the substrate within an area $a_c$, at a radial distance $r$ from the center of indentation.
+It is therefore equivalent to the pressure distribution, we need only to scale the y-axis with a factor $1/a_c$.  
+The continuum prediction of the distribution with absence of friction\footnote{Among other assumptions (section \ref{sec:hertzTheory}).} was developed by Hertz \eqref{eq:HertzPressure}, as described in section \ref{sec:hertzTheory}. 
 In order to compare our distribution to that of Hertz' theory, we need to know the radii of contact \eqref{eq:HertzRadii}, and the maximum pressure \eqref{eq:HertzMaxPressure}.
-A challenge is that we do not know $E^*$, and can't compute it from equation \eqref{eq:effectiveModulus}, since $\beta$-cristobalite is not an isotropic crystal. 
-However, from the resulting distribution, we may assume the radii of contact $a$ to be the (first) radial distance where $F(r)=0$, and $p_0$ to be the maximum value.
-This approach result in the situation shown in figure XX.
+A challenge is that we do not know $E^*$ nor $a$.
+It would be possible to compute $E^*$ by finding the Youngs modulus and Poisson's ratio, and apply \eqref{eq:effectiveModulus}. And there exists methods for defining the contact area \cite{RobbinsDefiningContactAtTheAtomicScale}, and thereby $a$.  
+However, due to limited time and the fact that it is obvious to the other that there are behavioral differences, we do not attempt to compute the theoretical prediction.
+
+%and can't compute it from equation \eqref{eq:effectiveModulus}, since $\beta$-cristobalite is not an isotropic crystal. 
+Instead, we may ignorantly assume the radii of contact $a$ to be the shortest radial distance where resulting force is zero, $F(r)=0$. Similarly, we may assume $p_0$ to be the larges measured force.
+It's ignorant because we expect our results to deviate from the theory, and so we are probably wrong in assuming  %of Robbins \cite{RobbinsSingleAsperity}, he obtained roughly the same maximum pressure $p_0$ as Hertz theory, but his edge $a$ was way larger. This made his result more linear than the theory predicted. 
+to have the same maximum force $p_0$ and contact radii $a$ as Hertz.
+Nevertheless, this enables us to compare the form of the theory's distribution to the one obtained by our simulation. 
+The full line in figure \ref{fig:HertzCompare} is the same result as the bottom row of figure \ref{fig:resultsRadialForceDistributions}.
+The dashed line represents the distribution predicted by Hertz.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\linewidth]{figures/forceDistribution/HertzCompare}
+\caption{Comparison of simulation (lighter, full line) to Hertz theory (darker, dashed line).}
+\label{fig:HertzCompare}
+\end{figure}
+
+
 Not surprisingly, we see large deviations. 
 In the simulations, we break almost every assumption made by Hertz.
 We have friction present, we do not know if we are within the elastic limit, the bodies are finite in size, and the surfaces are discrete, not continuous. 
