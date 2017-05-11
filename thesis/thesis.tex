@@ -165,7 +165,7 @@ Thus, we will simulate a more realistic situation than Robbins did.
 		\vspace{-5pt}\item[1) Develop a method for computing per-atom forces]\hfill\\ 
 		As of now, LAMMPS does not contain the functionality to retrieve the net force acting on an every individual atom of one group from all atoms of another group. A goal is therefor to develop such a method and integrate it in the LAMMPS distribution.
 		\item[2) Develop method to approximate the contact surface]\hfill\\ 
-		To distinguish the components of the contact forces, we must approximate the surface, in order to determine its gradient.
+		To distinguish the components of the contact forces, we must approximate the surface, in order to determine its normal vector.
 	\end{description}
 	
 	\item[c) Compute the coefficient of static friction] \hfill \\
@@ -2636,7 +2636,7 @@ From the looks of the result, it is tempting to claim a linear relation, at leas
 
 \chapter{Discussion, Summary and future work}
 \section{Discussion}\label{chap:discussion}
-In this chapter we will discuss the results posted in chapter \ref{chp:contactForces} and \ref{chp:coefficientOfFriction}. 
+%In this chapter we will discuss the results posted in chapter \ref{chp:contactForces} and \ref{chp:coefficientOfFriction}. 
 
 \subsection{Force distribution}
 Figure \ref{fig:resultsRadialForceDistributions} shows the radial force distribution in the area of contact, between an elastic sphere and an elastic, flat substrate. 
@@ -2756,16 +2756,32 @@ It is also a good supplement to experiments, as it has been in this work.
 %Stochastic quantum mechanics methods are typically used for   
 
 \section{Summary}
-It was proven that the coefficient of static friction was linearly dependent on the substrate thickness, in the range of thicknesses accounted for. 
+In this thesis we have developed a Molecular Dynamics model consisting of a spherical cap - resembling an asperity - and a flat substrate. 
+Both bodies were made of $\beta$-cristobalite, which is a type of silica. 
+We allowed both bodies to remain elastic in contrast in contrast to the simulation performed by Robbins, and did not restrict frictional forces in contrast to both Hertz theory and Robbins' simulation.
+
+We computed the contact force distribution, and were able to decompose it into normal force and shear force as well.
+In order to achieve this, we expanded the LAMMPS library with a custom compute, that computet per-atom forces acting between atoms of the two bodies.
+We also created a method that applies least squares plane regression to approximate the normal vector of the discretized surface. 
+The resulting radial distribution of the normal force was much more linear than expected from the continuum theory of Hertz, and partly similar to the results of Robbins, despite the different restrictions between the models already described. 
+
+It was proven that the coefficient of static friction was linearly dependent on the substrate thickness, in the range of thicknesses accounted for ($\sim$1nm-5nm). 
+This was in agreement with the experimental results of Julien Scheibert, and we support his claim; the coefficient of static friction is linearly dependent on substrate thickness for thin substrates.
+
+Our initial goals were met to a satisfactory level, though the comparison to Hertz theory and the results of Robbins necessarily had to be purely quantitative, due to the anisotropic material we used in our model.    
+In the part concerning the coefficient of static friction we were only interested in the qualitative behavior, and this was obtained.
+
 
 \section{Prospects for future work}
-There are many potential methodological errors that may arisen in our model.
-When computing the force distribution for instance, the center of the indentation is defined to be in the center of the system. 
-It does not account for the possibility that it might move, however slightly, du to atomic structure. 
+There are many potential methodological errors that may arisen in our model, and if we should continue working with these methods, it might be of interest to refine them a bit.
+When computing the force distribution for instance, the center of the indentation is defined to be in the geometric center of the system. 
+It does not account for the possibility that the asperity might move, however slightly, due to atomic structure. 
 A possible solution could be to let the center of indentation be defined by the center of mass of the asperity. 
-   
+
+
+
 We found behavioral similarities and differences between the distributions obtained by Robbins and our-self. 
-Considering the differences in our models, it would be interesting to investigate the cause of the discrepancies. 
+Considering the differences in our models, it would be interesting to investigate the cause of those discrepancies. 
 Are they due to the presence of friction, or the fact that all bodies are elastic? 
 Will we get the same behavior for other materials?
 Does the distribution depend on ambient conditions?
@@ -2790,7 +2806,7 @@ At this point we have a model which can be altered as desired, and be used for f
 
 \appendix
 
-\chapter{Something}
+\chapter{ }
 \section{LAMMPS units}
 
 \begin{table}[H]
@@ -2832,14 +2848,23 @@ At this point we have a model which can be altered as desired, and be used for f
 	\end{center}
 \end{table}
 
+\newpage
 \section{Building LAMMPS with custom compute}
-In order to use the custom compute \texttt{group/group/atom}, some files in the lammps distribution must be perturbed.  
-All files that have been altered during this thesis are available at my githuh-account in the directory named \textit{modifiedLammpsFiles}.  
+In order to use the custom compute \texttt{group/group/atom}, some files in the lammps distribution must be perturbed.
+They are located in \texttt{/path/to/lammps/src/}.  
+All files that have been altered during this thesis are available at my githuh-account in the directory named \texttt{modifiedLammpsFiles}.  
 The compute uses only the two-body part of the potential. 
-As a consequence, we must set the \texttt{single\_enable}-flag to be true in \texttt{pair\_vashishta.cpp}. 
-Also
-terminal commands for building LAMMPS again?
-
+As a consequence, we must set the \texttt{single\_enable} flag to be true in \texttt{pair\_vashishta.cpp}. 
+Secondly, the \texttt{private} attributes in \texttt{compute\_group\_group.h} must be changed to \texttt{protected}, allowing our custom compute to have access to them.
+Before we move these files into  the source code folder, we must run the make command:
+\begin{lstlisting}
+make yes-molecule yes-manybody yes-python yes-rigid 
+\end{lstlisting}
+Now we can move the files into the source code folder, and build LAMMPS for instance as
+\begin{lstlisting}
+make -j8 mpi
+\end{lstlisting}
+The custom compute can then be used as described in section \ref{sec:customCompute}.
 
 
 \bibliographystyle{plain}
