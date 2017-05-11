@@ -758,28 +758,62 @@ The assumptions made in this theory are that:
 \section{Previously conducted studies}
 The field of friction is not new to science in any regard. 
 However, thanks to advances in technology and computational power, we are now able to simulate physical systems at an atomic level. 
-
-
-
-
 Continuum mechanics does not consider the nature of the atomic structure and interaction within solids. 
-This may very well be an important detail at the discrete atomic level. 
+This has recently been proven to be an important detail when describing mechanics at the discrete atomic level. 
 Mark O. Robbins, has written several articles on this matter \cite{Robbins2005,RobbinsSingleAsperity,RobbinsSimpleMicroscopicTheroyOfAmontonsLawsOfFriction, RobbinsDefiningContactAtTheAtomicScale},  
 one of which is very relevant to this thesis \cite{RobbinsSingleAsperity}. 
 In collaboration with Binquan Luan, he used LAMMPS to do molecular dynamics simulations of a single spherical asperity indenting a flat substrate. 
 They measured pressure distribution in the area of contact, without adhesion, and compared it to the solution predicted by Hertz' theory. 
-They did this for differently constructed crystalline spheres: bent, cut, and
-cut amorphous. 
-Also for the bent tips, they used three different densities. 
+In order to simulate nonadhesive contact, they used the Lennard-Jones\footnote{The Lennard-Jones potential is discussed in section \ref{sec:LJ}.} potential truncated at $2^{1/6}\sigma$, which assures only repulsive forces between the two bodies.
+They did this for differently constructed crystalline spheres: dense, bent, amorphous and
+stepped. 
+Examples of such surfaces are shown in figure \ref{fig:robbinsSurfaces}.
+Also, for the bent tips, they used three different densities. 
 They kept the sphere rigid throughout the simulation, fixing the atoms of the sphere relative to each other. 
-They found that atomic structure clearly changes the distribution of pressure.
+Their results are shown in figure \ref{fig:robbinsResults}, and demonstrate that atomic structure clearly changes the distribution of pressure.
 The stepped tip deviated the most from the theory, having a behavior similar to that of a "flat punch"!  
 They also noticed a dip in the pressure right at the center, both for the amorphous and bent incommensurate tips, obviously deviating from Hertz' theory.
 Thus, atomic structure is of importance at nano-scale.
-In this thesis, we will perform a similar simulation, but with fundamental differences. 
+
+
+
+Robbins and Luan makes two decisions that obviously renders their results unrealistic. 
+First, they assume nonadhesive contact, that there are only repulsive forces between the two bodies. 
+This is obviously not the case in reality.
+Secondly, they keep the sphere rigid. 
+This implies an infinitely large stiffness in the material, which is unphysical. 
+
+In this thesis, we will perform a similar simulation, but with these important differences: 
 We will allow both the sphere and the substrate to be elastic. 
-Both these bodies will be constructed by $\beta$-cristobalite, and we will apply the Vashishta potential\footnote{The computed forces will only reflect the two-body term of the potential.}.  
-We will compare our results to theirs in the chapter \ref{chap:discussion}, conscious about these differences.
+Both these bodies will be constructed by a silica named $\beta$-cristobalite.
+We will apply the Vashishta potential\footnote{The computed forces will only reflect the two-body term of the potential.}, which includes attractive forces, and even allow construction of covalent bonds. 
+We will compare our results to theirs and to Hertz theory in chapter \ref{chap:discussion}, conscious about these differences. 
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\linewidth]{figures/Robbins/surfaceSrtucture}
+\caption{Snapshots of atoms near the center regions of spherical tips. From top to bottom, tips are made by bending a crystal, cutting a crystal, or cutting an amorphous solid. Three ratios $\nu$ of the atomic spacing in bent crystals to that in the substrate are considered; a dense case $\nu=0.05$, a commensurate case $\nu=1$, and an incommensurate case $\nu=0.944$. The step structure of cut crystalline tips is not unique, leading to variations in their behavior.
+This figure is copied from \cite{RobbinsSingleAsperity}.}
+\label{fig:robbinsSurfaces}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\linewidth]{figures/Robbins/results2}
+\caption{Local normal pressure vs radius for five
+	different tip geometries (a) dense tip, (b) bent commensurate crystal, (c) bent incommensurate crystal, (d) amorphous, and (e) stepped crystal. All are nonadhesive, and have the same nominal radius.
+	%? , ? i / =1, and normalized load N/ ?R2E*?=0.0018. 
+	Solid lines	show the prediction of Hertz theory, dots show the pressure on each surface atom, and circles in (c) and (d) show the mean pressure in radial bins. Squares in (b) show the component of the tangential force directed radially from the center of the contact.
+	This figure is copied from \cite{RobbinsSingleAsperity}. However, we have inserted the dashed line in (d) to prove a point later.}
+\label{fig:robbinsResults}
+\end{figure}
+
+
+
+
+  
+
 
 
 \chapter{Molecular dynamics}
@@ -901,7 +935,7 @@ This algorithm has good energy conservation, and is symplectic.
 
 
 \section{Potentials}
-\subsection{Lennard-Jones} \label{Lennard-Jones-section}
+\subsection{Lennard-Jones} \label{sec:LJ}
 One of the simplest and most known potentials is the Lennard-Jones potential. It was first proposed in 1924 by John Edward Lennard-Jones.  It takes the form
 \begin{equation}
 	V(r) = 4\epsilon\left[\lr{\frac{\theta}{r}}^{12} -  \lr{\frac{\theta}{r}}^6 \right], \label{eq:Lennard-Jones}
@@ -1168,7 +1202,7 @@ In this section we will look at the most fundamental efficiency improvements app
 
 \subsection{Cut-off}
 Depending on the potential in use, the forces become negligible at certain distances. 
-For instance if one uses the Lennard-Jones potential (introduced in section \ref{Lennard-Jones-section}) the contributions are practically zero for atoms positioned at a distance $r\geq2.5\sigma$.
+For instance if one uses the Lennard-Jones potential (introduced in section \ref{sec:LJ}) the contributions are practically zero for atoms positioned at a distance $r\geq2.5\sigma$.
 Therefore, during a simulation we choose to only account for the contributions from atoms closer than this \textit{cut-off} distance, denoted $r_c$.  
 %Atoms within the cut-off length from the atom of consideration are referred to as \textit{neighbor atoms}.
 For the Lennard-Jones potentials the cut-off range is usually set to $2.5\theta$. 
@@ -1786,6 +1820,8 @@ The results will be posed graphically at the end of the chapter, as 3-dimensiona
 
 \section{Creating a custom compute} \label{sec:customCompute}
 A \textit{compute} is a LAMMPS command that defines a computation that will be performed on a group of atoms. 
+It does not affect the dynamics in any way, but simply uses already available information from the system. 
+This can be atom positions, velocity, force, mass, or other properties like size of the simulation box.
 The \textit{computes} produce instantaneous values, using information about the atoms on the current time step\footnote{\href{ http://lammps.sandia.gov/doc/compute.html}{ http://lammps.sandia.gov/doc/compute.html}}.
 In LAMMPS there are more than 100 computes and chances are, they already have what you're looking for. If not, one might treat the data from other computes in some way to get the desired information. However, if there are no compute command that does the desired task, it is possible to create an own custom class and thereby expanding the LAMMPS library.  
 In order to compute the normal forces acting on the sphere, we have written a custom compute class. 
@@ -1828,7 +1864,7 @@ As can be seen, there are not many additions to the variables and functions alre
 \item \texttt{compute\_peratom()} and \texttt{pair\_contribution()} are functions which will be described below the corresponding source file. 
 \end{itemize}
 
-
+\newpage
 \lstinputlisting[caption={Source file of compute: \texttt{compute\_group\_group\_atom.cpp}.}, label={lst:groupGroupAtomSource}, language=c++, firstline=19, lastline=300]{../../LAMMPS/src/compute_group_group_atom.cpp}
 
 \subsubsection{Setting flags}
@@ -2598,94 +2634,82 @@ From the looks of the result, it is tempting to claim a linear relation, at leas
 
 
 
-\part{Discussion, Summary and future work}
-
-\chapter{Discussion}\label{chap:discussion}
+\chapter{Discussion, Summary and future work}
+\section{Discussion}\label{chap:discussion}
 In this chapter we will discuss the results posted in chapter \ref{chp:contactForces} and \ref{chp:coefficientOfFriction}. 
 
-\section{Force distribution}
+\subsection{Force distribution}
 Figure \ref{fig:resultsRadialForceDistributions} shows the radial force distribution in the area of contact, between an elastic sphere and an elastic, flat substrate. 
 The distribution shows the average force acting on the sphere from the substrate within an area $a_c$, at a radial distance $r$ from the center of indentation.
 It is therefore equivalent to the pressure distribution, we need only to scale the y-axis with a factor $1/a_c$.  
-The continuum prediction of the distribution with absence of friction\footnote{Among other assumptions (section \ref{sec:hertzTheory}).} was developed by Hertz \eqref{eq:HertzPressure}, as described in section \ref{sec:hertzTheory}. 
-In order to compare our distribution to that of Hertz' theory, we need to know the radii of contact \eqref{eq:HertzRadii}, and the maximum pressure \eqref{eq:HertzMaxPressure}.
-A challenge is that we do not know $E^*$ nor $a$.
-It would be possible to compute $E^*$ by finding the Youngs modulus and Poisson's ratio, and apply \eqref{eq:effectiveModulus}. And there exists methods for defining the contact area \cite{RobbinsDefiningContactAtTheAtomicScale}, and thereby $a$.  
-However, due to limited time and the fact that it is obvious to the other that there are behavioral differences, we do not attempt to compute the theoretical prediction.
 
+\subsubsection*{Comparison with Hertz theory}
+The continuum prediction of the distribution with absence of friction\footnote{Among other assumptions (section \ref{sec:hertzTheory}).} was developed by Hertz, as described in section \ref{sec:hertzTheory}. 
+In order to compare our distribution to that of Hertz theory, we need to know the radii of contact $a$ \eqref{eq:HertzRadii}, and the maximum force $p_0$ \eqref{eq:HertzMaxPressure}.
+A challenge is that we do not know $E^*$, and $E^*$ is not isotropic, so we cannot use equation \eqref{eq:effectiveModulus} as it stands. 
+Theories can be applied with an effective modulus $E^*$ that depends on orientation and is determined numerically \cite{Johnson1985},
+and there exists methods for defining the contact area \cite{RobbinsDefiningContactAtTheAtomicScale}, and thereby $a$.  
+However, due to limited time and the fact that it is obvious to the author that there are behavioral differences, we do not attempt to compute the theoretical prediction.
 %and can't compute it from equation \eqref{eq:effectiveModulus}, since $\beta$-cristobalite is not an isotropic crystal. 
-Instead, we may ignorantly assume the radii of contact $a$ to be the shortest radial distance where resulting force is zero, $F(r)=0$. Similarly, we may assume $p_0$ to be the larges measured force.
-It's ignorant because we expect our results to deviate from the theory, and so we are probably wrong in assuming  %of Robbins \cite{RobbinsSingleAsperity}, he obtained roughly the same maximum pressure $p_0$ as Hertz theory, but his edge $a$ was way larger. This made his result more linear than the theory predicted. 
-to have the same maximum force $p_0$ and contact radii $a$ as Hertz.
-Nevertheless, this enables us to compare the form of the theory's distribution to the one obtained by our simulation. 
-The full line in figure \ref{fig:HertzCompare} is the same result as the bottom row of figure \ref{fig:resultsRadialForceDistributions}.
+Instead, we may naively assume the radii of contact $a$ to be the shortest radial distance where the force is zero, $F(r)=0$. Similarly, we may assume $p_0$ to be the larges measured force.
+It's naive because we expect our results to deviate from the theory, and so we are probably wrong in assuming  %of Robbins \cite{RobbinsSingleAsperity}, he obtained roughly the same maximum pressure $p_0$ as Hertz theory, but his edge $a$ was way larger. This made his result more linear than the theory predicted. 
+to have the same maximum force $p_0$ and contact radii $a$ as Hertz. Also, the simulations performed by Robbins resulted in a radii of contact that was far from the prediction. 
+Nevertheless, this enables us to compare the form of the theory's distribution to the one obtained by our simulation, but nothing else.
+The solid line in figure \ref{fig:HertzCompare} is the same result as the bottom row of figure \ref{fig:resultsRadialForceDistributions}.
 The dashed line represents the distribution predicted by Hertz.
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.5\linewidth]{figures/forceDistribution/HertzCompare}
-\caption{Comparison of simulation (lighter, full line) to Hertz theory (darker, dashed line).}
+\caption{Comparison of normal force distribution resulting from simulation (lighter, solid line) and Hertz theory (darker, dashed line).}
 \label{fig:HertzCompare}
 \end{figure}
 
 
-Not surprisingly, we see large deviations. 
+Not surprisingly, we see big differences in the form of the distributions. 
+The one resulting from the simulation has a much more linear form than what was predicted by Hertz, seemingly in the whole area of contact.
+The slope of our normal force distribution as a function of radial distance does not fall as \\$dF/dr=-\infty$, like Hertz theory predicts.
+Similarly we do not have $dF/dr=0$ at the center.
+Reasons for the differences may be numerous. 
 In the simulations, we break almost every assumption made by Hertz.
 We have friction present, we do not know if we are within the elastic limit, the bodies are finite in size, and the surfaces are discrete, not continuous. 
-The distribution resulting from the simulation has a much more linear form than what was predicted by Hertz. 
-Reasons for the differences may be plenty. 
-However, it is curious that the greatest deviation is where the shear force is the largest, as the shear force is due to friction.
-  
+%However, it is curious that the greatest deviation is where the shear force is the largest, as the shear force is due to friction.
+
+
+\subsubsection*{Comparison with Robbins and Luan}
 Robbins et al. conducted a simulation \cite{RobbinsSingleAsperity} studying the effects of surface structure on the pressure distribution.
 They kept the sphere rigid and made both the sphere and substrate out of noble atoms.  
 They used the Lennard-Jones potential truncated at its minimum $r=2^{1/6}\sigma$ in order to only have repulsive forces between the bodies. 
 This way they did not have friction present.
 They used several differently constructed surfaces, the most relevant to us is the amorphous, and the stepped tips. 
-As we do not have a rigid sphere, the surface atoms will organize differently than the bulk atoms, due to surface tension.
-Thus, our surface is the most similar to the amorphous sphere they used, 
-whereas our bulk is similar to that of the stepped tip. 
-These two cases showed extremely different behaviors in the resulting pressure distributions. 
-The amorphous case was somewhat in agreement to Hertz near the center, but extended farther, and was more linear toward the edge. 
-The stepped tip resulted in a distribution resembling that of a "flat punch".
-As we did, Robbins obtained a dip in the center of the radial pressure distribution, but did not address it. 
-  
-  
+As we do not have a rigid sphere, the surface atoms will organize differently than the bulk atoms.
+Thus, our surface is the most similar to their amorphous sphere, 
+whereas our bulk is similar to their stepped tip. 
+These two cases showed extremely different behaviors in the resulting pressure distributions.
+The stepped tip exhibited a qualitatively different behavior than all the others, with a distribution resembling that of a "flat punch".
+Their results are shown in figure \ref{fig:robbinsResults}.
 
-Hertz - me: deviates the most, where the shear forces are the largest.
+As it is the surface atoms that compose the contact forces, we will compare our results to the distribution obtained by an amorphous tip.
+This distribution seems to be approximately linear, for most of the range of $r<a$. 
+We have drawn a dashed line in subfigure (d) to highlight this observation. 
+It conformed much better with the theory near the center, though as mentioned - and visible in the figure - there is a weaker statistical foundation for these measurements.
 
-In our simulation both the sphere and substrate were elastic bodies, unlike in the simulations of Robbins et al., who kept the sphere rigid. 
-We used the Vashishta potential and SiO$_2$ as material, while they used Lennard-Jones and noble atoms. 
-Obviously, the fact that we use materials with different properties should produce a difference in adhesion.
+The form of our distribution conform surprisingly well with Robbins' at radial distances not too close to the center. Both were seemingly linear in this region. 
+They deviate only near the center, where our result continues its linear behavior, while Robbins' bends off closer to the theoretical prediction.
+We find it surprising because of the big differences in our methods: presence of friction, elasticity of the sphere, potential model and material. 
+Also, since there are so many differences in our methods, it is difficult to point out exactly what causes the dissimilarity. 
+To accomplish that, we would have to use much more advanced theoretical models \cite{Johnson1985}, which is impossible to do in a short project like this. 
+However, the fact that both our simulation resulted in a somewhat linear form, may also be evidence that the radial force distribution has a qualitatively different behavior at the nano-scale than the continuum theory predicts.
 
 
-The normal force distribution does not seem to fit very well with Hertz theory.
-Our result is way more linear in $r$. 
-The assumptions used in Hertz' theory are (\href{https://en.wikipedia.org/wiki/Contact_mechanics}{wikipedia})
-\begin{itemize}
-	\item Strains are small and within the elastic limit.
-	\item The surfaces are continuous and non-conforming\footnote{
-A non-conforming contact is when dissimilar surfaces (which fit badly together) are in contact. When under zero load, they would only touch at a single point. 
-The real area of contact is small compared to the sizes of the objects and the stress is highly concentrated.}.
-	\item Each body can be considered an elastic half-space.
-	\item The surfaces are frictionless.
-\end{itemize}
-
-We have not checked if the deformations were elastic throughout the simulation.
-We absolutely have friction present.
-The hysteresis plot illustrates the presence of adhesion.
 %It would not be possible do a molecular dynamics simulation and disregard the effects of friction.
  
 
 
 
 
-When measuring the shear force, we did not mind how the substrate was cut, when adjusting the depth of the substrate.
-This could cause large differences in the surface properties! 
-Since in the one case, the surface has a larger concentration of one type of atom, while in the other case it has a larger concentration of the other type. 
 
-
-
-\section{Coefficient}
+\subsection{Coefficient of static friction}
 The coefficient of friction was found to be dependent on the substrate thickness, having a lower value for thinner substrates. 
 This dependence proved to be in agreement with the experimental results of Julien Scheibert \cite{Scheibert2017}. 
 His experiment included a tip made out of polymer indenting a substrate of the same polymer, laying on top of glass.
@@ -2694,31 +2718,61 @@ Even though we do not use an isotropic polymer, but a crystalline silica, we see
 the coefficient increased linearly. 
 This coefficient was only measured for thin substrates ($\sim$1nm-5nm), and we do not expect this linear behavior to remain for thick substrates. 
 Ultimately, it should converge towards a finite value as the substrate thickness increases.
-What we really have found is the 
-
+These results infer that material properties may behave differently at nano-scale than they do macroscopically. 
 
 
 As satisfying as it is to see simulations reproduce the results of a physical experiment, we need to be critical regarding the methods used in the measurements.
 For instance, J. Scheibert accounts for the changing area of contact in his measurements\footnote{The area of contact increases with substrate thickness.}, whereas we do not.
 We pull the spring at ridiculously high velocities, $1\mathring{A}/\text{ps} = 100\text{m/s}$, while in a laboratory, the shear force can be increased for hours before initiating slip. 
-Since the resulting measurements for each velocity fit very well on a line, this should not be of concern. 
+Since the resulting measurements for each velocity fit very well on a line, and it is still only $\sim10\%$ of the sound propagation speed in the material \cite{melosh2007}, this should not be of concern. 
+ 
+
 Numerical values of the coefficient should not be interpreted as the real value. 
-The test of finding the silicas melting point (section \ref{sec:meltingPoint}) proved that we missed the real value with $\sim 7.5\%$.
+The test of finding the silica's melting point (section \ref{sec:meltingPoint}) proved that we missed the real value with $\sim7.5\%$.
 However, quantitative behaviors should still be accurate and reliable.
 This is why we do not bother measuring the slope of the linear dependence, but merely state that there is a linear dependence.   
 Also, we have only completed 8 measurements. 
 If we conducted an additional measurement with a thickness of 9 unit cells, and got a result deviating from this linear form, it could potentially change our conclusion completely. 
 Since we cannot simulate indefinitely, we have to cease when we are confident in the conclusion.  
 In this case 8 simulations was found to be sufficient. 
-Also, each single measurement requires alot of computational power. 
+Also, each single measurement requires a lot of computational power. 
 To measure the coefficient for a specific thickness, we first had to measure the shear force for 5 different velocities at each value of the load. 
-This was used to find $\mu(v)$ and extrapolate back to $\mu(v=0)$, for the given load. 
-Having 13 different values of $N$ this amounts to 
+This was used to find $\mu(v)$ so that we could extrapolate back to $\mu(v=0)$, for the given load. 
+For each substrate thickness we had 13 different values of $N$.
+Having 8 different substrate thicknesses the number (of successful) simulations we have performed to compute the coefficient of static friction was 520. 
+The simulations used on average 80 hours of total CPU time, amounting to 41600 hours of CPU time to produce these results.
+
+
+\subsection{Molecular Dynamics as a method}
+Since the problem at hand was partly to compare continuum theory to nano-scale measurements, Molecular Dynamics was a suitable method, because this is the typical length scale we operate on in Molecular Dynamics. 
+We observed that due to the time scales we're able to compute, we may be obliged to simulate processes at high velocities, for instance pulling a spring or lowering the asperity. 
+In some cases this may not be suitable, but it sufficed for our task.
+The qualitative results from Molecular Dynamics are difficult to evaluate, since it is highly dependent on many factors: potential model, thermostat, boundary conditions, etc.. 
+One must therefore be careful when deciding upon these aspects of the model. 
+However, if the conditions are reasonable, the quantitative results may provide valuable insight in processes that are difficult to measure. 
+It is also a good supplement to experiments, as it has been in this work.
+
+%In comparison to other simulation methods, I cannot think of a better one to simulate the dynamics of this many atoms.
+%Stochastic quantum mechanics methods are typically used for   
+
 \section{Summary}
-
-
-%Coefficient of friction
 It was proven that the coefficient of static friction was linearly dependent on the substrate thickness, in the range of thicknesses accounted for. 
+
+\section{Prospects for future work}
+There are many potential methodological errors that may arisen in our model.
+When computing the force distribution for instance, the center of the indentation is defined to be in the center of the system. 
+It does not account for the possibility that it might move, however slightly, du to atomic structure. 
+A possible solution could be to let the center of indentation be defined by the center of mass of the asperity. 
+   
+We found behavioral similarities and differences between the distributions obtained by Robbins and our-self. 
+Considering the differences in our models, it would be interesting to investigate the cause of the discrepancies. 
+Are they due to the presence of friction, or the fact that all bodies are elastic? 
+Will we get the same behavior for other materials?
+Does the distribution depend on ambient conditions?
+At this point we have a model which can be altered as desired, and be used for further studies of friction. 
+
+  
+%Coefficient of friction
 
 
 
