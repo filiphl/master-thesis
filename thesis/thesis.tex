@@ -105,6 +105,23 @@ It's shown that for thin substrates the coefficient increases linearly with the 
 
 
 \begin{acknowledgements}
+Upon the completion of this work I have a small group of people who greatly deserve some appreciations. 
+First of, I would like to thank my supervisor Anders Malthe-Sørenssen for all of our discussions, the goals you have set for me, and the encouragement I am left with after every conversation.
+
+Anders Hafreager has practically been a second supervisor to me, and been of tremendous help. 
+Thanks for the technical support related to LAMMPS, Abel and Atomify, but also for the discussions, conversations, tips related to workflow, writing topics and life in general. 
+You have made yourself available, and initiated video conferences (also with Anders Malthe-Sørenssen).
+I feel lucky to have become a friend of yours. 
+
+A big thanks to Henrik Sveinsson for helping with Abel related Issues, and of course also for the many discussions. You have shown genuine interest in my progress, given me great suggestions for 
+
+Sean Bruce Miller,   
+
+
+  %The amount of knowledge you posses astounds me.   
+	
+	
+	
   Flora Joelle Larsen\\*
   Anders Malthe-Sørenssen \\*
   Anders Hafreager \\*
@@ -938,15 +955,15 @@ This algorithm has good energy conservation, and is symplectic.
 
 
 \section{Potentials}
-As mensioned, the force acting on each atom is comupted from the potential model.
-In order to obtain realistic dynamics, it is therefore crusial to have an accurate potential model. 
-The potentials are usially created for a particular kind of compound, like clay or hydrocarbonds \cite{Cygan2004,VanDuin2001}, and the paramaters are derived from quantum chemestry calculations in combination with emitrical methods.
+As mentioned, the force acting on each atom is computed from the potential model.
+In order to obtain realistic dynamics, it is therefore crucial to have an accurate potential model. 
+The potentials are usually created for a particular kind of compound, like clay or hydrocarbonds \cite{Cygan2004,VanDuin2001}, and the parameters are derived from quantum chemistry calculations in combination with empirical methods.
 Some are more general than others, allowing other sets of parameters to be applied when using different materials. 
-Different potential model may accout for different forces. 
-As we will see, the Lennard-Jones potential only account for steric repulsion and the Van der Waal force, rendering its aplicability very limited.
+Different potential model may account for different forces. 
+As we will see, the Lennard-Jones potential only account for steric repulsion and the Van der Waal force, rendering its applicability very limited.
 Besides the degrees of freedom of the potential, there are other aspects to evaluate as well. 
 Like how we deal with bonds, for instance.
-The choise of potential model should always be dependent on the material and problem at hand.  
+The choice of potential model should always be dependent on the material and problem at hand.  
  
 
 \subsection{Lennard-Jones} \label{sec:LJ}
@@ -1577,17 +1594,34 @@ read_restart name.timeStep.restart
 
 \section{Visualization}
 The LAMMPS package does not provide high-quality visualization software. However, the default formats of the dump command are well known to most of the ones out there. 
-A couple of so-called high-quality visualization tools are listed below:
-\begin{itemize}
-	\item VMD
-	\item AtomEye
-	\item OVITO
-	\item ParaView
-	\item PyMol 
-\end{itemize}
-In this section we will discuss hos to visualize an MD simulation and some of the features of one of the softwares listed, namely Ovito. Lastly we will be presented with a new concept that is currently under development here at the University of Oslo; a software named Atomify.
+A couple of so-called high-quality visualization tools are: VMD, AtomEye, Ovito, ParaView and PyMol.
+All of the listed software are able to read \texttt{.xyz}-files, and also the standard \texttt{.dump}-files produced by LAMMPS.
+Typically, each atom is shown as a sphere, with a given radii and color, dependent on the atom type.
+One can then zoom, rotate and move the camera position. 
+The author has only experience with VMD and Ovito among the listed software, and find Ovito to have the most user friendly interface.
+The user has four viewports, one along each dimension and one that is a perspective view.
+It's possible to color code atoms based on position, remove/hide all atoms outside a region, do analysis on the fly, and has an own scripting tool compatible with python. 
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=0.8\linewidth]{figures/visualization/ovito3}
+%	\caption{Screenshot form Ovito's interface.}
+%	\label{fig:ovito2}
+%\end{figure}
+\subsection{Atomify}
+The user has to relate to several programs when working with LAMMPS. 
+A text editor is used to create/edit scripts, the terminal is used to run the simulations, visualization software as the stated above are used to visualize, and lastly, computed values (which also demand scripts to obtain) are usually plotted using Python or Matlab. 
+A software developed by Anders Hafreager and Svenn-Arne Dragly at the University of Oslo,  
+was recently released in Mac App store.  
+They aim to ease the tedious workflow of working with LAMMPS, by introducing Atomify; a high performance live visualizer for LAMMPS simulations.
+It allows the user to edit input scripts, and by the push of a button start the simulation.
+The simulation is visualized live as it processes.
+Computes and fixes can be monitored, also live, and specific groups can be hidden or shown as one pleases. 
+The possibility of having an all-in-one solution has been of great help to the author, especially when learning to use LAMMPS, and plotting the returned values from computes or fixes. 
+This is a software that we highly recommended for everyone new to LAMMPS.   
 
-\subsection{OVITO}
+
+
+
 
 \chapter{Preparing a molecular dynamics simulation}
 
@@ -1612,7 +1646,7 @@ The format of th \texttt{.cif}-file is not easily readable. To extract the infor
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\linewidth]{figures/unitcell/unitCell.png}
+	\includegraphics[width=0.5\linewidth]{figures/unitcell/unitcell.png}
 	\caption{Unit cell of b-cristobalite. Light and dark spheres represent silicon and oxygen atoms respectively. The unit cell is cubical, with edges of length 7.12Å.}
 	\label{fig:unitcellbcristobalite}
 \end{figure}
@@ -2891,6 +2925,48 @@ Now we can move the files into the source code folder, and build LAMMPS for inst
 make -j8 mpi
 \end{lstlisting}
 The custom compute can then be used as described in section \ref{sec:customCompute}.
+
+
+
+\section{Example code for computing coefficient of static friction}
+The following code was applied to compute the coefficient of static friction. 
+It is divided into three parts.
+The first initializes the system, calling upon the 'system.prepare' and 'system.in', which calls upon 'system.in.init', 'system.data' and 'system.in.setting'. 
+It then equilibrates the system at the desired temperature.
+The second adds a force to the top of the sphere, which increases in magnitude. 
+While the force increases, and the sphere is pushed into the substrate, we save restart files every 10000 step. 
+Finaly, we sequentially load every restart file (corresponding to distinct normal loads), and attach a spring.
+For each value of normal load, we did a simulation for five different velocities at which we pulled the spring.
+Since there we conducted 520 simulations, it was crucial to automate this process. 
+A simple an very specific python script applying regular expression is also shown.
+This script could then be called upon inside a loop iterating through all the combinations.
+We then had to change the value of the substrate thickness in 'system.prepare' before repeating.
+
+\lstinputlisting[caption={system.in.init}, label={lst:CoeffRun1}]{../SiO2/coefficientScript/h5/system.in.init}
+
+\newpage
+
+\lstinputlisting[caption={system.in.settings}, label={lst:CoeffRun1}]{../SiO2/coefficientScript/h5/system.in.settings}
+
+\lstinputlisting[caption={system.prepare}, label={lst:CoeffRun1}]{../SiO2/coefficientScript/h5/system.prepare2}
+
+\newpage
+
+\lstinputlisting[caption={Initialization}, label={lst:CoeffRun1}]{../SiO2/coefficientScript/h5/latexRun1.in}
+\newpage
+\lstinputlisting[caption={Adding vertical force to sphere}, label={lst:CoeffRun1}]{../SiO2/coefficientScript/h5/latexRun2.in}
+\newpage
+\lstinputlisting[caption={Loading spring while monitoring spring force}, label={lst:CoeffRun1}]{../SiO2/coefficientScript/h5/inputScripts/system.run}
+
+\newpage
+\lstinputlisting[caption={Script to create input scripts and corresponding slurm job scripts, taking velocity, time step and number of iterations as input arguments. }, label={lst:CoeffRun1}]{../SiO2/coefficientScript/h5/createJob.py}
+
+
+
+
+
+
+
 
 
 \bibliographystyle{plain}

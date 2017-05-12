@@ -46,7 +46,7 @@
 \BOOKMARK [2][-]{subsection.4.2.2}{Run-time commands}{section.4.2}% 46
 \BOOKMARK [2][-]{subsection.4.2.3}{Output}{section.4.2}% 47
 \BOOKMARK [1][-]{section.4.3}{Visualization}{chapter.4}% 48
-\BOOKMARK [2][-]{subsection.4.3.1}{OVITO}{section.4.3}% 49
+\BOOKMARK [2][-]{subsection.4.3.1}{Atomify}{section.4.3}% 49
 \BOOKMARK [0][-]{chapter.5}{Preparing a molecular dynamics simulation}{part.1}% 50
 \BOOKMARK [1][-]{section.5.1}{Silica}{chapter.5}% 51
 \BOOKMARK [2][-]{subsection.5.1.1}{Unit cell of -cristobalite}{section.5.1}% 52
@@ -83,3 +83,4 @@
 \BOOKMARK [0][-]{appendix.A}{ }{part.2}% 83
 \BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 84
 \BOOKMARK [1][-]{section.A.2}{Building LAMMPS with custom compute}{appendix.A}% 85
+\BOOKMARK [1][-]{section.A.3}{Example code for computing coefficient of static friction}{appendix.A}% 86
