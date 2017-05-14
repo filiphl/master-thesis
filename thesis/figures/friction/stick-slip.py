@@ -73,7 +73,6 @@ for i in xrange(len(s)):
         continue
 
 
-
 #y2 = decay(x[N2:], 50, 0.7)
 
 
@@ -85,8 +84,8 @@ for i in xrange(len(s)):
 
 #ax.legend(loc=1)
 ax.grid()
-ax.set_ylabel(r"Friction force", fontsize=20)
-ax.set_xlabel(r"Time"  , fontsize=20)
+ax.set_ylabel(r"Friction force", fontsize=25)
+ax.set_xlabel(r"Time"  , fontsize=25)
 ax.xaxis.set_label_coords(0.5, -0.05)
 ax.yaxis.set_label_coords(-0.025, 0.5)
 
@@ -149,7 +148,7 @@ ax.arrow(0, ymin, 0., ymax-ymin, fc='#333333', ec='#333333', lw = lw,
 
 
 plt.show()
-#plt.savefig('../../thesis/figures/friction/steadySlide.pdf')
+#plt.savefig('steadySlide.pdf')
 
 Y2 = []
 for y in Y:
@@ -204,8 +203,8 @@ linewidth=4)
 
 #ax.legend(loc=1)
 ax.grid('on')
-ax.set_ylabel(r"Friction force", fontsize=20)
-ax.set_xlabel(r"Time"  , fontsize=20)
+ax.set_ylabel(r"Friction force", fontsize=30)
+ax.set_xlabel(r"Time"  , fontsize=30)
 ax.xaxis.set_label_coords(0.5, -0.05)
 ax.yaxis.set_label_coords(-0.025, 0.5)
 
@@ -255,5 +254,5 @@ ax.arrow(0, ymin, 0., ymax-ymin, fc='#333333', ec='#333333', lw = lw,
 
 
 
-plt.savefig('../../thesis/figures/friction/stick-slip.pdf')
+plt.savefig('stick-slip.pdf')
 plt.show()
