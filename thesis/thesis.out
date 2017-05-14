@@ -77,10 +77,11 @@
 \BOOKMARK [1][-]{section.8.1}{Discussion}{chapter.8}% 77
 \BOOKMARK [2][-]{subsection.8.1.1}{Force distribution}{section.8.1}% 78
 \BOOKMARK [2][-]{subsection.8.1.2}{Coefficient of static friction}{section.8.1}% 79
-\BOOKMARK [2][-]{subsection.8.1.3}{Molecular Dynamics as a method}{section.8.1}% 80
-\BOOKMARK [1][-]{section.8.2}{Summary}{chapter.8}% 81
-\BOOKMARK [1][-]{section.8.3}{Prospects for future work}{chapter.8}% 82
-\BOOKMARK [0][-]{appendix.A}{ }{part.2}% 83
-\BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 84
-\BOOKMARK [1][-]{section.A.2}{Building LAMMPS with custom compute}{appendix.A}% 85
-\BOOKMARK [1][-]{section.A.3}{Example code for computing coefficient of static friction}{appendix.A}% 86
+\BOOKMARK [2][-]{subsection.8.1.3}{Error evaluation}{section.8.1}% 80
+\BOOKMARK [2][-]{subsection.8.1.4}{Molecular Dynamics as a method}{section.8.1}% 81
+\BOOKMARK [1][-]{section.8.2}{Summary}{chapter.8}% 82
+\BOOKMARK [1][-]{section.8.3}{Prospects for future work}{chapter.8}% 83
+\BOOKMARK [0][-]{appendix.A}{ }{part.2}% 84
+\BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 85
+\BOOKMARK [1][-]{section.A.2}{Building LAMMPS with custom compute}{appendix.A}% 86
+\BOOKMARK [1][-]{section.A.3}{Example code for computing coefficient of static friction}{appendix.A}% 87

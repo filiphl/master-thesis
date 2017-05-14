@@ -106,27 +106,25 @@ It's shown that for thin substrates the coefficient increases linearly with the 
 
 \begin{acknowledgements}
 Upon the completion of this work I have a small group of people who greatly deserve some appreciations. 
-First of, I would like to thank my supervisor Anders Malthe-Sørenssen for all of our discussions, the goals you have set for me, and the encouragement I am left with after every conversation.
+First of, I would like to thank my supervisor Anders Malthe-Sørenssen for insightful talks, the goals you have set for me, and the encouragement I am left with after every conversation.
 
 Anders Hafreager has practically been a second supervisor to me, and been of tremendous help. 
-Thanks for the technical support related to LAMMPS, Abel and Atomify, but also for the discussions, conversations, tips related to workflow, writing topics and life in general. 
+Thanks for the technical support related to LAMMPS, Abel and Atomify, but also for the conversations, tips related to workflow, writing topics and life in general. 
 You have made yourself available, and initiated video conferences (also with Anders Malthe-Sørenssen).
 I feel lucky to have become a friend of yours. 
 
-A big thanks to Henrik Sveinsson for helping with Abel related Issues, and of course also for the many discussions. You have shown genuine interest in my progress, given me great suggestions for 
+Henrik Sveinsson has helped me with Abel related Issues, and shown genuine interest in my progress. 
+All the above have supported me through relevant and constructive discussions, which has benefited me greatly. 
 
-Sean Bruce Miller,   
+Lastly I would like to thank my wife, Flora Joelle Mbuebue Larsen, for her patience and love throughout my yeas of studies. 
+You, and our son to come, are my greatest source of motivation.  
+
 
 
   %The amount of knowledge you posses astounds me.   
 	
 	
-	
-  Flora Joelle Larsen\\*
-  Anders Malthe-Sørenssen \\*
-  Anders Hafreager \\*
-  Henrik Sveinsson \\*
-  Kjetil Thøgersen
+
 \end{acknowledgements}
 {
 \hypersetup{linkcolor = black}
@@ -212,22 +210,21 @@ If approved, it can be included in future distributions and be available for all
 \item We also developed a method that partitions a domain in a two-dimensional grid, and applies plane regression on points within each cell of the grid (section \ref{sec:leastSquareRegression}).  
 This method was used to approximate the gradient of the substrate's surface.
 
-\item Modeled all simulations, and written all algorithms in the post-processing scripts. We do utilize open source python packages in these, like: NumPy, Matplotlib, SciPy and Pickle.
+\item Modeled all simulations, and written all algorithms in the post-processing scripts. We do utilize open-source python packages in these, like: NumPy, Matplotlib, SciPy and Pickle.
 
 \end{itemize}
 
 \section{Structure of the thesis}
-This thesis consists of three parts. 
+This thesis consists of two parts. 
 In the first part, we present the fundamental theory and methods relevant to the problem. 
 This includes an introduction to friction, elasticity and contact mechanics.
 We will introduce theory, concepts and methods used in Molecular dynamics. 
 The software LAMMPS, which we have used extensively, will be presented, and is meant as a quick introduction for readers not yet familiar with it. 
 
-The second part describes or methods and results.
+In the second part we describe description our methods, post our results, and discuss these.
 Here we will show how we modeled the system, what processes we induce with LAMMPS, and how we measured and analyzed the results. 
-The results will also be posted in this part.
-
-In the third part, we discuss the results, make conclusions and briefly summarize what we have done, what we have achieved and whether our initial goals has been met.
+The results will be posted immediately after the methods description, but the main discussion is found in the final chapter. 
+Finally, we met a conclusion and briefly summarize what we have done, what we have achieved and whether our initial goals has been met.
     
 	
 
@@ -2197,6 +2194,7 @@ This way the shear force has a defined direction, but we no longer have the usua
 	\vspace{0mm}
 	\caption{Spatial and radial distribution of the magnitude of force, as well as normal and shear force. 
 		The spatial distributions shown on the top row are equivalent to the ones in figure \ref{fig:forceDistributions}, only in polar coordinates. 
+		The magnitude of the force components (y-axis) are the force acting on a square of area $7.12\mathring{A}\times7.12\mathring{A}$.
 		The value of the radial bins at a given radius $r$ in the figures at the bottom row, are the average value of the column at that $r$ in the top row.
 		The units of $r$ is unit cell length (7.12$\mathring{A}$).
 		This figure show the result from a simulation where we push a sphere with radius of curvature $R=200\mathring{A}$,  40$\mathring{A}$ into a half-space of size $327.52\mathring{A} \times 327.52\mathring{A} \times 157.64 \mathring{A}$. 
@@ -2205,6 +2203,8 @@ This way the shear force has a defined direction, but we no longer have the usua
 \end{figure}
 
 
+
+  
 
 \section{Results - Radial force distribution} \label{sec:resultsRadialForceDistribution}
 
@@ -2800,13 +2800,49 @@ Having 8 different substrate thicknesses the number (of successful) simulations 
 The simulations used on average 80 hours of total CPU time, amounting to 41600 hours of CPU time to produce these results.
 
 
+\subsection{Error evaluation}
+%The sources of error when working with Molecular Dynamics are very dependent on the system we study.
+It's always of interest to know how reliable our results are. 
+This is however a difficult question to answer when working with Molecular Dynamics. 
+Our results are highly dependent on our model and methods. 
+Changing the potential model or thermostat may affect the results.
+Nevertheless, ones we have decided upon these configurations, we can analyze the data errors produces.
+If we do the same simulation several times, using different initial conditions, we may compute an average and also the standard deviation in the results.
+We did this for the simulation discussed in chapter \ref{chp:contactForces}. 
+We repeatedly did the same simulation, using a different \textit{seed} for the initial velocities. 
+Thus, the velocities were distributed randomly 10 different ways. 
+An averaged radial force distribution was computed, as well as the standard deviation in the results. 
+This is shown in figure averagedDistributionsN10, where the line drawn is the average and the surrounding shaded area represents the standard deviation. The distance between the shaded area's edge to the average is the standard deviation.
+We see that at large radial distance, the results conform. 
+Close to the center, there are much larger deviations. 
+This is reassuring. 
+The low deviation indicates that all the simulations gave approximately the same result at large radial distance, where the statistical foundation is better. 
+Closer to the center, the radial average is computed from much fewer contributions, making the variance larger. 
+These errors are not significant to our conclusion in this case.
+
+For the simulation concerning the coefficient of static friction, we did not perform such an analysis. 
+The reason is simply the huge amount of computational power needed, and therefore economical expense. 
+This should off course be kept in mind, should the results of this thesis be used for future work.
+%   
+
+ 
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth, trim={18mm 40mm 0mm 16mm}, clip] {figures/forceDistribution/radialDistribution/averagedDistributionsN10}
+	\caption{Averaged force distribution from 10 simulations following the procedure described in \ref{chp:contactForces}. 
+		The solid line represents the average radial distribution, while the surrounding shaded area represents the standard deviation in the resulting data. 
+	}
+	\label{fig:averagedDistributionsN10}
+\end{figure}
+
+
 \subsection{Molecular Dynamics as a method}
 Since the problem at hand was partly to compare continuum theory to nano-scale measurements, Molecular Dynamics was a suitable method, because this is the typical length scale we operate on in Molecular Dynamics. 
 We observed that due to the time scales we're able to compute, we may be obliged to simulate processes at high velocities, for instance pulling a spring or lowering the asperity. 
 In some cases this may not be suitable, but it sufficed for our task.
 The qualitative results from Molecular Dynamics are difficult to evaluate, since it is highly dependent on many factors: potential model, thermostat, boundary conditions, etc.. 
 One must therefore be careful when deciding upon these aspects of the model. 
-However, if the conditions are reasonable, the quantitative results may provide valuable insight in processes that are difficult to measure. 
+However, if the conditions are reasonable, the quantitative results may provide valuable insight in processes that are difficult to measure otherwise. 
 It is also a good supplement to experiments, as it has been in this work.
 
 %In comparison to other simulation methods, I cannot think of a better one to simulate the dynamics of this many atoms.
