@@ -2726,12 +2726,13 @@ It is therefore equivalent to the pressure distribution, we need only to scale t
 \subsubsection*{Comparison with Hertz theory}
 The continuum prediction of the distribution with absence of friction\footnote{Among other assumptions (section \ref{sec:hertzTheory}).} was developed by Hertz, as described in section \ref{sec:hertzTheory}. 
 In order to compare our distribution to that of Hertz theory, we need to know the radii of contact $a$ \eqref{eq:HertzRadii}, and the maximum force $p_0$ \eqref{eq:HertzMaxPressure}.
-A challenge is that we do not know $E^*$, and $E^*$ is not isotropic, so we cannot use equation \eqref{eq:effectiveModulus} as it stands. 
+A challenge is that we do not know $E^*$, and since our material is anisotropic, we cannot use equation \eqref{eq:effectiveModulus} as it stands. 
 Theories can be applied with an effective modulus $E^*$ that depends on orientation and is determined numerically \cite{Johnson1985},
 and there exists methods for defining the contact area \cite{RobbinsDefiningContactAtTheAtomicScale}, and thereby $a$.  
 However, due to limited time and the fact that it is obvious to the author that there are behavioral differences, we do not attempt to compute the theoretical prediction.
 %and can't compute it from equation \eqref{eq:effectiveModulus}, since $\beta$-cristobalite is not an isotropic crystal. 
-Instead, we may naively assume the radii of contact $a$ to be the shortest radial distance where the force is zero, $F(r)=0$. Similarly, we may assume $p_0$ to be the larges measured force.
+Instead, we may naively assume the radii of contact $a$ to be the shortest radial distance where the force is zero, $F(r)=0$. 
+Similarly, we may assume $p_0$ to be the largest measured force.
 It's naive because we expect our results to deviate from the theory, and so we are probably wrong in assuming  %of Robbins \cite{RobbinsSingleAsperity}, he obtained roughly the same maximum pressure $p_0$ as Hertz theory, but his edge $a$ was way larger. This made his result more linear than the theory predicted. 
 to have the same maximum force $p_0$ and contact radii $a$ as Hertz. Also, the simulations performed by Robbins resulted in a radii of contact that was far from the prediction. 
 Nevertheless, this enables us to compare the form of the theory's distribution to the one obtained by our simulation, but nothing else.
@@ -2748,7 +2749,7 @@ The dashed line represents the distribution predicted by Hertz.
 
 Not surprisingly, we see big differences in the form of the distributions. 
 The one resulting from the simulation has a much more linear form than what was predicted by Hertz, seemingly in the whole area of contact.
-The slope of our normal force distribution as a function of radial distance does not fall as \\$dF/dr=-\infty$, like Hertz theory predicts.
+The slope of our normal force distribution as a function of radial distance does not fall as \\$dF/dr=-\infty$ at the edge, like Hertz theory predicts.
 Similarly we do not have $dF/dr=0$ at the center.
 Reasons for the differences may be numerous. 
 In the simulations, we break almost every assumption made by Hertz.
@@ -2771,11 +2772,12 @@ Their results are shown in figure \ref{fig:robbinsResults}.
 
 As it is the surface atoms that compose the contact forces, we will compare our results to the distribution obtained by an amorphous tip.
 This distribution seems to be approximately linear, for most of the range of $r<a$. 
-We have drawn a dashed line in subfigure (d) to highlight this observation. 
+We have drawn a dashed line in subfigure (d) of figure \ref{fig:robbinsResults} to highlight this observation. 
 It conformed much better with the theory near the center, though as mentioned - and visible in the figure - there is a weaker statistical foundation for these measurements.
 
-The form of our distribution conform surprisingly well with Robbins' at radial distances not too close to the center. Both were seemingly linear in this region. 
-They deviate only near the center, where our result continues its linear behavior, while Robbins' bends off closer to the theoretical prediction.
+The form of our distribution conform surprisingly well with Robbins' at radial distances not too close towards the center. 
+Both were seemingly linear in this region. 
+They deviate only near the center, where our result continues its linear behavior, while Robbins' bends off closer towards the theoretical prediction.
 We find it surprising because of the big differences in our methods: presence of friction, elasticity of the sphere, potential model and material. 
 Also, since there are so many differences in our methods, it is difficult to point out exactly what causes the dissimilarity. 
 To accomplish that, we would have to use much more advanced theoretical models \cite{Johnson1985}, which is impossible to do in a short project like this. 
@@ -2790,13 +2792,13 @@ However, the fact that both our simulation resulted in a somewhat linear form, m
 
 
 \subsection{Coefficient of static friction}
-The coefficient of friction was found to be dependent on the substrate thickness, having a lower value for thinner substrates. 
+The coefficient of static friction was found to be dependent on the substrate thickness, having a lower value for thinner substrates. 
 This dependence proved to be in agreement with the experimental results of Julien Scheibert \cite{Scheibert2017}. 
 His experiment included a tip made out of polymer indenting a substrate of the same polymer, laying on top of glass.
 He concluded that for thin substrates, the coefficient of friction between the two bodies increases linearly. 
-Even though we do not use an isotropic polymer, but a crystalline silica, we see the same tendency; 
+Even though we didn't use an isotropic polymer, but a crystalline silica, we saw the same tendency; 
 the coefficient increased linearly. 
-This coefficient was only measured for thin substrates ($\sim$1nm-5nm), and we do not expect this linear behavior to remain for thick substrates. 
+The coefficient was only measured for thin substrates ($\sim$1nm-5nm), and we do not expect the linear behavior to remain for thick substrates. 
 Ultimately, it should converge towards a finite value as the substrate thickness increases.
 These results infer that material properties may behave differently at nano-scale than they do macroscopically. 
 
@@ -2812,7 +2814,7 @@ The test of finding the silica's melting point (section \ref{sec:meltingPoint}) 
 However, quantitative behaviors should still be accurate and reliable.
 This is why we do not bother measuring the slope of the linear dependence, but merely state that there is a linear dependence.   
 Also, we have only completed 8 measurements. 
-If we conducted an additional measurement with a thickness of 9 unit cells, and got a result deviating from this linear form, it could potentially change our conclusion completely. 
+If we conducted an additional measurement with a thickness of 9 unit cells, and got a result deviating from this linear form, it could potentially change our conclusion. 
 Since we cannot simulate indefinitely, we have to cease when we are confident in the conclusion.  
 In this case 8 simulations was found to be sufficient. 
 Also, each single measurement requires a lot of computational power. 
@@ -2835,8 +2837,7 @@ We did this for the simulation discussed in chapter \ref{chp:contactForces}.
 We repeatedly did the same simulation, using a different \textit{seed} for the initial velocities. 
 Thus, the velocities were distributed randomly 10 different ways. 
 An averaged radial force distribution was computed, as well as the standard deviation in the results. 
-This is shown in figure averagedDistributionsN10, where the line drawn is the average and the surrounding shaded area represents the standard deviation. The distance between the shaded area's edge to the average is the standard deviation.
-We see that at large radial distance, the results conform. 
+We ssw that at large radial distance, the results conform. 
 Close to the center, there are much larger deviations. 
 This is reassuring. 
 The low deviation indicates that all the simulations gave approximately the same result at large radial distance, where the statistical foundation is better. 
