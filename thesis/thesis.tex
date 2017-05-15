@@ -1633,13 +1633,15 @@ This is a software that we highly recommend for everyone new to LAMMPS.
 
 We wish to construct a system consisting of two bodies made out of silica: a parallelepiped slab and a sphere cap. In order to do this we need to generate the spacial position coordinates (x,y,z) of every single atom. Considering that we are making a system consisting of about $10^5$ atoms, this is obviously not done manually. We have chosen to use a tool named \textit{Moltemplate}\footnote{\href{http://www.moltemplate.org/index.html}{http://www.moltemplate.org/index.html}}, which is included in the LAMMPS distribution.
 
-The main idea is to manually enter the coordinates of only the atoms in a unit cell of the material one wish to generate, and then simply copy this unit cell wherever desired. The software will shift the coordinates of the copied unit cell by the displacement from the original image. In addition it will generate files containing data such as which atoms they share bonds with, if any, and angles between such bonds. 
+The main idea is to manually enter the coordinates of only the atoms in a unit cell of the material one wish to generate, and then simply copy this unit cell wherever desired. In addition to atoms positions it will generate files containing data such as which atoms they share bonds with, if any, and angles between such bonds. 
 
 \section{Silica}
 Silica is a chemical compound also known as Silicon dioxide, having the chemical formula SiO$_2$. It has several polymorph structures, the most common being quartz, which is one of the most abundant minerals in the Earth's crust. Other polymorphs include cristobalite, tridymite, coesite and more.    
-For our purpose it is insignificant which one we choose. 
+If we wish to obtain amorphous silica it's insignificant which one we choose. 
 Once the material is melted, it is indifferent which configuration we started from, as long as the density is correct.
-In this project we will build the constituents of the system from a type of cristobalite named $\beta$-cristobalite. This is mainly because it has a simple structure and a cubical unit cell.
+However, we may wish to keep the crystalline structure, in which case the choice does matter.
+In this project we will build the constituents of the system from a type of cristobalite named $\beta$-cristobalite. 
+This is mainly because it has a simple structure and a cubical unit cell.
 
 
 \subsection{Unit cell of $\beta$-cristobalite}
@@ -1648,19 +1650,19 @@ At this site one can download a \texttt{.cif}-file (Crystallographic Information
 In the case of $\beta$-cristobalite the unit cell is cubical with edges of length 7.12Å. 
 It contains 24 atoms: 8 silicon atoms and 16 oxygen atoms. 
 The density of the unit cell can easily be computed and is 2.2114 g/cm$^3$.
-The format of th \texttt{.cif}-file is not easily readable. To extract the information we have used a tool named \texttt{cif2file}\footnote{\href{http://www.cif2cell.com-about.com/}{http://www.cif2cell.com-about.com/}}, developed by Torbjörn Björkman. 
+The format of the \texttt{.cif}-file is not easily readable. To extract the information we have used a tool named \texttt{cif2file}\footnote{\href{http://www.cif2cell.com-about.com/}{http://www.cif2cell.com-about.com/}}, developed by Torbjörn Björkman. 
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\linewidth]{figures/unitcell/unitcell.png}
-	\caption{Unit cell of b-cristobalite. Light and dark spheres represent silicon and oxygen atoms respectively. The unit cell is cubical, with edges of length 7.12Å.}
+	\caption{Unit cell of $\beta$-cristobalite. Light and dark spheres represent silicon and oxygen atoms respectively. The unit cell is cubical, with edges of length 7.12Å.}
 	\label{fig:unitcellbcristobalite}
 \end{figure}
 
 
 
 \section{Constructing a crystal}
-The coordinates gotten from the \texttt{.cif}-file can now be implemented into \textit{moltemplate} together with whatever bond and angle data required by the potential. In our simulations we will use the Vashishta potential, which does not require these. 
+The coordinates gotten from the \texttt{.cif}-file can now be implemented into \textit{moltemplate} together with whatever bond and angle data required by the potential. In our simulations we will use the Vashishta potential, which does not require these, as it is non-bonded. 
 Moltemplate has its own structure and syntax. 
 The first step to build up a larger material is, as mentioned, to create the unit cell. 
 Data concerning the unit cell are placed in a \texttt{.lt}-file, which is readable by Moltemplate. 
@@ -1669,7 +1671,7 @@ For a more profound understanding of the structure and syntax of these files, th
 
 
 \lstinputlisting[caption={Typical Moltemplate file containing unit cell data. The columns of the "Data Atoms" section hold, from left to right, information of atom ID, atom type, x-, y- and z-position. The "Data Masses" section stores the weight of silicon and oxygen atoms in atomic mass units.}, label=lst:beta-cristobalite.lt, language=LammpsData]{../SiO2/large/beta-cristobalite.lt}
-We use the unit cells as building blocks, placing them concurrently until we have a crystal of the desired size. For example purposes, we generate a large cube of $15\times15\times15$ unit cells, i.e. 81000 atoms. This is done in line 17-21 of listing \ref{lst:cubeSiO2} below.
+We use the unit cells as building blocks, placing them concurrently until we have a crystal of the desired size. For example purposes, we generate a cube of $15\times15\times15$ unit cells, i.e. 81000 atoms. This is done in line 18-20 of listing \ref{lst:cubeSiO2} below.
 \lstinputlisting[caption={
 	Moltemplate script to build a cube out of $15^3$ unitcells of $\beta$-cristobalite (81000 atoms), and also specify system configurations (see section \ref{sec:systemConfigurations}). 
 	The "write\_once" sections create the files containing their contents. Line 17 imports the unit cell shown in listing \ref{lst:beta-cristobalite.lt}, and line 19-21 copies it concurrently in a $15\times15\times15$ cube.}, label=lst:cubeSiO2, language=LammpsData]{../SiO2/large/system.lt.latex}
@@ -1707,16 +1709,16 @@ The mean square displacement is the average of the square of the displacement ev
 \langle r^2(t)\rangle = \frac{1}{N}\sum_{i=1}^{N}\lr{\vec{r}_i(t)-\vec{r}_i(0)}^2. \label{eq: diffusion constant}
 \end{equation}
 where $\vec{r}_i(t)$ is the position of atom $i$ at time $t$ and $N$ is the total number of atoms. 
-
-The mean square displacement is expected to related to the diffusion of atoms though
+The mean square displacement is expected to relate to the diffusion of atoms through
 \begin{equation}
 	D = \frac{\langle r^2(t)\rangle}{2dt},
 \end{equation}
 where $D$ is the diffusion coefficient, and $d$ is the number of dimensions \cite{EinsteinBrowninanMotion}. 
 
 In practice the mean square displacement was computed using a standard \textit{compute} in LAMMPS, namely the \textit{msd compute}\footnote{\url{http://lammps.sandia.gov/doc/compute_msd.html}}. 
-At every time step it stores a vector of 4 elements; the first 3 are the squared $dx$, $dy$ and $dz$ displacements averaged over the atoms of the specific group, while the 4th is the total mean square displacement for the specific group, i.e. $(dx^2 + dy^2 + dz^2)$. 
-The $15\times15\times15$ system is sufficient for this test. The procedure is rather simple. For $\beta$-cristobalite we expect the melting point to be about 1986K\footnote{\url{https://en.wikipedia.org/wiki/Cristobalite}}, so we start out at 1500K. After equilibration the following steps are repeated until we reach a target temperature. 
+At every time step it stores a vector of 4 elements. 
+The first 3 are the squared $dx$, $dy$ and $dz$ displacements averaged over the atoms of the specific group, while the 4th is the total mean square displacement for the specific group, i.e. $(dx^2 + dy^2 + dz^2)$. 
+The $15\times15\times15$ system is sufficient for this test. The procedure is rather simple. For $\beta$-cristobalite we expect the melting point to be about 1986K\footnote{\url{https://en.wikipedia.org/wiki/Cristobalite}}, so we start out at 1500K. After equilibration, the following steps are repeated until we reach a target temperature. 
 \begin{itemize}
 	\item equilibrate for the current temperature
 	\item compute msd for $N$ time steps
@@ -1750,7 +1752,7 @@ Unfortunately, this also show that there are some qualitative detail that is los
 %	\label{fig:drawing}
 %\end{figure}
 
-The huge cube of silica can be carved however we like by defining regions from which we delete the containing atoms. 
+The cube of silica can be carved however we like by defining regions from which we delete the containing atoms. 
 In LAMMPS this is done using the \texttt{region}, \texttt{union}, \texttt{intersect} and \texttt{delete\_atoms} commands. 
 Our implementation is stated in Listing \ref{lst:sculpting}, which is very simple due to the way we are going to treat the boundary conditions. 
 We start out by defining a spherical region labeled \texttt{sphereRegion}, described by the xyz-coordinates of its center and a radii. 
@@ -1762,7 +1764,7 @@ Finally, we delete the atoms that are not in the sphere nor the slab; we delete 
 \lstinputlisting[caption={Defining regions to keep or delete from a system of dimensions $106.8\times106.8\times106.8$ Å.}, label={lst:sculpting}]{../SiO2/small/system.prepare.latex}
 For the purpose of deleting atoms, the creation of groups was superfluous.
 However, at a later stage we will utilize them and this is an appropriate place for them to be assigned. 
-The appliance of the script in Listing \ref{lst:sculpting} on the system is shown in figure \ref{fig:hugeCube} is shown in figure \ref{fig:carvedxz}, where our perspective is along the y-axis.
+The appliance of the script in Listing \ref{lst:sculpting} on the system is shown in figure \ref{fig:carvedxz}, where our perspective is along the y-axis.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.5\linewidth]{figures/CreatingSystem/carved_xz.png}
@@ -1772,14 +1774,15 @@ The appliance of the script in Listing \ref{lst:sculpting} on the system is show
 
 
 \section{Moving the sphere towards the slab} \label{sec:movingSphereDown}
-We wish to push the sphere down onto the slab in order to create a deformation on the slab. There are many approaches to accomplish this. 
+We wish to push the sphere down onto the substrate in order to create a deformation on the substrate. 
+There are many approaches to accomplish this. 
 One could apply an external force, pushing the sphere with a controlled force. 
 Another is to move the sphere at a controlled, constant velocity.  
 We will use both of these methods on separate parts of the project.
 For the first part, we have settled on the following strategy:
 We apply periodic boundary conditions in all three dimensions. 
 %This will in practice imply that the sphere cap and the slab are connected through the z-boundaries. 
-Secondly, we freeze the atoms at the bottom of the slab so that their positions are fixed. 
+Secondly, we freeze the atoms at the bottom of the substrate so that their positions are fixed. 
 They still interact with other atoms, but we restrain them from moving. 
 This will, due to the periodic boundary conditions, allow us to consider the sphere cap and the slab as if they are not connected to each other, but to independent blocks of silica glass.  
 For every $N$ time steps we decrease the height of the system, while remapping the positions of the atoms. 
@@ -1792,11 +1795,11 @@ One technique to fix atom positions is to explicitly set their velocity and forc
 A more efficient method is to simply omit the atoms of consideration from time-integration. 
 This way we do not bother computing the force acting on them, updating their velocity or position at all! 
 To do this, we simply create a group that contains all atoms except the once who should be fixed.
-Listing \ref{lst:FreezeStuff} show how to tell LAMMPS to only time-integrate the atoms in the group \texttt{excludingBT}, which excludes the bottom and tom regions of our system.
+Listing \ref{lst:FreezeStuff} show how to tell LAMMPS to only time-integrate the atoms in the group \texttt{excludingBT}, which excludes the bottom and top regions of our system.
 The omitted atoms are still considered to be present, we just don't bother updating their movement.
 
 To deform/resize the system, we may use the command shown in listing \ref{lst:Deform}. 
-This command changes the position of the upper boundary of in the z-dimension, by the length \texttt{compressionLength} during a \texttt{run}.
+This command changes the position of the upper boundary of in the z-dimension by the length \texttt{compressionLength} during a \texttt{run}.
 Thus if we choose the run to last $N$ time steps, the boundary will move with the velocity 
 \begin{equation}
 	\vec{v}_z = -\frac{\texttt{compressionLength}}{N\cdot0.002} ~~ [\text{\AA/ps}]
