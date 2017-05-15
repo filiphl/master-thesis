@@ -111,15 +111,16 @@ class ForceDistribution:
                 if not np.isnan( np.cos( self.surf.getAngle( self.force.matrix[i][j], self.surf.grid[mi, mj] ) ) ):
                     a = np.dot( self.force.matrix[i,j],  self.surf.grid[mi, mj] )
                     b = np.dot( self.force.matrix[i,j], -self.surf.grid[mi, mj] )
-                    if a > b:
-                        self.normal[i,j] = b # a
+                    #if a > b:
+                    self.normal[i,j] = b # a
                         #self.shear[i,j] = np.sqrt(self.force.absoluteForces[i,j]**2-b**2)
                         #Fs[i,j] = self.force.matrix[i,j] + self.surf.grid[ int(i/self.mapping), int(j/self.mapping) ] * b
-                    else:
-                        self.normal[i,j] = b #b
+                    #else:
+                        #self.normal[i,j] = b #b
                         #self.shear[i,j] = np.sqrt(self.force.absoluteForces[i,j]**2-b**2) #a
 
-                    Fn = self.surf.grid[mi, mj]*self.normal[i,j]
+
+                    Fn = b
                     Fs[i,j] = self.force.matrix[i,j] + Fn # The reason for the addition is that Fn points downwards, rather than upwards. Too late to change now.
 
                     self.shear [i,j] = np.sqrt(sum(Fs[i,j]**2))
@@ -183,9 +184,9 @@ class ForceDistribution:
 
             plt.gcf().subplots_adjust(bottom=0.23)
             #plt.tight_layout()
-            if self.timeStep:
+            #if self.timeStep:
                 #fig.suptitle(r"$ $Time step %d"%self.timeStep, fontsize=16)
-                plt.savefig('timeSteps/radialOnly/timestep%06d_bottom.pdf'%self.timeStep)
+                #plt.savefig('timeSteps/radialOnly/timestep%06d_bottom.pdf'%self.timeStep)
 
 
 
@@ -247,9 +248,9 @@ class ForceDistribution:
             ax[0,0].set_yticklabels([r'$0$', r'$\pi/2$', r'$\pi$', r'$3\pi/2$', r'$2\pi$'],  fontsize=ticksfontSize)
             ax[1,0].set_yticklabels(yax, fontsize=ticksfontSize)
 
-            if self.timeStep:
+            #if self.timeStep:
                 #fig.suptitle(r"$ $Time step %d"%self.timeStep, fontsize=16)
-                plt.savefig('timeSteps/timestep%06d.pdf'%self.timeStep)
+                #plt.savefig('timeSteps/timestep%06d.pdf'%self.timeStep)
     #------------------------------------------------------------------------------#
 
 if __name__ == '__main__':

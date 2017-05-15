@@ -177,7 +177,7 @@ Thus, we will simulate a more realistic situation than Robbins did.
 	The model should consist of a spherical cap - representing the asperity - and a flat substrate. 
 	We must decide upon a material to use, and choose a potential model suitable to this type of simulation. 
 	\item[b) Compute contact force distribution]\hfill \\
-	We wish to compute the spacial force distribution in the area of contact acting between the two bodies, preferably component wise. 
+	We wish to compute the spatial force distribution in the area of contact acting between the two bodies, preferably component wise. 
 	In order to achieve this, we will need to be able to recognize the contact forces. 
 	Due to the simple geometry of the system, we may define contact forces as any force acting on atoms of one body from the atoms of the other.
 	Secondly, we need to know the normal vector of the surface, in order to define its normal and shear components.
@@ -1631,7 +1631,7 @@ This is a software that we highly recommend for everyone new to LAMMPS.
 
 \chapter{Preparing a molecular dynamics simulation}
 
-We wish to construct a system consisting of two bodies made out of silica: a parallelepiped slab and a sphere cap. In order to do this we need to generate the spacial position coordinates (x,y,z) of every single atom. Considering that we are making a system consisting of about $10^5$ atoms, this is obviously not done manually. We have chosen to use a tool named \textit{Moltemplate}\footnote{\href{http://www.moltemplate.org/index.html}{http://www.moltemplate.org/index.html}}, which is included in the LAMMPS distribution.
+We wish to construct a system consisting of two bodies made out of silica: a parallelepiped slab and a sphere cap. In order to do this we need to generate the spatial position coordinates (x,y,z) of every single atom. Considering that we are making a system consisting of about $10^5$ atoms, this is obviously not done manually. We have chosen to use a tool named \textit{Moltemplate}\footnote{\href{http://www.moltemplate.org/index.html}{http://www.moltemplate.org/index.html}}, which is included in the LAMMPS distribution.
 
 The main idea is to manually enter the coordinates of only the atoms in a unit cell of the material one wish to generate, and then simply copy this unit cell wherever desired. In addition to atoms positions it will generate files containing data such as which atoms they share bonds with, if any, and angles between such bonds. 
 
@@ -2090,11 +2090,13 @@ This can be expressed as a matrix equation.
 \end{array} \right]
 \label{linearSystemPlane}
 \end{equation}
-where we have omitted the indices to better readability.
+where we have omitted the indices from the sums to better readability.
 Solving this linear system retrieves the optimal coefficients in the sense of the least squares method. 
 The normal vector of the plane will be $\vec{n}=[a,b,1]$. 
-This vector will be used to compute the size of the normal force. 
-Since we know the average force on an atom in the chunk, and the normal vector from the approximated slope of the surface, we can compute the normal force simply as
+This vector will be used to compute the normal force. 
+To use this method, we stored the position of all the atoms at the substrate surface. 
+These positions were the data points at which we did the regression.
+Since we know the force acting on a chunk/cell, and now also the normal vector from the approximated plane of the surface atoms, we can compute the normal force as
 
 \begin{equation}
 	\vec{F_N} 
@@ -2107,9 +2109,9 @@ The cosine of the angle between the two vectors is given as
 meaning that the normal force may be expressed as
 \begin{equation} 
 %	\vec{F_N} = \frac{\lr{\vec{F}\cdot\vec{n}}}{|\vec{n}|} \frac{\vec{n}}{|\vec{n}|} .\\
-\vec{F_N} = \lr{\vec{F}\cdot\vec{n}} \frac{\vec{n}}{|\vec{n}|^2} .
+\vec{F_N} = \frac{\vec{F}\cdot\vec{n}}{|\vec{n}|} \frac{\vec{n}}{|\vec{n}|} .
 \end{equation}
-In general there are two valid normal vectors $\vec{n}$ that satisfy the plane equation. However, this procedure assures that we always get the one with a positive z-component.  
+In general there are two valid normal vectors $\vec{n}$ that satisfy the plane equation. However, our procedure assures that we always get the one with a positive z-component.  
 If we compute the contact forces acting on the sphere from the substrate, a positive normal force, will imply a repulsive force, while a negative value an attractive force.
 
 %{\color{editColor} We will assume that the normal vector $\vec{n}$ is always in the same general direction as the average force, though obviously it may just as well point in the opposite direction and still be a normal vector to the plane. Programatically this was done in python as shown in \ref{angleVecLine}.} 
@@ -2150,20 +2152,20 @@ In many applications where the bin width can be large compared to the length of 
 However, the current radii of the contact area between the sphere and the slab is only about 15-20 unit cells, and therefor having a large bin width will result in very few data points. 
 
 
-A different, slightly more sophisticated approach is to compute the fraction of the area of each cell that actually is within the bin, and multiply this by the value associated with the cell. This product will be the cells contribution.
+A different, slightly more sophisticated approach is to compute the fraction of the area of each cell that's actually within the bin, and multiply this by the value associated with the cell. This product will be the cells contribution.
 We can sum all these contributions and average them by dividing by the ratio of the bin area $A$ to the area of a cell $a$.  
 This means that even cells that do not have their center within the bin might contribute to the resulting bin average. 
 How much, however, will depend on the fraction of the cell's area that is within the bin.
-This may be regarded as a smoothing of our coarse force distribution, and will give a more correct result than the coarse binning method already described. 
+This may be regarded as a smoothing of our coarse radial binning method, and will give a more correct result than the coarse binning method already described. 
 An illustration of this binning method is shown in figures \ref{fig:radialBinningWeights}.
 The figures clearly show that some cells have a larger area within the bin than others, and thus contribute more. 
 
 
 By exploiting the symmetry we are only required to compute the weights for cells in a section of the domain, and not all cells. 
-I have chosen to regard only the upper right corner of the system, meaning $x\geq x_c$ and $y\geq y_c$, where $(x_c, y_c)$ is the coordinates of the center of the indentation.
+We have chosen to regard only the upper right corner of the system, meaning $x\geq x_c$ and $y\geq y_c$, where $(x_c, y_c)$ is the coordinates of the center of the indentation.
 As the actual computations are easy to follow from the source code, the reader is encouraged to take a look at it if this is of interest. 
-In our computations we have regarded unit cell length (7.12\AA) as unit of length.
-The bin width was set to 1, though this is allowed to vary. 
+In our computations we have partitioned the space into square cells of length equal the unit cell length (7.12\AA).
+The bin width was set to 1 unit cell length, though this is allowed to vary. 
 
 
 \begin{figure}[H]
@@ -2171,7 +2173,7 @@ The bin width was set to 1, though this is allowed to vary.
 	\resizebox{0.4\linewidth}{!}{
 		\input{figures/tikz/radialBinning.tikz}
 	}
-	\caption{Coarse radial binning. The value appointed to the radial bin is the average of the weights of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.}
+	\caption{Coarse radial binning. The value appointed to the radial bin is the average of the value of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.}
 	\label{fig:radialBinningChoars}
 \end{figure}
 
@@ -2192,10 +2194,9 @@ The normal force was found by treating the data as described in section \ref{sec
 What is meant by shear force is in this situation dependent on how we define it. 
 Usually, the shear force is the component of contact force that is parallel to the contact surface (perpendicular to the normal force). 
 However, by strictly using that definition, the computed shear force would have only positive contributions, and no notion of direction.
-This would also not fit with the distributions derived by Hertz. 
-Instead, we define the shear force as the radial component of the shear force as defined above.
-Thus, if its general direction is away from the center of indentation, its value will  be positive, while if its towards the center it is negative. 
-This way the shear force has a defined direction, but we no longer have the usual relation $\vec{F}=\vec{F_N} + \vec{F_s}$.
+Instead, we define the shear force as the radial component of the shear force.
+If its general direction is away from the center of indentation, its value will  be positive, while if its towards the center it is negative. 
+This way the shear force has a defined direction.
 %These results will be discussed further in chapter \ref{sec:resultsRadialDistribution}.
 
 
