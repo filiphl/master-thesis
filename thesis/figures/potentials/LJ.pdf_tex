@@ -50,7 +50,7 @@
   \makeatother%
   \begin{picture}(1,0.33333333)%
     \put(0,0){\includegraphics[width=\unitlength,page=1]{figures/potentials/LJ.pdf}}%
-    \put(0.1974074,0.21){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\theta$}}}%
-    \put(0.41407409,0.13585208){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{\large$\epsilon$}}}%
+    \put(0.1974074,0.21){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\sigma$}}}%
+    \put(0.41407409,0.14){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\epsilon$}}}%
   \end{picture}%
 \endgroup%
