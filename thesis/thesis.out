@@ -60,28 +60,31 @@
 \BOOKMARK [2][-]{subsection.6.1.1}{Look for similar computes}{section.6.1}% 60
 \BOOKMARK [2][-]{subsection.6.1.2}{Creating the class}{section.6.1}% 61
 \BOOKMARK [2][-]{subsection.6.1.3}{Usage}{section.6.1}% 62
-\BOOKMARK [1][-]{section.6.2}{Least squares plane regression}{chapter.6}% 63
-\BOOKMARK [1][-]{section.6.3}{Radial distribution}{chapter.6}% 64
-\BOOKMARK [1][-]{section.6.4}{Results - Contact force distribution}{chapter.6}% 65
-\BOOKMARK [2][-]{subsection.6.4.1}{Specific description of experiment}{section.6.4}% 66
-\BOOKMARK [2][-]{subsection.6.4.2}{Description of results}{section.6.4}% 67
-\BOOKMARK [2][-]{subsection.6.4.3}{Observations}{section.6.4}% 68
-\BOOKMARK [1][-]{section.6.5}{Results - Hysteresis}{chapter.6}% 69
-\BOOKMARK [0][-]{chapter.7}{Computing the coefficient of static friction}{part.2}% 70
-\BOOKMARK [1][-]{section.7.1}{Maintaining a normal force}{chapter.7}% 71
-\BOOKMARK [1][-]{section.7.2}{Adding a shear force}{chapter.7}% 72
-\BOOKMARK [1][-]{section.7.3}{Procedure}{chapter.7}% 73
-\BOOKMARK [1][-]{section.7.4}{Treating the results}{chapter.7}% 74
-\BOOKMARK [1][-]{section.7.5}{Results}{chapter.7}% 75
-\BOOKMARK [0][-]{chapter.8}{Discussion, Summary and future work}{part.2}% 76
-\BOOKMARK [1][-]{section.8.1}{Discussion}{chapter.8}% 77
-\BOOKMARK [2][-]{subsection.8.1.1}{Force distribution}{section.8.1}% 78
-\BOOKMARK [2][-]{subsection.8.1.2}{Coefficient of static friction}{section.8.1}% 79
-\BOOKMARK [2][-]{subsection.8.1.3}{Error evaluation}{section.8.1}% 80
-\BOOKMARK [2][-]{subsection.8.1.4}{Molecular Dynamics as a method}{section.8.1}% 81
-\BOOKMARK [1][-]{section.8.2}{Summary}{chapter.8}% 82
-\BOOKMARK [1][-]{section.8.3}{Prospects for future work}{chapter.8}% 83
-\BOOKMARK [0][-]{appendix.A}{ }{part.2}% 84
-\BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 85
-\BOOKMARK [1][-]{section.A.2}{Building LAMMPS with custom compute}{appendix.A}% 86
-\BOOKMARK [1][-]{section.A.3}{Example code for computing coefficient of static friction}{appendix.A}% 87
+\BOOKMARK [1][-]{section.6.2}{Verification}{chapter.6}% 63
+\BOOKMARK [1][-]{section.6.3}{Application}{chapter.6}% 64
+\BOOKMARK [1][-]{section.6.4}{Least squares plane regression}{chapter.6}% 65
+\BOOKMARK [1][-]{section.6.5}{Radial distribution}{chapter.6}% 66
+\BOOKMARK [1][-]{section.6.6}{Results - Contact force distribution}{chapter.6}% 67
+\BOOKMARK [2][-]{subsection.6.6.1}{Specific description of experiment}{section.6.6}% 68
+\BOOKMARK [2][-]{subsection.6.6.2}{Description of results}{section.6.6}% 69
+\BOOKMARK [2][-]{subsection.6.6.3}{Observations}{section.6.6}% 70
+\BOOKMARK [1][-]{section.6.7}{Results - Hysteresis}{chapter.6}% 71
+\BOOKMARK [0][-]{chapter.7}{Computing the coefficient of static friction}{part.2}% 72
+\BOOKMARK [1][-]{section.7.1}{Maintaining a normal force}{chapter.7}% 73
+\BOOKMARK [1][-]{section.7.2}{Adding a shear force}{chapter.7}% 74
+\BOOKMARK [1][-]{section.7.3}{Procedure}{chapter.7}% 75
+\BOOKMARK [1][-]{section.7.4}{Treating the results}{chapter.7}% 76
+\BOOKMARK [1][-]{section.7.5}{Results}{chapter.7}% 77
+\BOOKMARK [0][-]{chapter.8}{Discussion, Summary and future work}{part.2}% 78
+\BOOKMARK [1][-]{section.8.1}{Discussion}{chapter.8}% 79
+\BOOKMARK [2][-]{subsection.8.1.1}{Force distribution}{section.8.1}% 80
+\BOOKMARK [2][-]{subsection.8.1.2}{Coefficient of static friction}{section.8.1}% 81
+\BOOKMARK [2][-]{subsection.8.1.3}{Error evaluation}{section.8.1}% 82
+\BOOKMARK [2][-]{subsection.8.1.4}{Molecular Dynamics as a method}{section.8.1}% 83
+\BOOKMARK [1][-]{section.8.2}{Summary}{chapter.8}% 84
+\BOOKMARK [1][-]{section.8.3}{Prospects for future work}{chapter.8}% 85
+\BOOKMARK [0][-]{appendix.A}{ }{part.2}% 86
+\BOOKMARK [1][-]{section.A.1}{LAMMPS units}{appendix.A}% 87
+\BOOKMARK [1][-]{section.A.2}{Verification of compute}{appendix.A}% 88
+\BOOKMARK [1][-]{section.A.3}{Building LAMMPS with custom compute}{appendix.A}% 89
+\BOOKMARK [1][-]{section.A.4}{Example code for computing coefficient of static friction}{appendix.A}% 90

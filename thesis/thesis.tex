@@ -135,7 +135,7 @@ You, and our son to come, are my greatest source of motivation.
 \hypersetup{linkcolor = black}
 \tableofcontents
 }
-\chapter{Introduction}
+\chapter{Introduction} \label{chp:introduction}
 
 The past decade, there has been an increasing interest in the behavior of materials at nano-scale \cite{nanoOnReflection}.
 Scientists have been able to alter material structures at nanometer scales, improving their properties, even macroscopically.
@@ -153,17 +153,21 @@ Using atomic-scale models, Mark Robbins and coworkers \cite{Robbins2005} demonst
 Thus, the continuum approach breaks down for very small contacts.
 In another paper, Robbins \cite{RobbinsSingleAsperity} uses a Molecular Dynamics model to analyze the pressure distribution in a single asperity contact, which he compares to well known continuum theory. He keeps the asperity rigid - rendering its atoms unable to move relative to each other - in order to see how different surface structures affects the distribution. 
 His results show that the differently constructed asperities exhibit very different pressure distributions. 
+However, a perfectly rigid asperity is not realistic. Neither is neglecting frictional forces.   
 
 
 Very recently, Julien Scheibert \cite{Scheibert2017} has experimentally studied the coefficient of static friction  acting between a polymer probe and a flat polymer substrate, laying on top of glass. 
 His results indicate that for very thin substrates on the nanometer scale, the coefficient of static friction is linearly dependent on the substrate thickness. 
-This is in contrast to current theory, where the thickness of the substrate is unimportant. 
+There's no developed theories to explain this result yet, and in current theory the substrate thickness is not of concern.
 
-In this project we will develop a Molecular Dynamics model for dry single asperity contact of silica, and address the force distribution and coefficient of static friction present.
+In this project we will develop a molecular dynamics model for dry single asperity contact of silica, and address the force distribution and coefficient of static friction present.
 Our model will be similar to that of Robbins, but with the perturbation of having an elastic asperity as well as substrate.
 We want all bodies to remain elastic because this is its state in reality. 
 A rigid asperity implies an infinitely large stiffness, which is physically impossible. 
 Thus, we will simulate a more realistic situation than Robbins did.
+It will be interesting to see if or how this affects the distribution of contect forces.
+We will also compute the coefficient of static friction.
+The dependence the coefficient has to the substrate thickness will be evaluated, and compared to the findings of J. Scheibert. 
 %We will compute the force distribution, and the coefficient of friction with varying substrate thickness. 
 %How will the force distribution compare to Hertzian theory and the results of Robbins when we have the presence of friction, and an elastic asperity?
 
@@ -221,6 +225,8 @@ This method was used to approximate the normal vector of the substrate's surface
 We utilize open-source python packages in these, like: NumPy, Matplotlib, SciPy and Pickle.
 
 \end{itemize}
+\noindent
+All scripts used to produce the results presented are available at Github\footnote{\href{https://github.com/filiphl/master-thesis}{\url{https://github.com/filiphl/master-thesis}}}.
 
 \section{Structure of the thesis}
 This thesis consists of two parts. 
@@ -294,7 +300,7 @@ F = \mu L \label{eq:coefficientOfFriction2}.
 \end{equation}
 Derjaguin proposed a modification to Amontons' law for adhering surfaces
 \begin{equation}
-F = F_0 + \mu L \label{eq:coefficientF0}
+F = F_0 + \mu L \label{eq:coefficientF0}, 
 \end{equation}
 where $F_0$ is the force present at zero load, due to attractive forces between the surfaces (adhesive force).
 Ultimately it changes the definition of $\mu$ to 
@@ -304,7 +310,7 @@ Ultimately it changes the definition of $\mu$ to
 which express how the static friction force $F$ increases with increasing load $L$.
 The difference between \eqref{eq:coefficientOfFriction2} and \eqref{eq:coefficientOfFriction} is that for the first, $\mu=0$ at $F=0$ and $\mu=\infty$ at $L=0$, while in the later, $\mu$ can be non-zero at $F=0$ and $\mu$ is finite at $L=0$.
 The latter is the common convention today.
-To account for the coefficient of friction, Amontons argued that the asperities in contact need to be pushed up a typical slope $\tan\theta$, which constitute an energy barrier.
+To account for the coefficient of friction, Amontons argued that the surfaces are rough at the microscopic level, having asperities that need to be pushed up a typical slope $\tan\theta$, which constitute an energy barrier.
 Soon after Leslie argued that the energy expended on pushing an asperity over another, is recovered when it descends on the other side. 
 Thus there is no energy loss, and the surfaces should continually move without the presence of a driving force. 
 He argued that friction had to be due some other mechanism than the pure geometrical.
@@ -817,27 +823,44 @@ Both these bodies will be constructed by a silica named $\beta$-cristobalite.
 We will apply the Vashishta potential\footnote{The computed forces will only reflect the two-body term of the potential.}, which includes attractive forces, and even allow construction of covalent bonds. 
 We will compare our results to theirs and to Hertz theory in chapter \ref{chap:discussion}, conscious about these differences. 
 
-{\huge JULIEN SCHEIBERT!}
+Another study we will compare with is the one of Julien Scheibert, introduced in chapter \ref{chp:introduction}. 
+As an article has not yet been published, we don't have all the detail at hand at this time. 
+However, during this project we have been in contact with Scheibert, and been presented with his results. 
+Their experiment consisted of a probe pushing down on a substrate, both made by an elastic polymer. 
+The substrate was placed on top of glass, which is much more stiff than the polymer.
+While varying the thickness of the substrate, they measured the coefficient of static friction, and found it to be linearly dependent on the thickness of the substrate, for thin substrates (nano-scale). 
+As of now, there's no theory that predicts this behavior. 
+We will try to simulate this experiment, and analyze the behavior of the coefficient of friction as the substrate thickness is modified.
 
 
-\begin{figure}
-\centering
-\includegraphics[width=0.5\linewidth]{figures/Robbins/surfaceSrtucture}
-\caption{Snapshots of atoms near the center regions of spherical tips. From top to bottom, tips are made by bending a crystal, cutting a crystal, or cutting an amorphous solid. Three ratios $\nu$ of the atomic spacing in bent crystals to that in the substrate are considered; a dense case $\nu=0.05$, a commensurate case $\nu=1$, and an incommensurate case $\nu=0.944$. The step structure of cut crystalline tips is not unique, leading to variations in their behavior.
-This figure is copied from \cite{RobbinsSingleAsperity}.}
-\label{fig:robbinsSurfaces}
+Our simulations will use molecular dynamics. 
+The basic principles, concepts and theory of this method is the topic of the next chapter. 
+
+\begin{multicols}{2}
+\begin{figure}[H]
+	\centering
+	\captionsetup{width=\linewidth}
+	\vspace*{17mm}
+	\includegraphics[width=0.9\linewidth]{figures/Robbins/surfaceSrtucture}
+	\vspace*{16.3mm}
+	\caption{Snapshots of atoms near the center regions of spherical tips. From top to bottom, tips are made by bending a crystal, cutting a crystal, or cutting an amorphous solid. Three ratios $\nu$ of the atomic spacing in bent crystals to that in the substrate are considered; a dense case $\nu=0.05$, a commensurate case $\nu=1$, and an incommensurate case $\nu=0.944$. The step structure of cut crystalline tips is not unique, leading to variations in their behavior.
+		This figure is copied from \cite{RobbinsSingleAsperity}.}
+	\label{fig:robbinsSurfaces}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.5\linewidth]{figures/Robbins/results2}
-\caption{Local normal pressure vs radius for five
-	different tip geometries (a) dense tip, (b) bent commensurate crystal, (c) bent incommensurate crystal, (d) amorphous, and (e) stepped crystal. All are nonadhesive, and have the same nominal radius.
-	%? , ? i / =1, and normalized load N/ ?R2E*?=0.0018. 
-	Solid lines	show the prediction of Hertz theory, dots show the pressure on each surface atom, and circles in (c) and (d) show the mean pressure in radial bins. Squares in (b) show the component of the tangential force directed radially from the center of the contact.
-	This figure is copied from \cite{RobbinsSingleAsperity}. However, we have inserted the dashed line in (d) to prove a point later.}
-\label{fig:robbinsResults}
+	\centering
+	\captionsetup{width=\linewidth}
+	\includegraphics[width=0.9\linewidth]{figures/Robbins/results2}
+	\caption{Local normal pressure vs radius for five
+		different tip geometries (a) dense tip, (b) bent commensurate crystal, (c) bent incommensurate crystal, (d) amorphous, and (e) stepped crystal. All are nonadhesive, and have the same nominal radius.
+		%? , ? i / =1, and normalized load N/ ?R2E*?=0.0018. 
+		Solid lines	show the prediction of Hertz theory, dots show the pressure on each surface atom, and circles in (c) and (d) show the mean pressure in radial bins. Squares in (b) show the component of the tangential force directed radially from the center of the contact.
+		This figure is copied from \cite{RobbinsSingleAsperity}. However, we have inserted the dashed line in (d) to prove a point later.}
+	\label{fig:robbinsResults}
 \end{figure}
+
+\end{multicols}
 
 
 
@@ -1988,6 +2011,30 @@ where \\*
 	\item group1-ID and group2-ID are the specified groups we wish to compute the energy and interaction force between. The energy and interaction force is only stored for atoms in group1, and the force is the force acting on group1 from group2.
 	\item keyword is optional and can be either \textit{pair}, \textit{kspace}, \textit{boundary} or \textit{molecule}, with value \textit{yes} or \textit{no}. For a description of these, please look up the documentation for compute group/group\footnote{\href{http://lammps.sandia.gov/doc/compute_group_group.html}{\url{http://lammps.sandia.gov/doc/compute_group_group.html}}}. 
 \end{itemize}
+
+
+
+\section{Verification}
+As a part of the process of creating such analytical tools, we need to verify that it works as intended. 
+A a first test, we used a very simple model. 
+We created a system consisting of two atoms, and applied the Lennard-Jones potential. 
+This potential was chosen because it is easy to obtain the analytical solution to the interacting force
+\begin{equation}
+	F(r) = -\frac{24\epsilon}{r}\left[ \lr{\frac{\sigma}{r}}^{6} - 2\lr{\frac{\sigma}{r}}^{12} \right] 
+\end{equation} 
+where $r$ is the distance between the two atoms.
+Setting $r=\sigma$ we should therefore obtain $F(r=\sigma)=-24\epsilon$.
+The input script and result are posted in appendix \ref{sec:testingOfCompute}.
+
+We then added a third atom, which was included in group \texttt{g1}. 
+The grid was made to contain 4 chunks.
+The atoms of \texttt{g1} was placed in different chunks, both with a distance $\sigma$ to the atom of \texttt{g2}. 
+All atoms are on a line.
+The computed forces are shown in listing \ref{lst:verify2Force}, and show that the force is correct for both atoms.
+
+
+
+\section{Application}
 The compute successfully stores the contact force components of all atoms in an array when invoked. 
 We are interested in the spatial distribution of the forces, which describes the force at a given position. 
 It is important to recognize that we operate at the discrete atomic level, and that "force at a given position" is a very vague description. 
@@ -2035,7 +2082,7 @@ fix fixComputeID sphereG ave/chunk ${Nevery} ${Nrepeat} ${Nfreq} chunkID c_ggaID
 	\label{fig:forceDistributions}
 \end{figure}
 
-\newpage
+
 \section{Least squares plane regression} \label{sec:leastSquareRegression}
 The method of least squares aims to find parameters which  minimize the sum of the squared residuals, where residuals are the difference between observed values and the approximated value. We will use this method to approximate the slope of the surface of the substrate. This will be done by partitioning the system in a grid and do a plane approximation on each cell of the grid. In other words, we seek the coefficients in the plane equation
 \begin{equation}
@@ -2118,15 +2165,11 @@ If we compute the contact forces acting on the sphere from the substrate, a posi
 
 %\lstinputlisting[caption={Python function to compute the smallest angle between a vector and a line parallel to another vector. }, label={angleVecLine}, language=python, firstline=190, lastline=197]{../SiO2/large/pythonScripts/surface.py}
 
-\newpage
+
 
 
 \section{Radial distribution}
-Our system is partitioned into a grid. 
-Each cell in the grid holds the sum of all contact forces on atoms within the cell. 
-We would like to know the radial distribution of the normal force, which should express the averaged value of the force at a given radial distance from the center of the spherical indentation.
-We achieve this by defining discrete radial bins with fixed bin width, and average contributions within each bin.
-\begin{figure}
+\begin{figure}[H]
 	%\begin{minipage}[t]{0.49\linewidth}
 	%	\captionsetup{width=\textwidth}
 	\centering
@@ -2146,6 +2189,12 @@ We achieve this by defining discrete radial bins with fixed bin width, and avera
 	%	\label{fig:radialBinningSmoothCloseUp}
 	%\end{minipage}
 \end{figure}
+
+Our system is partitioned into a grid. 
+Each cell in the grid holds the sum of all contact forces on atoms within the cell. 
+We would like to know the radial distribution of the normal force, which should express the averaged value of the force at a given radial distance from the center of the spherical indentation.
+We achieve this by defining discrete radial bins with fixed bin width, and average contributions within each bin.
+
 A coarse method of doing this is to average the values of the cells who's center is within the bin. 
 This is illustrated in figure \ref{fig:radialBinningChoars}. 
 In many applications where the bin width can be large compared to the length of the cells, this method might suffice.
@@ -2167,27 +2216,6 @@ As the actual computations are easy to follow from the source code, the reader i
 In our computations we have partitioned the space into square cells of length equal the unit cell length (7.12\AA).
 The bin width was set to 1 unit cell length, though this is allowed to vary. 
 
-
-\begin{figure}[H]
-	\center
-	\resizebox{0.4\linewidth}{!}{
-		\input{figures/tikz/radialBinning.tikz}
-	}
-	\caption{Coarse radial binning. The value appointed to the radial bin is the average of the value of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.}
-	\label{fig:radialBinningChoars}
-\end{figure}
-
-
-\begin{figure}[H]
-	\centering
-	\hspace{0.74cm}
-	\includegraphics[height=0.39\linewidth]{figures/forceDistribution/radialDistribution/weights.pdf}
-	\caption{Radial binning based on weighted contributions of intersecting cells. The fraction of cell's area that are within the third radial bin is color coded; black being 1 and white being 0.}
-	\label{fig:radialBinningWeights}
-\end{figure}
-
-
-\noindent
 On the same data set as used in figure \ref{fig:forceDistributions}, the computed radial distribution is as shown in figure \ref{fig:radialdistribution110000}.
 The figure show the spatial distribution in polar coordinates (top row) and the radial average (bottom row) of the magnitude of force, normal force and shear force.
 The normal force was found by treating the data as described in section \ref{sec:leastSquareRegression}.
@@ -2198,6 +2226,22 @@ Instead, we define the shear force as the radial component of the shear force.
 If its general direction is away from the center of indentation, its value will  be positive, while if its towards the center it is negative. 
 This way the shear force has a defined direction.%, but we no longer have the usual relation $\vec{F}=\vec{F_N} + \vec{F_s}$.
 %These results will be discussed further in chapter \ref{sec:resultsRadialDistribution}.
+\begin{figure}[H]
+	\center
+	\resizebox{0.4\linewidth}{!}{
+		\input{figures/tikz/radialBinning.tikz}
+	}
+	\caption{Coarse radial binning. The value appointed to the radial bin is the average of the value of the cells who's center is within the bin. The cells with center within the third radial bin are colored, and their centers drawn.}
+	\label{fig:radialBinningChoars}
+\end{figure}
+\vfill
+\begin{figure}[H]
+	\centering
+	\hspace{0.74cm}
+	\includegraphics[height=0.39\linewidth]{figures/forceDistribution/radialDistribution/weights.pdf}
+	\caption{Radial binning based on weighted contributions of intersecting cells. The fraction of cell's area that are within the third radial bin is color coded; black being 1 and white being 0.}
+	\label{fig:radialBinningWeights}
+\end{figure}
 
 
 \vspace{5mm}
@@ -2968,6 +3012,22 @@ Though we have only considered single asperity contact, these results may be of 
 	\end{center}
 \end{table}
 
+
+\newpage
+\section{Verification of compute} \label{sec:testingOfCompute}
+In the following we use Lennard-Joens units, meaning that $\sigma$ is unit length and $\epsilon$ is unit energy.
+The scripts shown here are also available at Github\footnote{\href{https://github.com/filiphl/master-thesis}{\url{https://github.com/filiphl/master-thesis}}}.
+Two atoms were placed a distance $\sigma$ apart, and we applied the Lennard-Jones potential. 
+To this case we know the interacting force should be $F=-24\epsilon$.
+The separation distance could also easily be adjusted, allowing us to control with other forces as well.
+The input script in listing \ref{lst:verify1} uses the custom compute to measure the force acting on one of the atoms, and stores them to a file named forces.txt.
+The resulting content of the force file is shown in listing \ref{lst:verify1Force}, and show the expected result. 
+\lstinputlisting[caption={twoAtomTest.in}, label={lst:verify1}]{../SiO2/verifyCompute/tiny/allInOne.in}
+\lstinputlisting[caption={twoAtomTest.data}, label={lst:verify1data}]{../SiO2/verifyCompute/tiny/system.data}
+\lstinputlisting[caption={forces.txt}, label={lst:verify1Force}]{../SiO2/verifyCompute/tiny/forceFiles/forcesAll.txt}
+In the next test, we added a third atom on the same line as the first two, also with a distance $\sigma$ to its closest neighbor.
+We divided the system into 4 chunks, and got the result shown in \ref{lst:verify2Force}.
+\lstinputlisting[caption={forces.txt}, label={lst:verify2Force}]{../SiO2/verifyCompute/tiny2/forces.txt}
 \newpage
 \section{Building LAMMPS with custom compute}
 In order to use the custom compute \texttt{group/group/atom}, some files in the lammps distribution must be perturbed.
