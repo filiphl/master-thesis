@@ -1,0 +1,549 @@
+\documentclass{beamer}
+\usetheme[progressbar=frametitle]{metropolis}
+\setbeamercolor{progress bar}{ fg=p4, bg=p-1}
+\setbeamercolor{title separator}{ fg=p4, bg=p-1 }
+
+
+%\usepackage{previewNextNotes}
+\usepackage{pgfpages}
+\setbeameroption{show notes on second screen=right}
+\setbeamertemplate{note page}[compressed]
+
+\usepackage[absolute,overlay]{textpos}
+%\usepackage[texcoord, grid,gridcolor=red!10,subgridcolor=green!10,gridunit=pt]{eso-pic}
+
+\usepackage{default}
+\usepackage[utf8]{inputenc}
+
+\newcommand\lr[1]{\left(#1\right)} 
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\definecolor{p-1}{HTML}{CCCCCC}
+\definecolor{p0}{HTML}{D7DFC0}
+\definecolor{p1}{HTML}{AECFA2}
+\definecolor{p2}{HTML}{82BC92}
+\definecolor{p3}{HTML}{5FA38E}
+\definecolor{p4}{HTML}{49848B}
+\definecolor{p5}{HTML}{3F5F7F}
+\definecolor{p6}{HTML}{383D65}
+\definecolor{p7}{HTML}{2C1E3E}
+
+
+
+
+\title{Molecular dynamics modeling of single asperity contact}
+\author{Filip Henrik Larsen}
+\institute{University of Oslo}
+\date{\today}
+
+
+
+
+
+
+\begin{document}
+\begin{frame}
+	\titlepage
+\end{frame}
+\note{Title frame}
+\metroset{block=fill}
+
+\section{Motivation}
+\begin{frame}{Breakdown of continuum theory}
+Mark Robbins 2005 \note{In 2005 Mark Robbins published an article }
+\end{frame}
+\begin{frame}{Contact problem}
+	Mark Robbins 2006 \note{Mark Robbins 2006, Single asperity contact. Severe restrictions.}
+\end{frame}
+\begin{frame}{Friction}
+	content...
+\end{frame}
+\begin{frame}{Goals}
+\begin{itemize}
+		\item Develop a molecular dynamics model \\
+		\note[item]{Spherical cap and a flat substrate. 
+		Material - Potential model}
+		\item Compute contact force distribution \\
+		\note[item]{Recognize contact forces. 
+		Define contact forces as F12  (on G1 from G2).
+		n\_vec of surface $\Rightarrow$ normal and shear components.
+		Grid and average}
+		\begin{itemize}
+				\item Develop a method for computing per-atom forces\\ 
+				\note[item]{\indent LAMMSP does not have GGA.}
+				\item Develop a method to approximate the contact surface\\ 
+				\note[item]{\indent Get n\_vec by Surface approximation}
+		\end{itemize}
+		
+		\item Compute the coefficient of static friction \\
+		\note[item]{Simulate same as Scheibert; probe on substrate - vary thickness.}
+		
+		\item Compare results to theory and to results of Robbins and Scheibert
+		\note[item]{Support or object to Scheibert's claim. }
+\end{itemize}
+\end{frame}
+
+\section{Molecular Dynamics}
+\begin{frame}{Time-integration}
+	The force acting on atom $i$ is assumed to be described by Newtons equation of motion.
+	\begin{equation*}
+	\sum_{i=1}^{N}\vec{F_i} = \sum_{i=1}^{N}-\nabla U_i({\bf r}^N)= m_i\vec{a_i}.
+	\end{equation*}
+	Once the acceleration is known, we update atom's velocity and position by applying time-integration. 
+	\begin{align*}
+	\vec{v_i}(t) &= \vec{v_i}(0) + \int_{0}^{t}\vec{a_i}(t) dt \\
+	\vec{r_i}(t) &= \vec{r_i}(0) + \int_{0}^{t}\vec{v_i}(t) dt
+	\end{align*}
+	
+	\note{$\vec{r}_0$ and $\vec{v}_0$ are known. }
+\end{frame}
+\begin{frame}{Velocity-Verlet}
+	\begin{align*}
+	\vec{v}^{n+1/2}	 &= \vec{v}^{n} +  \frac{\Delta t}{2}\vec{a}^n\\[2mm]
+	\vec{r}^{n+1} &= \vec{r}^n + \Delta t \vec{v}^{n+1/2}	\\[2mm]
+	\vec{a}^{n+1} &= -\nabla U(\vec{r}^{n+1})/m\\[2mm]
+	\vec{v}^{n+1} &= \vec{v}^{n+1/2} + \frac{\Delta t}{2} \vec{a}^{n+1}
+	\end{align*}
+	\note{
+		The most common scheme for time-integration in MD.
+		
+		Fast / Computationally cheap
+		
+		Preceise / Low error ($\Delta t^4$)
+		
+		I will not derive this, I only wish to show how simple it is.
+		
+		\vfill
+			Bridge: In order to obtain {\color[rgb]{0.8,0,0}realistic dynamics}, the potential model must {\color[rgb]{0.8,0,0}describe forces accurately}. There are many types of potentails. Many of them are material spesific. The simplest, but still commonly used potential is the {\color[rgb]{0.8,0,0} LJ potential}. 		
+		\vfill
+	}
+\end{frame}
+\begin{frame}[t]{Potentials}
+	\only<1-2>{\large Lennard-Jones}
+	
+	
+	 \only<1-2>{
+	 	\begin{equation*}V(r) =4\epsilon\left[\lr{\frac{\sigma}{r}}^{12} -  \lr{\frac{\sigma}{r}}^6 \right]
+		\end{equation*}
+	}
+
+	\only<2>{
+		\begin{figure}[H]
+			\centering{
+				\def\svgwidth{0.8\linewidth}
+				\input{figures/potentials/LJ.pdf_tex}
+			}
+		\end{figure}
+	}
+\end{frame}
+\begin{frame}[t]{Potentials}
+	\only<1->{
+	{\large Vashishta}\\*
+	\begin{equation*}
+		V(r) = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k} V_{ijk}^{(3)}(\vec{r}_{ij}, \vec{r}_{ik}) 
+	\end{equation*}
+	\\[5mm]
+	}
+	\only<2->{
+	\begin{equation*}
+			V_{ij}^{(2)}(r) = 
+		\frac{H_{ij}}{\displaystyle r^{\eta_{ij}}} +
+		\frac{Z_iZ_j}{r}e^{-r/r_{1s}} -
+		\frac{D_{ij}}{2r^4}e^{-r/r_{4s}} - 
+		\frac{W_{ij}}{r^6}
+	\end{equation*}
+	\\
+}
+	\only<3->{
+	\begin{equation*}
+			\hspace{-8mm}
+			V_{ijk}^{(3)}(\vec{r}_{ij}, \vec{r}_{ik}) = 
+			B_{ijk} \exp\lr{\frac{\xi}{r_{ij}-r_0} + \frac{\xi}{r_{ik}-r_0}}
+			\frac{\lr{\cos \theta_{ijk} - \cos \theta_0}^2}{1 + C_{ijk}\lr{\cos \theta_{ijk} - \cos \theta_0}^2}
+	\end{equation*} 
+} 
+
+	\note<2>{
+		\begin{table}
+		\begin{tabular}{lll}
+			$H_{ij}$ &:& Strength of the steric repulsion \\
+			$\eta_{ij}$ &:& Exponent of the steric repulsion\\
+			$Z_i$ &:& Effective charge of atom $i$\\
+			$r_{1s}$ &:& Screening lengths for the coulomb interaction\\
+			$r_{4s}$ &:& Screening lengths for the dipole interaction\\
+			$D_{ij}$ &:& Strength of the dipole interaction\\
+			$W_{ij}$ &:& Strength of the Van der Waal interaction
+		\end{tabular}
+		\end{table}
+	}
+	
+	\note<3>{
+		\begin{table}
+			\begin{tabular}{lll}
+				$B_{ijk}$ &:& Strength of the three-body term \\
+				$\xi$ &:& Constant parameter\\
+				$C_{ijk}$ &:& Constant parameter\\
+				$r$ &:& Cut-off length\\
+				$\theta_{ijk}$ &:& Angle between $\vec{r}_{ji}$ and $\vec{r}_{jk}$\\
+				$\theta_{0}$ &:& Equilibrium bond angle
+			\end{tabular}
+		\end{table}
+		\vfill 
+		Bridge: The potential govern the force interaction between atoms. However {\color[rgb]{0.8,0,0} which atoms} interact is decided using a {\color[rgb]{0.8,0,0} cut-off} range, and dependent on the {\color[rgb]{0.8,0,0} boundary conditions} we use.
+		\vfill
+	}
+\end{frame}
+\begin{frame}{Boundary conditions}
+	\only<1>{
+		No boundary conditions
+		\vfill
+		\begin{figure}
+			\includegraphics[width=0.5\linewidth]{figures/BoundaryConditions/no.pdf} 
+		\end{figure}
+	}
+	
+	
+	\only<2>{
+		Reflecting boundary conditions
+		\vfill
+		\begin{figure}
+			\includegraphics[width=0.5\linewidth]{figures/BoundaryConditions/reflecting.pdf} 
+		\end{figure}
+	}
+	
+	\only<3>{
+		Periodic boundary conditions
+		\vfill
+		\begin{figure}
+			\includegraphics[width=0.5\linewidth]{figures/BoundaryConditions/periodic.pdf} 
+		\end{figure}
+	}
+	
+	\note{
+		\begin{itemize}
+			\item Also affect atom trajectories\\
+			\only<3>{\item Periodic minimum image convention}
+			
+		\end{itemize}
+		}
+\end{frame}
+\begin{frame}{Measuring physical quantities}
+	\only<1>{
+		{\large Energy}
+		\vfill
+		As we assume Newtonian motion, the kinetic energy is computed simply as 
+		\begin{equation*}
+			E_K = \frac{1}{2}\sum_{i=1}^{N} m_i {\vec{v}_i}^2,
+		\end{equation*} 
+		while the potential energy is computed directly from the potential
+		\begin{equation*}
+			E_P = \sum_{i=1}^{N}\sum_{j>i}^{N}U(\vec{r}_i, \vec{r}_j).
+		\end{equation*} 
+	}
+\end{frame}
+\begin{frame}{Measuring physical quantities}
+	\only<1>{
+		{\large Temperature}
+		\vfill
+		For a system consisting of $N$ atoms with $f$ kinetic degrees of freedom and temperature $T$, thermodynamics state that
+		\begin{equation*}
+			E_k = \frac{f}{2} Nk_bT. 	\note{
+				$k_b$ is the Boltzmann constant. 
+				
+				Since we assume point particles, we take only the translational degrees of freedom into account and ignore the rotational degrees of freedom.}
+		\end{equation*}
+		
+		Thus we have two relations for the kinetic energy. 
+		By equating these we find the instantaneous temperature given as
+		\begin{equation*}\label{eq:MDtemperature}
+		T = \frac{\langle m_i \vec{v_i}^2\rangle}{f\hspace{0.2mm}k_b}.
+		\end{equation*}
+		\note{
+			
+		Thus, we can approximate the instantaneous temperature using the atoms velocities.
+		
+		This value will fluctuate about the real value, so time-averaging is often used when measuring.
+		
+		In many cases it is desirable to control the temperature of the system, e.g. when using the canonical ensemble (NVT).
+		Methods for doing this are called \textit{thermostats}, and are described in section 
+		}
+	}
+\end{frame}
+%\begin{frame}{Measuring physical quantities}
+%	\only<3>{
+%		{\large Pressure}
+%		\vfill
+%		
+%		\note{There are many methods for computing the pressure of the system.\\}
+%		Normally, for a N-body system of volume $V$ and particle density $\rho=N/V$ in the canonical ensemble, it is taken from the virial equation for pressure. 
+%		\begin{equation*}
+%		P = \rho k_B T + \frac{1}{dV}\Big< \sum_{i<j} \vec{F}_{ij} \cdot \vec{r}_{ij}\Big> ,
+%		\end{equation*}
+%		The equation is dependent on the ensemble in use.
+%		\note{
+%					\begin{table}
+%						\begin{tabular}{lll}
+%							$d$ &:& Number of dimensions \\
+%							$\vec{F}_{ij}$ &:& Force contribution on atom $i$ from atom $j$
+%						\end{tabular}
+%					\end{table}
+%					
+%		This expression assume constant $NVT$, i.e. the canonical ensemble.
+%		
+%		The equation will not be the same for the micro-canonical ensemble.	
+%		}
+%		
+%		}	
+%\end{frame}
+
+
+\begin{frame}{Thermostats}
+	Thermostats are alterations implemented to control the average temperature. \\[5mm]
+	
+	Common thermostats:
+	\begin{itemize}
+		\item \only<2>{{\bf Berendsen}} \only<1,3->{Berendsen}
+		\item \only<3>{{\bf Andersen}} \only<1,2,4>{Andersen}
+		\item  \only<4>{{\bf Nosé-Hoover}} \only<-3>{Nosé-Hoover}
+	\end{itemize}
+	\note{
+		%We are necesserily required to control the temperature in order to simulate the canonical ensemble ($NVT$).
+		\begin{description}
+			\item[Berendsen]
+			Rescales velocities so that the temperature approaches that of the heat bath.
+			How fast the velocities should converge to that of the heat bath, can be tuned.
+			
+			\item[Andersen]
+			Assigns a randomly chosen atom a randomly distributed velocity with the target temperature as average.
+			
+			\item[Nosé-Hoover]
+			Incorporates a fictitious frictional force in the equation of motion. 
+		\end{description}
+		
+		Berendsen and Andersen does not produce realistic dynamics due to the direct scaling of the temperature. Andersen also disturbes lattice vibrations and decorrelates the system, rendering it unfit when measuring diffusion coefficient.
+		
+		The Nosé-Hoover thermostat is the {\color{red}most commonly} used thermostat, because it produces accurate dynamics.
+		}
+\end{frame}
+
+\section{LAMMPS}
+\begin{frame}{About LAMMPS}
+	\phantom{i}{\color{p4} L}arge-scale {\color{p4}A}tomic/{\color{p4}M}olecular {\color{p4}M}assively {\color{p4}P}arallel {\color{p4}S}imulator
+	\vfill
+	A classical molecular dynamics simulation code designed to run efficiently on parallel computers. 
+	
+	Development began in the mid 1990s, and is still ongoing.
+	
+	Open-source
+	
+	Extensive and user friendly documentation.
+\end{frame}
+
+\section{Simulations}
+\begin{frame}{Preparing a simulation}
+	We need to consider the following aspects of the simulation:
+	\begin{itemize}
+		\item Geometry of the system
+		\item Boundary conditions
+		\item Material
+		\item Potential model
+		\item Ensemble
+		\item Other restrictions
+		\item Applied actions
+	\end{itemize}
+\end{frame}
+\begin{frame}{Creating a crystal}
+\only<1>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame000.png}
+	\end{figure}
+}
+
+
+\only<2>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame001.png}
+	\end{figure}
+}
+
+
+\only<3>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame002.png}
+	\end{figure}
+}
+
+
+\only<4>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame003.png}
+	\end{figure}
+}
+
+
+\only<5>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame004.png}
+	\end{figure}
+}
+
+
+\only<6>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame005.png}
+	\end{figure}
+}
+
+
+\only<7>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame006.png}
+	\end{figure}
+}
+
+
+\only<8>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame007.png}
+	\end{figure}
+}
+
+
+\only<9>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame008.png}
+	\end{figure}
+}
+
+
+\only<10>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame009.png}
+	\end{figure}
+}
+
+
+\only<11>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame010.png}
+	\end{figure}
+}
+
+
+\only<12>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame011.png}
+	\end{figure}
+}
+
+
+\only<13>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame012.png}
+	\end{figure}
+}
+
+
+\only<14>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame013.png}
+	\end{figure}
+}
+
+
+\only<15>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame014.png}
+	\end{figure}
+}
+
+
+\only<16>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame015.png}
+	\end{figure}
+}
+
+
+\only<17>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame016.png}
+	\end{figure}
+}
+
+
+\only<18>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame017.png}
+	\end{figure}
+}
+
+
+\only<19>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame018.png}
+	\end{figure}
+}
+
+
+\only<20>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame019.png}
+	\end{figure}
+}
+
+
+\only<21>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame020.png}
+	\end{figure}
+}
+
+
+\only<22>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame021.png}
+	\end{figure}
+}
+
+
+\only<23>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame022.png}
+	\end{figure}
+}
+
+
+\only<24>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame023.png}
+	\end{figure}
+}
+
+
+\only<25>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame024.png}
+	\end{figure}
+}
+
+
+\only<26>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame025.png}
+	\end{figure}
+}
+
+
+\only<27>{
+	\begin{figure}
+		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame026.png}
+	\end{figure}
+}
+\end{frame}
+
+
+
+\end{document}
+
+
