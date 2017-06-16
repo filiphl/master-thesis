@@ -1741,7 +1741,8 @@ where $D$ is the diffusion coefficient, and $d$ is the number of dimensions \cit
 In practice the mean square displacement was computed using a standard \textit{compute} in LAMMPS, namely the \textit{msd compute}\footnote{\url{http://lammps.sandia.gov/doc/compute_msd.html}}. 
 At every time step it stores a vector of 4 elements. 
 The first 3 are the squared $dx$, $dy$ and $dz$ displacements averaged over the atoms of the specific group, while the 4th is the total mean square displacement for the specific group, i.e. $(dx^2 + dy^2 + dz^2)$. 
-The $15\times15\times15$ system is sufficient for this test. The procedure is rather simple. For $\beta$-cristobalite we expect the melting point to be about 1986K\footnote{\url{https://en.wikipedia.org/wiki/Cristobalite}}, so we start out at 1500K. After equilibration, the following steps are repeated until we reach a target temperature. 
+The $15\times15\times15$ system is sufficient for this test. The procedure is rather simple. For $\beta$-cristobalite we expect the melting point to be about 1986K\footnote{\url{https://en.wikipedia.org/wiki/Cristobalite}}, so we start out at 1500K. 
+After equilibration, the following steps are repeated until we reach a target temperature. 
 \begin{itemize}
 	\item equilibrate for the current temperature
 	\item compute msd for $N$ time steps

@@ -3,21 +3,6 @@
 \setbeamercolor{progress bar}{ fg=p4, bg=p-1}
 \setbeamercolor{title separator}{ fg=p4, bg=p-1 }
 
-
-%\usepackage{previewNextNotes}
-\usepackage{pgfpages}
-\setbeameroption{show notes on second screen=right}
-\setbeamertemplate{note page}[compressed]
-
-\usepackage[absolute,overlay]{textpos}
-%\usepackage[texcoord, grid,gridcolor=red!10,subgridcolor=green!10,gridunit=pt]{eso-pic}
-
-\usepackage{default}
-\usepackage[utf8]{inputenc}
-
-\newcommand\lr[1]{\left(#1\right)} 
-\renewcommand{\vec}[1]{\mathbf{#1}}
-
 \definecolor{p-1}{HTML}{CCCCCC}
 \definecolor{p0}{HTML}{D7DFC0}
 \definecolor{p1}{HTML}{AECFA2}
@@ -27,6 +12,22 @@
 \definecolor{p5}{HTML}{3F5F7F}
 \definecolor{p6}{HTML}{383D65}
 \definecolor{p7}{HTML}{2C1E3E}
+
+
+%\usepackage{previewNextNotes}
+\usepackage{pgfpages}
+\setbeameroption{show notes on second screen=right}
+\setbeamertemplate{note page}[compressed]
+
+\usepackage[absolute,overlay]{textpos}
+%\usepackage[texcoord, grid,gridcolor=red!10,subgridcolor=green!10,gridunit=pt]{eso-pic}
+
+%\usepackage{default}
+%\usepackage[utf8]{inputenc}
+\usepackage{HASstyle}
+\newcommand\lr[1]{\left(#1\right)} 
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
 
 
 
@@ -79,7 +80,13 @@ Mark Robbins 2005 \note{In 2005 Mark Robbins published an article }
 		\note[item]{Simulate same as Scheibert; probe on substrate - vary thickness.}
 		
 		\item Compare results to theory and to results of Robbins and Scheibert
-		\note[item]{Support or object to Scheibert's claim. }
+		\note[item]{Support or object to Scheibert's claim. 
+			\vfill
+				\begin{block}{Molecular Dynamics}
+					Simulation method
+				\end{block}
+				\vfill
+				}
 \end{itemize}
 \end{frame}
 
@@ -114,7 +121,9 @@ Mark Robbins 2005 \note{In 2005 Mark Robbins published an article }
 		I will not derive this, I only wish to show how simple it is.
 		
 		\vfill
-			Bridge: In order to obtain {\color[rgb]{0.8,0,0}realistic dynamics}, the potential model must {\color[rgb]{0.8,0,0}describe forces accurately}. There are many types of potentails. Many of them are material spesific. The simplest, but still commonly used potential is the {\color[rgb]{0.8,0,0} LJ potential}. 		
+		\begin{block}{Potentail}
+			In order to obtain {\color[rgb]{0.8,0,0}realistic dynamics}, the potential model must {\color[rgb]{0.8,0,0}describe forces accurately}. There are many types of potentails. Many of them are material spesific. The simplest, but still commonly used potential is the {\color[rgb]{0.8,0,0} LJ potential}.
+		\end{block} 		
 		\vfill
 	}
 \end{frame}
@@ -189,7 +198,10 @@ Mark Robbins 2005 \note{In 2005 Mark Robbins published an article }
 			\end{tabular}
 		\end{table}
 		\vfill 
-		Bridge: The potential govern the force interaction between atoms. However {\color[rgb]{0.8,0,0} which atoms} interact is decided using a {\color[rgb]{0.8,0,0} cut-off} range, and dependent on the {\color[rgb]{0.8,0,0} boundary conditions} we use.
+		\begin{block}{Boundary conditions}
+			The potential govern the force interaction between atoms. However {\color[rgb]{0.8,0,0} which atoms} interact is decided using a {\color[rgb]{0.8,0,0} cut-off} range, and dependent on the {\color[rgb]{0.8,0,0} boundary conditions} we use.
+		\end{block}
+		 
 		\vfill
 	}
 \end{frame}
@@ -337,6 +349,16 @@ Mark Robbins 2005 \note{In 2005 Mark Robbins published an article }
 	Open-source
 	
 	Extensive and user friendly documentation.
+	
+	\note{Show examples with Atomify!
+		\begin{block}{Simulations}
+			We will precent:
+			\begin{itemize}
+				\item How our simulations were set up\\
+				\item The most important details of the simulations \\
+				\item Lastly, we will post and discuss the results
+			\end{itemize}
+		\end{block}}
 \end{frame}
 
 \section{Simulations}
@@ -351,196 +373,372 @@ Mark Robbins 2005 \note{In 2005 Mark Robbins published an article }
 		\item Other restrictions
 		\item Applied actions
 	\end{itemize}
+	\note{\vfill
+		\begin{block}{Creating a crystal}
+			Place atoms into inital positions.\\
+			Unit cell of $\beta$-cristobalite
+		\end{block}
+		\vfill
+		}
+	
 \end{frame}
 \begin{frame}{Creating a crystal}
+	
 \only<1>{
+	\vspace{-3mm}
+	\lstinputlisting[language=LammpsData, basicstyle=\fontsize{5.5pt}{6.5pt}\selectfont, firstline=3, linewidth=1.1\linewidth]{../SiO2/large/beta-cristobalite.lt}
+	}
+
+\only<2>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame000.png}
 	\end{figure}
 }
-
-
-\only<2>{
+\only<3>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame001.png}
 	\end{figure}
 }
-
-
-\only<3>{
+\only<4>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame002.png}
 	\end{figure}
 }
-
-
-\only<4>{
+\only<5>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame003.png}
 	\end{figure}
 }
-
-
-\only<5>{
+\only<6>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame004.png}
 	\end{figure}
 }
-
-
-\only<6>{
+\only<7>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame005.png}
 	\end{figure}
 }
-
-
-\only<7>{
+\only<8>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame006.png}
 	\end{figure}
 }
-
-
-\only<8>{
+\only<9>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame007.png}
 	\end{figure}
 }
-
-
-\only<9>{
+\only<10>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame008.png}
 	\end{figure}
 }
-
-
-\only<10>{
+\only<11>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame009.png}
 	\end{figure}
 }
-
-
-\only<11>{
+\only<12>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame010.png}
 	\end{figure}
 }
-
-
-\only<12>{
+\only<13>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame011.png}
 	\end{figure}
 }
-
-
-\only<13>{
+\only<14>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame012.png}
 	\end{figure}
 }
-
-
-\only<14>{
+\only<15>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame013.png}
 	\end{figure}
 }
-
-
-\only<15>{
+\only<16>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame014.png}
 	\end{figure}
 }
-
-
-\only<16>{
+\only<17>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame015.png}
 	\end{figure}
 }
-
-
-\only<17>{
+\only<18>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame016.png}
 	\end{figure}
 }
-
-
-\only<18>{
+\only<19>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame017.png}
 	\end{figure}
 }
-
-
-\only<19>{
+\only<20>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame018.png}
 	\end{figure}
 }
-
-
-\only<20>{
+\only<21>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame019.png}
 	\end{figure}
 }
-
-
-\only<21>{
+\only<22>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame020.png}
 	\end{figure}
 }
-
-
-\only<22>{
+\only<23>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame021.png}
 	\end{figure}
 }
-
-
-\only<23>{
+\only<24>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame022.png}
 	\end{figure}
 }
-
-
-\only<24>{
+\only<25>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame023.png}
 	\end{figure}
 }
-
-
-\only<25>{
+\only<26>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame024.png}
 	\end{figure}
 }
-
-
-\only<26>{
+\only<27>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame025.png}
 	\end{figure}
 }
-
-
-\only<27>{
+\only<28>{
 	\begin{figure}
 		\includegraphics[width=0.5\linewidth]{figures/CreatingSystem/buildingBlocks/frame026.png}
 	\end{figure}
+	\note<28>{\begin{block}{$15^3$-Cube}
+			We make a large cube...
+		\end{block}}
+}
+\only<29>{
+	\vspace{2mm}
+	\begin{figure}
+		\includegraphics[width=0.7\linewidth]{figures/CreatingSystem/cube.png}
+	\end{figure}
+		\note<29>{
+			Density: 2.2114 g/cm$^3$
+			\vfill
+			\begin{block}{Melting point}
+			    Check basic properties of the system:
+				
+				Density
+				
+				Melting point
+			\end{block}
+			\vfill
+			}
 }
 \end{frame}
+
+
+
+\begin{frame}{Melting point}
+	\only<1>{
+	\begin{equation*}
+	D = \frac{\langle r^2(t)\rangle}{2dt},
+	\end{equation*}
+	\begin{equation*}
+	\langle r^2(t)\rangle = \frac{1}{N}\sum_{i=1}^{N}\lr{\vec{r}_i(t)-\vec{r}_i(0)}^2
+	\end{equation*}
+	\vfill
+}
+
+\only<2>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_01500.pdf}
+	\end{figure}
+}
+\only<3>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_01550.pdf}
+	\end{figure}
+}
+\only<4>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_01600.pdf}
+	\end{figure}
+}
+\only<5>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_01650.pdf}
+	\end{figure}
+}
+\only<6>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_01700.pdf}
+	\end{figure}
+}
+\only<7>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_01750.pdf}
+	\end{figure}
+}
+\only<8>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_01800.pdf}
+	\end{figure}
+}
+\only<9>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_01850.pdf}
+	\end{figure}
+}
+\only<10>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_01900.pdf}
+	\end{figure}
+}
+\only<11>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_01950.pdf}
+	\end{figure}
+}
+\only<12>{
+	\begin{figure}[H]
+		\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdplot_02000.pdf}
+	\end{figure}
+}
+	\only<13>{
+		\begin{figure}[H]
+			\includegraphics[width=0.7\linewidth]{../SiO2/msd/figures/msdTransparent.pdf}
+		\end{figure}
+		}
+\note<1>{
+	\begin{table}
+		\begin{tabular}{lll}
+			$D$ &:& Self diffusion coefficient \\
+			$d$ &:& Number of dimension \\
+			$t$ &:& Time\\
+			$\langle r^2(t)\rangle$ &:& Mean square displacement\\
+			$r$ &:& Position\\
+			$N$ &:& Number of atoms
+		\end{tabular}
+	\end{table}
+}
+\note<13>{1986K - Wikipedia
+	
+	Deviations less than $20\%$ from the experimental results is considered a pass, as stated by the developers of the potential. 
+	
+	Some qualitative detail that is lost. We should focus on quantitative behavior. 
+	}
+
+\end{frame}
+
+\section{Numerical simulations}
+\note{
+	\begin{block}{Shaping the system}
+		We carve out regions to obtain the desired geometry.
+	\end{block}
+	}
+
+
+
+\begin{frame}{Configuring the  simulation}
+	\only<1>{
+	\begin{figure}
+		\includegraphics[width=0.9\linewidth]{figures/hysteresis/animation/hysteresis3.png}
+	\end{figure}
+}
+	\only<2>{
+		\begin{figure}
+			\includegraphics[width=0.9\linewidth]{figures/hysteresis/animation/hysteresis6.png}
+		\end{figure}
+	}
+	\only<3>{
+		\begin{figure}
+			\includegraphics[width=0.9\linewidth]{figures/hysteresis/animation/hysteresis9.png}
+		\end{figure}
+	}
+		\only<4>{
+			\begin{figure}
+				\includegraphics[width=0.9\linewidth]{figures/hysteresis/animation/hysteresis12.png}
+			\end{figure}
+		}
+	\only<5>{
+		\begin{figure}
+			\includegraphics[width=0.9\linewidth]{figures/hysteresis/animation/hysteresis15.png}
+		\end{figure}
+	}
+	\note{
+		Regions, groups, delete, fix nvt
+		
+		Used in both experiments (but with varying thickness in problem 2).
+		
+		Frozen regions (top/bottom).
+		
+		Lowering sphere $\Rightarrow$ $\dfrac{\partial v}{\partial t} = 0$ or $\dfrac{\partial F}{\partial t} = 0$.
+\begin{enumerate}
+	\item Lower sphere with constant velocity $\rightarrow$ Hold at constant height $\rightarrow$ Compute force distribution 
+	\item Lower sphere by linearly increasing load $\rightarrow$ Keep load constant $\rightarrow$ Apply shear force
+\end{enumerate}
+		}
+\end{frame}
+
+
+\begin{frame}{Computing contact forces}
+	Contact forces are forces acting between two bodies at the area of contact. 
+	
+	They can be decomposed into normal and shear forces.
+	
+	Challenging to compute in MD because:
+	\begin{itemize}
+		\item[-] The contact surface has to be defined.
+		\item[-] We must distinguish between contact and non-contact forces.
+	\end{itemize}
+	
+	\note{
+		Contact can be defined as the maximum distance one experiences repulsive net-force on the surface atoms.
+		}
+\end{frame}
+
+\begin{frame}{Defining the surface}
+	\begin{itemize}
+		\item Define <<surface atoms>> of one of the groups
+		\item Partition the system into a 2D grid (in the xy-plane)
+		\item Apply least squares plane regression to each element of the grid
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Custom compute}
+	
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
