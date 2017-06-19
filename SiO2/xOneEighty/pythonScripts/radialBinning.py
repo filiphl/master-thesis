@@ -108,7 +108,8 @@ class smooth:
 
 
                     # Symetry
-                    weights[2*self.cx-i, 2*self.cy-j, b] = weights[2*self.cx-i, j, b]= weights[i, 2*self.cy-j, b]= weights[i,j,b]
+
+                    weights[int(round(2*self.cx-i)), int(round(2*self.cy-j)), b] = weights[int(round(2*self.cx-i)), j, b]= weights[i, int(round(2*self.cy-j)), b]= weights[i,j,b]
         return weights, bins
 
     def show(self, pBin):
@@ -180,7 +181,7 @@ class smooth:
 
 
         def up(event):
-            if sBin.val < 8:
+            if sBin.val < np.sqrt(self.N)/self.pBin+2:
                 sBin.val += 1
             Bin = int(sBin.val)
             im.set_data(self.weights[:,:,Bin])
@@ -208,7 +209,7 @@ if __name__ == '__main__':
     N  = 24
     cx = 11.5
     cy = 11.5
-    bw = 1.8
+    bw = 2
 
     if len(sys.argv)>1:
         N  = int(sys.argv[1])

@@ -692,8 +692,8 @@ Mark Robbins 2005 \note{In 2005 Mark Robbins published an article }
 \end{frame}
 
 
-\begin{frame}{Computing contact forces}
-	Contact forces are forces acting between two bodies at the area of contact. 
+\begin{frame}[t]{Computing contact force distribution}
+	Contact forces acts between two bodies at the area of contact. 
 	
 	They can be decomposed into normal and shear forces.
 	
@@ -708,17 +708,155 @@ Mark Robbins 2005 \note{In 2005 Mark Robbins published an article }
 		}
 \end{frame}
 
-\begin{frame}{Defining the surface}
-	\begin{itemize}
-		\item Define <<surface atoms>> of one of the groups
-		\item Partition the system into a 2D grid (in the xy-plane)
-		\item Apply least squares plane regression to each element of the grid
-	\end{itemize}
+
+\begin{frame}[t]{Custom compute}
+	Stores the net force acting on each atom of one group, from all atoms of the other group.
+	
+	Per-atom version of \texttt{compute group/group}.
+	
+	Verified by using Lennard-Jones and few particles. 
+	
+	Integrated with the LAMMPS distribution.
+	
+	Must rebuild LAMMPS with special sequence of commands. 
 \end{frame}
 
-\begin{frame}{Custom compute}
-	
+{\setbeamercolor{background canvas}{bg=white}
+\begin{frame}{Distribution of magnitude of contact force}
+	\centering
+	\begin{figure}
+			\includegraphics[width=0.8\linewidth,  trim={15mm 2mm 7mm 2mm}, clip]{figures/forceDistribution/forces/absoluteForceDistribution.pdf}
+	\end{figure}
 \end{frame}
+}
+
+{\setbeamercolor{background canvas}{bg=white}
+	\begin{frame}{Distribution of z-component of contact force}
+		\centering
+		\begin{figure}
+			\includegraphics[width=0.8\linewidth,  trim={15mm 2mm 7mm 2mm}, clip]{figures/forceDistribution/forces/zForceDistribution.pdf}
+		\end{figure}
+	\end{frame}
+}
+
+
+
+
+\setbeamercolor{background canvas}{bg=white}
+\begin{frame}{Defining the surface}
+\only<1>{
+Define <<surface atoms>> of one group.
+
+Partition the system into a 2D grid (in the xy-plane).
+
+Apply least squares plane regression on the <<surface atoms>> in each element of the grid.
+\\[1cm]
+Equation to solve:
+\begin{equation*}
+z = ax + by + c
+\end{equation*}
+Yields normal vector:
+\begin{equation*}
+\vec{n} = [a,b,1]
+\end{equation*}
+}
+\end{frame}
+
+
+\begin{frame}{Defining the surface}
+\begin{figure}
+\includegraphics[width=1\linewidth, trim={30mm 47mm 22mm 48mm}, clip]{figures/forceDistribution/surface/approximation23_5.pdf}
+\end{figure}
+\end{frame}
+
+
+
+\begin{frame}{Contact force distribution}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\linewidth, trim={8mm 42mm 12mm 17mm}, clip]{figures/forceDistribution/radialResults/ALL_timestep_110000.pdf}
+	\end{figure}
+		\note{Spatial and radial distribution of the magnitude of force, as well as normal and shear force. 
+			The spatial distributions shown on the top row are equivalent to the ones in figure \ref{fig:forceDistributions}, only in polar coordinates. 
+			The magnitude of the force components (y-axis) represents the force acting on a square of area $7.12\mathring{A}\times7.12\mathring{A}$.
+			The values at given radii $r$ in the bottom figures, are the average value of a column at that $r$ in the top row.
+			The units of $r$ is unit cell length (7.12$\mathring{A}$).
+			This is an average distribution from 10 simulations. 
+			The shaded areas in the radial distribution represents the standard deviation.
+			In the simulations we pushed a sphere with radius of curvature $R=200\mathring{A}$,  40$\mathring{A}$ into a half-space of size $327.52\mathring{A} \times 327.52\mathring{A} \times 157.64 \mathring{A}$. 
+		}
+\end{frame}
+
+
+
+\section{Results - 1}
+
+
+\begin{frame}{Results}
+	\centering
+\only<1>{
+	h = $-5\mathring{A}$
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth, trim={8mm 0mm 35mm 3}, clip]{figures/forceDistribution/radialResults/timestep_065000.pdf}
+	\end{figure}
+}
+\only<2>{
+	h = $0\mathring{A}$
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth, trim={8mm 0mm 35mm 3}, clip]{figures/forceDistribution/radialResults/timestep_070000.pdf}
+	\end{figure}
+}
+\only<3>{
+	h = $5\mathring{A}$
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth, trim={8mm 0mm 35mm 3}, clip]{figures/forceDistribution/radialResults/timestep_075000.pdf}
+	\end{figure}
+}
+\only<4>{
+	h = $10\mathring{A}$
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth, trim={8mm 0mm 35mm 3}, clip]{figures/forceDistribution/radialResults/timestep_080000.pdf}
+	\end{figure}
+}
+\only<5>{
+	h = $15\mathring{A}$
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth, trim={8mm 0mm 35mm 3}, clip]{figures/forceDistribution/radialResults/timestep_085000.pdf}
+	\end{figure}
+}
+\only<6>{
+	h = $20\mathring{A}$
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth, trim={8mm 0mm 35mm 3}, clip]{figures/forceDistribution/radialResults/timestep_090000.pdf}
+	\end{figure}
+}
+\only<7>{
+	h = $25\mathring{A}$
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth, trim={8mm 0mm 35mm 3}, clip]{figures/forceDistribution/radialResults/timestep_095000.pdf}
+	\end{figure}
+}
+\only<8>{
+	h = $30\mathring{A}$
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth, trim={8mm 0mm 35mm 3}, clip]{figures/forceDistribution/radialResults/timestep_100000.pdf}
+	\end{figure}
+}
+\only<9>{
+	h = $35\mathring{A}$
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth, trim={8mm 0mm 35mm 3}, clip]{figures/forceDistribution/radialResults/timestep_105000.pdf}
+	\end{figure}
+}
+\only<10>{
+	h = $40\mathring{A}$
+	\begin{figure}[H]
+		\includegraphics[width=\linewidth, trim={8mm 0mm 35mm 3}, clip]{figures/forceDistribution/radialResults/timestep_110000.pdf}
+	\end{figure}
+}
+\end{frame}
+
+
 
 
 
